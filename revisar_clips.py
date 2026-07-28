@@ -35,7 +35,7 @@ from pipeline import (
     _guardar_evento_correccion,
     _guardar_evento_descarte,
 )
-from agent4_video_cutter import (
+from edicion_video.agent4_video_cutter import (
     _find_video,
     _detect_video_info,
     _prepare_font,

@@ -10,7 +10,7 @@ subtítulo quemado y exporta en formato vertical 9:16
 listo para TikTok / Reels / Shorts.
 
 Uso:
-  python agent4_video_cutter.py stream_data/<session_id>/contenido.json
+  python edicion_video/agent4_video_cutter.py stream_data/<session_id>/contenido.json
 """
 
 import sys
@@ -452,8 +452,8 @@ def run_agent(
 # ─────────────────────────────────────────
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("\nUso: python agent4_video_cutter.py <path/contenido.json>")
-        print("Ejemplo: python agent4_video_cutter.py stream_data/20260529_143022/contenido.json\n")
+        print("\nUso: python edicion_video/agent4_video_cutter.py <path/contenido.json>")
+        print("Ejemplo: python edicion_video/agent4_video_cutter.py stream_data/20260529_143022/contenido.json\n")
         sys.exit(1)
 
     run_agent(sys.argv[1])

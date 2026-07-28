@@ -22,7 +22,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
 
-from agent4_video_cutter import (
+from edicion_video.agent4_video_cutter import (
     _cut_clip,
     _prepare_font,
     _detect_video_info,
