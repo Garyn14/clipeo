@@ -25,6 +25,7 @@ import os
 import re
 import signal
 import subprocess
+import threading
 import time
 from datetime import datetime
 from pathlib import Path
@@ -250,6 +251,33 @@ def _detener_ordenado(proc: subprocess.Popen) -> None:
     proc.communicate()
 
 
+_PROGRESO_INTERVALO_SEGUNDOS = 15
+
+
+def _monitorear_progreso(chunk_path: Path, detener: threading.Event) -> None:
+    """
+    Corre en un hilo aparte mientras yt-dlp graba (stdout/stderr van a PIPE,
+    sin progreso legible) e imprime cada _PROGRESO_INTERVALO_SEGUNDOS el
+    tamaño del archivo — única señal de que la captura sigue viva y no se
+    quedó pegada, sobre todo con --chunk 0 donde el proceso puede bloquear
+    horas sin que communicate() devuelva nada.
+    """
+    ultimo_tamano = -1
+    while not detener.wait(_PROGRESO_INTERVALO_SEGUNDOS):
+        if not chunk_path.exists():
+            print("[CAPTURE] ⏳ esperando que yt-dlp empiece a escribir...")
+            continue
+        tamano = chunk_path.stat().st_size
+        tamano_mb = tamano / (1024 * 1024)
+        if tamano > ultimo_tamano:
+            delta_mb = (tamano - ultimo_tamano) / (1024 * 1024) if ultimo_tamano >= 0 else tamano_mb
+            print(f"[CAPTURE] 📈 grabando... {tamano_mb:.1f} MB  (+{delta_mb:.1f} MB en {_PROGRESO_INTERVALO_SEGUNDOS}s)")
+        else:
+            print(f"[CAPTURE] ⚠️ {tamano_mb:.1f} MB — sin crecimiento en los últimos "
+                  f"{_PROGRESO_INTERVALO_SEGUNDOS}s, verificar conexión/túnel")
+        ultimo_tamano = tamano
+
+
 def _grabar_chunk(url: str, chunk_path: Path, chunk_segundos: int) -> tuple[int, str]:
     """
     Corre yt-dlp para grabar un chunk del live, con timeout externo
@@ -284,6 +312,13 @@ def _grabar_chunk(url: str, chunk_path: Path, chunk_segundos: int) -> tuple[int,
         text=True, encoding="utf-8", errors="replace",
         **popen_kwargs,
     )
+
+    detener_monitor = threading.Event()
+    monitor = threading.Thread(
+        target=_monitorear_progreso, args=(chunk_path, detener_monitor), daemon=True,
+    )
+    monitor.start()
+
     try:
         _, stderr = proc.communicate(timeout=chunk_segundos or None)
         return proc.returncode, stderr or ""
@@ -293,6 +328,9 @@ def _grabar_chunk(url: str, chunk_path: Path, chunk_segundos: int) -> tuple[int,
     except KeyboardInterrupt:
         _detener_ordenado(proc)
         raise
+    finally:
+        detener_monitor.set()
+        monitor.join(timeout=2)
 
 
 def _registrar_chunk(
