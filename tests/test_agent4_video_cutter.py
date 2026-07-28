@@ -15,11 +15,13 @@ from edicion_video.agent4_video_cutter import (
 )
 
 
-def test_sanitize_preserva_emoji():
-    assert _sanitize_text("esto es lo que tiene por dentro 😱") == "esto es lo que tiene por dentro 😱"
-    assert _sanitize_text("no puede ser 👀") == "no puede ser 👀"
-    assert _sanitize_text("bravazo 🔥") == "bravazo 🔥"
-    assert _sanitize_text("jajaja 😂") == "jajaja 😂"
+def test_sanitize_quita_emoji():
+    # Sin emoji a propósito: drawtext no los renderiza a color, y el
+    # criterio editorial es texto solo, sin emoji quemado en el video.
+    assert _sanitize_text("esto es lo que tiene por dentro 😱") == "esto es lo que tiene por dentro"
+    assert _sanitize_text("no puede ser 👀") == "no puede ser"
+    assert _sanitize_text("bravazo 🔥") == "bravazo"
+    assert _sanitize_text("jajaja 😂") == "jajaja"
 
 
 def test_sanitize_preserva_espanol():

@@ -21,7 +21,6 @@ import random
 import re
 import shutil
 import subprocess
-import urllib.request
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -57,29 +56,19 @@ def _normalize_timestamp(ts: str) -> str:
     return ts
 
 
-_EMOJI_RANGES = (
-    (0x1F300, 0x1FAFF),  # pictogramas, emoticonos, transporte, suplementarios
-    (0x2600, 0x27BF),    # símbolos varios y dingbats
-    (0x2B00, 0x2BFF),    # estrellas, flechas
-)
-
-
-def _is_emoji(c: str) -> bool:
-    cp = ord(c)
-    return any(lo <= cp <= hi for lo, hi in _EMOJI_RANGES)
-
-
 def _sanitize_text(text: str) -> str:
-    """Keep printable Latin characters + emoji; strip FFmpeg filter metacharacters."""
-    # Keep ASCII + Latin-1 Supplement + Latin Extended A/B (ñ, á, é, ¡, ¿, etc.) + emoji
-    clean = "".join(c for c in text if (ord(c) < 0x0250 or _is_emoji(c)) and c.isprintable())
+    """Keep printable Latin characters; strip emojis and FFmpeg filter metacharacters."""
+    # Keep ASCII + Latin-1 Supplement + Latin Extended A/B (ñ, á, é, ¡, ¿, etc.)
+    # Sin emoji a propósito: drawtext no los renderiza a color (tofu), y aunque
+    # se probó un overlay de imagen para mostrarlos bien, el criterio editorial
+    # es no usarlos en el video quemado — el texto solo alcanza.
+    clean = "".join(c for c in text if ord(c) < 0x0250 and c.isprintable())
     # ',' splits the filter chain; ':' splits options; the rest break quoting.
     for ch in [",", ":", ";", '"', "'"]:
         clean = clean.replace(ch, " ")
     return re.sub(r"  +", " ", clean).strip()
 
 
-_EMOJI_ASSETS_DIR = Path(__file__).parent / "assets" / "emoji"
 _MUSICA_DIR        = Path(__file__).parent / "assets" / "musica"
 _MUSICA_VOLUMEN    = 0.15  # bajo, para no tapar el diálogo original
 
@@ -100,48 +89,6 @@ def _pick_music_track(mood: str) -> Path | None:
     return None
 
 
-def _get_emoji_image(char: str) -> Path | None:
-    """
-    Devuelve la ruta a un PNG del emoji, descargándolo una sola vez a
-    assets/emoji/ si no está en caché local (llamadas siguientes son gratis).
-
-    Fuente: Noto Emoji (googlefonts/noto-emoji) — Apache 2.0 / OFL, uso
-    comercial libre y sin atribución requerida en el producto final (a
-    diferencia de Twemoji, que es CC-BY 4.0 y sí la exige).
-
-    FFmpeg drawtext no puede renderizar emojis a color (limitación conocida
-    de libfreetype con fuentes CBDT/CBLC) — confirmado empíricamente: sale
-    como un cuadrado vacío ("tofu"). Por eso se superpone como imagen en vez
-    de intentar dibujarlo como texto.
-
-    Retorna None si no se pudo conseguir (emoji no está en el repo de Noto,
-    sin red, etc.) — el llamador debe omitir el emoji, nunca fallar el corte
-    completo por esto.
-    """
-    _EMOJI_ASSETS_DIR.mkdir(parents=True, exist_ok=True)
-    codepoint = f"{ord(char):x}"
-    dest      = _EMOJI_ASSETS_DIR / f"emoji_u{codepoint}.png"
-    if dest.exists():
-        return dest
-
-    url = f"https://raw.githubusercontent.com/googlefonts/noto-emoji/main/png/128/emoji_u{codepoint}.png"
-    try:
-        urllib.request.urlretrieve(url, dest)
-        return dest
-    except Exception:
-        return None
-
-
-def _split_trailing_emoji(text: str) -> tuple[str, str]:
-    """
-    Separa un emoji final del resto del texto (los prompts de contenido
-    piden "remate con emoji al final" — solo se soporta ese caso, un emoji
-    al final de la línea, no emojis intercalados en medio del texto).
-    """
-    stripped = text.rstrip()
-    if stripped and _is_emoji(stripped[-1]):
-        return stripped[:-1].rstrip(), stripped[-1]
-    return text, ""
 
 
 def _prepare_font() -> tuple[str, str]:
@@ -238,47 +185,7 @@ def _detect_video_info(video_path: Path) -> dict:
     return {"width": w, "height": h, "has_letterbox": has_letterbox, "bar_height": bar_height}
 
 
-_EMOJI_GAP = 18  # px entre el final del texto y el emoji (~un espacio a fs≈58)
-
-# _CHAR_WIDTH_FACTOR (0.52) se calibró para Arial y sirve bien para el
-# dimensionado de las cajas (con margen de sobra, el padding lo absorbe).
-# Pero para ubicar el emoji justo después del texto hace falta precisión:
-# medido empíricamente sobre un clip real (Impact, la fuente que de hecho
-# se usa por _prepare_font), el texto termina ~72px antes de lo que
-# _CHAR_WIDTH_FACTOR predice a fs=58 — Impact es más condensada que Arial.
-# Con este factor corregido el emoji queda pegado al texto en vez de
-# flotando separado.
-_EMOJI_CHAR_WIDTH_FACTOR = 0.42
-
-
-def _emoji_overlay(
-    text_sin_emoji: str, emoji_char: str, fs: int, lh: int, y: int, enable: str = "",
-) -> dict | None:
-    """
-    Calcula dónde superponer la imagen del emoji justo después del texto
-    centrado. No es pixel-perfect (el ancho real lo mide FFmpeg internamente
-    al renderizar, no accesible desde acá) pero _EMOJI_CHAR_WIDTH_FACTOR está
-    calibrado contra un render real para que el hueco sea chico, no ausente.
-
-    Retorna None si no se consiguió la imagen del emoji (sin red, etc.) —
-    el llamador debe simplemente no mostrar el emoji en ese caso.
-    """
-    img = _get_emoji_image(emoji_char)
-    if img is None:
-        return None
-    text_w = int(len(text_sin_emoji) * fs * _EMOJI_CHAR_WIDTH_FACTOR)
-    size   = int(lh * 0.9)
-    return {
-        "path":         img,
-        "x":            540 + text_w // 2 + _EMOJI_GAP,
-        "y":            y + (lh - size) // 2,
-        "size":         size,
-        "extra_w":      size + _EMOJI_GAP,
-        "enable":       enable,
-    }
-
-
-def _build_vf(linea1: str, linea2: str, font_rel: str, has_letterbox: bool, bar_height: int) -> tuple[str, dict, list[dict]]:
+def _build_vf(linea1: str, linea2: str, font_rel: str, has_letterbox: bool, bar_height: int) -> tuple[str, dict]:
     """
     Caso A  (letterbox, 2 líneas): texto anclado justo encima del video.
     Caso A1 (letterbox, 1 línea):  línea única centrada verticalmente en la barra.
@@ -291,26 +198,20 @@ def _build_vf(linea1: str, linea2: str, font_rel: str, has_letterbox: bool, bar_
     safe2    = _sanitize_text(linea2) if linea2 else ""
     font_opt = f"fontfile={font_rel}:" if font_rel else ""
 
-    # drawtext no puede renderizar emoji a color (ver _get_emoji_image) — se
-    # separan acá y se agregan como overlays de imagen sobre el texto.
-    txt1, emoji1 = _split_trailing_emoji(safe1)
-    txt2, emoji2 = _split_trailing_emoji(safe2)
-
     base = (
         "scale=1080:1920:force_original_aspect_ratio=decrease,"
         "pad=1080:1920:(ow-iw)/2:(oh-ih)/2"
     )
-    filters  = [base]
-    params   = {}
-    overlays = []
+    filters = [base]
+    params  = {}
 
     if has_letterbox:
         pad = 20
 
-        if txt1 and txt2:
+        if safe1 and safe2:
             # ── Dos líneas: anclar al inicio del video ──────────────
-            fs1 = _pick_fontsize(txt1, [72, 58, 48], 900)
-            fs2 = _pick_fontsize(txt2, [58, 44, 36], 900)
+            fs1 = _pick_fontsize(safe1, [72, 58, 48], 900)
+            fs2 = _pick_fontsize(safe2, [58, 44, 36], 900)
             lh1 = int(fs1 * 1.2)
             lh2 = int(fs2 * 1.2)
             gap    = 18
@@ -335,14 +236,10 @@ def _build_vf(linea1: str, linea2: str, font_rel: str, has_letterbox: bool, bar_
                 y2 = bar_height - 10 - lh2
                 y1 = y2 - gap - lh1
 
-            ov1 = _emoji_overlay(txt1, emoji1, fs1, lh1, y1) if emoji1 else None
-            ov2 = _emoji_overlay(txt2, emoji2, fs2, lh2, y2) if emoji2 else None
-            extra_w = max(ov1["extra_w"] if ov1 else 0, ov2["extra_w"] if ov2 else 0)
-
             est_w = max(
-                int(len(txt1) * fs1 * _CHAR_WIDTH_FACTOR),
-                int(len(txt2) * fs2 * _CHAR_WIDTH_FACTOR),
-            ) + extra_w
+                int(len(safe1) * fs1 * _CHAR_WIDTH_FACTOR),
+                int(len(safe2) * fs2 * _CHAR_WIDTH_FACTOR),
+            )
             box_w = min(1060, est_w + 2 * pad)
             box_h = lh1 + gap + lh2 + 2 * pad
             box_x = (1080 - box_w) // 2
@@ -357,28 +254,23 @@ def _build_vf(linea1: str, linea2: str, font_rel: str, has_letterbox: bool, bar_
 
             filters.append(f"drawbox=x={box_x}:y={y_box}:w={box_w}:h={box_h}:color=white:t=fill")
             filters.append(
-                f"drawtext={font_opt}expansion=none:text='{txt1}':"
+                f"drawtext={font_opt}expansion=none:text='{safe1}':"
                 f"fontsize={fs1}:fontcolor=black:x=(w-text_w)/2:y={y1}"
             )
             filters.append(
-                f"drawtext={font_opt}expansion=none:text='{txt2}':"
+                f"drawtext={font_opt}expansion=none:text='{safe2}':"
                 f"fontsize={fs2}:fontcolor=black:x=(w-text_w)/2:y={y2}"
             )
-            overlays = [ov for ov in (ov1, ov2) if ov]
 
-        elif txt1 or txt2:
+        elif safe1 or safe2:
             # ── Una línea: anclada justo encima del video (igual que A) ─
-            text  = txt1 if txt1 else txt2
-            emoji = emoji1 if txt1 else emoji2
+            text = safe1 if safe1 else safe2
             fs   = _pick_fontsize(text, [72, 58, 48], 900)
             lh   = int(fs * 1.2)
             margin = 20
 
             y_text = bar_height - margin - lh
-            ov     = _emoji_overlay(text, emoji, fs, lh, y_text) if emoji else None
-            extra_w = ov["extra_w"] if ov else 0
-
-            est_w  = int(len(text) * fs * _CHAR_WIDTH_FACTOR) + extra_w
+            est_w  = int(len(text) * fs * _CHAR_WIDTH_FACTOR)
             box_w  = min(1060, est_w + 2 * pad)
             box_h  = lh + 2 * pad
             box_x  = (1080 - box_w) // 2
@@ -395,7 +287,6 @@ def _build_vf(linea1: str, linea2: str, font_rel: str, has_letterbox: bool, bar_
                 f"drawtext={font_opt}expansion=none:text='{text}':"
                 f"fontsize={fs}:fontcolor=black:x=(w-text_w)/2:y={y_text}"
             )
-            overlays = [ov] if ov else []
 
         else:
             # ── Sin texto ────────────────────────────────────────────
@@ -404,39 +295,29 @@ def _build_vf(linea1: str, linea2: str, font_rel: str, has_letterbox: bool, bar_
     else:
         # Caso B: centrado, semitransparente — duración según velocidad de
         # lectura (más texto, más tiempo en pantalla; ver _text_display_duration)
-        params  = {"caso": "B"}
-        dur     = _text_display_duration(txt1, txt2)
-        enable  = f"lte(t\\,{dur:.1f})"
+        params = {"caso": "B"}
+        dur    = _text_display_duration(safe1, safe2)
+        enable = f"lte(t\\,{dur:.1f})"
         params["duracion_texto_seg"] = dur
 
-        if txt1:
-            fs1 = 52
-            lh1 = int(fs1 * 1.2)
-            ov1 = _emoji_overlay(txt1, emoji1, fs1, lh1, 200, enable=f"lte(t,{dur:.1f})") if emoji1 else None
+        if safe1:
             filters.append(
-                f"drawtext={font_opt}expansion=none:text='{txt1}':"
-                f"fontsize={fs1}:fontcolor=black:"
+                f"drawtext={font_opt}expansion=none:text='{safe1}':"
+                "fontsize=52:fontcolor=black:"
                 "x=(w-text_w)/2:y=200:"
                 f"enable={enable}:"
                 "box=1:boxcolor=white@0.85:boxborderw=12"
             )
-            if ov1:
-                overlays.append(ov1)
-        if txt2:
-            fs2 = 40
-            lh2 = int(fs2 * 1.2)
-            ov2 = _emoji_overlay(txt2, emoji2, fs2, lh2, 275, enable=f"lte(t,{dur:.1f})") if emoji2 else None
+        if safe2:
             filters.append(
-                f"drawtext={font_opt}expansion=none:text='{txt2}':"
-                f"fontsize={fs2}:fontcolor=black:"
+                f"drawtext={font_opt}expansion=none:text='{safe2}':"
+                "fontsize=40:fontcolor=black:"
                 "x=(w-text_w)/2:y=275:"
                 f"enable={enable}:"
                 "box=1:boxcolor=white@0.85:boxborderw=10"
             )
-            if ov2:
-                overlays.append(ov2)
 
-    return ",".join(filters), params, overlays
+    return ",".join(filters), params
 
 
 def _load_word_timings(session_dir: Path, inicio_s: float, fin_s: float) -> list[dict]:
@@ -530,7 +411,7 @@ def _cut_clip(
     fin      = _normalize_timestamp(fin)
     duracion = _timestamp_to_seconds(fin) - _timestamp_to_seconds(inicio)
 
-    vf, params, overlays = _build_vf(linea1, linea2, font_rel, has_letterbox, bar_height)
+    vf, params = _build_vf(linea1, linea2, font_rel, has_letterbox, bar_height)
 
     # Imprimir coordenadas para verificación visual
     if params.get("caso") == "A":
@@ -609,20 +490,7 @@ def _cut_clip(
         else:
             print(f"         Subtítulos: sin palabras.json/datos — usando texto estático")
 
-    if overlays:
-        print(f"         Emoji   : {len(overlays)} superpuesto(s) como imagen (drawtext no soporta color)")
-        fc_static = f"[0:v]{vf}[v0]"
-        label = "v0"
-        for i, ov in enumerate(overlays):
-            emoji_label = f"e{i}"
-            next_label  = "outv" if i == len(overlays) - 1 else f"v{i + 1}"
-            fc_static  += f";[{i + 1}:v]scale={ov['size']}:{ov['size']},format=rgba[{emoji_label}]"
-            enable_opt  = f":enable='{ov['enable']}'" if ov.get("enable") else ""
-            fc_static  += f";[{label}][{emoji_label}]overlay=x={ov['x']}:y={ov['y']}{enable_opt}[{next_label}]"
-            label = next_label
-        attempts.append(("con subtítulo", _ffmpeg_cmd(fc_static, [ov["path"] for ov in overlays])))
-    else:
-        attempts.append(("con subtítulo", _ffmpeg_cmd(f"[0:v]{vf}[outv]", [])))
+    attempts.append(("con subtítulo", _ffmpeg_cmd(f"[0:v]{vf}[outv]", [])))
 
     attempts.append(("sin subtítulo", _ffmpeg_cmd(
         "[0:v]scale=1080:1920:force_original_aspect_ratio=decrease,"
