@@ -238,7 +238,17 @@ def _detect_video_info(video_path: Path) -> dict:
     return {"width": w, "height": h, "has_letterbox": has_letterbox, "bar_height": bar_height}
 
 
-_EMOJI_GAP = 8  # px entre el final del texto y el emoji
+_EMOJI_GAP = 18  # px entre el final del texto y el emoji (~un espacio a fs≈58)
+
+# _CHAR_WIDTH_FACTOR (0.52) se calibró para Arial y sirve bien para el
+# dimensionado de las cajas (con margen de sobra, el padding lo absorbe).
+# Pero para ubicar el emoji justo después del texto hace falta precisión:
+# medido empíricamente sobre un clip real (Impact, la fuente que de hecho
+# se usa por _prepare_font), el texto termina ~72px antes de lo que
+# _CHAR_WIDTH_FACTOR predice a fs=58 — Impact es más condensada que Arial.
+# Con este factor corregido el emoji queda pegado al texto en vez de
+# flotando separado.
+_EMOJI_CHAR_WIDTH_FACTOR = 0.42
 
 
 def _emoji_overlay(
@@ -246,10 +256,9 @@ def _emoji_overlay(
 ) -> dict | None:
     """
     Calcula dónde superponer la imagen del emoji justo después del texto
-    centrado. Usa el mismo heurístico _CHAR_WIDTH_FACTOR que ya usa el resto
-    del archivo para estimar anchos de caja — no es pixel-perfect (el ancho
-    real lo mide FFmpeg internamente al renderizar, no accesible desde acá),
-    pero es consistente con el nivel de precisión del resto del layout.
+    centrado. No es pixel-perfect (el ancho real lo mide FFmpeg internamente
+    al renderizar, no accesible desde acá) pero _EMOJI_CHAR_WIDTH_FACTOR está
+    calibrado contra un render real para que el hueco sea chico, no ausente.
 
     Retorna None si no se consiguió la imagen del emoji (sin red, etc.) —
     el llamador debe simplemente no mostrar el emoji en ese caso.
@@ -257,7 +266,7 @@ def _emoji_overlay(
     img = _get_emoji_image(emoji_char)
     if img is None:
         return None
-    text_w = int(len(text_sin_emoji) * fs * _CHAR_WIDTH_FACTOR)
+    text_w = int(len(text_sin_emoji) * fs * _EMOJI_CHAR_WIDTH_FACTOR)
     size   = int(lh * 0.9)
     return {
         "path":         img,
