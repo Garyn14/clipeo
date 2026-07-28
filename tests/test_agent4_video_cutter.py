@@ -3,7 +3,7 @@ test_agent4_video_cutter.py — Tests unitarios para _sanitize_text()
 (edicion_video/agent4_video_cutter.py).
 """
 
-from edicion_video.agent4_video_cutter import _sanitize_text
+from edicion_video.agent4_video_cutter import _sanitize_text, _text_display_duration
 
 
 def test_sanitize_preserva_emoji():
@@ -26,3 +26,22 @@ def test_sanitize_quita_metacaracteres_ffmpeg():
 
 def test_sanitize_colapsa_espacios_dobles():
     assert _sanitize_text("hola,   mundo") == "hola mundo"
+
+
+def test_duracion_texto_respeta_minimo():
+    # "Wow" + "🔥" -> 2 palabras, la fórmula pura daría menos del mínimo
+    assert _text_display_duration("Wow", "🔥") == 3.0
+
+
+def test_duracion_texto_escala_con_largo():
+    corta = _text_display_duration("Wow", "que fuerte")
+    larga = _text_display_duration(
+        "Partieron el calzado del Tio Fritz",
+        "y encontraron esto adentro increible de verdad",
+    )
+    assert larga > corta
+
+
+def test_duracion_texto_respeta_maximo():
+    texto_muy_largo = " ".join(["palabra"] * 40)
+    assert _text_display_duration(texto_muy_largo, "") == 7.0

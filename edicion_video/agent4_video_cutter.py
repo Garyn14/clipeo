@@ -171,6 +171,24 @@ def _pick_fontsize(text: str, candidates: list[int], max_px: int = 900) -> int:
     return candidates[-1]
 
 
+_LECTURA_PALABRAS_POR_SEG = 3.0
+_LECTURA_MARGEN_SEG       = 1.0
+_LECTURA_MIN_SEG          = 3.0
+_LECTURA_MAX_SEG          = 7.0
+
+
+def _text_display_duration(txt1: str, txt2: str) -> float:
+    """
+    Duración (segundos) para mostrar el texto en Caso B, según velocidad de
+    lectura — no es un juicio subjetivo, es aritmética simple (palabras
+    totales / palabras-por-segundo + margen de arranque), acotada para que
+    un hook de 2 palabras no destelle ni uno largo se quede pegado.
+    """
+    palabras = len((txt1 + " " + txt2).split())
+    duracion = palabras / _LECTURA_PALABRAS_POR_SEG + _LECTURA_MARGEN_SEG
+    return max(_LECTURA_MIN_SEG, min(_LECTURA_MAX_SEG, duracion))
+
+
 def _detect_video_info(video_path: Path) -> dict:
     """
     Detecta dimensiones del video fuente y si producirá barras negras en salida 9:16.
@@ -237,7 +255,7 @@ def _build_vf(linea1: str, linea2: str, font_rel: str, has_letterbox: bool, bar_
     Caso A  (letterbox, 2 líneas): texto anclado justo encima del video.
     Caso A1 (letterbox, 1 línea):  línea única centrada verticalmente en la barra.
     Caso A0 (letterbox, 0 líneas): sin texto, sin box.
-    Caso B  (vertical):            texto centrado, semitransparente, primeros 4s.
+    Caso B  (vertical):            texto centrado, semitransparente, duración según lectura.
 
     Retorna (filtro_vf, params_debug).
     """
@@ -356,17 +374,22 @@ def _build_vf(linea1: str, linea2: str, font_rel: str, has_letterbox: bool, bar_
             params = {"caso": "A0", "bar_height": bar_height}
 
     else:
-        # Caso B: centrado, semitransparente, solo primeros 4s
-        params = {"caso": "B"}
+        # Caso B: centrado, semitransparente — duración según velocidad de
+        # lectura (más texto, más tiempo en pantalla; ver _text_display_duration)
+        params  = {"caso": "B"}
+        dur     = _text_display_duration(txt1, txt2)
+        enable  = f"lte(t\\,{dur:.1f})"
+        params["duracion_texto_seg"] = dur
+
         if txt1:
             fs1 = 52
             lh1 = int(fs1 * 1.2)
-            ov1 = _emoji_overlay(txt1, emoji1, fs1, lh1, 200, enable="lte(t,4)") if emoji1 else None
+            ov1 = _emoji_overlay(txt1, emoji1, fs1, lh1, 200, enable=f"lte(t,{dur:.1f})") if emoji1 else None
             filters.append(
                 f"drawtext={font_opt}expansion=none:text='{txt1}':"
                 f"fontsize={fs1}:fontcolor=black:"
                 "x=(w-text_w)/2:y=200:"
-                "enable=lte(t\\,4):"
+                f"enable={enable}:"
                 "box=1:boxcolor=white@0.85:boxborderw=12"
             )
             if ov1:
@@ -374,12 +397,12 @@ def _build_vf(linea1: str, linea2: str, font_rel: str, has_letterbox: bool, bar_
         if txt2:
             fs2 = 40
             lh2 = int(fs2 * 1.2)
-            ov2 = _emoji_overlay(txt2, emoji2, fs2, lh2, 275, enable="lte(t,4)") if emoji2 else None
+            ov2 = _emoji_overlay(txt2, emoji2, fs2, lh2, 275, enable=f"lte(t,{dur:.1f})") if emoji2 else None
             filters.append(
                 f"drawtext={font_opt}expansion=none:text='{txt2}':"
                 f"fontsize={fs2}:fontcolor=black:"
                 "x=(w-text_w)/2:y=275:"
-                "enable=lte(t\\,4):"
+                f"enable={enable}:"
                 "box=1:boxcolor=white@0.85:boxborderw=10"
             )
             if ov2:
@@ -427,6 +450,9 @@ def _cut_clip(
         print(f"         y_text  : {params['y_text']}px  (centro barra: {bh//2}px)")
     elif params.get("caso") == "A0":
         print(f"         Layout  : Caso A0 — letterbox sin texto  |  barra {params['bar_height']}px")
+    elif params.get("caso") == "B" and "duracion_texto_seg" in params:
+        print(f"         Layout  : Caso B — vertical nativo")
+        print(f"         Texto visible : {params['duracion_texto_seg']:.1f}s (según velocidad de lectura)")
 
     if overlays:
         print(f"         Emoji   : {len(overlays)} superpuesto(s) como imagen (drawtext no soporta color)")
