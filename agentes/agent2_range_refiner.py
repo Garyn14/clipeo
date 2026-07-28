@@ -22,6 +22,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
 from core.utils import _timestamp_to_seconds, _seconds_to_timestamp, _parse_segments
 
 # ─────────────────────────────────────────
@@ -287,11 +288,10 @@ if __name__ == "__main__":
         print("Ejemplo: python agent2_range_refiner.py stream_data/test/picos.json papi_jhos\n")
         sys.exit(1)
 
-    sys.path.insert(0, str(Path(__file__).parent))
     from contexto.config_loader import ConfigLoader
 
     canal_id = sys.argv[2] if len(sys.argv) >= 3 else None
-    cfg      = ConfigLoader(config_dir=str(Path(__file__).parent / "config"))
+    cfg      = ConfigLoader(config_dir=str(Path(__file__).parent.parent / "config"))
     config   = cfg.load(canal_id)
 
     print(f"[AGENT2] Canal : {cfg.get('meta', 'id')}  (config: {cfg.loaded_file.name})")

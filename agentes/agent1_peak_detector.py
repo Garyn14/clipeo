@@ -21,6 +21,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
 from core.utils import _timestamp_to_seconds, _parse_segments
 
 # ─────────────────────────────────────────
@@ -190,11 +191,10 @@ if __name__ == "__main__":
         print("Ejemplo: python agent1_peak_detector.py stream_data/test/transcripcion_completa.txt papi_jhos\n")
         sys.exit(1)
 
-    sys.path.insert(0, str(Path(__file__).parent))
     from contexto.config_loader import ConfigLoader
 
     canal_id = sys.argv[2] if len(sys.argv) >= 3 else None
-    cfg      = ConfigLoader(config_dir=str(Path(__file__).parent / "config"))
+    cfg      = ConfigLoader(config_dir=str(Path(__file__).parent.parent / "config"))
     config   = cfg.load(canal_id)
 
     print(f"[AGENT1] Canal : {cfg.get('meta', 'id')}  (config: {cfg.loaded_file.name})")

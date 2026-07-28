@@ -35,11 +35,11 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from contexto.config_loader  import ConfigLoader
 from contexto.context_loader import ContextLoader
-from agent1_peak_detector import run_agent as agent1
-from agent2_range_refiner  import run_agent as agent2
-from agent3_viral_scorer   import run_agent as agent3
+from agentes.agent1_peak_detector import run_agent as agent1
+from agentes.agent2_range_refiner  import run_agent as agent2
+from agentes.agent3_viral_scorer   import run_agent as agent3
 from agent4_video_cutter   import run_agent as agent4
-from core.agent0_speaker_identifier import identify_speakers as agent0
+from agentes.agent0_speaker_identifier import identify_speakers as agent0
 
 STREAM_DATA = Path("stream_data")
 

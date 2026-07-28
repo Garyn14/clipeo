@@ -22,6 +22,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
 from core.utils import _timestamp_to_seconds, _parse_segments
 
 # ─────────────────────────────────────────
@@ -225,7 +226,7 @@ def run_agent(rangos_path: str, config: dict) -> list[dict]:
 
     # Cargar aprendizajes optimizados si existen
     canal_id          = config.get("meta", {}).get("id", "default")
-    aprendizajes_path = Path(__file__).parent / "aprendizajes" / f"{canal_id}_optimizado.md"
+    aprendizajes_path = Path(__file__).parent.parent / "aprendizajes" / f"{canal_id}_optimizado.md"
     if aprendizajes_path.exists():
         aprendizajes_context = aprendizajes_path.read_text(encoding="utf-8")
         tokens_aprox = len(aprendizajes_context.split())
@@ -353,11 +354,10 @@ if __name__ == "__main__":
         print("Ejemplo: python agent3_viral_scorer.py stream_data/test/rangos.json papi_jhos\n")
         sys.exit(1)
 
-    sys.path.insert(0, str(Path(__file__).parent))
     from contexto.config_loader import ConfigLoader
 
     canal_id = sys.argv[2] if len(sys.argv) >= 3 else None
-    cfg      = ConfigLoader(config_dir=str(Path(__file__).parent / "config"))
+    cfg      = ConfigLoader(config_dir=str(Path(__file__).parent.parent / "config"))
     config   = cfg.load(canal_id)
 
     print(f"[AGENT3] Canal : {cfg.get('meta', 'id')}  (config: {cfg.loaded_file.name})")

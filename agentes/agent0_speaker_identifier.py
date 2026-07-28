@@ -321,7 +321,7 @@ def identify_speakers(
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("Uso: python core/agent0_speaker_identifier.py <raw_path> <metadata_path>")
+        print("Uso: python agentes/agent0_speaker_identifier.py <raw_path> <metadata_path>")
         sys.exit(1)
 
     raw_path      = Path(sys.argv[1])
