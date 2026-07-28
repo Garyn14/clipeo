@@ -9,7 +9,7 @@ una URL real.
 import pytest
 import requests
 
-from core.video_transcriber import _transcribe_via_colab
+from transcripcion.video_transcriber import _transcribe_via_colab
 
 TRANSCRIBE_URL = "https://fake-colab.trycloudflare.com/transcribe"
 

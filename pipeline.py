@@ -459,8 +459,8 @@ def _run_video_chunks(
     manual: bool = False,
 ) -> None:
     from core.chunk_manager    import ChunkManager
-    from core.audio_chunker    import extract_audio_chunk
-    from core.video_transcriber import transcribe_chunk
+    from transcripcion.audio_chunker    import extract_audio_chunk
+    from transcripcion.video_transcriber import transcribe_chunk
 
     canal_id = cfg.get("meta", "id", default="default")
     print(f"[PIPELINE] Modo transcripción: {'COLAB (GPU remota)' if usar_colab else 'WHISPERX (local, CPU)'}")
@@ -634,7 +634,7 @@ def _run_video_chunks(
 
             # ── Limpieza de nombres (ecosistemas con personajes) ──
             if config.get("personajes") and trans_chunk.exists():
-                from core.transcript_cleaner import clean_known_names
+                from transcripcion.transcript_cleaner import clean_known_names
                 raw_text   = trans_chunk.read_text(encoding="utf-8")
                 clean_text = clean_known_names(raw_text, config)
                 if clean_text != raw_text:

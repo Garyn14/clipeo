@@ -2,7 +2,7 @@
 audio_chunker.py — Extrae fragmentos de audio de un video usando FFmpeg input seek.
 
 Uso interno:
-    from core.audio_chunker import extract_audio_chunk
+    from transcripcion.audio_chunker import extract_audio_chunk
     path = extract_audio_chunk(video_path, "00:30:00", "01:00:00", output_path)
 """
 

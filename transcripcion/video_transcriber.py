@@ -2,7 +2,7 @@
 video_transcriber.py — Transcribe audio con WhisperX + diarización de hablantes.
 
 Uso interno:
-    from core.video_transcriber import transcribe_full
+    from transcripcion.video_transcriber import transcribe_full
     path = transcribe_full(audio_path, session_dir)
 
 Requiere HF_TOKEN en .env para diarización de speakers.

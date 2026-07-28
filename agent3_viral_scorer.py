@@ -296,7 +296,7 @@ def run_agent(rangos_path: str, config: dict) -> list[dict]:
 
         # Limpiar nombres canónicos en el texto generado
         if config.get("personajes"):
-            from core.transcript_cleaner import clean_known_names as _clean
+            from transcripcion.transcript_cleaner import clean_known_names as _clean
             l1 = resultado.get("texto_linea1", "")
             l2 = resultado.get("texto_linea2", "")
             if l1 or l2:
