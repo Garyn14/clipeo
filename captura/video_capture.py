@@ -2,7 +2,7 @@
 video_capture.py — Descarga video + extrae audio desde cualquier URL soportada por yt-dlp.
 
 Uso interno:
-    from core.video_capture import download_video
+    from captura.video_capture import download_video
     info = download_video(url, session_dir)
 """
 

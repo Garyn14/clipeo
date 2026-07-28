@@ -17,8 +17,9 @@ import argparse
 import json
 import time
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tiktok_capture import capturar, normalizar_usuario, verificar_live_activo, verificar_yt_dlp
+from captura.tiktok_capture import capturar, normalizar_usuario, verificar_live_activo, verificar_yt_dlp
 
 CACHE_PATH = Path("live_check_cache.json")
 COOLDOWN_SEGUNDOS = 600      # no re-consultar la red por el mismo usuario antes de esto

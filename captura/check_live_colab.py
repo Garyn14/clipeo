@@ -12,8 +12,10 @@ Uso:
 """
 
 import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tiktok_capture import normalizar_usuario, verificar_live_via_colab
+from captura.tiktok_capture import normalizar_usuario, verificar_live_via_colab
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:

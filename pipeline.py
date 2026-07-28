@@ -508,7 +508,7 @@ def _run_video_chunks(
                     pass
 
         if session_dir is None:
-            from core.video_capture import download_video
+            from captura.video_capture import download_video
             session_id  = datetime.now().strftime("%Y%m%d_%H%M%S")
             session_dir = STREAM_DATA / session_id
             _step(1, "DESCARGA DE VIDEO")

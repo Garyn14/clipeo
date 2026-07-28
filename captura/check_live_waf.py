@@ -13,8 +13,10 @@ Uso:
   python check_live_waf.py <usuario>
 """
 import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tiktok_capture import normalizar_usuario, _diagnosticar_live
+from captura.tiktok_capture import normalizar_usuario, _diagnosticar_live
 
 
 def main():
