@@ -54,6 +54,11 @@ def parse_args() -> argparse.Namespace:
              "session_dir (ver transcripcion/video_transcriber.py) — cae a texto "
              "estático si no hay datos de palabra.",
     )
+    p.add_argument(
+        "--mood", default="neutral",
+        help="Mezcla música de fondo de edicion_video/assets/musica/<mood>/ "
+             "(default: 'neutral'). Sin efecto si esa carpeta no tiene pistas.",
+    )
     return p.parse_args()
 
 
@@ -153,6 +158,7 @@ def main() -> None:
         args.linea1 or "", args.linea2 or "",
         clip_path, font_rel, has_lb, bar_h,
         session_dir=session_dir if args.animado else None,
+        mood=args.mood,
     )
 
     if not ok:

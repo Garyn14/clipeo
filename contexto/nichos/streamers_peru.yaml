@@ -164,6 +164,14 @@ contenido_base:
     La frase debe sonar natural, como si la
     omisión del sujeto fuera intencional.
 
+    MOOD DEL CLIP — elige uno según la emoción dominante del momento:
+    - "tension"     → rivalidad, confrontación, denuncia, algo que genera
+                      incomodidad o expectativa de conflicto
+    - "comedia"      → burla, meme, humor autoconsciente, ironía
+    - "revelacion"   → descubrimiento, dato sorprendente, "no puede ser"
+    - "neutral"      → informativo o sin carga emocional fuerte, usar solo
+                      si ninguno de los anteriores encaja bien
+
     FORMATO DE RESPUESTA — solo JSON válido:
     {
       "score": 9,
@@ -171,7 +179,8 @@ contenido_base:
       "texto_linea1": "frase con personaje + acción",
       "texto_linea2": "remate con emoji al final 😱",
       "hashtags": ["#kickperu", "#viral"],
-      "razon_score": "motivo del score"
+      "razon_score": "motivo del score",
+      "mood": "tension"
     }
 
 refinamiento_base:

@@ -312,6 +312,10 @@ def run_agent(rangos_path: str, config: dict) -> list[dict]:
         merged_tags = list(dict.fromkeys(hashtags_base + claude_tags))
         resultado["hashtags"] = merged_tags
 
+        # Default defensivo por si el prompt no pide/Claude omite el mood
+        # (usado por Agente 4 para elegir música de fondo — ver edicion_video/)
+        resultado.setdefault("mood", "neutral")
+
         # Aplicar score mínimo del config
         score    = resultado.get("score", 0)
         publicar = score >= score_minimo

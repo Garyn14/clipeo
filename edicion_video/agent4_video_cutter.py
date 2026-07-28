@@ -17,6 +17,7 @@ import sys
 sys.stdout.reconfigure(encoding="utf-8")
 
 import json
+import random
 import re
 import shutil
 import subprocess
@@ -79,6 +80,24 @@ def _sanitize_text(text: str) -> str:
 
 
 _EMOJI_ASSETS_DIR = Path(__file__).parent / "assets" / "emoji"
+_MUSICA_DIR        = Path(__file__).parent / "assets" / "musica"
+_MUSICA_VOLUMEN    = 0.15  # bajo, para no tapar el diálogo original
+
+
+def _pick_music_track(mood: str) -> Path | None:
+    """
+    Elige (al azar) una pista de edicion_video/assets/musica/<mood>/ para
+    mezclar de fondo. Cae a la carpeta "neutral" si el mood pedido no tiene
+    pistas propias, y retorna None si no hay ninguna disponible — el clip
+    sale sin música de fondo en vez de fallar el corte por esto.
+    """
+    for candidate in (mood, "neutral"):
+        carpeta = _MUSICA_DIR / candidate
+        if carpeta.is_dir():
+            pistas = [p for p in carpeta.iterdir() if p.suffix.lower() in (".mp3", ".wav", ".m4a")]
+            if pistas:
+                return random.choice(pistas)
+    return None
 
 
 def _get_emoji_image(char: str) -> Path | None:
@@ -484,6 +503,7 @@ def _cut_clip(
     output_path: Path, font_rel: str,
     has_letterbox: bool, bar_height: int,
     session_dir: Path | None = None,
+    mood: str = "neutral",
 ) -> bool:
     """
     Corta [inicio, fin] del video y quema las dos líneas de texto.
@@ -492,6 +512,10 @@ def _cut_clip(
     intenta primero subtítulos animados palabra por palabra; si no hay datos
     de palabra o ese intento falla, cae al subtítulo estático de dos líneas;
     si eso también falla, corta sin ningún texto — nunca se pierde el clip.
+
+    Si hay una pista en edicion_video/assets/musica/<mood>/ (ver
+    _pick_music_track), se mezcla de fondo a bajo volumen en los tres casos
+    — la música es independiente de si el subtítulo rindió bien o no.
     """
     inicio   = _normalize_timestamp(inicio)
     fin      = _normalize_timestamp(fin)
@@ -526,72 +550,83 @@ def _cut_clip(
         print(f"         Layout  : Caso B — vertical nativo")
         print(f"         Texto visible : {params['duracion_texto_seg']:.1f}s (según velocidad de lectura)")
 
-    if overlays:
-        print(f"         Emoji   : {len(overlays)} superpuesto(s) como imagen (drawtext no soporta color)")
-        filter_complex = f"[0:v]{vf}[v0]"
-        label = "v0"
-        for i, ov in enumerate(overlays):
-            emoji_label = f"e{i}"
-            next_label  = f"v{i + 1}"
-            filter_complex += f";[{i + 1}:v]scale={ov['size']}:{ov['size']},format=rgba[{emoji_label}]"
-            enable_opt = f":enable='{ov['enable']}'" if ov.get("enable") else ""
-            filter_complex += f";[{label}][{emoji_label}]overlay=x={ov['x']}:y={ov['y']}{enable_opt}[{next_label}]"
-            label = next_label
+    musica_path = _pick_music_track(mood)
+    if musica_path:
+        print(f"         Música  : mood='{mood}' → {musica_path.name}")
 
-        cmd_con_subtitulo = ["ffmpeg", "-ss", inicio, "-i", str(video_path)]
-        for ov in overlays:
-            cmd_con_subtitulo += ["-i", str(ov["path"])]
-        cmd_con_subtitulo += [
+    def _ffmpeg_cmd(filter_complex_video: str, extra_inputs: list[Path]) -> list[str]:
+        """
+        Arma el comando ffmpeg completo a partir de un filtro de video ya
+        armado (debe terminar en [outv]): agrega los inputs de imagen que
+        ese filtro referencia, mezcla la música de fondo si hay una elegida,
+        y arma el mapeo final de video+audio.
+        """
+        inputs = ["-ss", inicio, "-i", str(video_path)]
+        for p in extra_inputs:
+            inputs += ["-i", str(p)]
+
+        fc       = filter_complex_video
+        map_args = ["-map", "[outv]"]
+
+        if musica_path:
+            music_idx = 1 + len(extra_inputs)
+            inputs += ["-stream_loop", "-1", "-i", str(musica_path)]
+            fc += (
+                f";[{music_idx}:a]volume={_MUSICA_VOLUMEN}[music_low]"
+                f";[0:a][music_low]amix=inputs=2:duration=first:dropout_transition=0:normalize=0[outa]"
+            )
+            map_args += ["-map", "[outa]"]
+        else:
+            map_args += ["-map", "0:a"]
+
+        return [
+            "ffmpeg", *inputs,
             "-t", str(duracion), "-v", "error",
-            "-filter_complex", filter_complex,
-            "-map", f"[{label}]", "-map", "0:a",
+            "-filter_complex", fc,
+            *map_args,
             "-c:v", "libx264", "-c:a", "aac", "-y",
             str(output_path),
         ]
-    else:
-        cmd_con_subtitulo = [
-            "ffmpeg", "-ss", inicio, "-i", str(video_path),
-            "-t", str(duracion), "-v", "error",
-            "-vf", vf,
-            "-c:v", "libx264", "-c:a", "aac", "-y",
-            str(output_path),
-        ]
-
-    cmd_sin_subtitulo = [
-        "ffmpeg", "-ss", inicio, "-i", str(video_path),
-        "-t", str(duracion), "-v", "error",
-        "-vf", "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2",
-        "-c:v", "libx264", "-c:a", "aac", "-y",
-        str(output_path),
-    ]
 
     attempts = []
 
     if session_dir is not None:
-        inicio_s = _timestamp_to_seconds(inicio)
-        words    = _load_word_timings(session_dir, inicio_s, inicio_s + duracion)
+        inicio_s   = _timestamp_to_seconds(inicio)
+        words      = _load_word_timings(session_dir, inicio_s, inicio_s + duracion)
         vf_animado = _build_vf_animated(words, font_rel) if words else None
         if vf_animado:
             print(f"         Subtítulos: animados por palabra ({len(words)} palabras)")
-            attempts.append(("animado", [
-                "ffmpeg", "-ss", inicio, "-i", str(video_path),
-                "-t", str(duracion), "-v", "error",
-                "-vf", vf_animado,
-                "-c:v", "libx264", "-c:a", "aac", "-y",
-                str(output_path),
-            ]))
+            attempts.append(("animado", _ffmpeg_cmd(f"[0:v]{vf_animado}[outv]", [])))
         else:
             print(f"         Subtítulos: sin palabras.json/datos — usando texto estático")
 
-    attempts.append(("con subtítulo", cmd_con_subtitulo))
-    attempts.append(("sin subtítulo", cmd_sin_subtitulo))
+    if overlays:
+        print(f"         Emoji   : {len(overlays)} superpuesto(s) como imagen (drawtext no soporta color)")
+        fc_static = f"[0:v]{vf}[v0]"
+        label = "v0"
+        for i, ov in enumerate(overlays):
+            emoji_label = f"e{i}"
+            next_label  = "outv" if i == len(overlays) - 1 else f"v{i + 1}"
+            fc_static  += f";[{i + 1}:v]scale={ov['size']}:{ov['size']},format=rgba[{emoji_label}]"
+            enable_opt  = f":enable='{ov['enable']}'" if ov.get("enable") else ""
+            fc_static  += f";[{label}][{emoji_label}]overlay=x={ov['x']}:y={ov['y']}{enable_opt}[{next_label}]"
+            label = next_label
+        attempts.append(("con subtítulo", _ffmpeg_cmd(fc_static, [ov["path"] for ov in overlays])))
+    else:
+        attempts.append(("con subtítulo", _ffmpeg_cmd(f"[0:v]{vf}[outv]", [])))
+
+    attempts.append(("sin subtítulo", _ffmpeg_cmd(
+        "[0:v]scale=1080:1920:force_original_aspect_ratio=decrease,"
+        "pad=1080:1920:(ow-iw)/2:(oh-ih)/2[outv]",
+        [],
+    )))
 
     for label, cmd in attempts:
         result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
         if result.returncode == 0:
-            if label == "sin subtítulo":
+            if label == "sin subtítulo" and len(attempts) > 1:
                 print(f"  ⚠️  Subtítulo falló — clip guardado sin texto")
-            elif label == "con subtítulo" and len(attempts) > 2:
+            elif label == "con subtítulo" and attempts[0][0] == "animado":
                 print(f"  ⚠️  Subtítulo animado falló — clip guardado con texto estático")
             return True
         if label != "sin subtítulo":
@@ -659,6 +694,7 @@ def run_agent(
         linea2   = item.get("texto_linea2",       "")
         hashtags = item.get("hashtags",           [])
         score    = item.get("score",              0)
+        mood     = item.get("mood",                "neutral")
 
         clip_name = f"clip_{i + 1 + clip_offset:03d}.mp4"
         meta_name = f"clip_{i + 1 + clip_offset:03d}.json"
@@ -673,7 +709,7 @@ def run_agent(
 
         ok = _cut_clip(
             video_path, inicio, fin, linea1, linea2, clip_path, font_rel, has_lb, bar_h,
-            session_dir=session_dir,
+            session_dir=session_dir, mood=mood,
         )
 
         if ok:

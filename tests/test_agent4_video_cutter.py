@@ -5,11 +5,13 @@ test_agent4_video_cutter.py — Tests unitarios para _sanitize_text()
 
 import json
 
+import edicion_video.agent4_video_cutter as avc
 from edicion_video.agent4_video_cutter import (
     _sanitize_text,
     _text_display_duration,
     _load_word_timings,
     _build_vf_animated,
+    _pick_music_track,
 )
 
 
@@ -94,3 +96,27 @@ def test_build_vf_animated_una_palabra_por_drawtext():
     assert vf.count("drawtext=") == 2
     assert "text='Esto'" in vf
     assert "text='es'" in vf
+
+
+def test_pick_music_track_elige_de_la_carpeta_del_mood(tmp_path, monkeypatch):
+    monkeypatch.setattr(avc, "_MUSICA_DIR", tmp_path)
+    (tmp_path / "tension").mkdir()
+    pista = tmp_path / "tension" / "track.mp3"
+    pista.write_bytes(b"fake mp3")
+
+    assert _pick_music_track("tension") == pista
+
+
+def test_pick_music_track_cae_a_neutral_si_mood_vacio(tmp_path, monkeypatch):
+    monkeypatch.setattr(avc, "_MUSICA_DIR", tmp_path)
+    (tmp_path / "comedia").mkdir()  # existe pero vacía
+    (tmp_path / "neutral").mkdir()
+    pista = tmp_path / "neutral" / "track.mp3"
+    pista.write_bytes(b"fake mp3")
+
+    assert _pick_music_track("comedia") == pista
+
+
+def test_pick_music_track_retorna_none_sin_ninguna_pista(tmp_path, monkeypatch):
+    monkeypatch.setattr(avc, "_MUSICA_DIR", tmp_path)
+    assert _pick_music_track("tension") is None
