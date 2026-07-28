@@ -740,7 +740,7 @@ def _run_video_chunks(
         print(f"{'═' * 47}")
         print(f"  Cero llamadas a Claude en esta sesión (modo: manual).")
         print(f"  Para cortar tus clips y guardarlos como ejemplos, usá:")
-        print(f"    python clip_manual.py --video {video_path} \\")
+        print(f"    python entrenamiento/clip_manual.py --video {video_path} \\")
         print(f"      --inicio HH:MM:SS --fin HH:MM:SS \\")
         print(f"      --linea1 \"...\" --linea2 \"...\" \\")
         print(f"      --config {canal_id} --entrenamiento")
@@ -813,7 +813,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--manual", action="store_true", default=False,
         help="Solo --video: descarga + transcribe y se detiene. Sin Agente 0 ni Agentes 1-4 "
-             "(cero llamadas a Claude). Usar junto con clip_manual.py --entrenamiento.",
+             "(cero llamadas a Claude). Usar junto con entrenamiento/clip_manual.py --entrenamiento.",
     )
 
     args = parser.parse_args()

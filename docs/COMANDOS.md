@@ -10,17 +10,17 @@ Todos los comandos se ejecutan desde la raíz del proyecto y requieren `.env` co
 
 ### 1.1 Capturar un TikTok Live en curso
 
-`tiktok_capture.py` **solo graba** — no transcribe ni analiza. Corta el live en archivos `.mp4` de duración fija mientras esté activo.
+`captura/tiktok_capture.py` **solo graba** — no transcribe ni analiza. Corta el live en archivos `.mp4` de duración fija mientras esté activo.
 
 ```bash
 # Grabar con el tamaño de chunk por defecto (30 min)
-python tiktok_capture.py --usuario @fritzsport
+python captura/tiktok_capture.py --usuario @fritzsport
 
 # Grabar en chunks de 1 minuto (pruebas rápidas)
-python tiktok_capture.py --usuario fritzsport --chunk 1m
+python captura/tiktok_capture.py --usuario fritzsport --chunk 1m
 
 # Grabar en chunks de 2 horas
-python tiktok_capture.py --usuario @fritzsport --chunk 2h
+python captura/tiktok_capture.py --usuario @fritzsport --chunk 2h
 ```
 
 - El `@` es opcional, se normaliza igual.
@@ -39,7 +39,7 @@ python pipeline.py --video https://www.tiktok.com/@fritzsport/video/123456789
 python pipeline.py --video https://www.tiktok.com/@fritzsport/video/123456789 --config zapatillas_peru
 python pipeline.py --video https://kick.com/sideral --config streamers_peru
 
-# Procesar un chunk grabado localmente por tiktok_capture.py
+# Procesar un chunk grabado localmente por captura/tiktok_capture.py
 python pipeline.py --video "stream_data/tiktok_fritzsport_20260705_120000/chunk_001.mp4" --config zapatillas_peru
 
 # Con revisión manual antes de cortar cada clip
@@ -69,7 +69,7 @@ python pipeline.py --test stream_data/20260704_170532/ --config zapatillas_peru 
 python pipeline.py --live https://www.tiktok.com/@fritzsport/live --config zapatillas_peru
 ```
 
-Este modo delega a un `capture_pipeline.py` en la raíz que **ya no existe** (fue archivado en `archive/capture_pipeline.py`). No lo uses — en su lugar combiná 1.1 + 1.2 (`tiktok_capture.py` para grabar, `pipeline.py --video` para procesar cada chunk).
+Este modo delega a un `capture_pipeline.py` en la raíz que **ya no existe** (fue archivado en `archive/capture_pipeline.py`). No lo uses — en su lugar combiná 1.1 + 1.2 (`captura/tiktok_capture.py` para grabar, `pipeline.py --video` para procesar cada chunk).
 
 ---
 
@@ -80,7 +80,7 @@ Este modo delega a un `capture_pipeline.py` en la raíz que **ya no existe** (fu
 Recorre los clips de una sesión, pide tu evaluación por clip, y usa Claude para destilar ese feedback en reglas que el Agente 3 reutilizará en publicaciones futuras del mismo canal.
 
 ```bash
-python feedback.py --session 20260704_170532
+python contexto/feedback.py --session 20260704_170532
 ```
 
 - `--session` es el nombre del directorio dentro de `stream_data/` (no la ruta completa).
@@ -93,7 +93,7 @@ python feedback.py --session 20260704_170532
 Corta un rango de tiempo arbitrario del video de una sesión, con o sin texto quemado, sin pasar por los Agentes 1-3 ni por `contenido.json`. Útil para un momento que viste vos mismo y el sistema no detectó.
 
 ```bash
-python clip_manual.py \
+python entrenamiento/clip_manual.py \
   --video "stream_data/20260704_170532/stream_completo.mp4" \
   --inicio 00:14:22 --fin 00:15:40 \
   --linea1 "Fritz reta a Yolu en vivo" \
@@ -101,7 +101,7 @@ python clip_manual.py \
   --config zapatillas_peru
 
 # Sin texto (clip limpio)
-python clip_manual.py \
+python entrenamiento/clip_manual.py \
   --video "stream_data/20260704_170532/stream_completo.mp4" \
   --inicio 00:14:22 --fin 00:15:40
 ```
@@ -114,8 +114,8 @@ python clip_manual.py \
 Solo aplica a entidades del Módulo Contexto v2 (`contexto/entidades/`). Usa la búsqueda web nativa de Claude para encontrar novedades recientes y, tras tu aprobación, las guarda como eventos de contexto.
 
 ```bash
-python contexto_refresh.py fritz
-python contexto_refresh.py sideral --max-busquedas 8
+python contexto/contexto_refresh.py fritz
+python contexto/contexto_refresh.py sideral --max-busquedas 8
 ```
 
 - El primer argumento es el `id` de la entidad (nombre del archivo en `contexto/entidades/<id>.yaml`, sin extensión).
@@ -130,24 +130,24 @@ Cada agente puede correrse aislado apuntándolo al JSON/txt que produce la etapa
 
 ```bash
 # Agente 0 — identificación de hablantes (requiere transcripción con diarización)
-python core/agent0_speaker_identifier.py stream_data/<session>/transcripcion_raw.txt stream_data/<session>/metadata.json
+python agentes/agent0_speaker_identifier.py stream_data/<session>/transcripcion_raw.txt stream_data/<session>/metadata.json
 
 # Agente 1 — detección de picos
-python agent1_peak_detector.py stream_data/<session>/transcripcion_completa.txt zapatillas_peru
+python agentes/agent1_peak_detector.py stream_data/<session>/transcripcion_completa.txt zapatillas_peru
 
 # Agente 2 — refinamiento de rangos (lee picos.json de la misma carpeta)
-python agent2_range_refiner.py stream_data/<session>/picos.json zapatillas_peru
+python agentes/agent2_range_refiner.py stream_data/<session>/picos.json zapatillas_peru
 
 # Agente 3 — scoring y generación de contenido (lee rangos.json de la misma carpeta)
-python agent3_viral_scorer.py stream_data/<session>/rangos.json zapatillas_peru
+python agentes/agent3_viral_scorer.py stream_data/<session>/rangos.json zapatillas_peru
 
 # Agente 4 — corte de video (lee contenido.json; busca el video más grande en esa carpeta)
-python agent4_video_cutter.py stream_data/<session>/contenido.json
+python edicion_video/agent4_video_cutter.py stream_data/<session>/contenido.json
 ```
 
 Notas:
 - El Agente 4 no recibe `canal_id` — no usa Claude ni config, solo corta con FFmpeg.
-- `core/config_loader.py` también puede correrse directo (`python core/config_loader.py`) — no es un comando de flujo de trabajo, es un self-test que imprime casos de carga de config único/ecosistema/fallback.
+- `contexto/config_loader.py` también puede correrse directo (`python contexto/config_loader.py`) — no es un comando de flujo de trabajo, es un self-test que imprime casos de carga de config único/ecosistema/fallback.
 
 ---
 

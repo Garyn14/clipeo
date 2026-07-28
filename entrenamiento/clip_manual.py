@@ -2,7 +2,7 @@
 clip_manual.py — Corta un clip manual con texto sin necesitar contenido.json.
 
 Uso:
-  python clip_manual.py --video stream_data/<session_id>/stream_completo.mp4
+  python entrenamiento/clip_manual.py --video stream_data/<session_id>/stream_completo.mp4
                         --inicio HH:MM:SS --fin HH:MM:SS
                         --linea1 "texto línea 1"
                         --linea2 "texto línea 2 con emoji"
@@ -22,6 +22,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
 from edicion_video.agent4_video_cutter import (
     _cut_clip,
     _prepare_font,

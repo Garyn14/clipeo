@@ -25,6 +25,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
 from core.utils import _timestamp_to_seconds, setup_ffmpeg_path
 setup_ffmpeg_path()
 

@@ -39,14 +39,14 @@ python pipeline.py --live  <url>   # currently broken — see note below
 **`--live` is currently non-functional**: it shells out to a `capture_pipeline.py` at the project root that no longer exists (it was moved to `archive/capture_pipeline.py`, an older v1.1 script using classic `whisper` instead of WhisperX). The supported path for live streams today is:
 
 ```
-python tiktok_capture.py --usuario @handle [--chunk 30m]   # records live to disk in chunks
+python captura/tiktok_capture.py --usuario @handle [--chunk 30m]   # records live to disk in chunks
 python pipeline.py --video stream_data/<session>/chunk_001.mp4 --config <canal_id>  # process each recorded chunk
 ```
 
 Other standalone tools:
-- `feedback.py --session <session_id>` — collect human feedback on generated clips, distilled by Claude into `aprendizajes/<canal_id>_optimizado.md` (fed back into Agent 3's prompt).
-- `clip_manual.py --video ... --inicio ... --fin ... --linea1 ... --linea2 ...` — cut one manual clip bypassing agents 1–4.
-- `contexto_refresh.py <entidad_id>` — web-search recent news about an entity and save approved findings as context events.
+- `contexto/feedback.py --session <session_id>` — collect human feedback on generated clips, distilled by Claude into `aprendizajes/<canal_id>_optimizado.md` (fed back into Agent 3's prompt).
+- `entrenamiento/clip_manual.py --video ... --inicio ... --fin ... --linea1 ... --linea2 ...` — cut one manual clip bypassing agents 1–4.
+- `contexto/contexto_refresh.py <entidad_id>` — web-search recent news about an entity and save approved findings as context events.
 - Ctrl+C during `--video`/`--live` processing waits for the in-flight chunk, then stops; chunk progress is checkpointed in `pipeline_estado.json` and resumable.
 
 ## Configuration systems
@@ -80,5 +80,5 @@ stream_data/<session_id>/            (session_id = YYYYMMDD_HHMMSS, or tiktok_<u
   contenido_chunks/<chunk_id>.json   per-chunk content summary (post --revisar if used)
   contenido_final.json               merge of all chunks, sorted by score
   clips/clip_NNN.mp4 + .json          Agent 4 output, continuous numbering across chunks
-  clips_custom/                      manual clips from clip_manual.py
+  clips_custom/                      manual clips from entrenamiento/clip_manual.py
 ```
