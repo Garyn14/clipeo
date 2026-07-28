@@ -144,7 +144,7 @@ Diferencia clave con v1: en v2 **todas** las entidades listadas en el nicho se m
      aprendizaje: <string>   # frase auto-generada resumiendo el/los cambio(s); si hay corrección de título Y de rango, ambas frases van concatenadas con " | "
    ```
    Solo se guarda evento si algo cambió realmente respecto a lo propuesto por el Agente 3 (título) o el Agente 2 (rango) — aprobar sin editar no genera archivo.
-2. **De búsqueda web** (`contexto_refresh.py`): `refresh_<entidad>_<hora>.yaml`:
+2. **De búsqueda web** (`contexto/contexto_refresh.py`): `refresh_<entidad>_<hora>.yaml`:
    ```yaml
    evento:
      tipo: refresh_noticia
@@ -160,10 +160,10 @@ Diferencia clave con v1: en v2 **todas** las entidades listadas en el nicho se m
 
 ### 1.3 `aprendizajes/` — reglas destiladas de feedback humano
 
-No es config inicial sino **memoria acumulada que se retroalimenta al Agente 3** después de publicar clips y evaluarlos (`feedback.py`). Dos archivos por canal:
+No es config inicial sino **memoria acumulada que se retroalimenta al Agente 3** después de publicar clips y evaluarlos (`contexto/feedback.py`). Dos archivos por canal:
 
-- **`aprendizajes/<canal_id>.md`** — historial completo, append-only, en lenguaje natural. Cada corrida de `feedback.py` agrega una sección con fecha, texto generado por el sistema vs. corrección humana, y el análisis de Claude sobre por qué funcionó o no. Es para trazabilidad/lectura humana — **no se carga en ningún prompt**.
-- **`aprendizajes/<canal_id>_optimizado.md`** — solo reglas que Claude marcó como *generalizables* (no específicas de un clip puntual), en formato de lista corta bajo encabezados temáticos (`## Estilo de texto del clip`, `## Aprendizajes de feedback`, etc.). **Este sí se carga por el Agente 3** (`agent3_viral_scorer.py::run_agent()`) y se inyecta en el bloque cacheado del prompt como "REGLAS ACTIVAS DEL NICHO" — es lo que hace que el sistema mejore su copywriting con el tiempo sin tocar el YAML de config.
+- **`aprendizajes/<canal_id>.md`** — historial completo, append-only, en lenguaje natural. Cada corrida de `contexto/feedback.py` agrega una sección con fecha, texto generado por el sistema vs. corrección humana, y el análisis de Claude sobre por qué funcionó o no. Es para trazabilidad/lectura humana — **no se carga en ningún prompt**.
+- **`aprendizajes/<canal_id>_optimizado.md`** — solo reglas que Claude marcó como *generalizables* (no específicas de un clip puntual), en formato de lista corta bajo encabezados temáticos (`## Estilo de texto del clip`, `## Aprendizajes de feedback`, etc.). **Este sí se carga por el Agente 3** (`agentes/agent3_viral_scorer.py::run_agent()`) y se inyecta en el bloque cacheado del prompt como "REGLAS ACTIVAS DEL NICHO" — es lo que hace que el sistema mejore su copywriting con el tiempo sin tocar el YAML de config.
 - **`aprendizajes.md`** (en la raíz, no dentro de la carpeta) es un manifiesto corto, no datos de un canal: explica el propósito de la carpeta y reserva un espacio para "patrones universales confirmados en más de un nicho" — hoy vacío, pendiente de los primeros datos cruzados entre nichos.
 
 ### 1.4 Cómo se relacionan los tres sistemas de "saber del dominio"
@@ -173,7 +173,7 @@ No es config inicial sino **memoria acumulada que se retroalimenta al Agente 3**
 | Origen | Escrito a mano por el operador | Escrito a mano por el operador | Generado por Claude a partir de feedback humano |
 | Cuándo se mezcla | Solo si el Agente 0 detecta que ese personaje habló | Siempre, para todas las entidades del nicho | Siempre, en cada llamada del Agente 3 |
 | Qué aporta | Lore + lenguaje/hashtags específicos del personaje | Lore + lenguaje/hashtags específicos de la entidad | Reglas de estilo/formato validadas por resultados reales |
-| Se actualiza con | Edición manual del YAML | Edición manual del YAML + eventos curados a mano | `feedback.py` (automático tras aprobación humana) |
+| Se actualiza con | Edición manual del YAML | Edición manual del YAML + eventos curados a mano | `contexto/feedback.py` (automático tras aprobación humana) |
 
 ### 1.5 Nota sobre `personajes` y limpieza de nombres bajo v2
 
@@ -183,16 +183,16 @@ No es config inicial sino **memoria acumulada que se retroalimenta al Agente 3**
 
 ## Parte 2 — Datos de sesión (`stream_data/`)
 
-Cada ejecución vive en `stream_data/<session_id>/` (formato `YYYYMMDD_HHMMSS`, o `tiktok_<usuario>_<timestamp>` si viene de `tiktok_capture.py`). El directorio es también el "bus de datos" entre etapas: cada agente lee el JSON que dejó el anterior y escribe el suyo al lado.
+Cada ejecución vive en `stream_data/<session_id>/` (formato `YYYYMMDD_HHMMSS`, o `tiktok_<usuario>_<timestamp>` si viene de `captura/tiktok_capture.py`). El directorio es también el "bus de datos" entre etapas: cada agente lee el JSON que dejó el anterior y escribe el suyo al lado.
 
 ### 2.1 Archivos de nivel de sesión
 
 | Archivo | Escrito por | Contiene |
 |---|---|---|
-| `metadata.json` | `core/video_capture.py` | Dump crudo de `yt-dlp --dump-json`: título, descripción, uploader, duración, etc. Lo consume el Agente 0 (para inferir speakers) y el Agente 3 (fallback de nombre de personaje). |
-| `stream_completo.mp4` | `core/video_capture.py` | Video fuente completo descargado (≤1080p). |
-| `audio/audio_completo.mp3` | `core/video_capture.py` | Audio completo extraído del video. |
-| `captura_estado.json` | `tiktok_capture.py` | Solo en sesiones de captura en vivo: usuario, url, `chunk_segundos`, lista de chunks grabados con su rango de tiempo real y estado (`listo`/`parcial`). |
+| `metadata.json` | `captura/video_capture.py` | Dump crudo de `yt-dlp --dump-json`: título, descripción, uploader, duración, etc. Lo consume el Agente 0 (para inferir speakers) y el Agente 3 (fallback de nombre de personaje). |
+| `stream_completo.mp4` | `captura/video_capture.py` | Video fuente completo descargado (≤1080p). |
+| `audio/audio_completo.mp3` | `captura/video_capture.py` | Audio completo extraído del video. |
+| `captura_estado.json` | `captura/tiktok_capture.py` | Solo en sesiones de captura en vivo: usuario, url, `chunk_segundos`, lista de chunks grabados con su rango de tiempo real y estado (`listo`/`parcial`). |
 | `pipeline_estado.json` | `core/chunk_manager.py` | Plan de chunks de **procesamiento** (distinto del de captura): url, config, duración total, tamaño de chunk, y un dict `chunks` con `{inicio_segundos, fin_segundos, inicio_ts, fin_ts, estado: pendiente\|completado\|fallido, error?}` por chunk. Es lo que permite reanudar una sesión cortada. |
 | `contenido_final.json` | `pipeline.py` | Merge de todos los `contenido_chunks/*.json` de la sesión, ordenado por `score` descendente. Mismo esquema que `contenido.json` (ver abajo). |
 
@@ -200,13 +200,13 @@ Cada ejecución vive en `stream_data/<session_id>/` (formato `YYYYMMDD_HHMMSS`, 
 
 | Archivo | Escrito por | Esquema / contenido |
 |---|---|---|
-| `transcripcion_raw.txt` | `core/video_transcriber.py` | Texto plano, una línea por segmento: `[MM:SS] SPEAKER_XX: "texto"` (con diarización) o `[MM:SS] texto` (sin ella). Timestamps ya ajustados al offset real dentro del video completo. |
-| `transcripcion_enriquecida.txt` | `core/agent0_speaker_identifier.py` | Mismo formato, con `SPEAKER_XX` reemplazado por el nombre real donde la confianza fue alta, o marcado `SPEAKER_XX [sin identificar]:` donde no. Es la que prefieren leer los Agentes 1/2/3 cuando existe. |
+| `transcripcion_raw.txt` | `transcripcion/video_transcriber.py` | Texto plano, una línea por segmento: `[MM:SS] SPEAKER_XX: "texto"` (con diarización) o `[MM:SS] texto` (sin ella). Timestamps ya ajustados al offset real dentro del video completo. |
+| `transcripcion_enriquecida.txt` | `agentes/agent0_speaker_identifier.py` | Mismo formato, con `SPEAKER_XX` reemplazado por el nombre real donde la confianza fue alta, o marcado `SPEAKER_XX [sin identificar]:` donde no. Es la que prefieren leer los Agentes 1/2/3 cuando existe. |
 | `transcripcion_completa.txt` | varios | Copia de compatibilidad de la transcripción vigente (raw o enriquecida) bajo el nombre legacy que usan los modos `--test` y la lectura por defecto de los agentes. |
-| `speaker_map.json` | `core/agent0_speaker_identifier.py` | `{"SPEAKER_00": {"nombre": <string|null>, "confianza": <float>, "estado": "confirmado"\|"posible"\|"desconocido"}, ...}` |
-| `picos.json` | `agent1_peak_detector.py` | `{"picos": [{"timestamp": "MM:SS", "razon": <string>, "confianza": <float 0-1>, "tipo"?: <string>}, ...]}` — ya filtrado por `confianza_minima`. |
-| `rangos.json` | `agent2_range_refiner.py` | `{"rangos": [{"conservar": <bool>, "inicio": "HH:MM:SS", "fin": "HH:MM:SS", "duracion_segundos": <int>, "razon": <string>, "gancho": <string>, "pico_original": {...picos.json item}}, ...]}` — puede haber menos rangos que picos (fusión de picos solapados) o rangos con `"conservar": false` (descartados, sin campos de tiempo). |
-| `contenido.json` | `agent3_viral_scorer.py` | `{"contenido": [{"score": <int 1-10>, "publicar": <bool>, "texto_linea1": <string>, "texto_linea2": <string>, "hashtags": [<string>,...], "razon_score": <string>, "rango_original": {...rangos.json item}}, ...]}` — solo incluye rangos que tenían `conservar: true`. Si `--revisar` estaba activo, este archivo se reescribe tras la revisión con los `publicar` ajustados y ediciones de texto/rango aplicadas. |
+| `speaker_map.json` | `agentes/agent0_speaker_identifier.py` | `{"SPEAKER_00": {"nombre": <string|null>, "confianza": <float>, "estado": "confirmado"\|"posible"\|"desconocido"}, ...}` |
+| `picos.json` | `agentes/agent1_peak_detector.py` | `{"picos": [{"timestamp": "MM:SS", "razon": <string>, "confianza": <float 0-1>, "tipo"?: <string>}, ...]}` — ya filtrado por `confianza_minima`. |
+| `rangos.json` | `agentes/agent2_range_refiner.py` | `{"rangos": [{"conservar": <bool>, "inicio": "HH:MM:SS", "fin": "HH:MM:SS", "duracion_segundos": <int>, "razon": <string>, "gancho": <string>, "pico_original": {...picos.json item}}, ...]}` — puede haber menos rangos que picos (fusión de picos solapados) o rangos con `"conservar": false` (descartados, sin campos de tiempo). |
+| `contenido.json` | `agentes/agent3_viral_scorer.py` | `{"contenido": [{"score": <int 1-10>, "publicar": <bool>, "texto_linea1": <string>, "texto_linea2": <string>, "hashtags": [<string>,...], "razon_score": <string>, "rango_original": {...rangos.json item}}, ...]}` — solo incluye rangos que tenían `conservar: true`. Si `--revisar` estaba activo, este archivo se reescribe tras la revisión con los `publicar` ajustados y ediciones de texto/rango aplicadas. |
 
 ### 2.3 Archivos de nivel de sesión derivados de chunks
 
@@ -219,9 +219,9 @@ Cada ejecución vive en `stream_data/<session_id>/` (formato `YYYYMMDD_HHMMSS`, 
 
 | Archivo | Escrito por | Esquema |
 |---|---|---|
-| `clips/clip_NNN.mp4` | `agent4_video_cutter.py` | Video vertical 1080x1920 con subtítulo quemado (o sin él, si el subtítulo falló). Numeración continua entre chunks de la misma sesión (`clip_offset`). |
-| `clips/clip_NNN.json` | `agent4_video_cutter.py` | `{"clip": <filename>, "texto_linea1", "texto_linea2", "hashtags", "score", "duracion_segundos", "listo_para_publicar": false}` — el flag queda siempre en `false`; publicarlo o no es una decisión humana posterior. |
-| `clips_custom/custom_<timestamp>.mp4` + `.json` | `clip_manual.py` | Igual que arriba más `{"inicio", "fin", "config", "creado_manual": true, "fecha"}`. Separado de `clips/` para no interferir con la numeración automática. |
+| `clips/clip_NNN.mp4` | `edicion_video/agent4_video_cutter.py` | Video vertical 1080x1920 con subtítulo quemado (o sin él, si el subtítulo falló). Numeración continua entre chunks de la misma sesión (`clip_offset`). |
+| `clips/clip_NNN.json` | `edicion_video/agent4_video_cutter.py` | `{"clip": <filename>, "texto_linea1", "texto_linea2", "hashtags", "score", "duracion_segundos", "listo_para_publicar": false}` — el flag queda siempre en `false`; publicarlo o no es una decisión humana posterior. |
+| `clips_custom/custom_<timestamp>.mp4` + `.json` | `entrenamiento/clip_manual.py` | Igual que arriba más `{"inicio", "fin", "config", "creado_manual": true, "fecha"}`. Separado de `clips/` para no interferir con la numeración automática. |
 
 ### 2.5 Cómo leerlo de punta a punta
 

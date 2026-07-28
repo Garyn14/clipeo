@@ -10,15 +10,15 @@ Esto importa porque hay **tres mecanismos distintos** que generan este tipo de r
 
 | Mecanismo | Dispara con | Guarda en | ¿Se re-lee solo en la próxima sesión? |
 |---|---|---|---|
-| **A. Feedback post-publicación** | `feedback.py` | `aprendizajes/<canal>_optimizado.md` | ✅ Sí — el Agente 3 lo carga siempre |
+| **A. Feedback post-publicación** | `contexto/feedback.py` | `aprendizajes/<canal>_optimizado.md` | ✅ Sí — el Agente 3 lo carga siempre |
 | **B. Corrección/descarte en revisión** | `pipeline.py --revisar` | `contexto/eventos/<mes>/correccion_*.yaml` / `descarte_*.yaml` | ❌ No — queda como bitácora |
-| **C. Refresco de contexto externo** | `contexto_refresh.py` | `contexto/eventos/<mes>/refresh_*.yaml` | ❌ No — requiere curación manual |
+| **C. Refresco de contexto externo** | `contexto/contexto_refresh.py` | `contexto/eventos/<mes>/refresh_*.yaml` | ❌ No — requiere curación manual |
 
 Las secciones 1-3 desarrollan cada uno.
 
 ---
 
-## 1. Mecanismo A — Feedback post-publicación (`feedback.py`)
+## 1. Mecanismo A — Feedback post-publicación (`contexto/feedback.py`)
 
 Es el **único circuito cerrado automático** del sistema: lo que aprende acá se aplica solo, sin que nadie tenga que editar un YAML a mano.
 
@@ -27,15 +27,15 @@ Es el **único circuito cerrado automático** del sistema: lo que aprende acá s
 Después de publicar los clips de una sesión y esperar 24-48h a tener datos reales (vistas, comentarios, cómo reaccionó la audiencia), corrés:
 
 ```bash
-python feedback.py --session 20260704_170532
+python contexto/feedback.py --session 20260704_170532
 ```
 
 ### 1.2 Flujo paso a paso
 
-1. `feedback.py` carga todos los clips de `clips/` y `clips_custom/` de esa sesión, junto a su metadata (`texto_linea1/2`, score del sistema).
+1. `contexto/feedback.py` carga todos los clips de `clips/` y `clips_custom/` de esa sesión, junto a su metadata (`texto_linea1/2`, score del sistema).
 2. Detecta el `canal_id` desde `pipeline_estado.json` de la sesión (o lo pide si no lo encuentra).
 3. Por cada clip, pregunta si querés darle feedback. Si decís que sí, pide: tu propio score 1-10, la razón (qué viste vos que el sistema no consideró), y opcionalmente un título alternativo que hubieras preferido.
-4. Con todos los feedbacks juntos, llama una vez a Claude (`_call_claude` en `feedback.py`) con un prompt que le pide **destilar** ese feedback en dos salidas:
+4. Con todos los feedbacks juntos, llama una vez a Claude (`_call_claude` en `contexto/feedback.py`) con un prompt que le pide **destilar** ese feedback en dos salidas:
    - un **registro completo** en lenguaje natural (para el historial),
    - una **regla resumida** (máx. 2 líneas, accionable), y
    - un booleano `es_generalizable`: si el feedback aplica solo a ese clip puntual o si es un patrón que vale la pena recordar para el nicho en general.
@@ -46,7 +46,7 @@ python feedback.py --session 20260704_170532
 
 ### 1.3 Cómo se re-inyecta
 
-`agent3_viral_scorer.py::run_agent()` busca al arrancar `aprendizajes/<canal_id>_optimizado.md`. Si existe, lo carga entero y lo concatena al prompt de contenido como bloque cacheado (`cached_context`), bajo el encabezado `REGLAS ACTIVAS DEL NICHO:`, antes de evaluar cualquier clip. Esto pasa **en cada corrida futura** de ese canal — no hace falta tocar nada más.
+`agentes/agent3_viral_scorer.py::run_agent()` busca al arrancar `aprendizajes/<canal_id>_optimizado.md`. Si existe, lo carga entero y lo concatena al prompt de contenido como bloque cacheado (`cached_context`), bajo el encabezado `REGLAS ACTIVAS DEL NICHO:`, antes de evaluar cualquier clip. Esto pasa **en cada corrida futura** de ese canal — no hace falta tocar nada más.
 
 ### 1.4 Ejemplo real en este repo
 
@@ -88,7 +88,7 @@ En la práctica esto significa: correr `--revisar` te deja una **bitácora fecha
 
 ---
 
-## 3. Mecanismo C — Refresco de contexto externo (`contexto_refresh.py`)
+## 3. Mecanismo C — Refresco de contexto externo (`contexto/contexto_refresh.py`)
 
 Este es **el comando para "enriquecer" el contexto** al que probablemente te referís: a diferencia de A y B (que nacen de resultados/decisiones dentro del propio pipeline), este busca información **fuera** del sistema — noticias y novedades recientes sobre un personaje — y la deja disponible como contexto candidato.
 
@@ -97,8 +97,8 @@ Este es **el comando para "enriquecer" el contexto** al que probablemente te ref
 Cuando querés refrescar el conocimiento sobre una entidad del Módulo Contexto v2 (`contexto/entidades/`) con hechos recientes que Claude no tendría en su prompt base — una polémica nueva, un evento viral, un cambio de negocio.
 
 ```bash
-python contexto_refresh.py fritz
-python contexto_refresh.py sideral --max-busquedas 8
+python contexto/contexto_refresh.py fritz
+python contexto/contexto_refresh.py sideral --max-busquedas 8
 ```
 
 ### 3.2 Flujo paso a paso
@@ -111,7 +111,7 @@ python contexto_refresh.py sideral --max-busquedas 8
 
 ### 3.3 ⚠ Esto tampoco se re-inyecta solo — requiere un paso manual
 
-Igual que el Mecanismo B, estos eventos quedan en `config["eventos"]` sin que ningún agente los lea. Para que un hallazgo de `contexto_refresh.py` realmente cambie qué detecta o cómo redacta el sistema, alguien tiene que **copiarlo a mano** al `deteccion_adicional.prompt` o `contenido_adicional` de `contexto/entidades/<entidad_id>.yaml` (o a `deteccion_adicional`/`contenido_adicional` del YAML de personaje en v1).
+Igual que el Mecanismo B, estos eventos quedan en `config["eventos"]` sin que ningún agente los lea. Para que un hallazgo de `contexto/contexto_refresh.py` realmente cambie qué detecta o cómo redacta el sistema, alguien tiene que **copiarlo a mano** al `deteccion_adicional.prompt` o `contenido_adicional` de `contexto/entidades/<entidad_id>.yaml` (o a `deteccion_adicional`/`contenido_adicional` del YAML de personaje en v1).
 
 ### 3.4 Ejemplo real de esta promoción manual, ya ocurrida en este repo
 
@@ -121,7 +121,7 @@ Ese hallazgo fue promovido a mano dentro de `contexto/entidades/fritz.yaml`, en 
 - `deteccion_adicional.prompt`, que ahora dice explícitamente: *"El meme de 'tecnología' es el contenido MÁS VIRAL confirmado de este personaje — 81K vistas..."* como señal de alto valor para el Agente 1.
 - `contenido_adicional.tono`, que documenta el "PATRÓN GANADOR CONFIRMADO FRITZ (81K vistas)" con el ejemplo textual exacto, para que el Agente 3 lo replique.
 
-Este es el patrón a seguir cuando curás eventos de `contexto_refresh.py` (o de correcciones/descartes del Mecanismo B) manualmente: el evento vive en `contexto/eventos/` como registro fechado del hallazgo, y su versión resumida/accionable se copia al `deteccion_adicional`/`contenido_adicional` de la entidad para que efectivamente afecte prompts futuros.
+Este es el patrón a seguir cuando curás eventos de `contexto/contexto_refresh.py` (o de correcciones/descartes del Mecanismo B) manualmente: el evento vive en `contexto/eventos/` como registro fechado del hallazgo, y su versión resumida/accionable se copia al `deteccion_adicional`/`contenido_adicional` de la entidad para que efectivamente afecte prompts futuros.
 
 ---
 
@@ -147,7 +147,7 @@ Clips publicados (fuera del sistema, manual)
 24-48h después: resultados reales (vistas, comentarios)
         │
         ▼
-python feedback.py --session <id>          [A]
+python contexto/feedback.py --session <id>          [A]
         │
         ├─▶ aprendizajes/<canal>.md              (historial, siempre)
         └─▶ aprendizajes/<canal>_optimizado.md   (solo si generalizable)
@@ -161,7 +161,7 @@ python feedback.py --session <id>          [A]
 
 En paralelo, cuando corresponde:
 
-python contexto_refresh.py <entidad>         [C]
+python contexto/contexto_refresh.py <entidad>         [C]
         │
         ▼
 contexto/eventos/*/refresh_*.yaml   (bitácora — requiere promoción manual)
@@ -174,4 +174,4 @@ a contexto/entidades/<entidad>.yaml (deteccion_adicional / contenido_adicional)
 ContextLoader lo carga en CADA sesión futura de ese nicho
 ```
 
-**En resumen**: hoy el sistema tiene un aprendizaje verdaderamente automático (A, vía `feedback.py`), y dos bitácoras de señales (B y C) que sirven de materia prima para que un humano actualice a mano el lore de una entidad — momento en el cual sí pasan a afectar todas las sesiones futuras de ese nicho.
+**En resumen**: hoy el sistema tiene un aprendizaje verdaderamente automático (A, vía `contexto/feedback.py`), y dos bitácoras de señales (B y C) que sirven de materia prima para que un humano actualice a mano el lore de una entidad — momento en el cual sí pasan a afectar todas las sesiones futuras de ese nicho.
