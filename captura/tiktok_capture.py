@@ -43,6 +43,44 @@ _GRACE_SEGUNDOS = 5
 _REINTENTOS_MAX = 5
 _REINTENTO_ESPERA_SEGUNDOS = 5
 
+_RATE_STATE_PATH     = Path(__file__).parent.parent / "_tiktok_rate_state.json"
+_ESPACIADO_MINIMO_SEGUNDOS = 30
+
+
+def _esperar_espaciado(clave: str, minimo_segundos: int = _ESPACIADO_MINIMO_SEGUNDOS) -> None:
+    """
+    Espaciado mínimo global entre requests a TikTok, compartido por todos los
+    scripts de captura/verificación (tiktok_capture.py, check_live_waf.py,
+    check_live_colab.py) vía un archivo de estado en disco — no solo por
+    cuenta como el cache de verificar_lives.py, sino cualquier request
+    saliente por la misma ruta (local o colab).
+
+    Existe porque el bloqueo de IP documentado (ver memoria:
+    tiktok-live-detection-blocked) se dispara por ráfagas de requests
+    seguidas, incluso a cuentas distintas — antes dependíamos de que la
+    persona recuerde esperar entre pruebas manuales; esto lo hace estructural
+    en vez de depender de la disciplina de quien esté probando.
+
+    `clave` separa el espaciado por ruta ("local" vs "colab") porque son
+    IPs distintas y no tiene sentido que una ráfaga de chequeos locales
+    retrase innecesariamente un chequeo vía Colab o viceversa.
+    """
+    try:
+        estado = json.loads(_RATE_STATE_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        estado = {}
+
+    ahora    = time.time()
+    ultima   = estado.get(clave, 0)
+    faltante = minimo_segundos - (ahora - ultima)
+
+    if faltante > 0:
+        print(f"[CAPTURE] ⏳ espaciando requests a TikTok ({clave}) — esperando {faltante:.0f}s...")
+        time.sleep(faltante)
+
+    estado[clave] = time.time()
+    _RATE_STATE_PATH.write_text(json.dumps(estado), encoding="utf-8")
+
 
 def _cookies_args() -> list[str]:
     """
@@ -107,6 +145,8 @@ def verificar_live_via_colab(usuario: str) -> bool:
     token = os.environ.get("COLAB_AUTH_TOKEN", "").strip()
     headers = {"Authorization": f"Bearer {token}"} if token else {}
 
+    _esperar_espaciado("colab")
+
     try:
         response = requests.post(check_url, json={"username": usuario}, headers=headers, timeout=30)
     except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
@@ -149,6 +189,8 @@ def _diagnosticar_live(usuario: str) -> bool:
     """
     url = f"https://www.tiktok.com/@{usuario}/live"
     perfil_suffix = f"@{usuario}.dump"
+
+    _esperar_espaciado("local")
 
     result = subprocess.run(
         ["yt-dlp", "--simulate", "--write-pages", "--no-warnings", *_cookies_args(), url],
@@ -307,6 +349,9 @@ def _grabar_chunk(url: str, chunk_path: Path, chunk_segundos: int) -> tuple[int,
         if sys.platform == "win32"
         else {"start_new_session": True}
     )
+
+    _esperar_espaciado("local")
+
     proc = subprocess.Popen(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         text=True, encoding="utf-8", errors="replace",
