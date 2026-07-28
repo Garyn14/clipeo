@@ -1,0 +1,150 @@
+meta:
+  id: default
+  descripcion: "Configuración genérica para cualquier canal"
+  plataforma: tiktok
+  activo: true
+  version: "2.0"
+
+identificacion:
+  umbral_alto: 0.70
+  umbral_bajo: 0.40
+
+deteccion:
+  confianza_minima: 0.75
+  prompt: |
+    Eres un detector de momentos virales para contenido
+    en español latino.
+
+    Tu tarea es analizar transcripciones y detectar momentos
+    de alto impacto emocional o narrativo que puedan
+    funcionar como clips virales independientes.
+
+    SEÑALES QUE DEBES BUSCAR:
+    - Revelaciones sorprendentes o inesperadas
+    - Momentos de alta tensión emocional
+    - Testimonios o confesiones impactantes
+    - Frases que generan curiosidad o FOMO
+    - Cambios narrativos abruptos o giros inesperados
+    - Reacciones genuinas de sorpresa, emoción o impacto
+    - Datos o hechos que desafían expectativas
+    - Momentos de confrontación o drama social
+
+    SEÑALES QUE DEBES IGNORAR:
+    - Transiciones o introducciones genéricas
+    - Saludos o despedidas
+    - Explicaciones técnicas sin carga emocional
+    - Momentos de relleno sin tensión narrativa
+
+    FORMATO DE RESPUESTA — solo JSON válido:
+    {
+      "picos": [
+        {
+          "timestamp": "00:01:03",
+          "razon": "revelación impactante sobre el barrio",
+          "confianza": 0.90
+        }
+      ]
+    }
+
+refinamiento:
+  contexto_antes_segundos: 45
+  contexto_despues_segundos: 45
+  duracion_minima_segundos: 15
+  duracion_maxima_segundos: 90
+  prompt: |
+    Eres un editor experto en contenido viral para
+    TikTok en español latino.
+
+    Recibirás un fragmento de transcripción con un
+    momento marcado como potencialmente viral.
+
+    CRITERIOS PARA EL RANGO:
+    - El inicio debe capturar el setup del momento
+    - El fin debe incluir la reacción completa
+    - El clip debe tener sentido visto de forma independiente
+    - Duración ideal entre 30 y 60 segundos
+
+    CRITERIOS PARA DESCARTAR:
+    - Momento genérico sin emoción real
+    - Reacción forzada o poco auténtica
+    - Contexto no se entiende sin ver el stream completo
+    - Confianza menor a 0.75 sin justificación fuerte
+
+    FORMATO DE RESPUESTA — solo JSON válido:
+    {
+      "conservar": true,
+      "inicio": "00:02",
+      "fin": "00:05",
+      "duracion_segundos": 45,
+      "razon": "reacción genuina al gift con setup claro",
+      "gancho": "primera línea llamativa del clip"
+    }
+
+contenido:
+  score_minimo_publicar: 7
+  hashtags_base:
+    - "#viral"
+    - "#fyp"
+    - "#tiktok"
+    - "#live"
+  prompt: |
+    Eres un experto en contenido viral de TikTok.
+    Conoces perfectamente el humor y la cultura digital
+    en español latino.
+
+    CRITERIOS DE SCORE (1-10):
+    10 → Gift enorme + reacción genuina épica
+    8-9 → Gift grande + reacción emotiva real
+    6-7 → Momento de tensión con resolución clara
+    4-5 → Reacción moderada, contexto algo confuso
+    1-3 → Momento genérico sin emoción real
+
+    CRITERIOS PARA TEXTO_LINEA1 (máx 5 palabras):
+    - La afirmación más polémica o impactante
+    - Sin emojis — se quema directamente en el video
+    - Debe generar debate, no describir el video
+
+    CRITERIOS PARA TEXTO_LINEA2 (máx 6 palabras):
+    - El complemento que da contexto a la línea 1
+    - Sin emojis
+    - Juntas deben leerse como una sola idea directa
+
+    REGLA DE SPEAKERS SIN IDENTIFICAR:
+    Si en la transcripción ves la marca
+    "[sin identificar]" junto a un speaker,
+    NO inventes ni asumas su nombre.
+    Redacta el título usando la ACCIÓN como
+    sujeto de la frase, nunca un relleno
+    como "alguien", "una persona" o
+    "un usuario".
+
+    ❌ Incorrecto: "Alguien dice terribles
+       afirmaciones sobre la rivalidad"
+    ✅ Correcto: "Terribles afirmaciones
+       sobre la rivalidad"
+
+    ❌ Incorrecto: "Una persona desconocida
+       niega tener competencia"
+    ✅ Correcto: "Niega tener competencia
+       en el mercado"
+
+    La frase debe sonar natural, como si la
+    omisión del sujeto fuera intencional.
+
+    FORMATO DE RESPUESTA — solo JSON válido:
+    {
+      "score": 9,
+      "publicar": true,
+      "texto_linea1": "frase polémica corta",
+      "texto_linea2": "complemento con contexto",
+      "hashtags": ["#viral", "#fyp", "#tiktok", "#live"],
+      "razon_score": "motivo del score"
+    }
+
+publicacion:
+  plataformas:
+    - youtube_shorts
+  horario: manual
+  descripcion_base: |
+    Clip viral de TikTok Live.
+    Síguenos para más momentos increíbles.

@@ -1,0 +1,32 @@
+evento:
+  aprendizaje: 'El sistema propuso ''Con evidencia: 5,000 a 6,000 pares diarios''
+    pero el editor corrigió a ''Tío Fritz el'''
+  fecha: '2026-07-01'
+  nicho: zapatillas_peru
+  rango:
+    conservar: true
+    duracion_segundos: 67
+    fin: 01:28:54
+    gancho: 'Con evidencia te lo hablo: vendemos entre 5,000 a 6,000 pares diarios.'
+    inicio: 01:27:47
+    pico_original:
+      confianza: 0.95
+      razon: Fritz afirma en vivo 'vendemos entre 5,000 a 6,000 pares diarios' con
+        evidencia visual del almacén — claim directo de superioridad que supera las
+        cifras públicas de Tío Yolu (3,000 pares diarios), rivalidad implícita de
+        alto valor
+      timestamp: '88:09'
+      tipo: soberbia_con_cifra
+    razon: 'Clip de soberbia con cifra máxima del video: Fritz hace el claim de 5,000-6,000
+      pares diarios con evidencia visual en vivo del almacén, precedido por el conteo
+      de stock en tiempo real (2,500 arriba + 1,000 abajo = 4,500 en tiendas). La
+      frase ''con evidencia te lo hablo'' activa el patrón de superioridad verificable.
+      Rivalidad implícita con Tío Yolu (3,000 diarios) es combustible para comentarios.
+      Confianza 0.95, el clip más fuerte del chunk.'
+  tipo: correccion_titulo
+  titulo_corregido:
+    linea1: Tío Fritz el
+    linea2: 'número #1 del Perú'
+  titulo_original:
+    linea1: 'Con evidencia: 5,000 a 6,000 pares diarios'
+    linea2: y el almacén lo confirma en vivo 🔥

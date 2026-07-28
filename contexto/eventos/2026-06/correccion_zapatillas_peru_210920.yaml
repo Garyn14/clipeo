@@ -1,0 +1,34 @@
+evento:
+  aprendizaje: El sistema propuso 'Fritz amenaza con soltar bouchers,' pero el editor
+    corrigió a 'Fritz amenaza con soltar vouchers'
+  fecha: '2026-06-30'
+  nicho: zapatillas_peru
+  rango:
+    conservar: true
+    duracion_segundos: 28
+    fin: 00:10:40
+    gancho: Si él sigue, yo sí te voy a mostrar boucher, compra, conversación, el
+      audio… todo te voy a mostrar.
+    inicio: 00:10:12
+    pico_original:
+      confianza: 0.88
+      razon: 'Fritz escala la amenaza: ''si él sigue, yo sí te voy a mostrar boucher,
+        compra, conversación, el audio, todo te voy a mostrar'' — amenaza con exponer
+        conversaciones y audios comprometedores de un rival. Momento de alta tensión
+        con potencial viral por la promesa de revelar pruebas.'
+      timestamp: '10:12'
+      tipo: rivalidad
+    razon: 'Aunque corto, este pico escala la misma rivalidad del Pico 1 con una amenaza
+      más concreta y explícita: vouchers, compras, conversaciones y audios. Es un
+      momento distinto al Pico 1 (ocurre 10 minutos después, el rival claramente siguió
+      hablando) y funciona como clip independiente porque Fritz enuncia la condición
+      (''si él sigue'') y la consecuencia (''todo te voy a mostrar'') de forma clara.
+      No se fusiona con el Pico 1 porque son escaladas separadas de la misma historia.
+      Se recorta antes de que Fritz cambie de tema hacia Venezuela.'
+  tipo: correccion_titulo
+  titulo_corregido:
+    linea1: Fritz amenaza con soltar vouchers
+    linea2: y audios del tío Supera
+  titulo_original:
+    linea1: Fritz amenaza con soltar bouchers,
+    linea2: audios y conversaciones completas 🔥

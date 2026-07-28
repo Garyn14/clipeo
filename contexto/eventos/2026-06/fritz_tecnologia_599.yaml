@@ -1,0 +1,15 @@
+evento:
+  entidad: fritz
+  fecha: 2026-06-09
+  titulo: "Meme de tecnología confirmado viral"
+  descripcion: |
+    Clip "El Tío Fritz muestra la verdadera tecnología de 599.00 a 99.90"
+    alcanzó 81K vistas — el resultado más alto del sistema hasta la fecha.
+  resultado_real:
+    vistas: 81000
+    tipo: "destacado"
+  aprendizaje: |
+    Meme establecido + dato que lo contradice es la fórmula más poderosa
+    confirmada en este nicho. Por encima de soberbia con cifra (18K),
+    figura pública+rivalidad (14K), y soberbia con marca reconocida (13K).
+    La ironía implícita supera a la ironía explícita — nunca explicar el meme.

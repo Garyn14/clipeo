@@ -1,0 +1,111 @@
+meta:
+  id: franco_vidal
+  nombre: "Franco Vidal"
+  nombre_real: "Franco Vidal Morales"
+  apodos: ["El Alcalde Streamer", "Dibujito"]
+  ecosistema: streamers_peru
+  plataformas: ["Kick", "TikTok"]
+  handles:
+    kick: "francovidalalcalde"
+    tiktok: "@francovidalm"
+
+lore:
+  descripcion: |
+    Alcalde del distrito de Ate (Lima) desde 2023. El alcalde más
+    joven de Ate y de Lima al momento de su elección. Streamer en
+    Kick desde agosto 2024 — el único funcionario público peruano
+    con presencia masiva en streaming. Mezcla política, gestión
+    municipal y entretenimiento en vivo. 895K seguidores en TikTok,
+    300K en Kick. Su comunidad se llama "Los Dibujitos".
+
+  personajes_universo:
+    - nombre: "Los Dibujitos"
+      rol: "su comunidad de seguidores"
+      relevancia: "muy activos, acusados de hostigar periodistas críticos"
+    - nombre: "René Gastelumendi"
+      rol: "periodista que lo critica"
+      relevancia: "denunció amenazas de muerte atribuidas a seguidores de Vidal"
+    - nombre: "José María Balcázar"
+      rol: "presidente al que entrevistó en vivo"
+      relevancia: "primer presidente entrevistado en vivo en Kick por un alcalde"
+
+  polemicas:
+    - titulo: "Alcalde streamer en horario laboral"
+      descripcion: |
+        Transmite en Kick durante horas de trabajo como alcalde.
+        Genera debate sobre conflicto de interés y uso de recursos
+        públicos. La Constitución prohíbe a funcionarios tener más
+        de un empleo remunerado.
+      tipo: "polemica_politica"
+
+    - titulo: "Renuncia a Avanza País en vivo"
+      descripcion: |
+        Anunció su renuncia al partido político Avanza País en
+        transmisión de Kick. Reveló que 4 partidos le ofrecen
+        candidatura a la Municipalidad de Lima Metropolitana.
+      tipo: "evento_politico_viral"
+
+    - titulo: "Padre acusado de proxenetismo"
+      descripcion: |
+        Acusaciones contra su padre circularon en redes. Franco
+        Vidal las llamó "leyenda urbana" en vivo en Kick.
+      tipo: "polemica_personal"
+
+    - titulo: "Los Dibujitos acosan periodistas"
+      descripcion: |
+        Informe del IPYS señala que su comunidad coordina campañas
+        de hostigamiento y amenazas contra periodistas críticos.
+      tipo: "polemica_grave"
+
+    - titulo: "Dice que streamers no merecen ganar tanta plata"
+      descripcion: |
+        Declaró en vivo que hay streamers peruanos que no merecen
+        ganar tanto dinero — generó reacción del ecosistema streamer.
+      tipo: "confrontacion_ecosistema"
+
+  vocabulario:
+    - termino: "Los Dibujitos"
+      significado: "su comunidad de seguidores, muy activa y polémica"
+    - termino: "vidalismo"
+      significado: "movimiento político-digital en torno a Franco Vidal"
+    - termino: "alcalde streamer"
+      significado: "su apodo más usado en medios"
+
+deteccion_adicional:
+  prompt: |
+    CONTEXTO ESPECÍFICO DE FRANCO VIDAL:
+
+    Es el único alcalde streamer del Perú — mezcla política y
+    entretenimiento de forma única en el ecosistema.
+
+    SEÑALES DE ALTO VALOR:
+    - Momentos donde mezcla gestión municipal con entretenimiento
+      en vivo
+    - Polémicas políticas reveladas en Kick (renuncias,
+      candidaturas, acusaciones)
+    - Confrontaciones con periodistas o críticos
+    - Menciones de "Los Dibujitos" en contexto de polémica o
+      movilización
+    - Declaraciones sobre otros streamers (dice que no merecen
+      ganar tanto)
+    - Cualquier momento donde su rol de alcalde choca con su rol
+      de streamer
+    - Revelaciones políticas en vivo (primer presidente
+      entrevistado en Kick)
+
+contenido_adicional:
+  hashtags: ["#francosvidal", "#vidalismo", "#alcaldedibujito", "#kickperu", "#streamersperu", "#ate"]
+  tono: |
+    Franco Vidal es único — político + streamer. El tono debe
+    aprovechar la ironía de un alcalde que transmite en Kick en
+    horario laboral y tiene más drama que un reality.
+
+    PATRONES DE TÍTULOS:
+    ✅ "El alcalde de Ate renuncia a su partido en vivo en Kick 😱"
+    ✅ "Franco Vidal dice que streamers no merecen ganar tanta plata 💀"
+    ✅ "El único alcalde streamer del Perú entrevista al presidente en vivo 🔥"
+    ✅ "Los Dibujitos vs periodistas — el alcalde responde 😤"
+
+identificacion:
+  umbral_alto: 0.80
+  umbral_bajo: 0.40

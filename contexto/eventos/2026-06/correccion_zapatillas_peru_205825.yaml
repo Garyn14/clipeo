@@ -1,0 +1,33 @@
+evento:
+  aprendizaje: El sistema propuso 'Fritz muestra vouchers de su rival' pero el editor
+    corrigió a 'Fritz muestra vouchers del tío Supera'
+  fecha: '2026-06-30'
+  nicho: zapatillas_peru
+  rango:
+    conservar: true
+    duracion_segundos: 50
+    fin: 00:00:50
+    gancho: Yo sí te puedo mostrar un montón de vouchers que él me ha pagado… y que
+      tampoco no me ha pagado.
+    inicio: 00:00:00
+    pico_original:
+      confianza: 0.87
+      razon: Fritz revela que tiene vouchers de pagos y deudas de un rival/proveedor
+        con quien tuvo conflicto después de 12 años de relación — amenaza con mostrar
+        pruebas públicamente si el otro sigue hablando. Confrontación directa con
+        tensión alta.
+      timestamp: 00:01
+      tipo: rivalidad
+    razon: Fritz revela que tiene vouchers de pagos de un rival con quien tuvo conflicto
+      tras 12 años de relación y lo desafía directamente diciéndole que no es necesario
+      que siga hablando. El clip arranca con contexto inmediato ('él me vende, que
+      nos pasamos en mercadería') y cierra con el desafío directo al rival ('no es
+      necesario papá, clickle ma muestra tío que le tienes miedo ese'). Se entiende
+      solo y tiene confrontación completa con setup y remate.
+  tipo: correccion_titulo
+  titulo_corregido:
+    linea1: Fritz muestra vouchers del tío Supera
+    linea2: sin pagar tras 2 años y medio
+  titulo_original:
+    linea1: Fritz muestra vouchers de su rival
+    linea2: sin pagar tras 12 años 💀

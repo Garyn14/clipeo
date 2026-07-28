@@ -1,0 +1,54 @@
+meta:
+  id: karolina_karley
+  nombre: "Karolina Karley"
+  ecosistema: streamers_peru
+  plataformas: ["TikTok", "YouTube"]
+
+lore:
+  descripcion: |
+    Tiktoker peruana conocida por su labor social —
+    organiza donaciones y ayuda en vivo a personas
+    vulnerables, adultos mayores y discapacitados
+    mediante yapeos de sus seguidores. Gastó S/1,100
+    en chaufa para bomberos del incendio de SJM.
+    Tiene comunidad muy leal y activa.
+
+  relacion_sideral: |
+    Vinculada sentimentalmente con Sideral durante
+    2025 aunque nunca hubo confirmación oficial.
+    Sideral la llamaba "amiga con derechos".
+    La comunidad especula que fue ella quien grabó
+    y filtró el video íntimo de Sideral con
+    Wendy La Rosada al descubrir la infidelidad.
+
+  personajes_universo:
+    - nombre: "Sideral"
+      rol: "su saliente no oficial"
+    - nombre: "BebaArmy"
+      rol: "comunidad que la ataca y defiende"
+
+  vocabulario:
+    - termino: "yapeos"
+      significado: "donaciones por Yape a personas necesitadas"
+    - termino: "amiga con derechos"
+      significado: "como Sideral la llamaba"
+
+deteccion_adicional:
+  prompt: |
+    CONTEXTO DE KAROLINA KARLEY:
+    - Tiktoker de labor social — donaciones y ayuda
+    - Saliente no oficial de Sideral (amiga con derechos)
+    - Comunidad especula que grabó el ampay de Sideral
+    - Menciones en contexto de infidelidad o ampay
+      son de alto engagement
+    - Frases clave: "amiga con derechos", "ampay",
+      "ella lo grabó", "Carolina Carlei" (error de Whisper)
+
+contenido_adicional:
+  hashtags: ["#karolinakarley", "#carolinakarley",
+             "#sideral", "#kickperu"]
+  tono: |
+    Karolina Karley es la figura simpática y víctima
+    del drama — la comunidad la defiende.
+    Clips donde aparece deben destacar su rol
+    como la afectada, no como la villana.

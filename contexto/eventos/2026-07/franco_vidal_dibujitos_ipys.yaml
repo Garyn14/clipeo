@@ -1,0 +1,24 @@
+evento:
+  entidad: franco_vidal
+  fecha: 2025-12
+  titulo: "Los Dibujitos — ejército digital que hostiga periodistas"
+  descripcion: |
+    Informe del IPYS documentó que la comunidad
+    de Franco Vidal "Los Dibujitos" coordina
+    ataques digitales, amenazas y doxing contra
+    periodistas críticos de su gestión.
+    Operan en chats de WhatsApp y Discord
+    ("Vidal Army Oficial", "Franco Vidal 9k").
+    Sistema de puntos canjeables por premios
+    (electrónicos, alimentos) para cliperos
+    que producen contenido a favor del alcalde.
+    Funcionarios municipales administran los chats.
+  tipo: "polemica_grave"
+  origen: "refresh_manual"
+  aprobado: true
+  relevancia: |
+    Cuando alguien menciona "Los Dibujitos"
+    en sus streams genera reacciones inmediatas
+    de la comunidad. Alta carga viral por la
+    ironía de un alcalde con un ejército digital
+    organizado y premiado para atacar críticos.

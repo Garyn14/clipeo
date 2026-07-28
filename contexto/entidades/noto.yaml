@@ -1,0 +1,94 @@
+entidad:
+  id: noto
+  nombre: "Tío Noto"
+  nombre_real: "George Rubín"
+  apodos: ["Notorious George", "Tío Noto"]
+  plataformas: ["TikTok", "YouTube", "Instagram"]
+  handles:
+    tiktok: "@notoriousgeorge_"
+    youtube: "@NotoGeorge"
+    instagram: "@notoriousgeorge_"
+
+lore:
+  descripcion: |
+    Experto peruano en autenticidad de zapatillas de lujo. Fundador de
+    Kicks for All (San Miguel, Lima). Conocido por analizar y
+    desenmascarar réplicas de zapatillas de personajes famosos. Ha
+    trabajado con figuras como Jefferson Farfán.
+
+  meme_principal:
+    descripcion: |
+      Noto se autoproclamó único vendedor de originales en Perú y acusa
+      constantemente a rivales de vender bambas o modelos antiguos. La
+      comunidad lo molesta con esto porque él mismo fue multado por
+      Indecopi por denigrar a una tienda rival — la ironía del "cazador
+      de bambas siendo investigado" es el chiste central del nicho.
+    señales_virales:
+      - Cuando acusa a alguien de vender bambas
+      - Cuando defiende su autenticidad ante críticos
+      - Cuando la comunidad le recuerda la multa
+      - Comparaciones de precios con rivales
+      - Cuando dice ser el único original del Perú
+
+  personajes_universo:
+    - nombre: "Pablo Ezeta"
+      rol: "rival — pelearon en Celebrity Combat"
+      relevancia: "confrontación viral del nicho"
+    - nombre: "Fritz Sport"
+      rol: "rival del nicho — Noto cuestiona autenticidad de sus productos"
+      relevancia: "rivalidad cross-nicho de alto engagement"
+
+  polémicas:
+    - titulo: "Multa Indecopi S/53,500"
+      descripcion: |
+        Sancionado por Indecopi (Resolución 084-2025/CCD) por
+        competencia desleal contra tienda rival Kicks E.I.R.L. Lo
+        acusaron de denigrar sus productos en TikTok cuestionando
+        autenticidad de sus Air Jordan 1 High. Multado con 10 UIT. La
+        ironía: el "cazador de bambas" multado por hablar mal de la
+        competencia.
+      tipo: "polémica legal — alta relevancia"
+
+  vocabulario:
+    - termino: "bamba hunter"
+      significado: "cazador de réplicas — rol que Noto se autoatribuye"
+    - termino: "original certificado"
+      significado: "claim que Noto usa para diferenciarse de rivales"
+    - termino: "modelo antiguo"
+      significado: "acusación que Noto lanza a rivales que venden stock viejo"
+
+deteccion_adicional:
+  prompt: |
+    CONTEXTO ESPECÍFICO DE TÍO NOTO:
+
+    Su meme principal es autoproclamarse el único que vende originales y
+    acusar a todos los demás de vender bambas o modelos descontinuados.
+    La ironía de ser multado por Indecopi mientras acusa a otros es el
+    combustible viral del nicho.
+
+    SEÑALES DE ALTO VALOR:
+    - Noto acusando a alguien de vender bambas
+    - Noto defendiendo su autenticidad ante críticos
+    - Comunidad recordándole la multa de Indecopi
+    - Comparaciones de precios o autenticidad entre Noto y Fritz u otros
+      rivales
+    - Noto diciendo ser el único original del Perú
+    - Menciones de Pablo Ezeta o Celebrity Combat
+    - Cualquier momento donde la ironía del "cazador de bambas multado"
+      sea evidente
+
+contenido_adicional:
+  hashtags: ["#tionoto", "#notoriousgeorge", "#kicksforall", "#kickperu", "#zapatillasperu"]
+  tono: |
+    Para clips de Noto el tono debe aprovechar la ironía de su
+    situación — el "juez" que también fue juzgado.
+
+    PATRONES DE TÍTULOS PARA NOTO:
+    ✅ "Noto dice que todos venden bambas menos él 😏"
+    ✅ "El cazador de bambas tiene que pagar 53 mil soles 💀"
+    ✅ "Noto acusa a Fritz de vender modelos antiguos 👀"
+    ✅ "La comunidad le recuerda la multa a Tío Noto 😂"
+
+identificacion:
+  umbral_alto: 0.65
+  umbral_bajo: 0.40

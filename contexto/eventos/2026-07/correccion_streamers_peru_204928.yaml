@@ -1,0 +1,29 @@
+evento:
+  aprendizaje: El sistema propuso 'Franco Vidal anuncia Kick en acto oficial' pero
+    el editor corrigió a 'Franco Vidal habla sobre las denuncias'
+  fecha: '2026-07-07'
+  nicho: streamers_peru
+  rango:
+    conservar: true
+    duracion_segundos: 49
+    fin: 00:30:10
+    gancho: Vamos a transmitirlo también en Stream, en Franco Vidal Alcalde, en esta
+      plataforma de Kick.
+    inicio: 00:29:21
+    pico_original:
+      confianza: 0.8
+      personaje_detectado: franco_vidal
+      razon: Franco Vidal menciona explícitamente su canal de Kick en acto oficial
+        de gobierno, fusionando su identidad de alcalde con su identidad de streamer
+        ante vecinos en espacio público
+      timestamp: '29:30'
+      tipo: viral_irl
+    razon: alcalde menciona Kick en acto oficial y anticipa denuncias — fusión de
+      identidad streamer/político con cierre polémico
+  tipo: correccion_titulo
+  titulo_corregido:
+    linea1: Franco Vidal habla sobre las denuncias
+    linea2: por la ejecución de obras
+  titulo_original:
+    linea1: Franco Vidal anuncia Kick en acto oficial
+    linea2: y ya sabe que vienen las denuncias 😤

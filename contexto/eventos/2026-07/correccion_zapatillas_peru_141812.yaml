@@ -1,0 +1,29 @@
+evento:
+  aprendizaje: El sistema propuso 'Club S/168 vs League S/227' pero el editor corrigió
+    a 'Fritz muestra la diferencia de precios'
+  fecha: '2026-07-01'
+  nicho: zapatillas_peru
+  rango:
+    conservar: true
+    duracion_segundos: 35
+    fin: 01:13:20
+    gancho: La diferencia, la tecnología hermano.
+    inicio: 01:12:45
+    pico_original:
+      confianza: 0.93
+      razon: 'Fritz usa la palabra ''tecnología'' para justificar la diferencia de
+        precio entre dos modelos: ''la diferencia, la tecnología hermano'' — activación
+        directa del meme más viral del personaje (81K vistas confirmadas)'
+      timestamp: '73:03'
+      tipo: meme_tecnologia
+    razon: Activación directa del meme 'la tecnología hermano' con contexto inmediato
+      de comparación de precios entre modelos (club vs league). Fritz explica la diferencia
+      de precio con amortiguación como argumento, lo que hace el clip autosuficiente
+      y alineado con el meme de 81K vistas confirmadas. Clip corto, directo y clipeable.
+  tipo: correccion_titulo
+  titulo_corregido:
+    linea1: Fritz muestra la diferencia de precios
+    linea2: debido a la tecnología
+  titulo_original:
+    linea1: Club S/168 vs League S/227
+    linea2: la tecnología hermano 🤯

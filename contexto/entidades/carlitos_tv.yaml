@@ -1,0 +1,63 @@
+entidad:
+  id: carlitos_tv
+  nombre: "Carlitos TV"
+  apodos: ["Carlitos", "Gallito TV", "Galito TV", "Carlito TV"]
+  ecosistema: streamers_peru
+  plataformas: ["TikTok", "YouTube"]
+
+lore:
+  descripcion: |
+    Creador de contenido peruano con 1.2M seguidores
+    en TikTok. Vive en Estados Unidos pero cubre
+    la farándula digital peruana — streamers, tiktokers
+    y polémicas del ecosistema Kick/TikTok peruano.
+    Tiene un espacio en vivo en YouTube donde conduce
+    entrevistas y comenta polémicas.
+    Conocido por la frase: "aquí encontrarás lo mejor
+    de la farándula de TikTok, YouTube, Kick".
+    Amigo cercano de ElZeein quien le regaló lentes
+    Louis Vuitton cuando llegó a Perú.
+    Criticado por Daniel Marquina quien dijo que hace
+    "farándula para pobres" — polémica viral.
+    Ha entrevistado a Zully, CristoRata y otros
+    streamers del ecosistema peruano.
+
+  rol_en_ecosistema: |
+    Es el "Magaly TV" del mundo streamer peruano.
+    Expone polémicas, filtra información y entrevista
+    a los protagonistas del drama digital.
+    Cuando Carlitos TV habla de algo es porque
+    ya es tendencia o está a punto de serlo.
+
+  personajes_universo:
+    - nombre: "ElZeein"
+      rol: "amigo cercano, le regaló lentes LV"
+    - nombre: "Daniel Marquina"
+      rol: "rival que lo criticó como farándula para pobres"
+
+  vocabulario:
+    - termino: "farándula para pobres"
+      significado: "crítica que le hicieron pero que su comunidad convirtió en orgullo"
+
+deteccion_adicional:
+  prompt: |
+    CONTEXTO DE CARLITOS TV:
+    - El expositor del ecosistema streamer peruano
+    - 1.2M seguidores TikTok, conductor en YouTube
+    - Vive en EEUU pero cubre farándula peruana
+    - Cuando él habla de algo → ya es noticia
+    - Error de Whisper: aparece como "Gallito TV"
+      o "Carlito TV" — siempre es "Carlitos TV"
+    - Amigo de Zein, entrevista a todos los streamers
+    - Momentos de alto valor: cuando expone a alguien,
+      cuando entrevista sobre polémicas,
+      cuando confronta a streamers con pruebas
+
+contenido_adicional:
+  hashtags: ["#carlitostv", "#kickperu",
+             "#streamersperu", "#viral"]
+  tono: |
+    Carlitos TV es el periodista del ecosistema.
+    Clips de él deben destacar el momento de
+    la exposición o revelación.
+    Tono: periodístico pero con morbo.

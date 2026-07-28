@@ -1,0 +1,29 @@
+evento:
+  aprendizaje: El sistema propuso 'Franco Vidal anuncia estadio de 60 millones' pero
+    el editor corrigió a 'Franco Vidal anuncia relección y nuevo'
+  fecha: '2026-07-07'
+  nicho: streamers_peru
+  rango:
+    conservar: true
+    duracion_segundos: 80
+    fin: 00:28:28
+    gancho: Vamos todos juntos a colocar la primera piedra de lo que será el primer
+      estadio profesional para Huaycán.
+    inicio: 00:27:08
+    pico_original:
+      confianza: 0.82
+      personaje_detectado: franco_vidal
+      razon: Franco Vidal anuncia en vivo la primera piedra del primer estadio profesional
+        para Huaycán — inversión de 60 millones de soles, revelación de obra de alto
+        impacto con nombre del presidente involucrado
+      timestamp: '27:57'
+      tipo: revelacion
+    razon: anuncio del estadio de 60 millones con setup de logros y cierre con declaración
+      de reelección — picos 2 y 3 fusionados
+  tipo: correccion_titulo
+  titulo_corregido:
+    linea1: Franco Vidal anuncia relección y nuevo
+    linea2: estadio profesional en Ate
+  titulo_original:
+    linea1: Franco Vidal anuncia estadio de 60 millones
+    linea2: y pide reelección en vivo en Kick 🔥

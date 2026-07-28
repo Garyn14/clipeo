@@ -1,0 +1,51 @@
+meta:
+  id: wendy_la_rosada
+  nombre: "Wendy La Rosada"
+  nombre_real: "Ashley Verdi"
+  apodos: ["Rosadita", "Wendy Rosadita", "calaca"]
+  ecosistema: streamers_peru
+  plataformas: ["TikTok", "Instagram"]
+
+lore:
+  descripcion: |
+    Influencer y creadora de contenido peruana,
+    584K seguidores en TikTok e Instagram.
+    Conocida por sus videos virales, humor y
+    anécdotas personales. Personaje popular
+    del ecosistema digital peruano.
+
+  relacion_sideral: |
+    Amiga de Sideral con quien se generó la
+    polémica del ampay en junio 2026.
+    Video íntimo de 38 segundos filtrado en
+    Telegram y X generó tendencia en Perú,
+    Argentina, México, Bolivia y Colombia.
+    Ella declaró que no hizo nada con Sideral.
+
+  vocabulario:
+    - termino: "calaca"
+      significado: "persona desnuda en jerga peruana"
+    - termino: "ampay"
+      significado: "ser cachado con alguien"
+    - termino: "Rosadita"
+      significado: "su apodo más usado"
+
+deteccion_adicional:
+  prompt: |
+    CONTEXTO DE WENDY LA ROSADA:
+    - Influencer peruana 584K seguidores
+    - Protagonista del ampay con Sideral junio 2026
+    - Video íntimo filtrado — tendencia latinoamérica
+    - Declaró que no hizo nada con Sideral
+    - Menciones junto a Sideral = alto engagement
+    - Error de Whisper: puede aparecer como
+      "Wendy Rosada" o "La Rosada" o "Rosadita"
+
+contenido_adicional:
+  hashtags: ["#wendylarosada", "#rosadita",
+             "#sideral", "#kickperu", "#ampay"]
+  tono: |
+    Wendy La Rosada es el personaje neutral del drama
+    — ni víctima ni villana clara.
+    Clips donde aparece deben destacar el morbo
+    del ampay sin tomar partido.

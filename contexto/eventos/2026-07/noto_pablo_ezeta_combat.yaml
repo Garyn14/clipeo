@@ -1,0 +1,17 @@
+evento:
+  entidad: noto
+  fecha: 2024
+  titulo: "Celebrity Combat: Pablo Ezeta vs Noto"
+  descripcion: |
+    Pelea real entre Pablo Ezeta y Notorious George
+    en el ring de Celebrity Combat. Confrontación
+    física entre rivales del nicho de zapatillas
+    que generó contenido viral masivo.
+  tipo: "confrontacion_fisica"
+  origen: "refresh_manual"
+  aprobado: true
+  relevancia: |
+    La rivalidad con Pablo Ezeta es el arco
+    narrativo más dramático del universo Noto —
+    cualquier mención de Ezeta activa el recuerdo
+    de la pelea.

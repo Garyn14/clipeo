@@ -1,0 +1,16 @@
+evento:
+  aprendizaje: El sistema propuso 'Streamer confiesa todo' pero el editor corrigió
+    a 'SIDERAL confiesa lo que pasó'
+  fecha: '2026-06-30'
+  nicho: zapatillas_peru
+  rango:
+    duracion_segundos: 109
+    fin: 00:12:00
+    inicio: 00:10:11
+  tipo: correccion_titulo
+  titulo_corregido:
+    linea1: SIDERAL confiesa lo que pasó
+    linea2: en Cusco con Karolina Karley 🤯
+  titulo_original:
+    linea1: Streamer confiesa todo
+    linea2: en vivo ante su comunidad

@@ -1,0 +1,32 @@
+evento:
+  aprendizaje: El sistema propuso 'El Tío Fritz le recuerda quién' pero el editor
+    corrigió a 'El jefe de tienda mete'
+  fecha: '2026-07-01'
+  nicho: zapatillas_peru
+  rango:
+    conservar: true
+    duracion_segundos: 52
+    fin: '55:26'
+    gancho: Lamentablemente yo soy el dueño de la empresa… y yo sí sé la verdad.
+    inicio: '54:34'
+    pico_original:
+      confianza: 0.83
+      razon: 'El dueño de la empresa revela que sabe la verdad que sus empleados le
+        ocultan: ''lamentablemente yo soy el dueño de la empresa y yo sí sé la verdad.
+        Si yo no fuera el dueño de la empresa, te creería hermano. Todo lo que no
+        me cuentas.'' — momento de soberbia con carga de autoridad y confrontación
+        implícita con su propio equipo.'
+      timestamp: '54:41'
+      tipo: soberbia
+    razon: 'Momento de autoridad máxima del dueño: setup con ''estoy por creerte'',
+      seguido del golpe directo ''lamentablemente yo soy el dueño de la empresa y
+      yo sí sé la verdad''. La reacción del empleado (''se guarda usted'') y el remate
+      con el precio completan el ciclo emocional. Clip autocontenido con tensión jefe-empleado,
+      soberbia justificada y cierre limpio.'
+  tipo: correccion_titulo
+  titulo_corregido:
+    linea1: El jefe de tienda mete
+    linea2: floro al tío Fritz
+  titulo_original:
+    linea1: El Tío Fritz le recuerda quién
+    linea2: sabe la verdad de la empresa 😤

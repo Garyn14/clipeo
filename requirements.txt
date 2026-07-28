@@ -1,0 +1,10 @@
+yt-dlp
+openai-whisper
+whisperx
+curl_cffi>=0.10,<0.15
+anthropic
+python-dotenv
+pyyaml
+requests
+pytest
+requests-mock

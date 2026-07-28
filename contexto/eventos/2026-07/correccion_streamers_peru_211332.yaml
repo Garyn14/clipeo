@@ -1,0 +1,29 @@
+evento:
+  aprendizaje: El sistema propuso 'Franco Vidal expone 8 millones' pero el editor
+    corrigió a 'Franco Vidal expone corrupción de la anterior'
+  fecha: '2026-07-07'
+  nicho: streamers_peru
+  rango:
+    conservar: true
+    duracion_segundos: 93
+    fin: 00:35:12
+    gancho: 8 millones de soles que se han perdido... ahora están en un informe que
+      dice que tiene que ser demolido todo
+    inicio: 00:33:39
+    pico_original:
+      confianza: 0.87
+      personaje_detectado: franco_vidal
+      razon: Revela en vivo que la ex-gestión municipal perdió 8 millones de soles
+        en el Estadio de San Gregorio y que la obra debe ser demolida por corrupción
+        en materiales. Acusación concreta con cifras reales contra gestión anterior.
+      timestamp: '33:56'
+      tipo: revelacion
+    razon: acusación con cifras reales + demolición + 'hemos sido gobernados por la
+      corrupción' con cierre contrastante
+  tipo: correccion_titulo
+  titulo_corregido:
+    linea1: Franco Vidal expone corrupción de la anterior
+    linea2: gestión. 8 millones perdidos
+  titulo_original:
+    linea1: Franco Vidal expone 8 millones
+    linea2: perdidos y ahora hay que demoler todo 💀

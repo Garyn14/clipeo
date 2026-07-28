@@ -1,0 +1,148 @@
+entidad:
+  id: fritz
+  nombre: "Tío Fritz"
+  nombre_real: "Fritz Durand"
+  apodos: ["Tío Triz"]
+  plataformas: ["TikTok", "YouTube", "Kick"]
+
+lore:
+  descripcion: |
+    16 años construyendo Fritz Sport desde cero.
+    Distribuidor de Adidas, Reebok, marcas de lujo
+    (AMIRI). Rival histórico de Tío Yolu — ambos
+    dicen ser el número 1 del Perú. Tiene Porsche
+    Panamera, se mueve en el segmento premium.
+
+  personajes_universo:
+    - nombre: "Rafael"
+      rol: "Jefe de tienda"
+    - nombre: "Niño Viejo"
+      rol: "streamer aliado, retó a Fritz a un partido de fútbol por S/100,000"
+    - nombre: "Airita"
+      rol: "pareja de Niño Viejo"
+    - nombre: "Lord Denis"
+      rol: "amigo, organiza partidos de fútbol con apuestas económicas elevadas"
+
+  vocabulario:
+    - termino: "tecnología"
+      significado: "palabra que Fritz usa hasta por gusto para describir cualquier
+                    característica de sus zapatillas — la comunidad lo molesta
+                    constantemente"
+    - termino: "Tío Triz"
+      significado: "apodo por la marca de pegamento, referencia a publicaciones
+                    donde sus zapatillas se despegaban"
+
+deteccion_adicional:
+  prompt: |
+    CONTEXTO ESPECÍFICO DE FRITZ — RESULTADOS REALES 2026:
+
+    Tres patrones confirmados generan clips por encima de 200K vistas:
+
+    1. MEME "TECNOLOGÍA" — Fritz llama "tecnología" a cualquier
+       característica de sus productos (zapatillas, casacas, pelotas).
+       La audiencia lo lee como "floro"/exageración.
+       Ejemplo real: "El Tío Fritz muestra la verdadera tecnología
+       de 599.00 a 99.90".
+
+    2. CUESTIONAMIENTO DE LEGITIMIDAD DEL DINERO — Un tercero (prensa,
+       entrevistador) pregunta o insinúa de dónde sale el dinero de
+       Fritz — efectivo en grandes sumas, apuestas altas, etc.
+       Fuente confirmada: reportaje de Magaly Medina
+       ("cómo justifica 100K en efectivo", "máquina contadora de
+       billetes en pichanga de 100K"). Funciona porque apela a la
+       duda constante de la audiencia sobre si "todo es limpio".
+
+    3. CONFESIÓN/EXPOSICIÓN DEL "SHOW" — Fritz admite que parte de su
+       imagen pública es actuada: pichangas y billetes de apuestas
+       altas, marcas de lujo, seguridad con chaleco antibala.
+       Fuente confirmada: documental Panorama/Dominical sobre amenazas
+       de extorsión y atentado contra él. Funciona por el contraste
+       entre ostentación expuesta como falsa Y vulnerabilidad real
+       (llorar contando que empezó con S/70 y vive bajo amenazas) —
+       la mezcla es la señal, no cada parte por separado.
+
+    SEÑALES DE ALTO VALOR (prioridad extra por resultados confirmados):
+    - Fritz usando "tecnología" para describir un producto
+    - Cualquier persona cuestionando o insinuando dudas sobre el
+      origen/licitud del dinero de Fritz
+    - Fritz confirmando o siendo confrontado sobre que algo de su
+      imagen (pichangas, apuestas, marcas, seguridad) es exagerado
+    - Momento de vulnerabilidad real (amenazas, inicios humildes)
+      cerca de un momento de ostentación
+    - Menciones del apodo "Tío Triz" o zapatillas que se despegan
+    - Lord Denis + apuestas de fútbol
+    - Rafael en contexto de tienda / interacción con el jefe
+    - Soberbia verificable con cifra: "soy el número 1",
+      "no tengo competencia", stock en números exactos
+
+    PATRONES RECURRENTES EN SELECCIÓN MANUAL (21 clips de entrenamiento,
+    sin dato de vistas confirmado aún, pero elegidos consistentemente
+    por el editor — tratar como señal real, no como los 3 de arriba):
+
+    4. GENEROSIDAD / AYUDA A ALGUIEN VULNERABLE — el patrón más repetido
+       (~1 de cada 3 clips manuales). Fritz da descuento, regalo o ayuda
+       a alguien en desventaja: cliente sin plata suficiente, joven
+       emprendedor, deportista, trabajador con historia difícil.
+       Ejemplo real: contratar trabajadores en rehabilitación.
+
+    5. RETO/GIVEAWAY CON PARTICIPACIÓN DEL PÚBLICO — Fritz anuncia un
+       desafío con premio (ej. dominadas a cambio de pelotas/dinero).
+       El gancho es la interacción y el premio anunciado, no hace
+       falta que el reto se resuelva dentro del mismo clip.
+
+    6. HUMOR AUTOCONSCIENTE — Fritz se burla de sí mismo o de su propio
+       negocio con ironía (esfuerzo exagerado por no regalar algo,
+       comentario sobre sueldos bajos, frases tipo "graduado de la
+       universidad de la vida"). El humor viene de que él mismo lo
+       dice, no de que alguien más lo señale.
+
+    SEÑALES ADICIONALES (menor prioridad, un solo caso confirmado c/u):
+    - Reacción genuina y espontánea de un cliente o tercero
+    - Frase que promete información "exclusiva" o "en privado"
+    - Popularidad visible: gente pidiendo fotos, aglomeración por Fritz
+    - Doble sentido o albur dicho por Fritz o el staff
+
+contenido_adicional:
+  hashtags: ["#tiofritz", "#fritzsport"]
+  tono: |
+    PATRÓN GANADOR CONFIRMADO FRITZ (200K+ vistas):
+    Meme establecido + dato que lo contradice.
+    Ejemplo real: "El Tío Fritz muestra la verdadera
+    tecnología de 599.00 a 99.90"
+
+    La ironía es implícita en el contexto y el precio —
+    nunca usar comillas alrededor de "tecnología".
+    Nunca explicar el meme, la audiencia ya lo sabe.
+    El dato concreto (precio, cifra, cantidad) refuerza
+    la ironía sin necesidad de comentario adicional.
+
+    PATRÓN CUESTIONAMIENTO DE DINERO (200K+ vistas):
+    El título insinúa la pregunta, nunca afirma ni acusa
+    directamente ("¿De dónde saca la plata?", no "Fritz
+    lava dinero"). Deja la duda abierta — la audiencia
+    completa la sospecha sola.
+
+    PATRÓN CONFESIÓN/EXPOSICIÓN (200K+ vistas):
+    Usar verbos de revelación: "confiesa", "admite",
+    "revela". Si el momento mezcla ostentación expuesta
+    como falsa con vulnerabilidad real (amenazas, inicios
+    humildes), no minimizar ni burlarse en el texto — dejar
+    que el contraste hable solo, igual que con "tecnología".
+
+    PATRÓN GENEROSIDAD (recurrente en selección manual):
+    Tono cálido y directo, sin ironía — este patrón es lo
+    opuesto al de "tecnología": aquí no hay contradicción
+    que exponer, el gesto es sincero. Nombrar a quién ayuda
+    (mamita, emprendedora, trabajador) da más peso que
+    describir el gesto en abstracto.
+
+    PATRÓN RETO/GIVEAWAY (recurrente en selección manual):
+    El título vende la participación y el premio, no el
+    resultado. Usar el nombre del reto tal cual lo dice
+    Fritz (ej. "dominadas") y la recompensa si se menciona
+    una cifra concreta.
+
+    PATRÓN HUMOR AUTOCONSCIENTE (recurrente en selección
+    manual): dejar la frase de Fritz casi textual — el chiste
+    ya está hecho, no hace falta reforzarlo con "XD" salvo
+    que el momento sea claramente absurdo.
