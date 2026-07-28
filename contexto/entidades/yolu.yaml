@@ -5,7 +5,7 @@ entidad:
   apodos: []
   plataformas: ["TikTok", "Facebook"]
   handles:
-    tiktok: "@yoluoriginal1"   # ⚠ sin confirmar — TikTok también devolvió "@yoluoriginals1" en resultados de búsqueda, verificar cuál es la cuenta real antes de grabar
+    tiktok: "@emprende.con.yolu"
 
 lore:
   descripcion: |
