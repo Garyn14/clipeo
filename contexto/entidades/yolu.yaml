@@ -1,0 +1,71 @@
+entidad:
+  id: yolu
+  nombre: "Tío Yolu"
+  nombre_real: "Jordy Picón Andrade"
+  apodos: []
+  plataformas: ["TikTok", "Facebook"]
+  handles:
+    tiktok: "@yoluoriginal1"   # ⚠ sin confirmar — TikTok también devolvió "@yoluoriginals1" en resultados de búsqueda, verificar cuál es la cuenta real antes de grabar
+
+lore:
+  descripcion: |
+    Dueño de "La Casa de las Zapatillas" (Yolu Originals), Huánuco.
+    El más grande del nicho: 2.2M+ seguidores, dice vender 3,000
+    pares diarios, se proclama el #1 de Perú. Rival histórico de
+    Tío Fritz — ambos disputan el título de "el número 1".
+
+  personajes_universo:
+    - nombre: "Tía Yolu (Luciana Fernández)"
+      rol: "esposa de Tío Yolu, personaje propio con escándalos virales"
+    - nombre: "Matawasi"
+      rol: "artista que le canta el tema 'Hijo del Tío Yolu'"
+    - nombre: "Jorgito Muñoz"
+      rol: "camarógrafo del canal, personaje secundario muy conocido"
+      relevancia: "la comunidad insinúa un romance con la Tía Yolu — morbo constante, hay hasta búsqueda de 'ampay' entre ellos"
+
+  polémicas:
+    - titulo: "Zapatillas de Jefferson Farfán no entregadas (mayo 2026)"
+      descripcion: |
+        Farfán, como embajador, prometió zapatillas a un joven de
+        Huánuco que nunca las recibió. El joven denunció públicamente
+        a Tío Yolu como responsable. Yolu respondió que "no hubo luz"
+        (corte eléctrico) durante el evento con aglomeración por la
+        presencia de Farfán, y que no podía asumir el riesgo — invitó
+        al joven a recoger el regalo con su madre.
+      tipo: "polémica viral — alta relevancia, confirmada en prensa (La República, mayo 2026)"
+
+  vocabulario:
+    - termino: "el número 1"
+      significado: "claim que Yolu repite constantemente, en disputa directa con Fritz"
+    - termino: "3,000 pares diarios"
+      significado: "cifra de ventas que Yolu usa para respaldar su claim de ser el más grande"
+
+deteccion_adicional:
+  prompt: |
+    CONTEXTO ESPECÍFICO DE TÍO YOLU:
+
+    Es el rival directo de Fritz por el título de "número 1" del
+    nicho — cualquier momento donde afirme superioridad en ventas,
+    stock o seguidores tiene alta carga viral por la rivalidad
+    establecida. Sin datos de vistas confirmados aún (entidad recién
+    activada) — tratar las señales de abajo como hipótesis a validar
+    con feedback real, no como patrones ya probados.
+
+    SEÑALES DE ALTO VALOR:
+    - Yolu afirmando ser "el número 1" o dando cifras de ventas/stock
+    - Comparaciones directas o indirectas con Fritz u otros rivales
+    - Interacción con Tía Yolu o Jorgito Muñoz (posible insinuación
+      de romance — tema de morbo constante en la comunidad)
+    - Menciones o preguntas sobre el caso Farfán / zapatillas no
+      entregadas
+    - Momentos de remate masivo o venta al por mayor con cifras
+      concretas
+
+contenido_adicional:
+  hashtags: ["#tioyolu", "#yoluoriginals", "#lacasadelaszapatillas"]
+  tono: |
+    Para clips de Yolu, el gancho más fuerte es la rivalidad directa
+    con Fritz por el "número 1" — nombrarlo explícitamente cuando
+    aplique. Sin patrones de texto confirmados todavía por falta de
+    clips reales; ajustar este bloque con feedback una vez publicados
+    los primeros.

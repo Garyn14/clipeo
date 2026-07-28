@@ -1,7 +1,7 @@
 nicho:
   id: zapatillas_peru
   descripcion: "Nicho de vendedores de zapatillas peruanos en TikTok/YouTube"
-  entidades: [fritz, noto]
+  entidades: [fritz, noto, yolu]
   identificacion:
     umbral_alto: 0.65
     umbral_bajo: 0.40
