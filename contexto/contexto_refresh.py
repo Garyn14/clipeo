@@ -22,7 +22,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 MODEL = "claude-sonnet-4-6"
-CONTEXTO_DIR = Path(__file__).parent / "contexto"
+CONTEXTO_DIR = Path(__file__).parent
 
 
 def _load_entity(entity_id: str) -> dict:

@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 STREAM_DATA  = Path("stream_data")
-APRENDIZAJES = Path(__file__).parent / "aprendizajes"
+APRENDIZAJES = Path(__file__).parent.parent / "aprendizajes"
 MODEL        = "claude-sonnet-4-6"
 
 

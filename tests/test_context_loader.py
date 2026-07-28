@@ -3,7 +3,7 @@ test_context_loader.py — Tests unitarios para ContextLoader._assemble()
 (core/context_loader.py).
 """
 
-from core.context_loader import ContextLoader
+from contexto.context_loader import ContextLoader
 
 
 def test_assemble_construye_personajes_desde_entidades():

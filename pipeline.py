@@ -33,8 +33,8 @@ load_dotenv()
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from core.config_loader  import ConfigLoader
-from core.context_loader import ContextLoader
+from contexto.config_loader  import ConfigLoader
+from contexto.context_loader import ContextLoader
 from agent1_peak_detector import run_agent as agent1
 from agent2_range_refiner  import run_agent as agent2
 from agent3_viral_scorer   import run_agent as agent3

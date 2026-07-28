@@ -7,7 +7,7 @@ Soporta dos arquitecturas:
                     + config/ecosistema_id/{personaje_id}.yaml
 
 Uso:
-  from core.config_loader import ConfigLoader
+  from contexto.config_loader import ConfigLoader
 
   cfg = ConfigLoader()
   config = cfg.load("zapatillas_peru")       # archivo único

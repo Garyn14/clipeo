@@ -288,7 +288,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     sys.path.insert(0, str(Path(__file__).parent))
-    from core.config_loader import ConfigLoader
+    from contexto.config_loader import ConfigLoader
 
     canal_id = sys.argv[2] if len(sys.argv) >= 3 else None
     cfg      = ConfigLoader(config_dir=str(Path(__file__).parent / "config"))

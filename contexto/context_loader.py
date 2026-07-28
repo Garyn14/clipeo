@@ -7,7 +7,7 @@ Arquitectura:
   contexto/eventos/{mes}/{entidad_id}_*.yaml → resultados reales + aprendizajes
 
 Uso:
-  from core.context_loader import ContextLoader
+  from contexto.context_loader import ContextLoader
 
   ctx = ContextLoader()
   config = ctx.load_nicho("zapatillas_peru")
