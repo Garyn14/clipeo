@@ -351,7 +351,7 @@ def run_agent(rangos_path: str, config: dict) -> list[dict]:
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("\nUso: python agent3_viral_scorer.py <rangos.json> [canal_id]")
-        print("Ejemplo: python agent3_viral_scorer.py stream_data/test/rangos.json papi_jhos\n")
+        print("Ejemplo: python agent3_viral_scorer.py stream_data/test/rangos.json zapatillas_peru\n")
         sys.exit(1)
 
     from contexto.config_loader import ConfigLoader

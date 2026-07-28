@@ -8,7 +8,7 @@ evidencia real de múltiples nichos publicados.
 ## Estructura de aprendizajes por nicho
 aprendizajes/
   zapatillas_peru.md  → nicho zapatillas peruanas
-  papi_jhos.md        → nicho gifts TikTok Live
+  sideral.md          → entidad sideral (nicho streamers_peru)
 
 ## Cómo registrar un aprendizaje
 1. Publica el clip y espera 24-48h de datos

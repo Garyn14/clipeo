@@ -5,9 +5,9 @@
 ===========================================
 
 Uso:
-  python pipeline.py --live  https://tiktok.com/@usuario/live  [--config papi_jhos]
+  python pipeline.py --live  https://tiktok.com/@usuario/live  [--config zapatillas_peru]
   python pipeline.py --video https://tiktok.com/@usuario/live  [--config canal_id]
-  python pipeline.py --test  stream_data/test/                 [--config papi_jhos]
+  python pipeline.py --test  stream_data/test/                 [--config zapatillas_peru]
 
   --config omitido → usa config/default.yaml
 """
@@ -787,9 +787,9 @@ if __name__ == "__main__":
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Ejemplos:\n"
-            "  python pipeline.py --live  https://tiktok.com/@papi.jhos/live --config papi_jhos\n"
+            "  python pipeline.py --live  https://tiktok.com/@usuario/live --config zapatillas_peru\n"
             "  python pipeline.py --video https://tiktok.com/@usuario/live\n"
-            "  python pipeline.py --test  stream_data/test/ --config papi_jhos\n"
+            "  python pipeline.py --test  stream_data/test/ --config zapatillas_peru\n"
         ),
     )
 
@@ -800,7 +800,7 @@ if __name__ == "__main__":
 
     parser.add_argument(
         "--config", metavar="CANAL_ID", default=None,
-        help="ID del canal en config/  (ej: papi_jhos).  Default: default.yaml",
+        help="ID del canal en config/  (ej: zapatillas_peru).  Default: default.yaml",
     )
     parser.add_argument(
         "--revisar", action="store_true", default=False,

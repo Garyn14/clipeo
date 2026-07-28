@@ -188,7 +188,7 @@ def run_agent(transcripcion_path: str, config: dict) -> list[dict]:
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("\nUso: python agent1_peak_detector.py <transcripcion.txt> [canal_id]")
-        print("Ejemplo: python agent1_peak_detector.py stream_data/test/transcripcion_completa.txt papi_jhos\n")
+        print("Ejemplo: python agent1_peak_detector.py stream_data/test/transcripcion_completa.txt zapatillas_peru\n")
         sys.exit(1)
 
     from contexto.config_loader import ConfigLoader
