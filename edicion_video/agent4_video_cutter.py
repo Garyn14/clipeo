@@ -411,15 +411,87 @@ def _build_vf(linea1: str, linea2: str, font_rel: str, has_letterbox: bool, bar_
     return ",".join(filters), params, overlays
 
 
+def _load_word_timings(session_dir: Path, inicio_s: float, fin_s: float) -> list[dict]:
+    """
+    Lee palabras.json (si existe — ver transcripcion/video_transcriber.py)
+    y filtra al rango [inicio_s, fin_s), con timestamps ajustados a
+    relativos-al-clip (restando inicio_s).
+
+    Retorna [] si no hay datos (sesión vieja, o transcripción por Colab que
+    no devolvió alineación por palabra) — el llamador debe caer a la ruta
+    estática de subtítulos, nunca fallar el corte por esto.
+    """
+    palabras_path = session_dir / "palabras.json"
+    if not palabras_path.exists():
+        return []
+    try:
+        data = json.loads(palabras_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+
+    out = []
+    for w in data:
+        start = w.get("start")
+        if start is None or not (inicio_s <= start < fin_s):
+            continue
+        rel_start = start - inicio_s
+        rel_end   = max(rel_start + 0.05, w.get("end", start) - inicio_s)
+        out.append({"word": w.get("word", ""), "start": rel_start, "end": rel_end})
+    return out
+
+
+def _build_vf_animated(words: list[dict], font_rel: str) -> str | None:
+    """
+    Subtítulos animados palabra por palabra: una palabra visible a la vez,
+    centrada, cada una con su propia ventana de tiempo (mutuamente
+    excluyentes) según los timestamps reales de WhisperX en palabras.json.
+
+    Empieza simple a propósito (una palabra a la vez, no frase completa con
+    la palabra actual resaltada) — es la forma de filtro más robusta, menos
+    propensa a romperse por un filter_complex gigante.
+
+    Retorna None si ninguna palabra sobrevivió el saneo (texto vacío tras
+    _sanitize_text) — el llamador debe caer a la ruta estática.
+    """
+    font_opt = f"fontfile={font_rel}:" if font_rel else ""
+    base = (
+        "scale=1080:1920:force_original_aspect_ratio=decrease,"
+        "pad=1080:1920:(ow-iw)/2:(oh-ih)/2"
+    )
+    filters = [base]
+    alguna  = False
+
+    for w in words:
+        text = _sanitize_text(w["word"])
+        if not text or w["end"] <= w["start"]:
+            continue
+        fs = _pick_fontsize(text, [72, 64, 56, 48], 900)
+        filters.append(
+            f"drawtext={font_opt}expansion=none:text='{text}':"
+            f"fontsize={fs}:fontcolor=black:"
+            "x=(w-text_w)/2:y=(h-text_h)/2:"
+            f"enable=between(t\\,{w['start']:.3f}\\,{w['end']:.3f}):"
+            "box=1:boxcolor=white@0.85:boxborderw=14"
+        )
+        alguna = True
+
+    return ",".join(filters) if alguna else None
+
+
 def _cut_clip(
     video_path: Path, inicio: str, fin: str,
     linea1: str, linea2: str,
     output_path: Path, font_rel: str,
     has_letterbox: bool, bar_height: int,
+    session_dir: Path | None = None,
 ) -> bool:
     """
     Corta [inicio, fin] del video y quema las dos líneas de texto.
-    Fallback a corte sin subtítulo si drawtext falla.
+
+    Si session_dir tiene palabras.json (ver transcripcion/video_transcriber.py),
+    intenta primero subtítulos animados palabra por palabra; si no hay datos
+    de palabra o ese intento falla, cae al subtítulo estático de dos líneas;
+    si eso también falla, corta sin ningún texto — nunca se pierde el clip.
     """
     inicio   = _normalize_timestamp(inicio)
     fin      = _normalize_timestamp(fin)
@@ -493,19 +565,37 @@ def _cut_clip(
         str(output_path),
     ]
 
-    attempts = [
-        ("con subtítulo", cmd_con_subtitulo),
-        ("sin subtítulo", cmd_sin_subtitulo),
-    ]
+    attempts = []
+
+    if session_dir is not None:
+        inicio_s = _timestamp_to_seconds(inicio)
+        words    = _load_word_timings(session_dir, inicio_s, inicio_s + duracion)
+        vf_animado = _build_vf_animated(words, font_rel) if words else None
+        if vf_animado:
+            print(f"         Subtítulos: animados por palabra ({len(words)} palabras)")
+            attempts.append(("animado", [
+                "ffmpeg", "-ss", inicio, "-i", str(video_path),
+                "-t", str(duracion), "-v", "error",
+                "-vf", vf_animado,
+                "-c:v", "libx264", "-c:a", "aac", "-y",
+                str(output_path),
+            ]))
+        else:
+            print(f"         Subtítulos: sin palabras.json/datos — usando texto estático")
+
+    attempts.append(("con subtítulo", cmd_con_subtitulo))
+    attempts.append(("sin subtítulo", cmd_sin_subtitulo))
 
     for label, cmd in attempts:
         result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
         if result.returncode == 0:
             if label == "sin subtítulo":
                 print(f"  ⚠️  Subtítulo falló — clip guardado sin texto")
+            elif label == "con subtítulo" and len(attempts) > 2:
+                print(f"  ⚠️  Subtítulo animado falló — clip guardado con texto estático")
             return True
-        if label == "con subtítulo":
-            print(f"  ⚠️  Subtítulo falló ({result.stderr.split(chr(10))[-2][:80]}), reintentando sin texto...")
+        if label != "sin subtítulo":
+            print(f"  ⚠️  {label.capitalize()} falló ({result.stderr.split(chr(10))[-2][:80]}), reintentando...")
 
     print(f"  ❌ FFmpeg error:\n{result.stderr[-600:]}")
     return False
@@ -581,7 +671,10 @@ def run_agent(
         print(f"         Línea 2 : {linea2}")
         print(f"         Texto   : '{_sanitize_text(linea1)}' / '{_sanitize_text(linea2)}'  (sanitizado)")
 
-        ok = _cut_clip(video_path, inicio, fin, linea1, linea2, clip_path, font_rel, has_lb, bar_h)
+        ok = _cut_clip(
+            video_path, inicio, fin, linea1, linea2, clip_path, font_rel, has_lb, bar_h,
+            session_dir=session_dir,
+        )
 
         if ok:
             size_kb = clip_path.stat().st_size // 1024

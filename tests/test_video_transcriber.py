@@ -6,10 +6,12 @@ Todas las llamadas HTTP están mockeadas con requests_mock — nunca se golpea
 una URL real.
 """
 
+import json
+
 import pytest
 import requests
 
-from transcripcion.video_transcriber import _transcribe_via_colab
+from transcripcion.video_transcriber import _transcribe_via_colab, _write_word_timings
 
 TRANSCRIBE_URL = "https://fake-colab.trycloudflare.com/transcribe"
 
@@ -150,3 +152,44 @@ def test_connection_error_en_polling(requests_mock, audio_file):
 
     with pytest.raises(RuntimeError):
         _transcribe_via_colab(audio_file, timeout=5, poll_interval=0.01)
+
+
+def test_write_word_timings_extrae_palabras_con_offset(tmp_path):
+    segments = [
+        {"words": [
+            {"word": "Hola",  "start": 1.0, "end": 1.3},
+            {"word": "mundo", "start": 1.4, "end": 1.8},
+        ]},
+    ]
+    dest = tmp_path / "palabras.json"
+    n = _write_word_timings(segments, dest, offset_segundos=10)
+
+    assert n == 2
+    data = json.loads(dest.read_text(encoding="utf-8"))
+    assert data == [
+        {"word": "Hola",  "start": 11.0, "end": 11.3},
+        {"word": "mundo", "start": 11.4, "end": 11.8},
+    ]
+
+
+def test_write_word_timings_omite_palabras_sin_alinear(tmp_path):
+    segments = [
+        {"words": [
+            {"word": "Hola"},                            # sin start/end
+            {"word": "mundo", "start": 1.4, "end": 1.8},
+        ]},
+    ]
+    dest = tmp_path / "palabras.json"
+    n = _write_word_timings(segments, dest)
+
+    assert n == 1
+    data = json.loads(dest.read_text(encoding="utf-8"))
+    assert data == [{"word": "mundo", "start": 1.4, "end": 1.8}]
+
+
+def test_write_word_timings_sin_segmentos_escribe_lista_vacia(tmp_path):
+    dest = tmp_path / "palabras.json"
+    n = _write_word_timings([], dest)
+
+    assert n == 0
+    assert json.loads(dest.read_text(encoding="utf-8")) == []

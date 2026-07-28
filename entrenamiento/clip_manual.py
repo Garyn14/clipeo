@@ -48,6 +48,12 @@ def parse_args() -> argparse.Namespace:
         "--nota", default=None,
         help="Opcional: nota del editor sobre por qué este clip es bueno (solo con --entrenamiento)",
     )
+    p.add_argument(
+        "--animado", action="store_true", default=False,
+        help="Usa subtítulos animados palabra por palabra si hay palabras.json en "
+             "session_dir (ver transcripcion/video_transcriber.py) — cae a texto "
+             "estático si no hay datos de palabra.",
+    )
     return p.parse_args()
 
 
@@ -146,6 +152,7 @@ def main() -> None:
         video_path, args.inicio, args.fin,
         args.linea1 or "", args.linea2 or "",
         clip_path, font_rel, has_lb, bar_h,
+        session_dir=session_dir if args.animado else None,
     )
 
     if not ok:

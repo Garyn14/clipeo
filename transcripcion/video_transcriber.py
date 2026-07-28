@@ -12,6 +12,7 @@ Sin HF_TOKEN transcribe sin labels de speaker.
 import sys
 sys.stdout.reconfigure(encoding="utf-8")
 
+import json
 import os
 import time
 from pathlib import Path
@@ -22,6 +23,35 @@ load_dotenv()
 
 from core.utils import setup_ffmpeg_path
 setup_ffmpeg_path()
+
+
+def _write_word_timings(segments: list, dest_path: Path, offset_segundos: float = 0) -> int:
+    """
+    Persiste los timestamps por palabra que whisperx.align() ya calcula en
+    result["segments"][i]["words"] pero que el .txt de salida (a nivel de
+    segmento) descarta — necesarios para subtítulos animados palabra por
+    palabra en edicion_video/agent4_video_cutter.py.
+
+    Solo incluye palabras con start/end reales (whisperx a veces deja
+    palabras sin alinear, ej. números o tokens raros — se omiten en vez de
+    inventar un timestamp). offset_segundos ajusta a tiempo real del video
+    completo, igual que ya hacen los timestamps de segmento en transcribe_chunk.
+
+    Retorna la cantidad de palabras escritas (0 si no hay alineación disponible
+    — no es un error, algunas transcripciones no logran alinear nada).
+    """
+    palabras = []
+    for seg in segments:
+        for w in seg.get("words", []):
+            if "start" not in w or "end" not in w:
+                continue
+            palabras.append({
+                "word":  w.get("word", "").strip(),
+                "start": round(w["start"] + offset_segundos, 3),
+                "end":   round(w["end"] + offset_segundos, 3),
+            })
+    dest_path.write_text(json.dumps(palabras, ensure_ascii=False), encoding="utf-8")
+    return len(palabras)
 
 
 def _transcribe_via_colab(audio_path: Path, timeout: int = 1800, poll_interval: int = 10) -> dict:
@@ -134,6 +164,8 @@ def transcribe_full(
     Guarda:
       - session_dir/transcripcion_raw.txt      (salida primaria)
       - session_dir/transcripcion_completa.txt (copia legacy para compatibilidad)
+      - session_dir/palabras.json               (timestamps por palabra, para
+                                                   subtítulos animados en Agente 4)
 
     Retorna Path a transcripcion_raw.txt.
     """
@@ -231,9 +263,14 @@ def transcribe_full(
     legacy = session_dir / "transcripcion_completa.txt"
     legacy.write_text(raw_path.read_text(encoding="utf-8"), encoding="utf-8")
 
+    # Timestamps por palabra (para subtítulos animados en Agente 4)
+    palabras_path  = session_dir / "palabras.json"
+    n_palabras_ts  = _write_word_timings(result["segments"], palabras_path)
+
     total = time.time() - t0
     print(f"[WHISPERX] ✅ {word_count:,} palabras en {total:.1f}s")
     print(f"[WHISPERX] Diarización: {'sí (SPEAKER_XX)' if diarized else 'no'}")
+    print(f"[WHISPERX] Timestamps por palabra: {n_palabras_ts:,} (palabras.json)")
     print(f"[WHISPERX] Guardado en: {raw_path}")
 
     return raw_path
@@ -287,6 +324,15 @@ def transcribe_chunk(
         # Copia como transcripcion_completa.txt para compatibilidad con agent2/3
         out_path = chunk_dir / "transcripcion_completa.txt"
         out_path.write_text(raw_path.read_text(encoding="utf-8"), encoding="utf-8")
+
+        # Timestamps por palabra — solo si el notebook de Colab ya los incluye
+        # en la respuesta (no verificable desde este repo, ver docs/COMANDOS.md
+        # o el plan de la Fase 3: el servidor remoto necesita su propio
+        # whisperx.align() para devolver "words" por segmento). Si no vienen,
+        # simplemente no habrá subtítulos animados para esta sesión — no falla.
+        n_palabras_ts = _write_word_timings(segments, chunk_dir / "palabras.json", offset_segundos)
+        if n_palabras_ts:
+            print(f"[COLAB] [{chunk_id}] Timestamps por palabra: {n_palabras_ts:,} (palabras.json)")
 
         print(f"[COLAB] [{chunk_id}] ✅ {word_count:,} palabras  (offset +{offset_segundos}s)")
 
@@ -373,7 +419,13 @@ def transcribe_chunk(
     out_path = chunk_dir / "transcripcion_completa.txt"
     out_path.write_text(raw_path.read_text(encoding="utf-8"), encoding="utf-8")
 
+    # Timestamps por palabra (para subtítulos animados en Agente 4)
+    n_palabras_ts = _write_word_timings(
+        result["segments"], chunk_dir / "palabras.json", offset_segundos
+    )
+
     total = time.time() - t0
     print(f"[WHISPERX] [{chunk_id}] ✅ {word_count:,} palabras en {total:.1f}s  (offset +{offset_segundos}s)")
+    print(f"[WHISPERX] [{chunk_id}] Timestamps por palabra: {n_palabras_ts:,} (palabras.json)")
 
     return out_path
