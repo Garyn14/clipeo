@@ -2,6 +2,14 @@
 contexto_refresh.py — Busca noticias recientes de una entidad via web search
 y permite aprobar eventos para guardar en contexto/eventos/.
 
+DEPRECADO EN LA PRÁCTICA (2026-07-31): este script gasta API real de
+Anthropic (la búsqueda web corre dentro de la llamada a Claude). Sigue
+funcionando, pero para este tipo de investigación/curación hoy se prefiere
+que un agente de Claude Code lo haga directo en sesión con su propio
+WebSearch, sin gastar ANTHROPIC_API_KEY, guardando el resultado en el mismo
+formato de archivo — ver .claude/skills/seo-refresh/SKILL.md como ejemplo
+de este patrón (memoria: preferencia-claude-code-reemplaza-scripts-de-api).
+
 Uso:
     python contexto_refresh.py fritz
     python contexto_refresh.py fritz --max-busquedas 8

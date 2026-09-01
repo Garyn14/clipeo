@@ -1,0 +1,18 @@
+evento:
+  entidad: yolu
+  fecha: 2026-04
+  titulo: "Extorsión en vivo — piden $200,000 USD a Tío Yolu"
+  descripcion: |
+    Durante una transmisión en vivo (abril 2026), alguien llamó a un
+    número de la empresa Yolu exigiendo $200,000 USD a cambio de no
+    atentar contra la vida del empresario Jordy/Yordi Picón Andrade.
+    La Policía (Depincri Huánuco, área de Secuestros y Extorsiones)
+    abrió investigación por la llamada extorsiva.
+  tipo: "seguridad_crimen_real"
+  origen: "refresh_manual"
+  aprobado: true
+  relevancia: |
+    Hecho delictivo real ocurrido en cámara — no contenido armado a
+    propósito. Ver manejo de texto obligatorio (leetspeak) en
+    contexto/entidades/yolu.yaml::contenido_adicional.tono para
+    clips que traten este tema.

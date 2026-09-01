@@ -1,0 +1,20 @@
+evento:
+  entidad: yolu
+  fecha: 2026
+  titulo: "Policías dados de baja por spot publicitario disfrazado de intervención"
+  descripcion: |
+    Tres suboficiales de la PNP (Luis Alexander Oquendo Baldeón, Lolin
+    Palacios Chávez y Franchesco Jhon Alberto Pérez) fueron pasados al
+    retiro por el Tribunal Disciplinario PNP (Resolución N° 863, faltas
+    MG-103, MG-19, G-53, G-46) tras participar en un video de ~3
+    minutos que aparentaba ser una intervención policial rutinaria de
+    verificación de mercadería, pero que en realidad era un spot
+    publicitario para la tienda de Yolu.
+  tipo: "polemica_institucional"
+  origen: "refresh_manual"
+  aprobado: true
+  relevancia: |
+    Ángulo de humor/ironía institucional (policías reales sancionados
+    por actuar en un comercial) — distinto en tono de las polémicas de
+    seguridad real (extorsión, atentado), no requiere el mismo manejo
+    de texto sensible.

@@ -122,6 +122,7 @@ class ContextLoader:
         det_prompt = det_base.get("prompt", "")
         cnt_prompt = cnt_base.get("prompt", "")
         hashtags   = list(cnt_base.get("hashtags_base", []))
+        seo_base   = copy.deepcopy(nicho_data.get("seo_base", {}))
 
         for ent_data in entidades:
             det_extra = ent_data.get("deteccion_adicional", {}).get("prompt", "").strip()
@@ -169,6 +170,7 @@ class ContextLoader:
             "personajes": personajes,
             "entidades":  entidades,
             "eventos":    eventos,
+            "seo_base":   seo_base,
         }
 
     # ─────────────────────────────────────────

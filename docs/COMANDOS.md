@@ -2,7 +2,7 @@
 
 Referencia de todos los comandos disponibles hoy en el proyecto, con ejemplos. Para entender qué hace cada etapa internamente ver [ARQUITECTURA.md](ARQUITECTURA.md); para el formato de los archivos que estos comandos leen/escriben ver [ESTRUCTURA_DATOS.md](ESTRUCTURA_DATOS.md).
 
-Todos los comandos se ejecutan desde la raíz del proyecto y requieren `.env` con `ANTHROPIC_API_KEY` (todos los que llaman a Claude) y opcionalmente `HF_TOKEN` (diarización de hablantes).
+Todos los comandos se ejecutan desde la raíz del proyecto y requieren `.env` con `ANTHROPIC_API_KEY` (todos los que llaman a Claude) y opcionalmente `HF_TOKEN` (diarización de hablantes). Excepción: con `AI_PROVIDER=manual` (ver §5) los Agentes 0-3 no requieren `ANTHROPIC_API_KEY`.
 
 ---
 
@@ -113,6 +113,8 @@ python entrenamiento/clip_manual.py \
 
 Solo aplica a entidades del Módulo Contexto v2 (`contexto/entidades/`). Usa la búsqueda web nativa de Claude para encontrar novedades recientes y, tras tu aprobación, las guarda como eventos de contexto.
 
+**Deprecado en la práctica (2026-07-31)**: este comando gasta API real (la búsqueda web corre dentro de la llamada a Claude). Para este tipo de investigación, hoy se prefiere pedirle directo a un agente de Claude Code que investigue con su propio `WebSearch` en la sesión — sin comando de terminal, sin gastar `ANTHROPIC_API_KEY`. Mismo patrón usado por `.claude/skills/seo-refresh/SKILL.md`. El comando de abajo sigue funcionando si hiciera falta.
+
 ```bash
 python contexto/contexto_refresh.py fritz
 python contexto/contexto_refresh.py sideral --max-busquedas 8
@@ -151,7 +153,37 @@ Notas:
 
 ---
 
-## 4. Comandos que ya NO aplican (archivados)
+## 4. Modo manual sin gastar la API (`AI_PROVIDER=manual`)
+
+Los Agentes 0-3 obtienen su cliente vía `ai_client.get_client()` (ver [ARQUITECTURA.md §16](ARQUITECTURA.md)). Con `AI_PROVIDER=manual` en `.env` (o como variable de entorno puntual), ningún agente llama a la API real de Anthropic — en su lugar, cada llamada queda escrita en `ai_client/_pending/<id>.request.json` y el proceso espera a que alguien escriba `ai_client/_pending/<id>.response.json` a mano.
+
+```bash
+# Ejemplo: correr el Agente 1 aislado (§3) sin gastar la API
+AI_PROVIDER=manual python agentes/agent1_peak_detector.py stream_data/<session>/transcripcion_completa.txt zapatillas_peru
+
+# Ejemplo: corrida completa de pipeline.py sin gastar la API de Claude
+AI_PROVIDER=manual python pipeline.py --video <url> --config <canal_id>
+```
+
+Con `pipeline.py` (no aplica a los agentes sueltos de arriba), `AI_PROVIDER=manual` **fuerza automáticamente `--colab`** para la transcripción — no hace falta pasarlo a mano. WhisperX local puede tardar más de una hora en un video de 20-25 min, lo cual no tiene sentido si de por sí el objetivo es iterar rápido sin gastar la API; requiere `COLAB_TRANSCRIBE_URL` configurada en `.env` (ver `.env.example`).
+
+Esto imprime algo como:
+```
+[AI_CLIENT] Modo manual — request escrita: ai_client/_pending/3f9a1b2c4d5e.request.json
+[AI_CLIENT] Esperando respuesta en: ai_client/_pending/3f9a1b2c4d5e.response.json (timeout 1800s)
+```
+
+Para responder: abrir el `.request.json` (trae `model`/`system`/`messages`/`max_tokens`, lo mismo que iría a la API), generar el texto que Claude habría devuelto, y escribir `ai_client/_pending/3f9a1b2c4d5e.response.json` con:
+```json
+{"text": "{\"picos\": [...]}"}
+```
+(el JSON que espera el agente que hizo la llamada, como string dentro de `"text"`). El proceso retoma apenas detecta el archivo, y borra ambos al terminar.
+
+Sin `AI_PROVIDER` en `.env` (o con `AI_PROVIDER=anthropic`), el comportamiento es el de siempre: llamada real a la API, requiere `ANTHROPIC_API_KEY`.
+
+---
+
+## 5. Comandos que ya NO aplican (archivados)
 
 - `python capture_pipeline.py <url>` — script v1.1 que vivía en la raíz; ahora está en `archive/capture_pipeline.py` y usa `whisper` clásico en vez de WhisperX. Es lo que describía el `CLAUDE.md` viejo. No lo ejecutes desde ahí sin adaptarlo — no está integrado con el resto del pipeline actual (agentes 0, Módulo Contexto, etc.).
 - `archive/merge_contenido.py` — script puntual de una sola vez, con una ruta de sesión (`stream_data/20260612_210425`) y una lista de chunks hardcodeados dentro del archivo. No es un comando general; si necesitás mergear contenido de chunks manualmente, hoy eso ya lo hace `pipeline.py` automáticamente al final del modo `--video` (ver ARQUITECTURA.md §3.1 paso 5).

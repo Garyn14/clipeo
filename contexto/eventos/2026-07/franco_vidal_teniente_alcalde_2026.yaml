@@ -1,0 +1,21 @@
+evento:
+  entidad: franco_vidal
+  fecha: 2026-06
+  titulo: "Estrategia de \"teniente alcalde\" para eludir la prohibición de reelección"
+  descripcion: |
+    A fines de junio 2026 se reportó que Franco Vidal, junto a más
+    de 15 alcaldes de Lima, se postula como teniente alcalde (primer
+    regidor de su lista) en vez de candidato directo a alcalde para
+    las elecciones municipales de octubre 2026 — copiando la
+    estrategia de Rafael López Aliaga para eludir la prohibición
+    legal de reelección municipal inmediata. Especialistas y medios
+    (Willax/Contracorriente, La República) lo describen como
+    "reelección encubierta".
+  tipo: "polemica_politica"
+  origen: "refresh_manual"
+  aprobado: true
+  relevancia: |
+    Tema político central de cara a las elecciones de octubre 2026.
+    Útil para detectar declaraciones o defensas en vivo sobre esta
+    estrategia, o ataques de rivales (ej. Edde Cuéllar) por el mismo
+    motivo.

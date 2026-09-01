@@ -24,6 +24,7 @@ load_dotenv()
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from core.utils import _timestamp_to_seconds, _parse_segments
+from ai_client import get_client
 
 # ─────────────────────────────────────────
 #  CONFIGURACIÓN
@@ -137,19 +138,56 @@ def _build_personajes_note(
     )
 
 
+def _merge_hashtags(base: list[str], extra: list[str]) -> list[str]:
+    """Combina hashtags base + extra sin duplicados, preservando el orden (base primero)."""
+    return list(dict.fromkeys((base or []) + (extra or [])))
+
+
+def _format_seo_context(seo_base: dict) -> str:
+    """
+    Arma el bloque de texto 'SEO BASE POR PLATAFORMA' a partir de
+    config["seo_base"] (ver contexto/nichos/<id>.yaml) para inyectarlo en el
+    prompt cacheado de _call_claude(), igual que el bloque de aprendizajes.
+    """
+    if not seo_base:
+        return ""
+
+    bloques = []
+    actualizado = seo_base.get("actualizado")
+    if actualizado:
+        bloques.append(f"(última actualización: {actualizado})")
+
+    for plataforma_id, etiqueta in (("tiktok", "TikTok"), ("youtube_shorts", "YouTube Shorts")):
+        datos        = seo_base.get(plataforma_id) or {}
+        hashtags     = datos.get("hashtags") or []
+        tags_backend = datos.get("tags_backend") or []
+        notas        = (datos.get("notas") or "").strip()
+        if not hashtags and not tags_backend and not notas:
+            continue
+        partes = [f"{etiqueta}:"]
+        if hashtags:
+            partes.append(f"  Hashtags base: {', '.join(hashtags)}")
+        if tags_backend:
+            partes.append(f"  Tags backend base: {', '.join(tags_backend)}")
+        if notas:
+            partes.append(f"  Notas: {notas}")
+        bloques.append("\n".join(partes))
+
+    return "\n\n".join(bloques).strip()
+
+
 def _call_claude(
     client: anthropic.Anthropic, rango: dict, clip_text: str, prompt: str,
     aprendizajes_context: str | None = None,
+    seo_context: str | None = None,
     extra_note: str = "",
 ) -> dict:
-    # Bloque cacheado: prompt del nicho + aprendizajes (grande, repetido por cada clip)
+    # Bloque cacheado: prompt del nicho + aprendizajes + SEO base (grande, repetido por cada clip)
+    cached_context = prompt
     if aprendizajes_context:
-        cached_context = (
-            prompt +
-            f"\n\n---\nREGLAS ACTIVAS DEL NICHO:\n{aprendizajes_context}\n---"
-        )
-    else:
-        cached_context = prompt
+        cached_context += f"\n\n---\nREGLAS ACTIVAS DEL NICHO:\n{aprendizajes_context}\n---"
+    if seo_context:
+        cached_context += f"\n\n---\nSEO BASE POR PLATAFORMA:\n{seo_context}\n---"
 
     # Bloque no cacheado: datos específicos del clip (cambia en cada llamada)
     clip_block = (
@@ -236,6 +274,13 @@ def run_agent(rangos_path: str, config: dict) -> list[dict]:
         aprendizajes_context = None
         print(f"[AGENT3] Aprendizajes: no encontrado para {canal_id}")
 
+    seo_base    = config.get("seo_base", {})
+    seo_context = _format_seo_context(seo_base)
+    if seo_context:
+        print(f"[AGENT3] SEO base: cargado (actualizado {seo_base.get('actualizado', '?')})")
+    else:
+        print(f"[AGENT3] SEO base: no configurado para {canal_id}")
+
     rangos_data  = json.loads(rangos_file.read_text(encoding="utf-8")).get("rangos", [])
     conservados  = [r for r in rangos_data if r.get("conservar")]
     text         = transcripcion.read_text(encoding="utf-8")
@@ -249,7 +294,7 @@ def run_agent(rangos_path: str, config: dict) -> list[dict]:
     print(f"[AGENT3] Prompt Caching activo para lore del nicho")
     print(f"[AGENT3] {'─'*40}\n")
 
-    client     = anthropic.Anthropic()
+    client     = get_client()
     contenido  = []
     a_publicar = 0
     descartados = 0
@@ -272,7 +317,9 @@ def run_agent(rangos_path: str, config: dict) -> list[dict]:
             print(f"  ⚠️  Sin texto en el rango, descartando")
             resultado = {"score": 0, "publicar": False, "razon_score": "clip vacío"}
         else:
-            resultado = _call_claude(client, rango, clip_text, prompt, aprendizajes_context, personajes_note)
+            resultado = _call_claude(
+                client, rango, clip_text, prompt, aprendizajes_context, seo_context, personajes_note
+            )
 
         # Verificar palabras prohibidas y regenerar si es necesario
         if palabras_prohibidas:
@@ -292,7 +339,7 @@ def run_agent(rangos_path: str, config: dict) -> list[dict]:
                     f"morbo sin las palabras prohibidas."
                 )
                 resultado = _call_claude(
-                    client, rango, clip_text, prompt, aprendizajes_context, extra
+                    client, rango, clip_text, prompt, aprendizajes_context, seo_context, extra
                 )
 
         # Limpiar nombres canónicos en el texto generado
@@ -308,13 +355,64 @@ def run_agent(rangos_path: str, config: dict) -> list[dict]:
                     resultado["texto_linea2"] = partes[1].strip()
 
         # Mergear hashtags: base del config + específicos de Claude, sin duplicados
-        claude_tags = resultado.get("hashtags", [])
-        merged_tags = list(dict.fromkeys(hashtags_base + claude_tags))
-        resultado["hashtags"] = merged_tags
+        resultado["hashtags"] = _merge_hashtags(hashtags_base, resultado.get("hashtags", []))
 
         # Default defensivo por si el prompt no pide/Claude omite el mood
         # (usado por Agente 4 para elegir música de fondo — ver edicion_video/)
         resultado.setdefault("mood", "neutral")
+
+        # Default defensivo por si el prompt no pide/Claude omite el estilo
+        # de texto (usado por Agente 4 para decidir el modo de subtítulo —
+        # "fijo" preserva el comportamiento previo a este campo)
+        resultado.setdefault("estilo_texto", "fijo")
+
+        # Defaults defensivos para los campos opcionales de la Fase 6
+        # (CTA y resaltado de palabra clave — ver edicion_video/)
+        resultado.setdefault("cta_texto", "")
+        resultado.setdefault("palabras_clave", [])
+
+        # Default defensivo para el relleno de fuente horizontal (Fase 7).
+        # "blur" es el default temporal (2026-07-30, ver contexto/nichos/*.yaml)
+        # mientras "imagen"/"crop" maduran — revertir a "pillarbox" cuando eso
+        # cambie.
+        resultado.setdefault("layout", "blur")
+
+        # Publicación por plataforma (SEO) — Claude redacta descripción/hashtags
+        # específicos del clip; se mezclan con los hashtags base de seo_base
+        # (contexto/nichos/<id>.yaml) igual que el merge global de arriba, para
+        # garantizar que los "siempre incluir" (ej. #Shorts) sobrevivan aunque
+        # Claude no los repita. Defaults vacíos si Claude omite el campo entero.
+        publicacion = resultado.get("publicacion") or {}
+        tiktok_seo  = seo_base.get("tiktok", {})
+        yt_seo      = seo_base.get("youtube_shorts", {})
+        tiktok_pub  = publicacion.get("tiktok") or {}
+        yt_pub      = publicacion.get("youtube_shorts") or {}
+        resultado["publicacion"] = {
+            "tiktok": {
+                "descripcion": tiktok_pub.get("descripcion", ""),
+                "hashtags": _merge_hashtags(tiktok_seo.get("hashtags", []), tiktok_pub.get("hashtags", [])),
+            },
+            "youtube_shorts": {
+                "titulo_alt":   yt_pub.get("titulo_alt", ""),
+                "descripcion":  yt_pub.get("descripcion", ""),
+                "hashtags":     _merge_hashtags(yt_seo.get("hashtags", []), yt_pub.get("hashtags", [])),
+                "tags_backend": _merge_hashtags(yt_seo.get("tags_backend", []), yt_pub.get("tags_backend", [])),
+            },
+        }
+
+        # Efecto de sonido corto (stinger/whoosh) anclado al momento de
+        # énfasis (Fase 15) — None preserva el comportamiento previo; no
+        # está en el prompt todavía (sin assets curados en
+        # edicion_video/assets/efectos_sonido/, ver docs/ESTRUCTURA_DATOS.md)
+        resultado.setdefault("efecto_sonido", None)
+
+        # layout_streaming (Fase 9) es un hecho TÉCNICO del canal (cómo
+        # está armada la escena de OBS del streamer), no una decisión de
+        # Claude — se copia tal cual desde la config del canal, nunca se
+        # le pide a Claude. Agente 4 sigue sin recibir config directamente
+        # (se mantiene "técnico puro"): esto viaja igual que mood/estilo_texto,
+        # a través de contenido.json.
+        resultado["layout_streaming"] = config.get("layout_streaming")
 
         # Aplicar score mínimo del config
         score    = resultado.get("score", 0)
@@ -329,6 +427,8 @@ def run_agent(rangos_path: str, config: dict) -> list[dict]:
             print(f"     Línea 2  : {resultado.get('texto_linea2', '')}")
             print(f"     Hashtags : {' '.join(resultado.get('hashtags', []))}")
             print(f"     Razón    : {resultado.get('razon_score', '')}")
+            print(f"     TikTok   : {resultado['publicacion']['tiktok']['descripcion'][:70]}")
+            print(f"     YouTube  : {resultado['publicacion']['youtube_shorts']['titulo_alt']}")
         else:
             descartados += 1
             print(f"  💤 Score {score}/10 — no publicar  ({resultado.get('razon_score', '')})")

@@ -6,6 +6,37 @@ nicho:
     umbral_alto: 0.65
     umbral_bajo: 0.40
 
+# Base de SEO por plataforma — investigado vía WebSearch (Claude Code, sin
+# gastar la API de Anthropic, ver memoria "preferencia-claude-code-reemplaza-
+# scripts-de-api"), no es tendencia minuto a minuto (no existe una API
+# pública confiable para eso) sino mejores prácticas + hashtags de nicho
+# vigentes a la fecha de "actualizado". Refrescar con el skill
+# .claude/skills/seo-refresh/SKILL.md cuando se pida.
+seo_base:
+  actualizado: "2026-07-31"
+  tiktok:
+    hashtags: ["#zapatillasperu", "#fyp", "#parati"]
+    notas: |
+      Fórmula recomendada para negocios: 1 hashtag de intención comercial +
+      1-2 de nicho + 1 de alcance amplio, 3-5 en total (no saturar). Los
+      hashtags específicos de cada vendedor (#tioyolu, #fritzsport,
+      #tionoto) NO van acá — se agregan por clip vía el personaje detectado
+      (contenido_adicional.hashtags de cada entidad), para no mezclar la
+      marca de un vendedor en el clip de otro. Igual que en streamers_peru,
+      el algoritmo de TikTok en 2026 pondera más las palabras dichas/
+      escritas en el caption que los hashtags en sí.
+  youtube_shorts:
+    hashtags: ["#Shorts", "#ZapatillasPeru", "#Peru"]
+    tags_backend: ["zapatillas peru", "zapatillas huanuco", "zapatillas mayoristas", "zapatillas originales o falsas"]
+    notas: |
+      "#Shorts" siempre primero. Máximo 3-5 hashtags; los primeros 3 de la
+      descripción aparecen como links arriba del título. tags_backend son
+      keywords de búsqueda genéricas del nicho — el nombre del vendedor
+      (yolu/fritz/noto) se agrega por clip, no acá.
+  facebook_reels:
+    hashtags: []
+    notas: ""   # sin activar todavía — placeholder para cuando se sume la plataforma
+
 deteccion_base:
   confianza_minima: 0.75
   prompt: |
@@ -208,6 +239,14 @@ deteccion_base:
 
     Si no hay picos responde: {"picos": []}
 
+# DEFAULT DE LAYOUT (bloque LAYOUT del prompt de abajo) — decisión temporal
+# (2026-07-30): "blur" quedó como default para fuente horizontal en vez de
+# "pillarbox", porque hoy es la opción más robusta de las que ya están en
+# el prompt. Revertir a pillarbox-como-default (o reemplazar por "imagen"/
+# "crop") cuando esas otras formas tengan assets curados/probados en corrida
+# real — ver docs/ARQUITECTURA.md §16 y docs/ESTRUCTURA_DATOS.md (esquema
+# de contenido.json, campo "layout"). Misma decisión aplicada en
+# streamers_peru.yaml.
 contenido_base:
   score_minimo_publicar: 7
   hashtags_base:
@@ -285,6 +324,17 @@ contenido_base:
       el clip la contiene
     - El texto debe funcionar como gancho autónomo
       sin necesidad de ver el clip para entenderlo
+
+    JERGA Y LEETSPEAK LOCAL — PRESERVAR, NO NEUTRALIZAR:
+    Si la transcripción trae jerga o modismos peruanos
+    (ej. "oe", "causa", "xd", "ya fue") o censura tipo
+    leetspeak (ej. "m3chan", "cabr*n") que son parte del
+    golpe del texto, consérvalos tal cual en vez de
+    traducirlos a un español neutro — es parte del tono
+    auténtico del nicho, no un error a corregir. Esto no
+    contradice la regla de "sin palabras de relleno" de
+    arriba: esa regla es sobre economía de palabras en el
+    título, no sobre neutralizar el tono.
 
     BALANCE VISUAL ENTRE LÍNEAS — OBLIGATORIO:
     Ambas líneas deben tener peso visual similar
@@ -379,6 +429,65 @@ contenido_base:
     - "neutral"      → informativo o sin carga emocional fuerte, usar solo
                       si ninguno de los anteriores encaja bien
 
+    ESTILO DE TEXTO — cómo se debe quemar texto_linea1/texto_linea2 en el
+    video (esto lo ejecuta el módulo de edición tal cual se lo indiques,
+    no lo reinterpreta):
+    - "fijo"          → el texto permanece visible todo el clip (default,
+                        úsalo salvo que el contenido pida lo contrario)
+    - "fijo_inicial"  → el texto aparece solo los primeros segundos y
+                        desaparece; úsalo cuando el hook ya se entiende
+                        sin el texto encima el resto del clip (reacciones
+                        largas, momentos que se explican solos en video)
+    - "dinamico"      → subtítulos animados palabra por palabra en vez de
+                        las dos líneas fijas; úsalo cuando el ritmo del
+                        habla es el atractivo principal del clip
+    - "dinamico_con_titulo" → subtítulos animados palabra por palabra
+                        JUNTO con el hook fijo arriba (ambos a la vez);
+                        úsalo cuando el hook da contexto necesario y el
+                        ritmo del habla también aporta
+    - "sin_texto"     → no quemar ningún texto; úsalo solo si el momento
+                        es autoexplicativo y el texto sobra
+
+    CTA_TEXTO (opcional) — llamado a la acción breve quemado en los
+    últimos segundos del clip (ej. "Sígueme para más", "Espera el final").
+    Déjalo vacío ("") si el clip no lo necesita — no lo fuerces.
+
+    PALABRAS_CLAVE (opcional) — lista de 1 a 3 palabras EXACTAS tal como
+    aparecen en la transcripción que merecen resaltarse en rojo dentro de
+    los subtítulos animados (solo aplica con estilo_texto "dinamico" o
+    "dinamico_con_titulo"). Usa esto solo para el nombre/dato que es el
+    golpe del clip — no satures de resaltado. Lista vacía si no aplica.
+
+    LAYOUT (opcional, solo importa si el video fuente es horizontal) —
+    cómo rellenar el espacio que sobra arriba/abajo al pasar a 9:16:
+    - "blur"      → el mismo video escalado y difuminado de fondo, más
+                    "premium" visualmente — es el default actual para
+                    fuente horizontal, úsalo casi siempre
+    - "pillarbox" → barras negras sólidas — úsalo solo si el contenido
+                    necesita máxima nitidez sin distracción de fondo
+                    (texto muy largo, gráficos superpuestos, HUD de juego)
+
+    PUBLICACIÓN — descripción y hashtags YA ARMADOS por plataforma, listos
+    para copiar/pegar al subir el clip (no confundir con texto_linea1/2,
+    que es el texto quemado EN el video — esto es la caption/título/
+    descripción de la plataforma, texto aparte). Usa como punto de partida
+    los hashtags de "SEO BASE POR PLATAFORMA" de más arriba (si existe ese
+    bloque), pero redacta la descripción específica para este clip.
+
+    - tiktok.descripcion: caption corta con gancho propio (no repitas
+      texto_linea1/2 literal), hashtags al final de la misma descripción
+      además de en el array "hashtags".
+    - youtube_shorts.titulo_alt: título REAL de YouTube (distinto del texto
+      quemado) — palabra clave dentro de los primeros ~40 caracteres,
+      menos de 60 caracteres en total.
+    - youtube_shorts.descripcion: puede ser más larga que la de TikTok,
+      con las mismas palabras clave del título.
+    - youtube_shorts.hashtags: "#Shorts" siempre primero.
+    - youtube_shorts.tags_backend: palabras/frases sueltas SIN "#", para el
+      campo de tags invisible de YouTube (no confundir con hashtags).
+    - Máximo 3-5 hashtags por plataforma en total (contando los de SEO BASE
+      + los que agregues) — no hagas hashtag-stuffing.
+
     FORMATO DE RESPUESTA — solo JSON válido:
     {
       "score": 9,
@@ -387,7 +496,23 @@ contenido_base:
       "texto_linea2": "remate con emoji al final 😱",
       "hashtags": ["#kickperu", "#tioyolu", "#viral"],
       "razon_score": "motivo del score",
-      "mood": "tension"
+      "mood": "tension",
+      "estilo_texto": "fijo",
+      "cta_texto": "",
+      "palabras_clave": [],
+      "layout": "blur",
+      "publicacion": {
+        "tiktok": {
+          "descripcion": "caption con gancho propio + hashtags al final",
+          "hashtags": ["#tioyolu", "#zapatillasperu", "#fyp"]
+        },
+        "youtube_shorts": {
+          "titulo_alt": "título con keyword al inicio, <60 caracteres",
+          "descripcion": "descripción más larga con las mismas keywords",
+          "hashtags": ["#Shorts", "#Peru"],
+          "tags_backend": ["zapatillas peru", "tio yolu"]
+        }
+      }
     }
 
 refinamiento_base:

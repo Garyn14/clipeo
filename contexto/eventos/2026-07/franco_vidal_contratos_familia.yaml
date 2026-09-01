@@ -1,0 +1,23 @@
+evento:
+  entidad: franco_vidal
+  fecha: 2025-08
+  titulo: "Investigación de La Encerrona — contratos millonarios a una misma familia"
+  descripcion: |
+    El periodista Ernesto Cabral (La Encerrona) publicó una
+    investigación mostrando 184 órdenes de compra/servicio
+    (arriendo de toldos, sillas, baños portátiles, producción de
+    eventos) adjudicadas de forma directa, sin licitación pública,
+    a tres personas de un mismo entorno familiar, por un total de
+    S/2.2 millones. Reportes posteriores (Infobae, sep 2025)
+    ampliaron la cifra a casi S/30 millones concentrados en la
+    misma familia bajo la gestión de Franco Vidal. Vidal respondió
+    en vivo calificando la cifra de exagerada y retando a la prensa
+    a "probar lo que dice".
+  tipo: "polemica_grave"
+  origen: "refresh_manual"
+  aprobado: true
+  relevancia: |
+    Momento de alto valor si aparece: Vidal respondiendo en vivo a
+    la prensa, retando a probar acusaciones, o defendiendo los
+    contratos. Conecta con la narrativa de "alcalde vs. prensa" que
+    ya funciona bien en este ecosistema.

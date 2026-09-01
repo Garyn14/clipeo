@@ -94,6 +94,30 @@ deteccion_base:        { confianza_minima, prompt }   # base del Agente 1
 contenido_base:        { score_minimo_publicar, hashtags_base, prompt }   # base del Agente 3
 refinamiento_base:     { contexto_antes_segundos, contexto_despues_segundos,
                           duracion_minima_segundos, duracion_maxima_segundos, prompt }   # base del Agente 2
+
+layout_streaming:      # opcional (Fase 9) — hecho TÉCNICO del canal, no editorial
+  facecam_rect:    {x, y, w, h}   # rect en píxeles del video FUENTE, opcional
+  contenido_rect:  {x, y, w, h}   # ídem — ambos presentes activan split-screen (Layout C)
+  overlays_ocultar: [{x, y, w, h}, ...]   # opcional, rects a tapar con caja negra (ej. watermark de Kick)
+  # Calibrado a mano una vez por streamer (el layout de su OBS es estático
+  # durante la sesión) — Agente 3 lo copia tal cual a contenido.json,
+  # nunca se lo pide a Claude. Ver edicion_video/agent4_video_cutter.py::_build_vf_splitscreen.
+
+seo_base:               # opcional — hashtags/notas base por plataforma para el Agente 3
+  actualizado: <YYYY-MM-DD o null>   # fecha del último refresco manual
+  tiktok:        { hashtags: [<string>, ...], notas: <string> }
+  youtube_shorts: { hashtags: [<string>, ...], tags_backend: [<string>, ...], notas: <string> }
+  facebook_reels: { hashtags: [<string>, ...], notas: <string> }
+  # tiktok.hashtags[0] es "#Shorts" por convención en youtube_shorts, no en tiktok.
+  # facebook_reels existe en el schema pero AÚN NO se le pide a Claude (plataforma
+  # no activa todavía) — mismo criterio que layout: "imagen"/"crop".
+  # Se inyecta en el prompt del Agente 3 vía _format_seo_context() (pre-hoc, Claude
+  # lo lee) y también se mezcla post-hoc con lo que Claude devuelve en
+  # contenido.json → publicacion.<plataforma>.hashtags (ver más abajo), para
+  # garantizar que los hashtags "siempre incluir" sobrevivan aunque Claude no
+  # los repita. No hay refresco automático — ver skill .claude/skills/seo-refresh/
+  # (investigación manual vía WebSearch en sesión de Claude Code, sin gastar
+  # la API — reemplaza el patrón de contexto_refresh.py, ver docs/APRENDIZAJE.md §3).
 ```
 
 **`contexto/entidades/<entidad_id>.yaml`** — lore de una entidad/personaje, referenciada desde uno o más nichos:
@@ -205,8 +229,8 @@ Cada ejecución vive en `stream_data/<session_id>/` (formato `YYYYMMDD_HHMMSS`, 
 | `transcripcion_completa.txt` | varios | Copia de compatibilidad de la transcripción vigente (raw o enriquecida) bajo el nombre legacy que usan los modos `--test` y la lectura por defecto de los agentes. |
 | `speaker_map.json` | `agentes/agent0_speaker_identifier.py` | `{"SPEAKER_00": {"nombre": <string|null>, "confianza": <float>, "estado": "confirmado"\|"posible"\|"desconocido"}, ...}` |
 | `picos.json` | `agentes/agent1_peak_detector.py` | `{"picos": [{"timestamp": "MM:SS", "razon": <string>, "confianza": <float 0-1>, "tipo"?: <string>}, ...]}` — ya filtrado por `confianza_minima`. |
-| `rangos.json` | `agentes/agent2_range_refiner.py` | `{"rangos": [{"conservar": <bool>, "inicio": "HH:MM:SS", "fin": "HH:MM:SS", "duracion_segundos": <int>, "razon": <string>, "gancho": <string>, "pico_original": {...picos.json item}}, ...]}` — puede haber menos rangos que picos (fusión de picos solapados) o rangos con `"conservar": false` (descartados, sin campos de tiempo). |
-| `contenido.json` | `agentes/agent3_viral_scorer.py` | `{"contenido": [{"score": <int 1-10>, "publicar": <bool>, "texto_linea1": <string>, "texto_linea2": <string>, "hashtags": [<string>,...], "razon_score": <string>, "rango_original": {...rangos.json item}}, ...]}` — solo incluye rangos que tenían `conservar: true`. Si `--revisar` estaba activo, este archivo se reescribe tras la revisión con los `publicar` ajustados y ediciones de texto/rango aplicadas. |
+| `rangos.json` | `agentes/agent2_range_refiner.py` | `{"rangos": [{"conservar": <bool>, "inicio": "HH:MM:SS", "fin": "HH:MM:SS", "duracion_segundos": <int>, "razon": <string>, "gancho": <string>, "pico_original": {...picos.json item}, "momento_enfasis_seg"?: <float>}, ...]}` — puede haber menos rangos que picos (fusión de picos solapados) o rangos con `"conservar": false` (descartados, sin campos de tiempo). `momento_enfasis_seg` (opcional): timestamp del pico original relativo al inicio del rango — usado por Agente 4 para el zoom/punch-in (ver `edicion_video/agent4_video_cutter.py::_build_vf_zoom`). |
+| `contenido.json` | `agentes/agent3_viral_scorer.py` | `{"contenido": [{"score": <int 1-10>, "publicar": <bool>, "texto_linea1": <string>, "texto_linea2": <string>, "hashtags": [<string>,...], "razon_score": <string>, "rango_original": {...rangos.json item}, "mood": <string>, "estilo_texto": "sin_texto"\|"fijo"\|"fijo_inicial"\|"dinamico"\|"dinamico_con_titulo", "cta_texto": <string>, "palabras_clave": [<string>,...], "layout": "pillarbox"\|"blur"\|"imagen"\|"crop", "layout_streaming": <dict\|null>, "efecto_sonido": <string\|null>, "publicacion": {"tiktok": {"descripcion": <string>, "hashtags": [<string>,...]}, "youtube_shorts": {"titulo_alt": <string>, "descripcion": <string>, "hashtags": [<string>,...], "tags_backend": [<string>,...]}}}, ...]}` — solo incluye rangos que tenían `conservar: true`. Si `--revisar` estaba activo, este archivo se reescribe tras la revisión con los `publicar` ajustados y ediciones de texto/rango aplicadas. Campos editoriales (`mood`, `estilo_texto`, `cta_texto`, `palabras_clave`, `layout`) los decide Claude vía el prompt de nicho, con defaults defensivos en `agent3_viral_scorer.py` si los omite — **nota: `layout` tiene hoy `"blur"` como default (prompt y fallback defensivo), no `"pillarbox"` — decisión temporal (2026-07-30) mientras `"imagen"`/`"crop"` maduran, ver el comentario sobre el bloque LAYOUT en `contexto/nichos/streamers_peru.yaml` y `zapatillas_peru.yaml`. Excepción: `layout: "imagen"` (Fase 13), `layout: "crop"` (Fase 14) y `efecto_sonido` (Fase 15) todavía NO están en el prompt de Claude** (imagen: no hay imágenes curadas en `edicion_video/assets/imagenes_relleno/`; crop: implementado pero sin probar con una corrida real de Agente 3 todavía; efecto_sonido: no hay efectos curados en `edicion_video/assets/efectos_sonido/`) — hoy los tres solo se pueden forzar manualmente vía `entrenamiento/clip_manual.py --layout imagen|crop` / `--efecto-sonido <tipo>`. `efecto_sonido` solo suena si el clip también tiene `momento_enfasis_seg` (Fase 5) — se ancla ahí vía `adelay`, sin ese instante el efecto se omite. `layout_streaming` es la ÚNICA excepción de origen — es un hecho técnico del canal (no editorial), copiado tal cual desde la config del canal (bloque `layout_streaming` en el YAML), nunca pedido a Claude — ver `_build_vf_splitscreen`. **`publicacion`** (2026-07-31): descripción + hashtags YA ARMADOS por plataforma, listos para copiar/pegar al publicar — no confundir con `texto_linea1`/`texto_linea2`, que es el texto quemado en el video. Claude redacta el contenido específico del clip; los `hashtags`/`tags_backend` se mezclan post-hoc con la base de `seo_base` del nicho (`_merge_hashtags` en `agent3_viral_scorer.py`) para garantizar que los hashtags "siempre incluir" (ej. `#Shorts`) sobrevivan aunque Claude no los repita. `facebook_reels` no está en este campo todavía — mismo criterio de plataforma-no-activa que `layout: "imagen"/"crop"`. Ningún agente/herramienta lo automatiza hacia la plataforma real — sigue siendo el usuario quien publica a mano, esto solo le ahorra redactarlo. **Compilación multi-segmento (Fase 11, motor de Agente 4 ya implementado, Agente 2/3 pendientes)**: en vez de `rango_original`, una entrada de compilación tendría `"segmentos": [{"inicio", "fin"}, ...]` y opcionalmente `"duracion_total"` — ver `_cut_compilation`. |
 
 ### 2.3 Archivos de nivel de sesión derivados de chunks
 

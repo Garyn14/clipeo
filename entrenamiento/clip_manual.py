@@ -49,15 +49,65 @@ def parse_args() -> argparse.Namespace:
         help="Opcional: nota del editor sobre por qué este clip es bueno (solo con --entrenamiento)",
     )
     p.add_argument(
-        "--animado", action="store_true", default=False,
-        help="Usa subtítulos animados palabra por palabra si hay palabras.json en "
-             "session_dir (ver transcripcion/video_transcriber.py) — cae a texto "
-             "estático si no hay datos de palabra.",
+        "--estilo-texto", dest="estilo_texto", default="fijo",
+        choices=["sin_texto", "fijo", "fijo_inicial", "dinamico", "dinamico_con_titulo"],
+        help="Modo de texto a quemar (default: 'fijo'). 'dinamico'/"
+             "'dinamico_con_titulo' usan palabras.json de session_dir (ver "
+             "transcripcion/video_transcriber.py) si existe — caen a 'fijo' "
+             "si no hay datos de palabra. 'dinamico_con_titulo' combina el "
+             "hook fijo con los subtítulos animados en el mismo render.",
+    )
+    p.add_argument(
+        "--cta", dest="cta_texto", default="",
+        help="Llamado a la acción quemado en los últimos ~3s del clip "
+             "(ej. 'Sígueme para más'). Vacío por defecto (sin CTA).",
+    )
+    p.add_argument(
+        "--palabras-clave", dest="palabras_clave", default="",
+        help="Lista separada por comas de palabras a resaltar en rojo "
+             "(solo con --estilo-texto dinamico/dinamico_con_titulo).",
+    )
+    p.add_argument(
+        "--layout", default="pillarbox", choices=["pillarbox", "blur", "imagen", "crop"],
+        help="Relleno para fuente horizontal (default: 'pillarbox'). "
+             "'blur' usa el mismo video difuminado; 'imagen' usa video "
+             "arriba + una imagen de edicion_video/assets/imagenes_relleno/<mood>/ "
+             "abajo (cae a pillarbox si no hay ninguna para ese mood); 'crop' "
+             "recorta el ancho centrado a 9:16 sin relleno (pierde bordes "
+             "laterales, solo recomendable si el sujeto está centrado). "
+             "Sin efecto si el video fuente ya es vertical.",
+    )
+    p.add_argument(
+        "--facecam-rect", dest="facecam_rect", default=None,
+        help="Split-screen (Layout C): rect 'x,y,w,h' en píxeles del video "
+             "FUENTE para el facecam. Requiere también --contenido-rect.",
+    )
+    p.add_argument(
+        "--contenido-rect", dest="contenido_rect", default=None,
+        help="Split-screen (Layout C): rect 'x,y,w,h' en píxeles del video "
+             "FUENTE para el contenido. Requiere también --facecam-rect.",
+    )
+    p.add_argument(
+        "--overlay-ocultar", dest="overlays_ocultar", action="append", default=[],
+        help="Rect 'x,y,w,h' a tapar con una caja negra (ej. watermark). "
+             "Repetible para varios overlays. Solo con split-screen.",
     )
     p.add_argument(
         "--mood", default="neutral",
         help="Mezcla música de fondo de edicion_video/assets/musica/<mood>/ "
              "(default: 'neutral'). Sin efecto si esa carpeta no tiene pistas.",
+    )
+    p.add_argument(
+        "--momento-enfasis", dest="momento_enfasis", type=float, default=None,
+        help="Segundos (relativos a --inicio) donde aplicar un zoom/punch-in "
+             "de prueba (ver agentes/agent2_range_refiner.py: momento_enfasis_seg). "
+             "Sin esto, no hay zoom.",
+    )
+    p.add_argument(
+        "--efecto-sonido", dest="efecto_sonido", default=None,
+        help="Tipo de efecto corto (ej. 'whoosh') a mezclar de "
+             "edicion_video/assets/efectos_sonido/<tipo>/, anclado a "
+             "--momento-enfasis (requiere que ambos estén presentes).",
     )
     return p.parse_args()
 
@@ -153,12 +203,32 @@ def main() -> None:
     has_lb       = vid_info["has_letterbox"]
     bar_h        = vid_info["bar_height"]
 
+    def _parse_rect(s: str) -> dict:
+        x, y, w, h = (int(v.strip()) for v in s.split(","))
+        return {"x": x, "y": y, "w": w, "h": h}
+
+    layout_streaming = None
+    if args.facecam_rect and args.contenido_rect:
+        layout_streaming = {
+            "facecam_rect":   _parse_rect(args.facecam_rect),
+            "contenido_rect": _parse_rect(args.contenido_rect),
+            "overlays_ocultar": [_parse_rect(o) for o in args.overlays_ocultar],
+        }
+
     ok = _cut_clip(
         video_path, args.inicio, args.fin,
         args.linea1 or "", args.linea2 or "",
         clip_path, font_rel, has_lb, bar_h,
-        session_dir=session_dir if args.animado else None,
+        session_dir=session_dir,
         mood=args.mood,
+        estilo_texto=args.estilo_texto,
+        momento_enfasis_seg=args.momento_enfasis,
+        source_width=vid_info["width"], source_height=vid_info["height"],
+        cta_texto=args.cta_texto,
+        palabras_clave=[p.strip() for p in args.palabras_clave.split(",") if p.strip()],
+        layout=args.layout,
+        layout_streaming=layout_streaming,
+        efecto_sonido=args.efecto_sonido,
     )
 
     if not ok:

@@ -46,7 +46,7 @@ python pipeline.py --video stream_data/<session>/chunk_001.mp4 --config <canal_i
 Other standalone tools:
 - `contexto/feedback.py --session <session_id>` — collect human feedback on generated clips, distilled by Claude into `aprendizajes/<canal_id>_optimizado.md` (fed back into Agent 3's prompt).
 - `entrenamiento/clip_manual.py --video ... --inicio ... --fin ... --linea1 ... --linea2 ...` — cut one manual clip bypassing agents 1–4.
-- `contexto/contexto_refresh.py <entidad_id>` — web-search recent news about an entity and save approved findings as context events.
+- `contexto/contexto_refresh.py <entidad_id>` — web-search recent news about an entity and save approved findings as context events. **Deprecated in practice (2026-07-31)**: spends real API budget (web search runs inside the Claude API call). Prefer asking a Claude Code agent to research directly in-session (own `WebSearch`, no `ANTHROPIC_API_KEY` spend) and save in the same file format — see `.claude/skills/seo-refresh/SKILL.md` for this pattern applied to per-platform SEO hashtags.
 - Ctrl+C during `--video`/`--live` processing waits for the in-flight chunk, then stops; chunk progress is checkpointed in `pipeline_estado.json` and resumable.
 
 ## Configuration systems

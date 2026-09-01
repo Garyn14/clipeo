@@ -12,6 +12,7 @@ Uso:
   --config omitido → usa config/default.yaml
 """
 
+import os
 import sys
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -826,7 +827,14 @@ if __name__ == "__main__":
     elif args.live:
         run_pipeline(cfg, config, url=args.live, mode="live", revisar=args.revisar)
     else:
+        usar_colab = args.colab
+        if not usar_colab and os.environ.get("AI_PROVIDER", "").strip().lower() == "manual":
+            usar_colab = True
+            print(
+                "[PIPELINE] AI_PROVIDER=manual detectado → forzando --colab "
+                "(WhisperX local es demasiado lento para el flujo de prueba manual)"
+            )
         run_pipeline(
             cfg, config, url=args.video, mode="video",
-            revisar=args.revisar, usar_colab=args.colab, manual=args.manual,
+            revisar=args.revisar, usar_colab=usar_colab, manual=args.manual,
         )

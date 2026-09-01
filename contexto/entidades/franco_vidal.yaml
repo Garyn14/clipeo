@@ -7,12 +7,26 @@ entidad:
 
 lore:
   descripcion: |
-    Alcalde del distrito de Ate (Lima) desde 2023. El alcalde más
-    joven de Ate y de Lima al momento de su elección. Streamer en
-    Kick desde agosto 2024 — el único funcionario público peruano
-    con presencia masiva en streaming. Mezcla política, gestión
-    municipal y entretenimiento en vivo. 895K seguidores en TikTok,
-    300K en Kick. Su comunidad se llama "Los Dibujitos".
+    Franco Vidal Morales, nacido el 2 de abril de 1995, abogado
+    (USMP). Alcalde del distrito de Ate (Lima) desde 2023, electo en
+    2022 por Avanza País — el alcalde más joven de Ate y de Lima al
+    momento de su elección. Streamer en Kick desde agosto 2024 — el
+    único funcionario público peruano con presencia masiva en
+    streaming. Mezcla política, gestión municipal y entretenimiento
+    en vivo. 895K seguidores en TikTok, 300K en Kick. Su comunidad
+    se llama "Los Dibujitos". Renunció a Avanza País en enero 2026
+    y no puede postular a la reelección directa (prohibición legal
+    de reelección municipal inmediata) — ver polémica de "teniente
+    alcalde" más abajo.
+
+  # Observación de mercado (no se inyecta en prompts): gran parte de
+  # la viralidad de este personaje no viene de su cuenta oficial sino
+  # de cuentas fan/clip de terceros (@elvidalismo, @clips.vidalpresi8,
+  # @fvidalitos.edits, @dibuclips), que suelen titular sus clips en
+  # estilo "titular de noticia" (mayúsculas, tono informativo) — un
+  # patrón distinto al estilo narrativo ya validado editorialmente
+  # para este nicho. Se deja registrado como dato, sin cambiar las
+  # reglas de copy vigentes.
 
   personajes_universo:
     - nombre: "Los Dibujitos"
@@ -23,7 +37,16 @@ lore:
       relevancia: "denunció amenazas de muerte atribuidas a seguidores de Vidal"
     - nombre: "José María Balcázar"
       rol: "presidente al que entrevistó en vivo"
-      relevancia: "primer presidente entrevistado en vivo en Kick por un alcalde"
+      relevancia: "primer presidente entrevistado en vivo en Kick por un alcalde; en marzo 2026 entrenó boxeo con Vidal en una transmisión"
+    - nombre: "Edde Cuéllar"
+      rol: "ex alcalde de Ate y candidato rival"
+      relevancia: "candidato a la alcaldía de Ate 2026 (Podemos Perú), crítico frecuente de la gestión de Vidal (ej. denuncia por gasto en maceteros)"
+    - nombre: "Manuel Vidal Camargo"
+      rol: "padre de Franco Vidal"
+      relevancia: "candidato a alcalde de Ate 2026 (Avanza País, el mismo partido que Franco dejó); antecedentes penales e investigaciones — ver polémica dedicada"
+    - nombre: "José Jerí"
+      rol: "presidente interino del Perú"
+      relevancia: "rompió públicamente con Vidal en enero 2026 por falta de presupuesto a poblaciones vulnerables"
 
   polemicas:
     - titulo: "Alcalde streamer en horario laboral"
@@ -41,11 +64,70 @@ lore:
         candidatura a la Municipalidad de Lima Metropolitana.
       tipo: "evento_politico_viral"
 
-    - titulo: "Padre acusado de proxenetismo"
+    - titulo: "Antecedentes penales del padre y acusación de proxenetismo"
       descripcion: |
-        Acusaciones contra su padre circularon en redes. Franco
-        Vidal las llamó "leyenda urbana" en vivo en Kick.
+        Manuel Vidal Camargo, padre del alcalde, tiene antecedentes
+        de prisión por estafa (1997) y por proxenetismo (2006,
+        Lurigancho), con varias denuncias por el mismo delito según
+        reportes periodísticos. Franco Vidal y su padre calificaron
+        las acusaciones de "leyenda urbana" en vivo en Kick. En 2026
+        el padre es además candidato a la alcaldía de Ate por Avanza
+        País — el mismo partido que Franco dejó.
       tipo: "polemica_personal"
+
+    - titulo: "Padre investigado por usurpación de funciones"
+      descripcion: |
+        La Fiscalía de Lima Este abrió una investigación de 120 días
+        contra Manuel Vidal Camargo por presuntamente usar personal
+        de inspección municipal (dirigido por su hijo, el alcalde)
+        para amenazar con cerrar el negocio de un tercero.
+      tipo: "polemica_grave"
+
+    - titulo: "Contratos millonarios a una misma familia"
+      descripcion: |
+        Investigación periodística (La Encerrona, ago-sep 2025)
+        reveló 184 órdenes de compra/servicio adjudicadas
+        directamente (sin licitación pública) a integrantes de una
+        misma familia, por S/2.2 millones inicialmente y hasta casi
+        S/30 millones según reportes posteriores. Vidal negó el
+        monto y retó a la prensa a probarlo en vivo.
+      tipo: "polemica_grave"
+
+    - titulo: "Demolición en Cerro Candela / ampliación Av. Nicolás Ayllón"
+      descripcion: |
+        Desde octubre 2025 la Municipalidad de Ate demolió más de 40
+        viviendas en Cerro Candela para ampliar la Av. Nicolás
+        Ayllón, afectando a cientos de familias que reclaman falta
+        de notificación e indemnización. En enero 2026 Vidal se
+        enfrentó en vivo a un vecino desalojado: "¿Por qué te vamos
+        a indemnizar? Cero soles".
+      tipo: "polemica_grave"
+
+    - titulo: "Ruptura pública con el presidente José Jerí"
+      descripcion: |
+        En enero 2026 Vidal criticó en vivo al presidente interino
+        José Jerí y a la ministra de Desarrollo Social por falta de
+        presupuesto para poblaciones vulnerables, transmitiendo
+        acompañado de un anciano y un exrecluso en situación de
+        calle para marcar distancia del Ejecutivo.
+      tipo: "confrontacion_politica"
+
+    - titulo: "Estrategia de \"teniente alcalde\" para eludir la reelección"
+      descripcion: |
+        Ante la prohibición legal de reelección municipal inmediata,
+        Vidal (junto a más de 15 alcaldes de Lima) se postula como
+        teniente alcalde en vez de alcalde para las elecciones de
+        octubre 2026 — la misma jugada de Rafael López Aliaga.
+        Genera acusaciones de "reelección encubierta".
+      tipo: "polemica_politica"
+
+    - titulo: "Rivalidad con Edde Cuéllar por gasto en maceteros"
+      descripcion: |
+        El ex alcalde de Ate y candidato rival 2026 Edde Cuéllar
+        acusó a Vidal de gastar S/320 mil en maceteros que terminan
+        funcionando como basureros — parte de una rivalidad más
+        amplia de cara a las elecciones municipales.
+      tipo: "confrontacion_politica"
 
     - titulo: "Los Dibujitos acosan periodistas"
       descripcion: |
@@ -87,7 +169,19 @@ deteccion_adicional:
     - Cualquier momento donde su rol de alcalde choca con su rol
       de streamer
     - Revelaciones políticas en vivo (primer presidente
-      entrevistado en Kick)
+      entrevistado en Kick, o actividades conjuntas como el
+      entrenamiento de boxeo)
+    - Confrontaciones con vecinos afectados por demoliciones o
+      desalojos (ej. reclamos de indemnización)
+    - Enfrentamientos o cruces verbales con Edde Cuéllar (rival
+      político) o con su propio padre, Manuel Vidal Camargo
+      (también candidato)
+    - Rupturas o choques con autoridades nacionales (ej. presidencia,
+      ministerios) transmitidos en vivo
+    - Defensas o respuestas en vivo a investigaciones periodísticas
+      (contratos, corrupción, antecedentes familiares)
+    - Contenido "antes/después" de obras públicas (parques, avenidas)
+      que genere debate en comentarios sobre gestión
 
     NOTA SOBRE TERCEROS EN ESCENA:
     Franco Vidal frecuentemente aparece en la calle rodeado de

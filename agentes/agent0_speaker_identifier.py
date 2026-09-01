@@ -23,6 +23,9 @@ load_dotenv()
 
 import anthropic
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from ai_client import get_client
+
 SYSTEM_PROMPT = """Eres un identificador de hablantes para contenido
 en español latino.
 
@@ -237,7 +240,7 @@ def identify_speakers(
 
     print(f"[AGENT0] Speakers detectados: {len(speakers)}  ({', '.join(speakers)})")
 
-    client  = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+    client  = get_client()
     preview = _extract_preview(raw_text, max_seconds=180)
     roster  = _build_roster_context(config or {}, metadata)
     if roster:

@@ -24,6 +24,7 @@ load_dotenv()
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from core.utils import _timestamp_to_seconds, _seconds_to_timestamp, _parse_segments
+from ai_client import get_client
 
 # ─────────────────────────────────────────
 #  CONFIGURACIÓN
@@ -223,7 +224,7 @@ def run_agent(picos_path: str, config: dict) -> list[dict]:
     print(f"[AGENT2] Contexto : -{antes}s / +{despues}s  |  duración {dur_min}–{dur_max}s")
     print(f"[AGENT2] {'─'*40}\n")
 
-    client = anthropic.Anthropic()
+    client = get_client()
 
     # Preparar todos los picos con su contexto
     picos_con_contexto = []
@@ -244,6 +245,21 @@ def run_agent(picos_path: str, config: dict) -> list[dict]:
     for rango in rangos_raw:
         pico_ts              = rango.pop("pico_timestamp", None)
         rango["pico_original"] = pico_by_ts.get(pico_ts, {})
+
+        # Momento de énfasis: segundos del pico relativos al inicio del rango
+        # (usado por Agente 4 para el zoom/punch-in — ver edicion_video/).
+        # Enterrado como pico_original.timestamp si no se puede calcular
+        # (rango descartado, o timestamps no parseables).
+        if rango.get("conservar") and pico_ts and "inicio" in rango and "fin" in rango:
+            try:
+                inicio_abs = _timestamp_to_seconds(rango["inicio"])
+                fin_abs    = _timestamp_to_seconds(rango["fin"])
+                pico_abs   = _timestamp_to_seconds(pico_ts)
+                duracion   = max(0, fin_abs - inicio_abs)
+                rango["momento_enfasis_seg"] = max(0, min(pico_abs - inicio_abs, duracion))
+            except (ValueError, TypeError):
+                pass
+
         rangos.append(rango)
 
     conservados = sum(1 for r in rangos if r.get("conservar"))

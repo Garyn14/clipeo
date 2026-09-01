@@ -23,6 +23,7 @@ load_dotenv()
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from core.utils import _timestamp_to_seconds, _parse_segments
+from ai_client import get_client
 
 # ─────────────────────────────────────────
 #  CONFIGURACIÓN
@@ -143,7 +144,7 @@ def run_agent(transcripcion_path: str, config: dict) -> list[dict]:
     print(f"[AGENT1] Confianza mínima : {confianza_minima}")
     print(f"[AGENT1] Prompt Caching activo para lore del nicho")
 
-    client = anthropic.Anthropic()
+    client = get_client()
 
     if word_count <= MAX_WORDS:
         print("[AGENT1] Procesando transcripción completa en una sola llamada...")

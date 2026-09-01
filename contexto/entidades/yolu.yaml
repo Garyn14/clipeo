@@ -9,36 +9,105 @@ entidad:
 
 lore:
   descripcion: |
-    Dueño de "La Casa de las Zapatillas" (Yolu Originals), Huánuco.
-    El más grande del nicho: 2.2M+ seguidores, dice vender 3,000
-    pares diarios, se proclama el #1 de Perú. Rival histórico de
-    Tío Fritz — ambos disputan el título de "el número 1".
+    Nombre real Jordy/Yordi Picón Andrade. Dueño de "La Casa de las
+    Zapatillas" (Yolu Originals), Huánuco (Jirón Bolívar 517). Empezó
+    vendiendo ambulante en Gamarra a los 17 años; hoy abastece a 1,800
+    tiendas en todo el Perú, dice vender 3,000-4,000 pares diarios, se
+    proclama el #1 de Perú. Rival histórico de Tío Fritz — ambos
+    disputan el título de "el número 1". Esposa: Luciana Luyo/Antonela
+    Lluyo Fernández ("Tía Yolu"). Hijo: Matías (Matiwasi).
 
   personajes_universo:
-    - nombre: "Tía Yolu (Luciana Fernández)"
+    - nombre: "Tía Yolu (Luciana Luyo Fernández)"
       rol: "esposa de Tío Yolu, personaje propio con escándalos virales"
-    - nombre: "Matawasi"
-      rol: "artista que le canta el tema 'Hijo del Tío Yolu'"
+    - nombre: "Matiwasi (Matías)"
+      rol: "hijo del Tío Yolu — personaje cómico recurrente del canal, protagonista de gags de torpeza (choca camionetas, etc.), cuenta propia @elmatiwasi1. Asociado al tema 'Hijo del Tío Yolu'."
+      relevancia: "según investigación externa (ver yolu_investigacion_clips_2026-07-29.md), es probablemente el generador de contenido viral más frecuente del canal (~25-30% de los clips relevados) — priorizar su detección."
     - nombre: "Jorgito Muñoz"
-      rol: "camarógrafo del canal, personaje secundario muy conocido"
-      relevancia: "la comunidad insinúa un romance con la Tía Yolu — morbo constante, hay hasta búsqueda de 'ampay' entre ellos"
+      rol: "camarógrafo del canal, personaje secundario muy conocido, personaje-meme recurrente en comentarios"
+      relevancia: "la comunidad insinúa un romance con la Tía Yolu — morbo constante, hay hasta búsqueda de 'ampay' entre ellos. Confirmado por scraping real (ver yolu_investigacion_clips_2026-07-31.md): se lo presenta como 'el más celoso', con overlays tipo 'Luciana le dice que se va al chongo' — arco de celos activo, no solo especulación de la comunidad."
+    - nombre: "Dana / Danna"
+      rol: "vendedora de la tienda, presentada como 'la mejor vendedora' — eje de tramas de coqueteo/celos del formato 'reality de tienda'"
+      relevancia: "confirmado por scraping real (ver yolu_investigacion_clips_2026-07-31.md) como uno de los arcos más virales del universo: el chisme 'Danna está con un coronel' generó uno de los clips más comentados detectados. Yolu 'perdona sus faltas' por ser la mejor vendedora — dinámica recurrente de favoritismo/coqueteo."
+    - nombre: "César Acuña"
+      rol: "político real (gobernador de La Libertad, fundador de la Universidad César Vallejo, varias veces candidato presidencial) — visitante recurrente de la tienda"
+      relevancia: "contenido recurrente de Acuña probándose/mostrando zapatillas de lujo junto a Yolu y Matiwasi, con tono de humor — mismo tipo de cruce político-viral que Franco Vidal en streamers_peru, ver contexto/entidades/franco_vidal.yaml"
 
   polémicas:
     - titulo: "Zapatillas de Jefferson Farfán no entregadas (mayo 2026)"
       descripcion: |
-        Farfán, como embajador, prometió zapatillas a un joven de
-        Huánuco que nunca las recibió. El joven denunció públicamente
-        a Tío Yolu como responsable. Yolu respondió que "no hubo luz"
-        (corte eléctrico) durante el evento con aglomeración por la
-        presencia de Farfán, y que no podía asumir el riesgo — invitó
-        al joven a recoger el regalo con su madre.
-      tipo: "polémica viral — alta relevancia, confirmada en prensa (La República, mayo 2026)"
+        Durante un evento público en Huánuco, Farfán vio a un joven con
+        zapatillas gastadas y le prometió unas nuevas frente a testigos.
+        El joven esperó de 1:45pm a 4:30pm y nunca las recibió; denunció
+        públicamente a Tío Yolu como responsable de la entrega. Yolu
+        respondió que "no hubo luz" (corte eléctrico) justo cuando Farfán
+        se retiraba, en medio de aglomeración, y que no podía asumir el
+        riesgo — invitó al joven a recoger el regalo con su madre.
+        Cobertura nacional amplia (La República, ATV, Wapa, El Popular,
+        RPP, mayo 2026) — fue noticia de farándula real, no solo redes.
+      tipo: "polémica viral — alta relevancia, confirmada en prensa (mayo 2026)"
+
+    - titulo: "Test de autenticidad / denuncia INDECOPI (2026)"
+      descripcion: |
+        Un cliente denunció públicamente problemas de calidad/autenticidad
+        en tiendas Yolu, mencionando derivación a INDECOPI. El repost de
+        este caso por un medio de prensa regional en Facebook alcanzó
+        2.6M de vistas — el mayor alcance real confirmado de cualquier
+        contenido de Yolu detectado en la investigación externa (ver
+        yolu_investigacion_clips_2026-07-29.md), por encima incluso de
+        la rivalidad con Fritz.
+      tipo: "polémica viral — máximo alcance confirmado"
+
+    - titulo: "Atentado con explosivo tras visita de Chechito (octubre 2023)"
+      descripcion: |
+        El 13 de octubre de 2023, horas después de que el cantante de
+        cumbia Chechito visitara la tienda para una transmisión en vivo,
+        dos sujetos en moto detonaron un explosivo en la puerta enrollable
+        del local y dispararon varias veces contra el segundo piso, donde
+        vive la familia. El negocio venía recibiendo amenazas atribuidas
+        a "El Tren de Aragua" exigiendo S/30,000. Cobertura amplia
+        (RPP, La República, Panamericana, Exitosa, Diario Correo).
+      tipo: "seguridad/crimen real — sensible, ver manejo de texto obligatorio en contenido_adicional.tono"
+
+    - titulo: "Extorsión en vivo por $200,000 (abril 2026)"
+      descripcion: |
+        Durante una transmisión en vivo, alguien llamó a un número de
+        la empresa exigiendo $200,000 USD a cambio de no atentar contra
+        la vida de Yolu. La Policía (Depincri Huánuco, área de
+        Secuestros y Extorsiones) investigó la llamada. Hecho delictivo
+        real ocurrido en cámara, no contenido armado a propósito.
+      tipo: "seguridad/crimen real — sensible, ver manejo de texto obligatorio en contenido_adicional.tono"
+
+    - titulo: "Policías dados de baja por spot publicitario disfrazado de intervención"
+      descripcion: |
+        Tres suboficiales (Luis Alexander Oquendo Baldeón, Lolin Palacios
+        Chávez y Franchesco Jhon Alberto Pérez) fueron pasados al retiro
+        por el Tribunal Disciplinario PNP (Resolución N° 863, faltas
+        MG-103, MG-19, G-53, G-46) tras participar en un video de ~3
+        minutos que aparentaba ser una intervención policial rutinaria
+        de verificación de mercadería, pero que en realidad era un spot
+        publicitario para la tienda de Yolu.
+      tipo: "polémica viral — institucional, confirmada en prensa (Tu Diario Huánuco)"
+
+    - titulo: "Denuncia de conflicto laboral"
+      descripcion: |
+        Denuncia pública de agresión a una trabajadora del negocio,
+        con mención al Ministerio de Trabajo.
+      tipo: "controversia laboral — sensible, ver manejo de texto obligatorio en contenido_adicional.tono"
 
   vocabulario:
     - termino: "el número 1"
       significado: "claim que Yolu repite constantemente, en disputa directa con Fritz"
     - termino: "3,000 pares diarios"
       significado: "cifra de ventas que Yolu usa para respaldar su claim de ser el más grande"
+    - termino: "el coronel"
+      significado: "personaje/chisme recurrente vinculado al arco de Danna — insinuación de affair con un militar; motor de uno de los clips más virales detectados por scraping"
+    - termino: "chongo"
+      significado: "jerga huanuqueña con doble sentido (lugar de encuentro/motel) — usada en arcos de celos, ej. Jorgito/Tía Yolu"
+    - termino: "la jaéna"
+      significado: "jerga huanuqueña para 'novia/enamorada', usada en humor de doble sentido dirigido a adultos (ej. bromas sobre el Tío Yolu)"
+    - termino: "baje"
+      significado: "jerga de burla/vergüenza ajena ('es un baje') usada en overlays de humor situacional"
 
 deteccion_adicional:
   prompt: |
@@ -52,20 +121,99 @@ deteccion_adicional:
     con feedback real, no como patrones ya probados.
 
     SEÑALES DE ALTO VALOR:
+    - Momentos protagonizados por Matiwasi (hijo de Yolu, personaje
+      cómico) — torpeza, choques, gags — es el ángulo con mayor
+      frecuencia histórica confirmada, priorizar su detección
+    - Retos mentales/matemáticos de Matiwasi (ej. cálculos de horas
+      que "generan debate") — confirmado por scraping (ver
+      yolu_investigacion_clips_2026-07-31.md) como el formato más
+      viral detectado del personaje; genera participación masiva en
+      comentarios
+    - Humor de "rol invertido" — Matiwasi superando/vacilando a un
+      adulto (ej. corrigiéndolo, dejándolo hablando solo)
+    - Contenido escolar de Matiwasi (notas, exámenes) — humor
+      relatable confirmado por scraping
+    - Tests de autenticidad de zapatillas con mención a INDECOPI —
+      el ángulo con mayor alcance real confirmado (2.6M vistas en un
+      caso), incluso por encima de la rivalidad con Fritz
     - Yolu afirmando ser "el número 1" o dando cifras de ventas/stock
     - Comparaciones directas o indirectas con Fritz u otros rivales
     - Interacción con Tía Yolu o Jorgito Muñoz (posible insinuación
-      de romance — tema de morbo constante en la comunidad)
+      de romance — tema de morbo constante en la comunidad, y arco de
+      celos activo de Jorgito hacia Tía Yolu)
+    - Arco de "Danna y el coronel" — chisme/drama de coqueteo con la
+      vendedora Danna, confirmado por scraping como uno de los
+      momentos más comentados del universo
+    - Yolu coqueteando y siendo "delatado" por Matiwasi ante su mamá
+      — humor familiar + chisme, patrón confirmado por scraping
+    - Contenido de baile/lifestyle de la cuenta propia de Tía Yolu
+      (@tiayolu, fuera del "reality" de tienda) — motor de
+      monetización aparte (colaboraciones pagadas), sube su propio
+      contenido con audiencia heredada del universo
     - Menciones o preguntas sobre el caso Farfán / zapatillas no
       entregadas
     - Momentos de remate masivo o venta al por mayor con cifras
       concretas
+    - Eventos deportivos organizados por Yolu ("Mundialito"),
+      incluyendo cruces con otras figuras públicas (ej. Franco Vidal,
+      alcalde streamer — ver contexto/entidades/franco_vidal.yaml)
+    - Visitas de artistas o celebridades (ej. cumbia: Grupo 5,
+      Christian Yaipén, Chechito) a la tienda
+    - Visitas o interacciones con César Acuña (político real,
+      gobernador de La Libertad) — contenido recurrente probándose
+      zapatillas de lujo, tono de humor
+    - Referencias al atentado con explosivo de 2023 o a la extorsión
+      en vivo de 2026 (Tren de Aragua, llamadas extorsivas) — ver
+      manejo de texto obligatorio abajo
+    - Menciones de la sanción a los policías por el spot publicitario
+      disfrazado de intervención
+    - Amenazas de extorsión, hechos de seguridad real contra el
+      negocio, o denuncias de conflicto laboral — SÍ detectar si
+      surgen espontáneamente en el stream (no es un tema a evitar),
+      pero ver el manejo de texto obligatorio en
+      contenido_adicional.tono para estos casos
 
 contenido_adicional:
-  hashtags: ["#tioyolu", "#yoluoriginals", "#lacasadelaszapatillas"]
+  hashtags: ["#tioyolu", "#yoluoriginals", "#lacasadelaszapatillas", "#matiwasi"]
   tono: |
     Para clips de Yolu, el gancho más fuerte es la rivalidad directa
     con Fritz por el "número 1" — nombrarlo explícitamente cuando
-    aplique. Sin patrones de texto confirmados todavía por falta de
-    clips reales; ajustar este bloque con feedback una vez publicados
-    los primeros.
+    aplique.
+
+    PATRONES DE GANCHO CONFIRMADOS POR ANÁLISIS DE SCRAPING REAL
+    (2026-07-31, ver yolu_investigacion_clips_2026-07-31.md — esto es
+    scraping de overlays/comentarios reales, NO corrección editorial
+    todavía; tratar como fuerte punto de partida, ajustar con feedback
+    real una vez publicados los primeros clips de este sistema):
+
+    El overlay debe funcionar como TITULAR CON GANCHO, nunca como
+    descripción neutra. Estructuras que se repiten en los clips más
+    virales del universo Yolu:
+    - Revelación/chisme: "Yolu se entera que Danna está con un coronel"
+    - Acción + consecuencia: "Matiwasi vio esto y llamó a su mamá"
+    - Pregunta/reto: "¿De 8am a 8pm son 16 horas?"
+    - Etiqueta de personaje: "la nueva engreída de la empresa",
+      "la mejor vendedora"
+
+    Emojis de intriga/picardía con moderación (no abusar): 👀 😏 🤣
+
+    El humor de doble sentido es el motor #1 de comentarios en este
+    universo — funciona, pero debe quedar apto para todo público:
+    sugerente, nunca explícito.
+
+    Cuando sea posible, el gancho debe dejar una pregunta abierta o
+    un chisme sin resolver — los clips que más comentarios generan en
+    este universo invitan a la audiencia a "completar el chiste" o
+    debatir en comentarios, no a que el título ya cuente todo.
+
+    MANEJO DE TEXTO OBLIGATORIO PARA CONTENIDO SENSIBLE (extorsión,
+    amenazas, hechos de seguridad real, denuncias de conflicto
+    laboral): si el clip trata sobre estos temas, SÍ generar el gancho
+    normalmente — no descartar el clip por sensible — pero censurar
+    con leetspeak las palabras que puedan activar moderación
+    automática de la plataforma (ej. "extorsión" → "3xtorci0N",
+    "amenaza" → "am3naza"). Esto es distinto de la regla general de
+    "preservar leetspeak ya presente en la transcripción" del prompt
+    del nicho — acá se aplica la censura de forma proactiva, aunque la
+    transcripción original no la traiga, específicamente para estos
+    temas delicados de Yolu.

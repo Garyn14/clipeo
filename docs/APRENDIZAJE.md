@@ -12,7 +12,7 @@ Esto importa porque hay **tres mecanismos distintos** que generan este tipo de r
 |---|---|---|---|
 | **A. Feedback post-publicación** | `contexto/feedback.py` | `aprendizajes/<canal>_optimizado.md` | ✅ Sí — el Agente 3 lo carga siempre |
 | **B. Corrección/descarte en revisión** | `pipeline.py --revisar` | `contexto/eventos/<mes>/correccion_*.yaml` / `descarte_*.yaml` | ❌ No — queda como bitácora |
-| **C. Refresco de contexto externo** | `contexto/contexto_refresh.py` | `contexto/eventos/<mes>/refresh_*.yaml` | ❌ No — requiere curación manual |
+| **C. Refresco de contexto externo** | `contexto/contexto_refresh.py` (deprecado en la práctica, ver §3) | `contexto/eventos/<mes>/refresh_*.yaml` | ❌ No — requiere curación manual |
 
 Las secciones 1-3 desarrollan cada uno.
 
@@ -91,6 +91,8 @@ En la práctica esto significa: correr `--revisar` te deja una **bitácora fecha
 ## 3. Mecanismo C — Refresco de contexto externo (`contexto/contexto_refresh.py`)
 
 Este es **el comando para "enriquecer" el contexto** al que probablemente te referís: a diferencia de A y B (que nacen de resultados/decisiones dentro del propio pipeline), este busca información **fuera** del sistema — noticias y novedades recientes sobre un personaje — y la deja disponible como contexto candidato.
+
+**Deprecado en la práctica (2026-07-31)**: este script llama a la API de Anthropic con la *tool* de búsqueda web, y consumía mucho de la API medida. El código sigue ahí y sigue funcionando, pero para investigación/curación de este tipo (noticias de una entidad, hashtags de SEO — ver `.claude/skills/seo-refresh/SKILL.md`) el patrón actual es que un agente de Claude Code lo haga directo en sesión con su propio `WebSearch`, sin gastar `ANTHROPIC_API_KEY`, y guarde el resultado en el mismo formato de archivo que este script produciría.
 
 ### 3.1 Cuándo se usa
 

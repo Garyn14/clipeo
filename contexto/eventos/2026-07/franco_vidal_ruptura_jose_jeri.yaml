@@ -1,0 +1,20 @@
+evento:
+  entidad: franco_vidal
+  fecha: 2026-01
+  titulo: "Ruptura pública con el presidente interino José Jerí"
+  descripcion: |
+    El 6 de enero de 2026 Franco Vidal criticó en vivo en Kick al
+    presidente interino José Jerí y a la ministra de Desarrollo
+    Social por la falta de presupuesto destinado a poblaciones
+    vulnerables, declarando "ya me cansé, Ate no espera nada de ti,
+    tus ministros están huevead[os]". Transmitió acompañado de un
+    anciano y un exrecluso en situación de calle para marcar
+    distancia pública del Ejecutivo.
+  tipo: "confrontacion_politica"
+  origen: "refresh_manual"
+  aprobado: true
+  relevancia: |
+    Confrontación directa con la máxima autoridad nacional,
+    lenguaje coloquial/explosivo característico del personaje —
+    encaja con el patrón de "explota en vivo" que ya prioriza el
+    nicho streamers_peru.

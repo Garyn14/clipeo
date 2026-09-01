@@ -1,0 +1,22 @@
+evento:
+  entidad: yolu
+  fecha: 2023-10
+  titulo: "Atentado con explosivo tras visita del cantante Chechito"
+  descripcion: |
+    El 13 de octubre de 2023, horas después de que el cantante de
+    cumbia Chechito visitara la tienda Yolu (Jirón Bolívar, Huánuco)
+    para una transmisión en vivo, dos sujetos en moto detonaron un
+    explosivo en la puerta enrollable del local y dispararon varias
+    veces contra el segundo piso, donde vive la familia. El negocio
+    venía recibiendo amenazas atribuidas a "El Tren de Aragua"
+    exigiendo S/30,000. Un video mostró a presuntos miembros de "Los
+    Destructores de Huánuco" extorsionando también al cantante Chechito
+    y amenazando con volar la tienda.
+  tipo: "seguridad_crimen_real"
+  origen: "refresh_manual"
+  aprobado: true
+  relevancia: |
+    Evento más antiguo (2023) que las otras polémicas de la entidad,
+    pero relevante como antecedente directo de la extorsión en vivo
+    de abril 2026 (mismo patrón de amenaza al negocio). Ver manejo de
+    texto obligatorio (leetspeak) en yolu.yaml::contenido_adicional.tono.
