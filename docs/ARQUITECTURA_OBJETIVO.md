@@ -1,6 +1,6 @@
 # Clipeo v2 — Arquitectura objetivo
 
-> Estado: **propuesta v0.1 para validación** · Fecha: 2026-11-15
+> Estado: **v0.2 aprobada** · Fecha: 2026-11-15
 > Parte de: [`DIAGNOSTICO_ACTUAL.md`](DIAGNOSTICO_ACTUAL.md) (AS-IS) → [`TO_BE.md`](TO_BE.md) (aprobado) → **este documento** → [`ROADMAP.md`](ROADMAP.md).
 > Las decisiones se registran como ADR (§9); las marcadas *Propuesta* requieren OK del operador.
 
@@ -198,16 +198,16 @@ clipeo/
 
 | ADR | Decisión | Alternativas consideradas | Estado |
 |---|---|---|---|
-| 001 | **Python 3.12+** para todo | TS/Node | Propuesta — reutiliza piloto, WhisperX, yt-dlp, FFmpeg. |
-| 002 | **Engine propio mínimo** sobre SQLite, con interfaz que permita migrar a Temporal/Prefect/Hatchet si escala | Prefect, Temporal, Celery+Redis, Dagster | Propuesta — cero infraestructura extra, encaja con "en espera" del operador IA y la revisión; el engine es además objetivo del producto. |
-| 003 | **SQLite (WAL) + SQLAlchemy + Alembic**; migrar a Postgres en Fase 2–3 | Postgres desde el inicio | Propuesta — costo cero, un archivo, portable. |
-| 004 | **Disco local** para artefactos tras interfaz `Storage` | S3/R2 desde el inicio | Propuesta. |
-| 005 | **IA por proveedor y por paso**; default `claude_code` (operador IA) en pasos de juicio | Solo API, solo open source | Propuesta — benchmark en Fase 6 del roadmap. |
-| 006 | **Web local FastAPI + HTMX** para revisión | Streamlit, React SPA, solo CLI | Propuesta — previsualizar video en navegador, sin build de frontend. |
-| 007 | **Ejecución en la PC del operador** (Windows) con soporte Linux; Docker opcional | VPS/nube | Propuesta — costo cero. |
-| 008 | **Migración strangler**: piloto a `legacy/`, envolver agentes como steps, luego reescribir | Reescritura total | Propuesta — mantiene la producción de clips durante la migración. |
-| 009 | **Publicación**: manual por defecto, `youtube_api` y `tiktok_inbox` reutilizando v1 | Control del navegador del operador | Propuesta — automatizar el navegador queda solo como respaldo. |
-| 010 | **Calidad**: ruff + mypy + pytest + GitHub Actions (gratis en repos privados con cupo) | — | Propuesta. |
+| 001 | **Python 3.12+** para todo | TS/Node | Aprobado — reutiliza piloto, WhisperX, yt-dlp, FFmpeg. |
+| 002 | **Engine propio mínimo** sobre SQLite, con interfaz que permita migrar a Temporal/Prefect/Hatchet si escala | Prefect, Temporal, Celery+Redis, Dagster | Aprobado — cero infraestructura extra, encaja con "en espera" del operador IA y la revisión; el engine es además objetivo del producto. |
+| 003 | **SQLite (WAL) + SQLAlchemy + Alembic**; migrar a Postgres en Fase 2–3 | Postgres desde el inicio | Aprobado — costo cero, un archivo, portable. |
+| 004 | **Disco local** para artefactos tras interfaz `Storage` | S3/R2 desde el inicio | Aprobado. |
+| 005 | **IA por proveedor y por paso**; default `claude_code` (operador IA) en pasos de juicio | Solo API, solo open source | Aprobado — benchmark en Fase 6 del roadmap. |
+| 006 | **Web local FastAPI + HTMX** para revisión | Streamlit, React SPA, solo CLI | Aprobado — previsualizar video en navegador, sin build de frontend. |
+| 007 | **Ejecución en la PC del operador** (Windows) con soporte Linux; Docker opcional | VPS/nube | Aprobado — costo cero. |
+| 008 | **Migración strangler**: piloto a `legacy/`, envolver agentes como steps, luego reescribir | Reescritura total | Aprobado — mantiene la producción de clips durante la migración. |
+| 009 | **Publicación**: manual por defecto, `youtube_api` y `tiktok_inbox` reutilizando v1 | Control del navegador del operador | Aprobado — automatizar el navegador queda solo como respaldo. |
+| 010 | **Calidad**: ruff + mypy + pytest + GitHub Actions (gratis en repos privados con cupo) | — | Aprobado. |
 
 ## 10. Requisitos no funcionales → cómo se cumplen
 
@@ -222,3 +222,89 @@ clipeo/
 | 07 Seguro | `SecretStore`; `.env` solo para configuración no sensible |
 | 08 Continuidad para agentes | `CLAUDE.md` + `docs/ESTADO.md` actualizados al cerrar cada tarea |
 | 09 Multi-cliente | `Cliente` como raíz del modelo de datos desde el día 1 |
+
+---
+
+## 11. Módulos de calidad del clip (v0.2)
+
+> Añadido tras la revisión del operador: la calidad del clip es la palanca principal del objetivo de 1M de vistas.
+> Estos módulos reemplazan la cadena "Agente 1 marca un instante → Agente 4 corta" del piloto.
+
+### 11.1 Estrategia de transcripción (sin GPU local)
+
+La PC del operador no tiene GPU y Claude no transcribe audio, así que la transcripción se resuelve con proveedores `STTProvider` en cascada:
+
+| Orden | Proveedor | Costo | Uso |
+|---|---|---|---|
+| 1 | **Groq Whisper API** | Plan gratuito con límites diarios (a verificar contra el volumen) | Principal: rápido, sin GPU. |
+| 2 | **Colab / Kaggle como worker _pull_** | Gratis | El notebook **pide trabajos** a la cola (en vez de exponer un túnel efímero), transcribe con WhisperX en GPU y devuelve el resultado. Kaggle es respaldo de Colab. Notebook versionado en `colab/`. |
+| 3 | **faster-whisper local en CPU** | Gratis | Último recurso: lotes nocturnos (el margen de 1 mes lo permite). |
+
+Reglas: recortar silencios (VAD) antes de transcribir; transcribir una sola vez por contenido; diarización **opcional por cliente** (solo cuando hay varios hablantes relevantes).
+
+### 11.2 Detección de momentos: candidatos multiseñal + selección de historia
+
+```
+transcripción ──┐
+audio (energía, risas, gritos) ──┤
+chat (lives, si disponible) ─────┼──▶ a. CANDIDATOS (determinista, barato) ──▶ b. SELECCIÓN DE HISTORIA (IA)
+cambios de escena / caras ───────┘     ventanas con señales altas                  arcos completos:
+                                                                                    contexto → tensión → remate
+```
+
+- **a. Candidatos**: cálculo sin IA que prioriza ventanas con señales altas; reduce lo que la IA tiene que leer.
+- **b. Selección de historia**: la IA elige **arcos narrativos completos** (no instantes sueltos), con el libro de reglas del cliente inyectado.
+
+### 11.3 Dirección editorial → lista de decisiones de edición (EDL)
+
+Paso que **piensa** la edición y produce un documento estructurado (`EditDecisionList`, validado con Pydantic) que el render ejecuta sin decidir nada:
+
+| Campo | Ejemplos |
+|---|---|
+| Estructura | `lineal`, **`gancho_primero`** (2–3 s del remate al inicio y luego "volvemos al principio"), `pregunta_respuesta` |
+| Segmentos | Rangos de la fuente, en el orden de montaje; cortes de tiempos muertos (jump cuts) |
+| Encuadre por segmento | `crop` con seguimiento de cara, `letterbox`, `splitscreen` (facecam + contenido), `imagen_relleno` |
+| Capas | Texto de gancho (L1/L2), subtítulos (estilo), zoom en énfasis, marca de agua, música y efectos con su instante |
+| Plataforma | Duración objetivo y variantes por plataforma |
+
+Beneficios: el editor mejora sin tocar el render; la EDL se versiona y se etiqueta, así el ciclo de aprendizaje mide qué estructuras funcionan.
+
+### 11.4 Control de calidad visual
+
+Tras renderizar se extraen fotogramas clave y la IA (visión) verifica: el texto no tapa caras, el encuadre es correcto, no hay barras indeseadas, los subtítulos son legibles. Si falla → se corrige la EDL y se vuelve a renderizar (máx. N intentos) o se marca para el operador.
+
+### 11.5 Ciclo de aprendizaje viral (analista semanal)
+
+| Paso | Qué ocurre | Quién |
+|---|---|---|
+| 1. Etiquetar | Cada clip guarda sus rasgos: tipo de gancho, tema, emoción, estructura de la EDL, duración, personajes, formato, hora de publicación | Producción (automático) |
+| 2. Medir | Métricas a 24 h, 72 h y 7 días, **normalizadas contra la línea base de la cuenta** | Flow `metricas` |
+| 3. Analizar | **Bot analista semanal** (flow `aprendizaje`, programado): compara rasgos vs. rendimiento, con tamaño de muestra | Agente analista |
+| 4. Reportar | Informe semanal: qué funcionó más, qué menos, hipótesis nuevas, reglas propuestas con evidencia (p. ej. "gancho de precio: 3× la línea base, n=8") | Agente analista |
+| 5. Aprobar | El operador acepta / rechaza / edita cada regla | Operador (luego agente) |
+| 6. Aplicar | Libro de reglas versionado en tres niveles (global / nicho / cliente), inyectado a selección de historia, dirección editorial y copy | Automático |
+| 7. Experimentar | Variantes A/B del mismo clip (gancho, título, estructura) para probar hipótesis | Despacho |
+| 8. Retirar | Reglas cuya evidencia se debilita se marcan para retiro | Agente analista |
+
+Más una señal externa periódica: investigación de tendencias por plataforma (patrón del skill `seo-refresh`).
+
+### 11.6 Conjunto de referencia (golden set)
+
+Colección versionada de clips del piloto con su resultado real (incluido el de ~500K vistas) y de clips descartados. Cada cambio en detección, dirección editorial o prompts se evalúa contra este conjunto antes de integrarse (¿encuentra los mismos momentos? ¿mejor estructura?). Es el criterio objetivo para decir "mejoró".
+
+### 11.7 Flow `produccion` actualizado
+
+```
+descargar → extraer audio → transcribir (cascada STT) → limpiar nombres → [hablantes] →
+señales (audio, escena, chat) → candidatos → selección de historia (IA) → fan-out por clip →
+dirección editorial / EDL (IA) → copy por plataforma (IA) → render → QA visual (IA) → revisión
+```
+
+### 11.8 Decisiones adicionales
+
+| ADR | Decisión | Estado |
+|---|---|---|
+| 011 | Transcripción en cascada: Groq → Colab/Kaggle pull → CPU local | Aprobado |
+| 012 | Edición basada en EDL: dirección editorial (piensa) separada de render (ejecuta) | Aprobado |
+| 013 | Ciclo de aprendizaje con bot analista semanal y reglas con evidencia aprobadas por el operador | Aprobado |
+| 014 | Golden set como criterio de aceptación de cambios de calidad | Aprobado |
