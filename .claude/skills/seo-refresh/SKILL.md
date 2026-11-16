@@ -5,9 +5,9 @@ description: Investiga hashtags/prácticas de SEO vigentes por plataforma (TikTo
 
 # Refresco de SEO por plataforma (`seo_base`)
 
-Procedimiento para actualizar el bloque `seo_base` de `contexto/nichos/<id>.yaml` (hashtags base + notas de estilo por plataforma que el Agente 3 usa para armar `publicacion` en cada clip — ver `docs/ARQUITECTURA.md` §16 y `docs/ESTRUCTURA_DATOS.md`).
+Procedimiento para actualizar el bloque `seo_base` de `legacy/contexto/nichos/<id>.yaml` (hashtags base + notas de estilo por plataforma que el Agente 3 usa para armar `publicacion` en cada clip — ver `docs/ARQUITECTURA.md` §16 y `docs/ESTRUCTURA_DATOS.md`).
 
-**Por qué existe este skill en vez de un script**: `contexto/contexto_refresh.py` hacía este tipo de investigación llamando a la API de Anthropic con la *tool* de búsqueda web — quedó deprecado porque consumía mucho de la API medida (ver memoria `preferencia-claude-code-reemplaza-scripts-de-api`). El reemplazo es que un agente de Claude Code haga la investigación directo, con su propio `WebSearch`/`WebFetch`, sin pasar por `ANTHROPIC_API_KEY`.
+**Por qué existe este skill en vez de un script**: `legacy/contexto/contexto_refresh.py` hacía este tipo de investigación llamando a la API de Anthropic con la *tool* de búsqueda web — quedó deprecado porque consumía mucho de la API medida (ver memoria `preferencia-claude-code-reemplaza-scripts-de-api`). El reemplazo es que un agente de Claude Code haga la investigación directo, con su propio `WebSearch`/`WebFetch`, sin pasar por `ANTHROPIC_API_KEY`.
 
 ## 1. Investigar
 
@@ -23,7 +23,7 @@ Igual que hacía `contexto_refresh.py`: mostrar lo encontrado (hashtags candidat
 
 ## 3. Guardar
 
-Editar el bloque `seo_base` del nicho correspondiente en `contexto/nichos/<id>.yaml`, con este schema (ver `streamers_peru.yaml` como referencia ya poblada):
+Editar el bloque `seo_base` del nicho correspondiente en `legacy/contexto/nichos/<id>.yaml`, con este schema (ver `streamers_peru.yaml` como referencia ya poblada):
 
 ```yaml
 seo_base:
@@ -42,12 +42,12 @@ seo_base:
     notas: ""
 ```
 
-No hace falta tocar `agentes/agent3_viral_scorer.py` ni `contexto/context_loader.py` — ya leen `seo_base` automáticamente (`_format_seo_context()` lo inyecta en el prompt del Agente 3 en la próxima corrida).
+No hace falta tocar `legacy/agentes/agent3_viral_scorer.py` ni `legacy/contexto/context_loader.py` — ya leen `seo_base` automáticamente (`_format_seo_context()` lo inyecta en el prompt del Agente 3 en la próxima corrida).
 
 ## 4. Verificar
 
 ```bash
-python -c "import yaml; yaml.safe_load(open('contexto/nichos/<id>.yaml', encoding='utf-8'))"
+python -c "import yaml; yaml.safe_load(open('legacy/contexto/nichos/<id>.yaml', encoding='utf-8'))"
 ```
 
 Y opcionalmente correr el Agente 3 en modo manual (skill `pipeline-manual`) sobre un rango de prueba para confirmar que el bloque `SEO BASE POR PLATAFORMA` llega actualizado en la request.
