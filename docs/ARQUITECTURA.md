@@ -1,5 +1,7 @@
 # Arquitectura del Pipeline — Idea Millonaria
 
+> **Documento del piloto v2.0** (referencia). La arquitectura de la v2 está en [ARQUITECTURA_OBJETIVO.md](ARQUITECTURA_OBJETIVO.md).
+>
 > Este documento describe la arquitectura **actual** del sistema, tal como existe en el código hoy. No cubre uso, instalación ni código — solo estructura, componentes, flujo de datos y decisiones de diseño. Para comandos ver [COMANDOS.md](COMANDOS.md); para esquemas de archivos ver [ESTRUCTURA_DATOS.md](ESTRUCTURA_DATOS.md); para cómo aprende el sistema con el tiempo ver [APRENDIZAJE.md](APRENDIZAJE.md).
 
 ## 1. Propósito y forma general
@@ -234,5 +236,5 @@ El Agente 3 lo usa de **dos formas a la vez** (`agentes/agent3_viral_scorer.py`)
 ## 18. Notas sobre el estado real de la arquitectura
 
 - El **modo `--live` de `pipeline.py` está roto/huérfano**: depende de un `capture_pipeline.py` en la raíz que ya no existe (fue archivado en `archive/capture_pipeline.py`, versión v1.1 con `whisper` clásico en vez de WhisperX). El camino soportado actualmente para contenido en vivo es: `captura/tiktok_capture.py` (graba chunks del live a disco) → `pipeline.py --video <chunk.mp4>` (procesa cada chunk grabado como si fuera un video normal).
-- El `CLAUDE.md` en la raíz del repositorio describe exclusivamente esa arquitectura v1.1 archivada (un único script `capture_pipeline.py`, Whisper clásico, sin agentes 0/2/3/4 separados, sin Módulo de Contexto) — **no refleja el pipeline v2.0 actual** documentado aquí.
+- **Nota (2026-11-16):** el `CLAUDE.md` de la raíz ahora describe la migración a la v2 (ver `docs/ESTADO.md` y `docs/ARQUITECTURA_OBJETIVO.md`); este documento describe el piloto.
 - Coexisten dos sistemas de configuración con la misma interfaz pública (`ConfigLoader` v1 y `ContextLoader` v2); la selección es automática y transparente para el resto del código, pero implica que hay dos formatos YAML distintos y no intercambiables mantenidos en paralelo (`config/` vs `contexto/`).

@@ -1,84 +1,85 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guía para cualquier sesión de Claude Code (u otro agente) que trabaje en este repositorio.
+**Lee esto primero, luego [`docs/ESTADO.md`](docs/ESTADO.md).** Con esos dos archivos debes saber en qué fase
+estamos, qué ticket sigue y cómo trabajar.
 
-## Purpose
+## Qué es Clipeo (en 5 líneas)
 
-A pipeline that downloads TikTok/video content, transcribes it (WhisperX), and runs it through a chain of Claude-based agents to detect viral moments, refine their exact boundaries, score/caption them, and cut them as vertical (9:16) clips with burned-in subtitles ready for TikTok/Shorts/Reels.
+1. Plataforma interna de **clipeo gestionado**: un operador atiende a muchos streamers clientes.
+2. Produce clips verticales virales adaptados al objetivo de cada cliente, los revisa y los publica en varias plataformas.
+3. Se compone de un **engine agnóstico** de orquestación (`engine/`) y un **sistema de clips** encima (`clips/`).
+4. Restricción clave: **costo ≈ 0** hasta tener ingresos (IA vía Claude Code como "operador IA", transcripción gratuita, todo local en Docker).
+5. Estado: **migrando del piloto (v2.0) a la v2** según el roadmap; el piloto sigue produciendo clips mientras tanto.
 
-For full architectural detail (components, data flow, session persistence, known gaps), see **[docs/ARQUITECTURA.md](docs/ARQUITECTURA.md)**. Command reference: **[docs/COMANDOS.md](docs/COMANDOS.md)**. Data/config file schemas: **[docs/ESTRUCTURA_DATOS.md](docs/ESTRUCTURA_DATOS.md)**. How the system learns from feedback over time: **[docs/APRENDIZAJE.md](docs/APRENDIZAJE.md)**. This section only covers what's needed to run and orient in the codebase.
+## Mapa de documentos
 
-## Dependencies
+| Documento | Para qué |
+|---|---|
+| [`docs/ESTADO.md`](docs/ESTADO.md) | **Dónde estamos ahora**: sprint, ticket en curso, siguiente paso, bloqueos. |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md) | Fases F0–F7 y sus hitos. |
+| [`docs/ARQUITECTURA_OBJETIVO.md`](docs/ARQUITECTURA_OBJETIVO.md) | Arquitectura v2 y decisiones (ADR-001…015). |
+| [`docs/TO_BE.md`](docs/TO_BE.md) | Visión, procesos, requisitos, riesgos (incl. R-01 contenido de terceros). |
+| [`docs/DIAGNOSTICO_ACTUAL.md`](docs/DIAGNOSTICO_ACTUAL.md) | Diagnóstico del piloto (AS-IS). |
+| `docs/sprints/S<n>.md` | Cierre de cada sprint: qué se hizo y cómo probar la demo. |
+| `docs/ARQUITECTURA.md`, `COMANDOS.md`, `ESTRUCTURA_DATOS.md`, `APRENDIZAJE.md` | Documentación **del piloto** (referencia). |
 
-```
-pip install -r requirements.txt
-```
+## Gestión del trabajo (Jira)
 
-Includes `yt-dlp`, `whisperx` (transcription + diarization — not `openai-whisper`, which is only used by the archived v1.1 script), `anthropic`, `python-dotenv`, `pyyaml`.
+- Sitio: `personal-clipeo.atlassian.net` · Proyecto **`CLIP`** · Tablero Scrum (board 1).
+- **Épicas = fases**: CLIP-5 (F0) … CLIP-12 (F7).
+- **Sprints de 1 semana** (lunes a domingo), S1…S10. Cada sprint termina con una **demo concreta** que el
+  operador revisa personalmente antes de cerrar el sprint.
+- Los tickets se detallan **solo para el sprint siguiente**, al planificarlo.
+- Etiquetas: `F<n>` (fase), `operador` (requiere acción del operador), `externo`, `infra`, `docs`, `calidad`.
 
-ffmpeg must be installed system-wide (https://ffmpeg.org/download.html). `core/utils.py::setup_ffmpeg_path()` also injects a hardcoded WinGet ffmpeg path into `PATH` for this machine.
+### Flujo por ticket
 
-Requires a `.env` file (gitignored) with:
-- `ANTHROPIC_API_KEY` — required by all Claude-calling agents.
-- `HF_TOKEN` — optional; enables speaker diarization in WhisperX. Without it, transcripts have no speaker labels.
+1. Mover el ticket a **En curso** en Jira.
+2. Rama `CLIP-<n>-<slug>` desde `main` (o apilada sobre el ticket del que depende).
+3. Commits con prefijo `CLIP-<n>:`.
+4. Tests y lint en verde (`pytest`, y desde CLIP-16: `ruff`, `mypy`).
+5. PR a `main` con el ticket en el título; el operador revisa y aprueba.
+6. Al integrar: ticket a **Finalizada** y actualizar `docs/ESTADO.md`.
 
-## Running
+### Cierre de sprint
 
-Main entry point is `pipeline.py`, with three mutually exclusive modes:
+Escribir `docs/sprints/S<n>.md` (qué se hizo, **cómo probar la demo paso a paso**, capturas o clips, pendientes),
+pedir revisión al operador y, solo con su OK, cerrar el sprint en Jira.
 
-```
-python pipeline.py --video <url_or_local_path> [--config <canal_id>] [--revisar]
-python pipeline.py --test  stream_data/<session_id>/    [--config <canal_id>]
-python pipeline.py --live  <url>   # currently broken — see note below
-```
+## Estructura del repositorio
 
-- `--config` selects a channel/niche config (see below). Omitted → `config/default.yaml`.
-- `--revisar` pauses before cutting each clip for manual approval/edit/discard via terminal.
-- `--test` skips capture/transcription and runs agents 1→4 directly on an existing `transcripcion_completa.txt` in the given session directory.
-
-**`--live` is currently non-functional**: it shells out to a `capture_pipeline.py` at the project root that no longer exists (it was moved to `archive/capture_pipeline.py`, an older v1.1 script using classic `whisper` instead of WhisperX). The supported path for live streams today is:
-
-```
-python captura/tiktok_capture.py --usuario @handle [--chunk 30m]   # records live to disk in chunks
-python pipeline.py --video stream_data/<session>/chunk_001.mp4 --config <canal_id>  # process each recorded chunk
-```
-
-Other standalone tools:
-- `contexto/feedback.py --session <session_id>` — collect human feedback on generated clips, distilled by Claude into `aprendizajes/<canal_id>_optimizado.md` (fed back into Agent 3's prompt).
-- `entrenamiento/clip_manual.py --video ... --inicio ... --fin ... --linea1 ... --linea2 ...` — cut one manual clip bypassing agents 1–4.
-- `contexto/contexto_refresh.py <entidad_id>` — web-search recent news about an entity and save approved findings as context events. **Deprecated in practice (2026-07-31)**: spends real API budget (web search runs inside the Claude API call). Prefer asking a Claude Code agent to research directly in-session (own `WebSearch`, no `ANTHROPIC_API_KEY` spend) and save in the same file format — see `.claude/skills/seo-refresh/SKILL.md` for this pattern applied to per-platform SEO hashtags.
-- Ctrl+C during `--video`/`--live` processing waits for the in-flight chunk, then stops; chunk progress is checkpointed in `pipeline_estado.json` and resumable.
-
-## Configuration systems
-
-Two config systems coexist, auto-selected per `canal_id` (see docs/ARQUITECTURA.md §4 for detail):
-- **v1 — `ConfigLoader`**, plain YAML under `config/`: either `config/<canal_id>.yaml` (single file) or `config/<canal_id>/_index.yaml` + per-character YAMLs (ecosystem).
-- **v2 — `ContextLoader`**, modular YAML under `contexto/`: `contexto/nichos/<id>.yaml` + `contexto/entidades/<id>.yaml` + `contexto/eventos/<YYYY-MM>/*.yaml`. Takes priority if `contexto/nichos/<canal_id>.yaml` exists.
-
-Both expose the same interface to the agents (`get()`, `loaded_file`, `get_ecosystem_type()`, `enrich_with_speakers()`), so agents don't know or care which one loaded the config.
-
-## Pipeline stages (per chunk, `--video` mode)
+Transición en curso (ADR-008, migración *strangler*):
 
 ```
-audio extraction → WhisperX transcription → name cleanup → Agent 0 (speaker ID)
-  → Agent 1 (peak detection) → Agent 2 (range refinement) → Agent 3 (scoring + copy) → Agent 4 (video cutting)
+CLAUDE.md, docs/                 ← documentación (este archivo + análisis + estado)
+pipeline.py, agentes/, captura/, ← PILOTO v2.0 (se mueve a legacy/ en CLIP-14)
+transcripcion/, edicion_video/,
+contexto/, core/, ai_client/, …
+tests/                           ← tests del piloto (81, todos pasan)
 ```
 
-Agents 1–3 call Claude and are driven entirely by the resolved `config` dict (prompts, thresholds, hashtags). Agent 4 is pure FFmpeg/technical — no Claude, no config. Agent 0 runs only when the transcript has speaker diarization.
+Estructura objetivo (se crea en CLIP-16, ver ARQUITECTURA_OBJETIVO §8):
+`engine/` (agnóstico) · `clips/` (dominio) · `adapters/` · `app/` (CLI + web) · `knowledge/` (YAML por cliente) ·
+`assets/` · `colab/` · `legacy/` (piloto) · `tests/`.
 
-## Output structure
+**Regla de dependencias:** `engine/` nunca importa `clips/` ni `adapters/`.
 
-```
-stream_data/<session_id>/            (session_id = YYYYMMDD_HHMMSS, or tiktok_<user>_<timestamp>)
-  metadata.json                      yt-dlp video metadata
-  stream_completo.mp4 / audio/       downloaded source video + audio
-  pipeline_estado.json               chunk plan + progress checkpoint (resumable)
-  chunks/<chunk_id>/
-    transcripcion_raw.txt            WhisperX output, real timestamps
-    transcripcion_enriquecida.txt    after Agent 0 speaker-name resolution
-    picos.json / rangos.json / contenido.json   Agent 1 / 2 / 3 outputs
-  contenido_chunks/<chunk_id>.json   per-chunk content summary (post --revisar if used)
-  contenido_final.json               merge of all chunks, sorted by score
-  clips/clip_NNN.mp4 + .json          Agent 4 output, continuous numbering across chunks
-  clips_custom/                      manual clips from entrenamiento/clip_manual.py
-```
+## Cómo ejecutar
+
+- **v2:** con Docker Compose (se crea en CLIP-17): `docker compose up`. Base SQLite local en `./data/` (ADR-015).
+- **Piloto:** ver `docs/COMANDOS.md`. Uso principal:
+  `python pipeline.py --video <url_o_ruta> --config <canal_id> [--revisar]`.
+  Requiere `.env` (ver `.env.example`) y FFmpeg. `--live` está roto (usar `captura/tiktok_capture.py` + `--video`).
+- **Tests del piloto:** `python -m pytest -q`.
+
+## Reglas de trabajo
+
+- **No gastar la API de Anthropic** salvo que el operador lo pida: los pasos de IA usan el modo operador
+  (`AI_PROVIDER=manual`, skill `pipeline-manual`) o Claude Code en sesión (skill `seo-refresh`).
+- **Secretos nunca en el repo ni en el chat**: van en `.env` local o se piden por el formulario seguro.
+- **Portabilidad**: nada de rutas absolutas ni comandos de un solo sistema operativo.
+- **Calidad del clip** se mide contra el golden set (`tests/golden/`, desde CLIP-20).
+- Contenido de terceros: seguir el riesgo aceptado **R-01** de `docs/TO_BE.md` (cuentas de captación separadas,
+  retiro inmediato ante solicitud, lista de exclusión).
+- Mantener `docs/ESTADO.md` al día: es la memoria compartida entre sesiones.
