@@ -1,3 +1,5 @@
+> **Piloto (legacy):** desde CLIP-14 el código vive en `legacy/`; ejecutar estos comandos desde esa carpeta (`cd legacy`). El modo `--live` fue eliminado.
+
 # Comandos del Pipeline
 
 Referencia de todos los comandos disponibles hoy en el proyecto, con ejemplos. Para entender qué hace cada etapa internamente ver [ARQUITECTURA.md](ARQUITECTURA.md); para el formato de los archivos que estos comandos leen/escriben ver [ESTRUCTURA_DATOS.md](ESTRUCTURA_DATOS.md).
