@@ -14,8 +14,8 @@
 | Ticket | Tema | Responsable | Estado |
 |---|---|---|---|
 | CLIP-13 | Documentación de análisis a `main` + ADR-015 | Claude Code | PR abierto: Garyn14/clipeo#1 |
-| CLIP-15 | `CLAUDE.md` + `docs/ESTADO.md` + convención Jira | Claude Code | En curso (rama apilada sobre CLIP-13) |
-| CLIP-14 | Congelar piloto: tag `piloto-v2.0` + `legacy/` | Claude Code | Pendiente |
+| CLIP-15 | `CLAUDE.md` + `docs/ESTADO.md` + convención Jira | Claude Code | PR abierto: Garyn14/clipeo#2 (apilado sobre #1) |
+| CLIP-14 | Congelar piloto: tag `piloto-v2.0` + `legacy/` | Claude Code | En revisión (falta crear el tag, ver bloqueos) |
 | CLIP-16 | Estructura v2 + pyproject/ruff/mypy/pytest | Claude Code | Pendiente |
 | CLIP-17 | Docker + docker compose | Claude Code | Pendiente |
 | CLIP-19 | Portabilidad (quitar rutas Windows) | Claude Code | Pendiente |
@@ -32,6 +32,8 @@ Revisión y merge de Garyn14/clipeo#1 (CLIP-13) por el operador; luego CLIP-14.
 
 ## Bloqueos / pendientes del operador
 
+- Crear el tag `piloto-v2.0` sobre el commit `5653b66` (el entorno de Claude Code no puede subir tags):
+  `git tag piloto-v2.0 5653b66 && git push origin piloto-v2.0`.
 - Borrar los tickets de ejemplo CLIP-1 a CLIP-4 en Jira (el conector no permite borrar).
 - CLIP-20, CLIP-21 y CLIP-22 (ver tabla).
 
