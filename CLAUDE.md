@@ -53,10 +53,8 @@ Transición en curso (ADR-008, migración *strangler*):
 
 ```
 CLAUDE.md, docs/                 ← documentación (este archivo + análisis + estado)
-pipeline.py, agentes/, captura/, ← PILOTO v2.0 (se mueve a legacy/ en CLIP-14)
-transcripcion/, edicion_video/,
-contexto/, core/, ai_client/, …
-tests/                           ← tests del piloto (81, todos pasan)
+legacy/                          ← PILOTO v2.0 congelado (tag piloto-v2.0); ver legacy/README.md
+legacy/tests/                    ← tests del piloto (81, todos pasan)
 ```
 
 Estructura objetivo (se crea en CLIP-16, ver ARQUITECTURA_OBJETIVO §8):
@@ -68,10 +66,10 @@ Estructura objetivo (se crea en CLIP-16, ver ARQUITECTURA_OBJETIVO §8):
 ## Cómo ejecutar
 
 - **v2:** con Docker Compose (se crea en CLIP-17): `docker compose up`. Base SQLite local en `./data/` (ADR-015).
-- **Piloto:** ver `docs/COMANDOS.md`. Uso principal:
-  `python pipeline.py --video <url_o_ruta> --config <canal_id> [--revisar]`.
-  Requiere `.env` (ver `.env.example`) y FFmpeg. `--live` está roto (usar `captura/tiktok_capture.py` + `--video`).
-- **Tests del piloto:** `python -m pytest -q`.
+- **Piloto:** desde `legacy/` (ver `legacy/README.md`):
+  `cd legacy && python pipeline.py --video <url_o_ruta> --config <canal_id> [--revisar]`.
+  Requiere `.env` (ver `.env.example`) y FFmpeg. Para lives: `captura/tiktok_capture.py` + `--video`.
+- **Tests del piloto:** `python -m pytest -q legacy/tests`.
 
 ## Reglas de trabajo
 
