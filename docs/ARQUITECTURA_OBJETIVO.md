@@ -1,6 +1,6 @@
 # Clipeo v2 — Arquitectura objetivo
 
-> Estado: **v0.2 aprobada** · Fecha: 2026-11-15
+> Estado: **v0.3 aprobada** · Fecha: 2026-11-16
 > Parte de: [`DIAGNOSTICO_ACTUAL.md`](DIAGNOSTICO_ACTUAL.md) (AS-IS) → [`TO_BE.md`](TO_BE.md) (aprobado) → **este documento** → [`ROADMAP.md`](ROADMAP.md).
 > Las decisiones se registran como ADR (§9); las marcadas *Propuesta* requieren OK del operador.
 
@@ -200,13 +200,13 @@ clipeo/
 |---|---|---|---|
 | 001 | **Python 3.12+** para todo | TS/Node | Aprobado — reutiliza piloto, WhisperX, yt-dlp, FFmpeg. |
 | 002 | **Engine propio mínimo** sobre SQLite, con interfaz que permita migrar a Temporal/Prefect/Hatchet si escala | Prefect, Temporal, Celery+Redis, Dagster | Aprobado — cero infraestructura extra, encaja con "en espera" del operador IA y la revisión; el engine es además objetivo del producto. |
-| 003 | **SQLite (WAL) + SQLAlchemy + Alembic**; migrar a Postgres en Fase 2–3 | Postgres desde el inicio | Aprobado — costo cero, un archivo, portable. |
-| 004 | **Disco local** para artefactos tras interfaz `Storage` | S3/R2 desde el inicio | Aprobado. |
+| 003 | **SQLite (WAL) + SQLAlchemy + Alembic**, **una base local por laptop** (ver ADR-015); migrar a Postgres en Fase 2–3 | Postgres desde el inicio; Postgres en la nube (free tier) | Aprobado — costo cero, un archivo, portable. |
+| 004 | **Disco local** (volumen `./data` de Docker) para artefactos tras interfaz `Storage` | S3/R2 desde el inicio | Aprobado. |
 | 005 | **IA por proveedor y por paso**; default `claude_code` (operador IA) en pasos de juicio | Solo API, solo open source | Aprobado — benchmark en Fase 6 del roadmap. |
 | 006 | **Web local FastAPI + HTMX** para revisión | Streamlit, React SPA, solo CLI | Aprobado — previsualizar video en navegador, sin build de frontend. |
-| 007 | **Ejecución en la PC del operador** (Windows) con soporte Linux; Docker opcional | VPS/nube | Aprobado — costo cero. |
+| 007 | **Ejecución en la laptop del operador dentro de Docker Compose** (Windows con Docker Desktop, o Linux) | VPS/nube; ejecución directa sin contenedor | Aprobado — costo cero; el operador cambia de laptop (ver ADR-015). |
 | 008 | **Migración strangler**: piloto a `legacy/`, envolver agentes como steps, luego reescribir | Reescritura total | Aprobado — mantiene la producción de clips durante la migración. |
-| 009 | **Publicación**: manual por defecto, `youtube_api` y `tiktok_inbox` reutilizando v1 | Control del navegador del operador | Aprobado — automatizar el navegador queda solo como respaldo. |
+| 009 | **Publicación**: manual por defecto, `youtube_api` y `tiktok_inbox` (reconstruidos: el código de v1 no está disponible) | Control del navegador del operador | Aprobado — automatizar el navegador queda solo como respaldo. |
 | 010 | **Calidad**: ruff + mypy + pytest + GitHub Actions (gratis en repos privados con cupo) | — | Aprobado. |
 
 ## 10. Requisitos no funcionales → cómo se cumplen
@@ -216,7 +216,7 @@ clipeo/
 | 01 Costo ≈ 0 | ADR 002–007; medición de costo por StepRun y por clip |
 | 02 IA intercambiable | Registro de proveedores por paso (§4) |
 | 03 Extensible | Interfaces de adaptadores (§6); flows declarados en el dominio |
-| 04 Portable | Sin rutas absolutas; assets en repo; scheduler interno; CI en Linux |
+| 04 Portable | Docker Compose; sin rutas absolutas; assets en repo; scheduler interno; CI en Linux; ADR-015 |
 | 05 Idempotente/reanudable | Claves de idempotencia, estados persistidos, reintentos (§3.2) |
 | 06 Trazable | StepRun guarda entradas/salidas, versión de prompt, costo; historial de revisiones |
 | 07 Seguro | `SecretStore`; `.env` solo para configuración no sensible |
@@ -308,3 +308,19 @@ dirección editorial / EDL (IA) → copy por plataforma (IA) → render → QA v
 | 012 | Edición basada en EDL: dirección editorial (piensa) separada de render (ejecuta) | Aprobado |
 | 013 | Ciclo de aprendizaje con bot analista semanal y reglas con evidencia aprobadas por el operador | Aprobado |
 | 014 | Golden set como criterio de aceptación de cambios de calidad | Aprobado |
+
+### 11.9 Portabilidad entre laptops (ADR-015)
+
+> Decisión del operador (2026-11-16): Docker con base de datos **local por laptop**.
+
+| Qué | Dónde vive | Al cambiar de laptop |
+|---|---|---|
+| Código | GitHub | `git pull` |
+| Configuración de clientes, perfiles editoriales y libro de reglas | **YAML versionado en el repo** (`knowledge/`), cargado a SQLite al iniciar | Viaja con `git pull` |
+| Estado operativo (inventario, publicaciones, métricas, ejecuciones) | SQLite en `./data/` | `clipeo backup` → archivo → `clipeo restore` en la otra laptop |
+| Videos fuente y clips | `./data/` (volumen de Docker) | Se regeneran o se copian si hace falta |
+| Secretos | `.env` local (fuera del repo) | Se copia a mano una vez por laptop |
+
+| ADR | Decisión | Estado |
+|---|---|---|
+| 015 | Docker Compose + SQLite local por laptop; conocimiento de clientes en YAML versionado; `backup`/`restore` del estado operativo | Aprobado |
