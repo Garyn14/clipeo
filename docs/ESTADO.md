@@ -19,12 +19,12 @@
 | CLIP-30 | Memoria del nicho con datos de @nandoclips93 | Desarrollador + **operador** (aprobar cambios) | Pendiente |
 | CLIP-31 | Dirección editorial MVP (arrancar en el conflicto, recortar relleno) | Desarrollador | Pendiente |
 
-Diseño técnico: `docs/sprints/S3.md` (pendiente). Línea base: `docs/calidad/LINEA_BASE.md`.
+Diseño técnico: `docs/sprints/S3.md`. Línea base: `docs/calidad/LINEA_BASE.md`.
 En backlog: CLIP-27 (medios como fuente), CLIP-28 (transcripción/hablantes), CLIP-26 (Q6 onboarding), CLIP-16/17/22.
 
 ## Siguiente paso
 
-[Líder técnico] diseño técnico del S3 (`docs/sprints/S3.md`).
+[Desarrollador] CLIP-30 (datos de @nandoclips93), luego CLIP-29 y CLIP-31.
 
 ## Pendientes del operador
 
