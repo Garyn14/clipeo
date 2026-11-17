@@ -1,0 +1,95 @@
+# Referencias del nicho zapatillas_peru — memoria del "cerebro".
+# Clips reales de TikTok medidos con yt-dlp (2026-10-03). outlier = vistas / mediana de la cuenta
+# (cuánto rindió respecto de lo normal para esa cuenta). texto_pantalla leído de los fotogramas.
+# Fuente de métricas: investigacion/zapatillas_peru/videos.jsonl · muestra: muestra.jsonl
+
+actualizado: 2026-10-03
+metodo: >
+  1.178 videos de 21 cuentas (creadores, cuentas de clips, medios y la cuenta propia @nandoclips93);
+  se compara el 25% de mayor outlier contra el 25% menor y se leen los fotogramas de 58 clips.
+
+hallazgos:
+  - id: historia_no_formato
+    regla: >
+      El formato (texto en pantalla en 2 líneas + emoji) es igual en el top y en el fondo.
+      Lo que separa un clip viral de uno que no rinde es la historia: emoción, algo en juego,
+      un conflicto o un gesto con alguien. Un personaje solo, sin historia, no alcanza.
+  - id: nombrar_personaje
+    regla: >
+      Los títulos del top nombran al personaje el doble de veces que los del fondo
+      (Yolu 33% vs 17%, Fritz 14% vs 0%, Noto 26% vs 16%). El título debe decir QUIÉN.
+  - id: descripcion_no_es_titulo
+    regla: >
+      La mayoría de los clips más virales de Fritz y Noto tienen la descripción vacía: el gancho
+      está en el texto quemado en el video, no en la descripción.
+
+  - id: arrancar_en_el_conflicto
+    regla: >
+      Los clips virales arrancan en medio del conflicto: lo que está en juego (una cifra de
+      dinero, una pregunta incómoda, una emoción) se escucha en los primeros 3–4 segundos, sin
+      presentación. Ej: "¿Cuánto tienes, ochenta?" (526K) · "el sueldo es entre 3.000 a 3.200"
+      (561K) · "Ayer fue su aniversario, dice" (1.3M) · "¿Cuánto te debo? 60 soles" (1.1M).
+      El corte debe empezar donde aparece lo que está en juego, no antes.
+
+formula_titulo: >
+  [Personaje] + [acción concreta] + [con quién / qué está en juego] + emoji o "XD".
+  Ej: "El tío Fritz hace descuento a mamita que no tenía cómo pagar".
+
+tipos_que_funcionan:
+  - tipo: generosidad_con_humilde
+    descripcion: El personaje ayuda, regala o descuenta a alguien humilde/vulnerable (mamita, carguero, niño, empleada).
+    ejemplos:
+      - {titulo: "El tío Fritz hace descuento a mamita que no tenía cómo pagar", vistas: 526000, outlier: 264.1, cuenta: nandoclips93, propia: true}
+      - {titulo: "ESTE HUMILDE CARGUERO LE COBRÓ CONCIENTEMENTE 60 SO AL TIO FRITZ POR UN CHAMBÓN", vistas: 1100000, outlier: 104.3, cuenta: clipeanonymus}
+      - {titulo: "Farfán le va a dar unas LV a chibolo que vino del colegio 😨", vistas: 600000, outlier: 28.0, cuenta: sofhiaclips}
+      - {titulo: "EMIL LLEVÓ A SU EMPLEADA A COLOMBIA! 😱", vistas: 140100, outlier: 127.5, cuenta: davidclipsx}
+      - {titulo: "Minutos antes de que Elsita llegara a más de 2k 😱", vistas: 106800, outlier: 97.2, cuenta: davidclipsx}
+      - {titulo: "Fritz apoya a chamo que jugará copa américa en Perú", vistas: 133900, outlier: 67.2, cuenta: nandoclips93, propia: true}
+      - {titulo: "Fritz apoya a emprendedora", vistas: 57600, outlier: 28.9, cuenta: nandoclips93, propia: true}
+  - tipo: relaciones_y_emocion
+    descripcion: Pareja, familia, alguien que llora o se emociona; olvidos, celos, cariño.
+    ejemplos:
+      - {titulo: "El tío Yolu se olvidó del aniversario de 15 años 🥺", vistas: 1300000, outlier: 13.3, cuenta: yoluclips19}
+      - {titulo: "A YOLU SE LE OLVIDÓ SU ANIVERSARIO PERO ASÍ LO AMA ❤️", vistas: 755400, outlier: 17.6, cuenta: satorugojo.clips}
+      - {titulo: "Llega matiwasi del colegio y le hace llorar al tío yolu 💔🤣", vistas: 479900, outlier: 38.2, cuenta: babynathsclips1}
+      - {titulo: "Matiwasi se inventa serenata para luana", vistas: 155500, outlier: 12.4, cuenta: babynathsclips1}
+      - {titulo: "EL TIO FRITZ AGRADECIDO CON EL PASTORCITO POR LO QUE PASO 🥲🥲", vistas: 101200, outlier: 49.1, cuenta: jhasminclips}
+  - tipo: jefe_y_trabajadores
+    descripcion: El dueño con sus empleados (premia, pilla, exige) o una oferta de trabajo con sueldo.
+    ejemplos:
+      - {titulo: "EL TIO FRITZ ENCUENTRA A EL CHARLANTAN DURMIENDO XD", vistas: 162200, outlier: 78.6, cuenta: jhasminclips}
+      - {titulo: "EL TIO FRITZ CONSINTIENDO ASUS TRABAJADORES 🤭👏", vistas: 113400, outlier: 55.0, cuenta: jhasminclips}
+      - {titulo: "El tío Fritz busca personal con sueldo acorde al mercado XD", vistas: 89600, outlier: 45.0, cuenta: nandoclips93, propia: true}
+      - {titulo: "TIO YOLU EN BUSCA DE ALGUIEN QUE SEPA EXCEL, 3000 X MES 😱", vistas: 560900, outlier: 32.2, cuenta: gatitoclips1.0}
+      - {titulo: "Las comisiones en Fritzsport superan facilmente el mismo sueldo", vistas: 506500, outlier: 48.0, cuenta: clipeanonymus}
+      - {titulo: "MATIWASI SUBIO PARA SUPERVISAR LA EMPRES4 😎", vistas: 276800, outlier: 15.9, cuenta: gatitoclips1.0}
+  - tipo: rivalidad_y_apuestas
+    descripcion: Indirectas entre tiendas, apuestas de dinero, retos con premio.
+    ejemplos:
+      - {titulo: "El tío Fritz manda indirecta a Yolu — La número uno es Dios", vistas: 83200, outlier: 41.8, cuenta: nandoclips93, propia: true}
+      - {titulo: "El Tio Fritz le gana los 200 Mil a Dennis 💀", vistas: 861600, outlier: 18.8, cuenta: sendooclips}
+      - {titulo: "El tío fritz realiza esfuerzo sobrehumano con tal de no regalar pelota XD", vistas: 51800, outlier: 26.0, cuenta: nandoclips93, propia: true}
+  - tipo: evento_fuerte
+    descripcion: Accidente, atentado, algo que pasó de verdad y es noticia.
+    ejemplos:
+      - {titulo: "🚨 ACCIDENTE 🚨 Tío Fritz", vistas: 516500, outlier: 113.1, cuenta: zeclips_0}
+      - {titulo: "El tío Fritz con seguridad del estado luego de sufrir atentado", vistas: 77400, outlier: 38.9, cuenta: nandoclips93, propia: true}
+  - tipo: humor_picaro
+    descripcion: Doble sentido, frase pesada o meme del personaje ("tecnología", "charlatán").
+    ejemplos:
+      - {titulo: "Se me paró mi Fritz XD", vistas: 102600, outlier: 51.5, cuenta: nandoclips93, propia: true}
+      - {titulo: "NO ERES FEO SI NO QUE ERES POBRE CTRM ..", vistas: 781900, outlier: 86.0, cuenta: contenido.variado079}
+      - {titulo: "EL CHARLANTAN CON LA TECNOLOGÍA DE DESTAPADOR DEL TIO FRITZ 😮😮", vistas: 209900, outlier: 101.8, cuenta: jhasminclips}
+
+lo_que_no_funciona:
+  descripcion: Personaje presente pero sin historia — nada en juego, sin emoción ni conflicto, o el momento es chato.
+  ejemplos:
+    - {titulo: "Yolu reclamando su hot wheels", outlier: 0.08, cuenta: satorugojo.clips}
+    - {titulo: "CUÁNTO GANA JORGITO", outlier: 0.11, cuenta: satorugojo.clips}
+    - {titulo: "Nuevo Jorgito revela cuánto gana como camaraman", outlier: 0.11, cuenta: full_showyolu}
+    - {titulo: "El jeque se fue al tío miyacky a buscar grasita 💥", outlier: 0.07, cuenta: clipeanonymus}
+    - {titulo: "Sideral feliz por haber botado A Zully de la casa", outlier: 0.12, cuenta: hijitoclips, nota: "otro nicho (streamers_peru)"}
+
+notas:
+  - Las cuentas de clips mezclan nichos (Sideral, política, Emil); el universo se asigna por el contenido del clip.
+  - Formato de la cuenta propia: video horizontal con barras negras y título en caja blanca arriba; rinde igual que el formato vertical de otras cuentas cuando la historia es buena.

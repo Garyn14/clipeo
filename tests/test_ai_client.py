@@ -15,6 +15,7 @@ import pytest
 import ai_client.client as ai_client_module
 import ai_client.manual_provider as manual_module
 from ai_client import get_client
+from ai_client.cli_provider import ClaudeCliClient
 from ai_client.manual_provider import ManualClient
 
 
@@ -22,11 +23,11 @@ from ai_client.manual_provider import ManualClient
 #  get_client() — selección de proveedor
 # ─────────────────────────────────────────
 
-def test_get_client_default_devuelve_anthropic_real(monkeypatch):
+def test_get_client_default_devuelve_claude_cli(monkeypatch):
     monkeypatch.delenv("AI_PROVIDER", raising=False)
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-fake-key")
+    monkeypatch.delenv("PIPELINE_TRACE_DIR", raising=False)
     client = get_client()
-    assert isinstance(client, anthropic.Anthropic)
+    assert isinstance(client, ClaudeCliClient)
 
 
 def test_get_client_explicito_anthropic_devuelve_anthropic_real(monkeypatch):
@@ -37,7 +38,7 @@ def test_get_client_explicito_anthropic_devuelve_anthropic_real(monkeypatch):
 
 
 def test_get_client_sin_api_key_falla_claro(monkeypatch):
-    monkeypatch.delenv("AI_PROVIDER", raising=False)
+    monkeypatch.setenv("AI_PROVIDER", "anthropic")
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     with pytest.raises(RuntimeError, match="ANTHROPIC_API_KEY"):
         get_client()

@@ -1,0 +1,236 @@
+[
+  {
+    "caso": "20261003_161148/chunks/chunk_001",
+    "inicio": "00:12:04",
+    "fin": "00:12:50",
+    "razon_a2": "Momento de generosidad completo: pregunta si tienen pelota, los niños (2 y 6 años) responden con emoción, recibe la pelota y cierra con las bendiciones. Se entiende sin ver el resto del video. Se incluye el pico 8 como setup y se corta antes del pitch de ventas de las 12:51.",
+    "A_hoy": {
+      "score": 6,
+      "texto_linea1": "Regala una pelota a dos hermanitos",
+      "texto_linea2": "de 2 y 6 años 🥹",
+      "razon_score": "Gesto de generosidad sincero y completo, que se entiende sin ver el resto del video. Los niños responden con emoción y el cierre con bendiciones es cálido. No hay dato verificable ni confrontación entre personajes, y los speakers están sin identificar, por lo que no se nombra a nadie. Por eso queda en 6. Encaja en el patrón de generosidad de selección manual: tono cálido, sin ironía, nombrando a quién ayuda (los hermanitos)."
+    },
+    "B_memoria": {
+      "score": 7,
+      "texto_linea1": "Regala una pelota gratis a dos hermanitos",
+      "texto_linea2": "de 2 y 6 años, felices 🥹",
+      "razon_score": "Es el tipo generosidad_con_humilde, que en la memoria del nicho rinde alto (outliers de 28 a 264). Tiene historia completa: la pregunta, los niños de 2 y 6 años que responden con emoción, la entrega de la pelota y las bendiciones. Se entiende sin ver el resto del video. No llega a 8-9 porque no hay confrontación ni dato verificable por la audiencia. Los speakers están [sin identificar], así que no se nombra a ningún personaje y la acción es el sujeto. Si el editor confirma que es Fritz, conviene reescribir el título con su nombre, porque nombrar al personaje mejora el rendimiento."
+    }
+  },
+  {
+    "caso": "20261003_161148/chunks/chunk_001",
+    "inicio": "00:13:25",
+    "fin": "00:14:09",
+    "razon_a2": "Reto completo con humor: el cliente pregunta el precio, Fritz se define como negociante y pide 40 dominadas, el cliente responde 'yo hablo y no domino', baja a 30, lo intenta en vivo y vuelve a negociar. Fusiona los picos 3 y 4, que cuentan la misma escena.",
+    "A_hoy": {
+      "score": 7,
+      "texto_linea1": "Pide 40 dominadas para bajar el precio",
+      "texto_linea2": "\"Yo hablo y no domino\", responde 😂",
+      "razon_score": "Reto con cifra concreta (40 dominadas, luego 30) y remate cómico claro ('yo hablo y no domino'), con intento en vivo y vuelta a la negociación. Hay tensión con resolución visible y la audiencia puede probar el reto, pero no hay confrontación entre personajes ni dato verificable de precio o stock, por eso no pasa de 7. Ambos speakers vienen [sin identificar], así que el texto no nombra a nadie y usa la acción como sujeto."
+    },
+    "B_memoria": {
+      "score": 7,
+      "texto_linea1": "Hazme 40 dominadas y te la llevas",
+      "texto_linea2": "Yo hablo y no domino 😂",
+      "razon_score": "Reto con premio y humor autoconsciente: el cliente se confiesa 'yo hablo y no domino', la apuesta baja de 40 a 30 y se intenta en vivo. Hay una cifra concreta (40 dominadas), pero ningún dato verificable de precio o stock y ninguna confrontación entre personajes, así que queda en 7. El speaker no está identificado en la transcripción, por eso el texto no nombra a nadie. Si el pipeline confirma que es Fritz, conviene reescribirlo nombrándolo."
+    }
+  },
+  {
+    "caso": "20261003_161148/chunks/chunk_001",
+    "inicio": "00:20:45",
+    "fin": "00:21:34",
+    "razon_a2": "Tensión jefe-trabajador: Fritz reclama a Fabri que debió avisarle, dice que no quiere 'renegar' y suelta 'yo sé que no van a chambear'. Tiene setup, queja y cierre. Confianza moderada porque la transcripción es algo desordenada, pero la confrontación se entiende.",
+    "A_hoy": {
+      "score": 7,
+      "texto_linea1": "Reclama a Fabri por no avisarle",
+      "texto_linea2": "y sentencia: no van a chambear 👀",
+      "razon_score": "Tensión jefe-trabajador clara, con queja directa ('tú también tienes que avisarme, Fabri') y cierre sentenciando que no van a chambear. No hay dato verificable ni confrontación entre personajes del lore, y la transcripción es desordenada, así que no pasa de 7. Speakers sin identificar: el título usa la acción como sujeto y solo nombra a Fabri, que aparece dicho en el audio."
+    },
+    "B_memoria": {
+      "score": 7,
+      "texto_linea1": "Reclama a Fabri por no avisarle",
+      "texto_linea2": "y suelta que nadie va a chambear 😏",
+      "razon_score": "Tensión jefe-trabajador con setup (Fabri no avisó del live), queja directa ('tú también tienes que avisarme') y cierre con la frase 'yo sé que no van a chambear'. Encaja en el tipo jefe_y_trabajadores, que funciona en el nicho. No hay dato verificable (precio, cifra, stock) ni confrontación fuerte entre personajes del lore, así que no pasa de 7. Además, ningún speaker está identificado en la transcripción: se omite el nombre del personaje y solo se nombra a Fabri, que sí aparece en el audio. Si se confirma quién habla, conviene nombrarlo en L1, porque los títulos que nombran al personaje rinden más."
+    }
+  },
+  {
+    "caso": "20260810_023129/chunks/chunk_001",
+    "inicio": "00:00:29",
+    "fin": "00:01:28",
+    "razon_a2": "Arco completo del gag: anuncia el producto y su 'tecnología Z-Flex', lanza el reto de probar si el agua penetra, se hace la demostración en vivo y cierra con el resumen de características — se entiende sin contexto externo",
+    "A_hoy": {
+      "score": 7,
+      "texto_linea1": "Fritz le echa agua a sus botines",
+      "texto_linea2": "para probar su tecnología waterproof 😏",
+      "razon_score": "Arco completo con prueba en vivo: Fritz anuncia las Terra Fresh, reta al agua a penetrar y hace la demostración. Hay un dato que la audiencia puede comprobar (waterproof, Z-Flex, planta TerraRash), pero no trae precio ni confrontación con otro personaje, así que no llega a 9-10. Entra en el meme de la tecnología Fritz, con ironía implícita y sin explicar el meme. El resultado de la prueba no se ve claro en la transcripción, por eso se queda en 7."
+    },
+    "B_memoria": {
+      "score": 7,
+      "texto_linea1": "Fritz le echa agua a sus botines",
+      "texto_linea2": "para probar su tecnología waterproof 😏",
+      "razon_score": "Es el meme de la tecnología de Fritz con una demostración en vivo (el agua sobre los botines) y arco completo, así que funciona solo. No tiene precio ni confrontación con otro personaje, y la prueba del agua no deja un dato que la audiencia pueda verificar. Por eso se queda en 7 y no sube a 9 o 10. Comedia con ironía implícita, sin comillas y sin explicar el meme."
+    }
+  },
+  {
+    "caso": "20260810_023129/chunks/chunk_001",
+    "inicio": "00:05:57",
+    "fin": "00:06:46",
+    "razon_a2": "Fritz arma y remata en vivo su propia definición de 'tecnología' (todo terreno, no pesa, amortiguación Z-Flex) — el momento más autoparódico del meme confirmado, cierra con el gesto de mostrar la suela",
+    "A_hoy": {
+      "score": 7,
+      "texto_linea1": "Fritz por fin define su tecnología",
+      "texto_linea2": "botines para subir montañas con lluvia 😏",
+      "razon_score": "Meme de tecnología confirmado con Fritz armando su propia definición en vivo (todo terreno, no pesa, amortiguación Z-Flex) y cerrando con el gesto de mostrar la suela. Es muy autoparódico y tiene un dato interesante (Z-Flex), pero no hay precio ni cifra verificable ni confrontación directa con otro personaje, por eso se queda en 7 y no sube a 9-10."
+    },
+    "B_memoria": {
+      "score": 7,
+      "texto_linea1": "Fritz da su clase de tecnología",
+      "texto_linea2": "con botines todo terreno y Z-Flex 😏",
+      "razon_score": "Es el meme de tecnología de Fritz confirmado como viral, y el clip es su versión más autoparódica: arma su propia definición (todo terreno, no pesa, amortiguación Z-Flex) y remata mostrando la suela. Pierde puntos para llegar a 8-9 porque no hay precio ni cifra concreta, y tampoco confrontación con otro personaje. Z-Flex es una referencia que se puede buscar, pero no un dato duro. El chiste funciona por sí solo y deja a la audiencia comentando el meme. Es parecido a la categoría 'humor_picaro' de la memoria del nicho (meme del personaje)."
+    }
+  },
+  {
+    "caso": "20260722_012426/chunks/chunk_001",
+    "inicio": "00:06:10",
+    "fin": "00:06:51",
+    "razon_a2": "Fritz anuncia en vivo un producto en fabricación que quiere 'probarle al Perú' a 99 soles — reveal con promesa de valor clara y gancho emocional completo. El clip abre con el anuncio y cierra con el llamado a corazones blancos, dándole remate reconocible para la comunidad kickperu.",
+    "A_hoy": {
+      "score": 8,
+      "texto_linea1": "Fritz va a probarle al Perú",
+      "texto_linea2": "un producto nuevo a solo 99 soles 😏",
+      "razon_score": "Fritz anuncia en vivo un producto en fabricación con un precio concreto (99 soles) que la audiencia podrá verificar cuando llegue. Esa promesa de valor es el gancho. No hay confrontación directa ni se nombra el producto, así que queda por debajo del 9. El cierre con los corazones blancos le da remate reconocible para la comunidad."
+    },
+    "B_memoria": {
+      "score": 7,
+      "texto_linea1": "Fritz muestra el producto que fabrica",
+      "texto_linea2": "para probarle al Perú por 99 soles 👀",
+      "razon_score": "Fritz es el sujeto activo: revela un producto en fabricación y lo reta a probarse ante el Perú con una cifra concreta (99 soles). Pero el producto nunca se nombra ni se muestra en la transcripción y no hay confrontación con otro personaje, así que el dato no es del todo verificable y no llega a 9. El cierre con los corazones blancos le da remate reconocible para la comunidad. Encaja en el patrón de Fritz anunciando lo que va a traer (meme de la tecnología), pero sin precio contrastado."
+    }
+  },
+  {
+    "caso": "20260722_012426/chunks/chunk_001",
+    "inicio": "00:07:26",
+    "fin": "00:08:00",
+    "razon_a2": "Fusión de PICO 2 y PICO 3: Fritz describe sus zapatillas como 'todo aterrendo para todo tipo de cliente' y remata con 'viene con waterproof', dos claims técnicos seguidos con vocabulario meme aplicado a producto local. El inicio desde 07:26 incluye el contexto de la consulta al público sobre el pasador, lo que da base narrativa al pitch. Clip autónomo y con carga cómica real.",
+    "A_hoy": {
+      "score": 7,
+      "texto_linea1": "Fritz presenta zapatillas para todo cliente",
+      "texto_linea2": "y botines con waterproof incluido 😏",
+      "razon_score": "Fritz pitchea su producto con vocabulario meme (todo terreno, waterproof) y la consulta al público sobre pasador o liga da base narrativa. Tiene carga cómica clara, pero no trae precio, cifra ni confrontación que la audiencia pueda verificar, así que no llega a 9-10. El claim de waterproof es comprobable de forma general, no con dato concreto."
+    },
+    "B_memoria": {
+      "score": 6,
+      "texto_linea1": "Fritz deja votar el pasador",
+      "texto_linea2": "y vende zapatías todo aterrendo waterproof 😏",
+      "razon_score": "Es humor autoconsciente del meme de 'tecnología' de Fritz. Fritz consulta al público (liga o pasador), vende zapatías 'todo aterrendo' y remata con 'viene con waterproof'. La carga cómica es real, pero no hay precio ni cifra verificable ni confrontación entre personajes. Cae en 5-6 por falta de dato comprobable, y sube a 6 y publicable por el patrón de meme y humor autoconsciente. El título deja casi textual la frase de Fritz, sin explicar el meme."
+    }
+  },
+  {
+    "caso": "20260722_012426/chunks/chunk_001",
+    "inicio": "00:16:23",
+    "fin": "00:17:06",
+    "razon_a2": "Fritz descubre mercadería deteriorada y en lugar de liquidarla decide regalarla a damnificados — momento de generosidad con setup claro (Michael le avisó) y resolución en la misma ventana. El diálogo con el colaborador da textura real al momento. Se entiende solo sin el video completo.",
+    "A_hoy": {
+      "score": 7,
+      "texto_linea1": "Fritz no liquida su mercadería deteriorada",
+      "texto_linea2": "la regala a los damnificados 🙏",
+      "razon_score": "Patrón generosidad con setup claro (Michael avisa de la mercadería deteriorada) y resolución en la misma ventana: Fritz decide regalar en vez de liquidar. Hay un dato interesante (unos 15 pares sin caja, pares únicos), pero lo dice un speaker sin identificar y no es del todo verificable. No hay confrontación ni claim de soberbia, así que no pasa de 7. Tono cálido y sin ironía, nombrando a quién ayuda."
+    },
+    "B_memoria": {
+      "score": 8,
+      "texto_linea1": "Fritz no liquida su mercadería deteriorada",
+      "texto_linea2": "y la regala a los damnificados 🙏",
+      "razon_score": "Encaja en el patrón de generosidad, que en la memoria del nicho rinde muy alto (Fritz y la mamita: 526K, outlier 264). Tiene setup claro (Michael avisó de la mercadería) y resolución en la misma ventana: Fritz decide regalar en vez de liquidar. Se entiende sin ver el video completo. No llega a 9 porque el único dato (unos 15 pares sin caja) es pequeño y poco verificable, y no hay confrontación entre personajes. El título nombra al personaje y a quién ayuda, y no lleva ironía, porque el gesto es sincero."
+    }
+  },
+  {
+    "caso": "20260722_012426/chunks/chunk_001",
+    "inicio": "00:22:47",
+    "fin": "00:26:42",
+    "razon_a2": "Fusión de PICOS 5, 6 y 7: narrativa completa del reto de dominadas — setup de reglas (50 = pelota, 100 = ferrito), tensión del intento, Fritz negociando en vivo si el participante sigue o cobra la pelota, cuenta en pantalla, palmas del público y entrega del ferrito con Fritz cumpliendo su promesa. El arco es setup → tensión → resolución emocional, el formato más viral del canal. Aunque supera los 60 segundos ideales, la naturaleza del reto físico en vivo justifica la duración completa; puede editarse con cortes en los conteos para reducirlo a ~90s sin perder el núcleo.",
+    "A_hoy": {
+      "score": 9,
+      "texto_linea1": "Fritz regala pelota por 50 dominadas",
+      "texto_linea2": "y un ferrito si llega a 100 💪",
+      "razon_score": "Reto con reglas y cifras concretas (50 = pelota, 100 = ferrito) que la audiencia puede comprobar contando en pantalla. Tiene arco completo: setup, tensión del intento, negociación en vivo y Fritz cumpliendo la promesa. No hay confrontación entre personajes, por eso 9 y no 10. Se puede recortar a ~90s cortando los conteos."
+    },
+    "B_memoria": {
+      "score": 9,
+      "texto_linea1": "Fritz regala una pelota por 50 dominadas",
+      "texto_linea2": "y un ferrito si llegan a 100 🔥",
+      "razon_score": "Reto con reglas y premios concretos que el espectador puede verificar o intentar: 50 dominadas = pelota, 100 = ferrito. Tiene arco completo (setup, negociación en vivo de Fritz sobre si el participante asegura la pelota o arriesga, cuenta, palmas del público) y cierra con Fritz cumpliendo su promesa. Encaja en el patrón RETO/GIVEAWAY y en el de generosidad. No hay confrontación directa entre personajes, por eso 9 y no 10. Dura 235s, así que conviene recortar los conteos largos (~90s) sin perder el núcleo. El speaker [sin identificar] no se nombra en el texto."
+    }
+  },
+  {
+    "caso": "20260709_160221/chunks/chunk_001",
+    "inicio": "02:43",
+    "fin": "03:37",
+    "razon_a2": "Setup claro con el portafolio de marcas (Adidas, Nike, Reebok, Converse) que construye la soberbia, luego el claim de superioridad absoluta en Adidas a nivel nacional, y cierra con el argumento de que el vendedor solo necesita atender porque los clientes ya llegan solos — el ciclo de tensión/soberbia está completo y se entiende sin contexto externo",
+    "A_hoy": {
+      "score": 9,
+      "texto_linea1": "Fritz presume ser distribuidor Adidas",
+      "texto_linea2": "y ninguna tienda del Perú compite 😏",
+      "razon_score": "Claim de superioridad verificable: distribuidor de Adidas sin competencia a nivel nacional. Lo puede comprobar la audiencia (precios, stock, otras tiendas) y volver a comentar. Suma portafolio de marcas (Nike, Reebok, Converse, marca propia) y el remate de ofrecer 5-6 mil soles por atención al cliente. No hay confrontación directa, por eso 9 y no 10. Nota: la transcripción etiqueta al hablante como Tío Yolu, pero lo presenta como dueño de Fritz Sport y menciona 'Tío Frito'. Redacté el texto con Fritz; conviene confirmar el speaker antes de publicar."
+    },
+    "B_memoria": {
+      "score": 9,
+      "texto_linea1": "Fritz presume ser número uno en Adidas",
+      "texto_linea2": "y ofrece 6 mil soles por atender 👀",
+      "razon_score": "Soberbia con marca reconocida (Adidas, distribuidor, 'ni una tienda nos hace competencia') más cifras que la audiencia puede comprobar o debatir (sueldo de 5 a 6 mil soles, '100.000 soles y nadie me responde'). Combina los patrones 'soberbia + marca reconocida' y 'jefe y trabajadores con sueldo', que en la memoria del nicho rinden alto (ej. oferta de S/3000 con 560K vistas). No hay confrontación directa entre personajes, por eso no llega a 10. Nota: la transcripción etiqueta al hablante como 'Tío Yolu (host/dueño Fritz Sport)', pero el contenido (dueño de Fritz Sport, clientes que escriben 'Tío Frito') apunta a Fritz, así que el título nombra a Fritz. Conviene verificar el speaker antes de publicar."
+    }
+  },
+  {
+    "caso": "20260709_160221/chunks/chunk_001",
+    "inicio": "16:29",
+    "fin": "17:14",
+    "razon_a2": "El anuncio de apertura en Los Olivos con fecha concreta (sábado o lunes) más la revelación de que todos los vendedores de esa sede fueron trasladados a Grau —movimiento estratégico visible— genera expectativa real para la comunidad. El clip arranca directo en el anuncio y cierra con la confirmación del interlocutor, autocontenido",
+    "A_hoy": {
+      "score": 9,
+      "texto_linea1": "Yolu abre Los Olivos sábado o lunes",
+      "texto_linea2": "y traslada sus vendedores a Grau 👀",
+      "razon_score": "Dato verificable y comprobable por la audiencia: fecha de apertura (sábado o lunes) y traslado de todos los vendedores de Los Olivos a la sede Grau. Sin confrontación directa, pero genera expectativa y que la comunidad vaya a verificar la sede y los precios. El clip arranca en el anuncio y cierra autocontenido."
+    },
+    "B_memoria": {
+      "score": 7,
+      "texto_linea1": "Yolu abre Los Olivos sábado o lunes",
+      "texto_linea2": "y traslada a sus vendedores a Grau 👀",
+      "razon_score": "Anuncio con fecha concreta (sábado o lunes) y un movimiento estratégico visible: todos los vendedores de Los Olivos pasaron a la sede Grau. La comunidad puede estar atenta a las redes y comprobar la apertura. No hay confrontación entre personajes ni cifra dura como stock o precio (solo el genérico 'precios de locura'), así que se queda en 7: dato interesante, parcialmente verificable. Deja una pregunta abierta (por qué los trasladó y qué pasa con las colas) que invita a comentar."
+    }
+  },
+  {
+    "caso": "20260709_160221/chunks/chunk_001",
+    "inicio": "17:50",
+    "fin": "18:45",
+    "razon_a2": "Revelación de plan de expansión a múltiples ciudades (Tarapoto, Piura, Chiclayo, Trujillo, Chimbote) con viaje inminente ya programado y oferta de S/10,000 a quien consiga el local — cifra concreta + escala de ambición hacen el clip autónomo y altamente compartible en la comunidad de distribuidores y emprendedores del nicho",
+    "A_hoy": {
+      "score": 9,
+      "texto_linea1": "Yolu busca local en Tarapoto y Piura",
+      "texto_linea2": "exige 300 m² y tres pisos 🏬",
+      "razon_score": "Claim verificable sin confrontación directa: Yolu da cifras que la audiencia puede comprobar (300 m², 3 pisos, direcciones de Huánuco en Gr. Damaso Beraún 1028 y de Huancayo en Gr. Arequipa 315, a cuadra y media de Plaza Constitución) y un itinerario concreto (Huánuco 2 días, Tingo María 1 día, Tarapoto 2 días). Invita a emprendedores y distribuidores a ofrecer locales. Nota: la razón A2 menciona una oferta de S/10,000, pero esa cifra no aparece en la transcripción del rango. Yolu solo dice 'si quieres ganar tu billetito', así que no la usé en el texto. Revisar el clip antes de publicar si se quiere incluir ese monto."
+    },
+    "B_memoria": {
+      "score": 9,
+      "texto_linea1": "Fritz Sport anuncia tienda nueva en Piura",
+      "texto_linea2": "y busca local de 300 metros, 3 pisos 👀",
+      "razon_score": "Claim verificable con cifras concretas: requisito de 300 m² y 3 pisos, ciudades con fecha de viaje (Tingo María, Tarapoto, Piura) y direcciones reales de las sedes de Huánuco y Huancayo que la audiencia puede comprobar. No hay confrontación directa, por eso no llega a 10. Ojo: la oferta de S/10,000 de la razón A2 NO aparece en la transcripción de este rango (solo dice 'ganar tu billetito'), así que no se usó en el texto. El hablante figura como Tío Yolu pero se presenta como dueño de Fritz Sport, por eso el título nombra la marca y no a la persona."
+    }
+  },
+  {
+    "caso": "20260709_160221/chunks/chunk_001",
+    "inicio": "25:38",
+    "fin": "27:40",
+    "razon_a2": "PICOS 4 Y 5 FUSIONADOS — son el mismo momento narrativo: arrancan con la revelación de la marca propia y la visita de Christian Cueva pidiendo su chocolatera, continúan con el diseño mostrado en vivo (Alianza + Selección), y escalan a la propuesta en directo a Pocholo Hernández + mención de César Cueto y Jordi La Pantera. Separar los clips cortaría la escalada emocional que va de una alianza a múltiples. El clip es autónomo, tiene setup (marca propia + ambición), tensión (propuesta en vivo a Pocholo) y cierre (muéstrale el color de la pantera). Duración justificada por la densidad de revelaciones",
+    "A_hoy": {
+      "score": 7,
+      "texto_linea1": "Yolu muestra la chocolatera de Cueva",
+      "texto_linea2": "y le propone una a Pocholo 👀",
+      "razon_score": "Revelación fuerte con figuras públicas reconocidas (Christian Cueva, Pocholo, César Cueto, Jordi La Pantera) y soberbia de marca ('a la altura de Homa y Kelme'). Tiene setup, escalada y propuesta en vivo, y la audiencia puede comprobar si salen las zapatillas. Pero no hay cifra concreta ni confrontación directa entre personajes, así que se queda en 7 y no sube a 9-10."
+    },
+    "B_memoria": {
+      "score": 7,
+      "texto_linea1": "Yolu muestra la chocolatera de Cueva",
+      "texto_linea2": "y ahora va por Pocholo y Cueto 👀",
+      "razon_score": "Figura pública conocida (Christian Cueva) + revelación en vivo de marca propia con diseño mostrado (Alianza + Selección) + escalada a Pocholo, César Cueto y Jordi La Pantera, con ambición explícita de igualar a Homa y Kelme. Historia con algo en juego y gancho abierto (¿quién firma?). No llega a 8-9 porque no hay confrontación directa ni cifra verificable (precio, stock, fecha); la audiencia solo puede comprobar si el lanzamiento ocurre. Nota: la transcripción etiqueta al hablante como 'Tío Yolu (host/dueño Fritz Sport)'; se usó Yolu tal cual viene, conviene confirmar el nombre antes de publicar."
+    }
+  }
+]

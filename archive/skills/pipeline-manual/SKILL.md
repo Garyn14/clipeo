@@ -5,6 +5,8 @@ description: Corre el pipeline completo (pipeline.py --video) sin gastar la API 
 
 # Pipeline en modo manual (`AI_PROVIDER=manual`)
 
+> **ARCHIVADA (2026-09-30).** El pipeline ya corre solo sin gastar la API: `AI_PROVIDER=claude_cli` (default) responde cada llamada con Claude Code headless — ver `docs/ARQUITECTURA.md` §16. El proveedor `manual` sigue existiendo solo para depuración. Se conserva este procedimiento como referencia histórica; no está en `.claude/skills/`, así que no se dispara.
+
 Procedimiento para correr `pipeline.py --video <url> --config <canal_id>` de punta a punta sustituyendo las llamadas a la API real de Anthropic por respuestas que genera el propio agente de Claude Code, usando el protocolo de archivos de `ai_client/` (ver `docs/ARQUITECTURA.md` §16 para el mecanismo, `docs/COMANDOS.md` §4 para el comando de referencia).
 
 ## 1. Lanzar el pipeline

@@ -10,3 +10,11 @@ stream_data/
 live_check_cache.json
 _tiktok_rate_state.json
 ai_client/_pending/
+node_modules/
+frontend/dist/
+backend/runs_logs/
+# Cola de publicación (SQLite, incluye tokens de TikTok)
+backend/publicacion.db*
+
+# Videos/audio/fotogramas descargados para fichas de referencia (pesados, regenerables)
+investigacion/*/muestra/

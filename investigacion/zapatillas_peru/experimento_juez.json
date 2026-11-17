@@ -1,0 +1,365 @@
+[
+  {
+    "caso": "20260709_160221/chunks/chunk_001",
+    "inicio": "02:43",
+    "A": {
+      "score": 9,
+      "texto_linea1": "Fritz presume ser distribuidor Adidas",
+      "texto_linea2": "y ninguna tienda del Perú compite 😏",
+      "razon_score": "Claim de superioridad verificable: distribuidor de Adidas sin competencia a nivel nacional. Lo puede comprobar la audiencia (precios, stock, otras tiendas) y volver a comentar. Suma portafolio de marcas (Nike, Reebok, Converse, marca propia) y el remate de ofrecer 5-6 mil soles por atención al cliente. No hay confrontación directa, por eso 9 y no 10. Nota: la transcripción etiqueta al hablante como Tío Yolu, pero lo presenta como dueño de Fritz Sport y menciona 'Tío Frito'. Redacté el texto con Fritz; conviene confirmar el speaker antes de publicar."
+    },
+    "B": {
+      "score": 9,
+      "texto_linea1": "Fritz presume ser número uno en Adidas",
+      "texto_linea2": "y ofrece 6 mil soles por atender 👀",
+      "razon_score": "Soberbia con marca reconocida (Adidas, distribuidor, 'ni una tienda nos hace competencia') más cifras que la audiencia puede comprobar o debatir (sueldo de 5 a 6 mil soles, '100.000 soles y nadie me responde'). Combina los patrones 'soberbia + marca reconocida' y 'jefe y trabajadores con sueldo', que en la memoria del nicho rinden alto (ej. oferta de S/3000 con 560K vistas). No hay confrontación directa entre personajes, por eso no llega a 10. Nota: la transcripción etiqueta al hablante como 'Tío Yolu (host/dueño Fritz Sport)', pero el contenido (dueño de Fritz Sport, clientes que escriben 'Tío Frito') apunta a Fritz, así que el título nombra a Fritz. Conviene verificar el speaker antes de publicar."
+    },
+    "juez": {
+      "n": 1,
+      "tipo": "jefe_y_trabajadores",
+      "en_juego": "Oferta de trabajo en atención al cliente con sueldo de 5.000 a 6.000 soles, con el gancho de clientes con 100.000 soles que dicen que nadie les responde. Gran parte del clip es pitch de marcas y precios.",
+      "parecidos": [
+        "El tío Fritz busca personal con sueldo acorde al mercado XD",
+        "TIO YOLU EN BUSCA DE ALGUIEN QUE SEPA EXCEL, 3000 X MES 😱"
+      ],
+      "publicar": true,
+      "fuerza": 6,
+      "linea1": "El tío Yolu ofrece 5 o 6 lucas al mes en atención al cliente",
+      "linea2": "Dice que clientes con 100 mil soles escriben y nadie les responde 😱",
+      "por_que": "Es una oferta de trabajo con sueldo y un reclamo concreto, parecido a los clips de búsqueda de personal que rindieron. Pierde fuerza porque empieza con un pitch largo de marcas y el dato del sueldo llega recién al final, así que conviene cortar desde 03:28."
+    }
+  },
+  {
+    "caso": "20260709_160221/chunks/chunk_001",
+    "inicio": "16:29",
+    "A": {
+      "score": 9,
+      "texto_linea1": "Yolu abre Los Olivos sábado o lunes",
+      "texto_linea2": "y traslada sus vendedores a Grau 👀",
+      "razon_score": "Dato verificable y comprobable por la audiencia: fecha de apertura (sábado o lunes) y traslado de todos los vendedores de Los Olivos a la sede Grau. Sin confrontación directa, pero genera expectativa y que la comunidad vaya a verificar la sede y los precios. El clip arranca en el anuncio y cierra autocontenido."
+    },
+    "B": {
+      "score": 7,
+      "texto_linea1": "Yolu abre Los Olivos sábado o lunes",
+      "texto_linea2": "y traslada a sus vendedores a Grau 👀",
+      "razon_score": "Anuncio con fecha concreta (sábado o lunes) y un movimiento estratégico visible: todos los vendedores de Los Olivos pasaron a la sede Grau. La comunidad puede estar atenta a las redes y comprobar la apertura. No hay confrontación entre personajes ni cifra dura como stock o precio (solo el genérico 'precios de locura'), así que se queda en 7: dato interesante, parcialmente verificable. Deja una pregunta abierta (por qué los trasladó y qué pasa con las colas) que invita a comentar."
+    },
+    "juez": {
+      "n": 2,
+      "tipo": "ninguno",
+      "en_juego": "Nada: es un anuncio de la apertura de la tienda de Los Olivos y de ofertas en la sede Grau, sin conflicto ni emoción.",
+      "parecidos": [],
+      "publicar": false,
+      "fuerza": 2,
+      "linea1": "El tío Yolu anuncia la apertura de la tienda de Los Olivos",
+      "linea2": "Traslada a los vendedores a la sede Grau por las colas",
+      "por_que": "Es un anuncio de tienda y logística, sin historia ni nada en juego."
+    }
+  },
+  {
+    "caso": "20260709_160221/chunks/chunk_001",
+    "inicio": "17:50",
+    "A": {
+      "score": 9,
+      "texto_linea1": "Yolu busca local en Tarapoto y Piura",
+      "texto_linea2": "exige 300 m² y tres pisos 🏬",
+      "razon_score": "Claim verificable sin confrontación directa: Yolu da cifras que la audiencia puede comprobar (300 m², 3 pisos, direcciones de Huánuco en Gr. Damaso Beraún 1028 y de Huancayo en Gr. Arequipa 315, a cuadra y media de Plaza Constitución) y un itinerario concreto (Huánuco 2 días, Tingo María 1 día, Tarapoto 2 días). Invita a emprendedores y distribuidores a ofrecer locales. Nota: la razón A2 menciona una oferta de S/10,000, pero esa cifra no aparece en la transcripción del rango. Yolu solo dice 'si quieres ganar tu billetito', así que no la usé en el texto. Revisar el clip antes de publicar si se quiere incluir ese monto."
+    },
+    "B": {
+      "score": 9,
+      "texto_linea1": "Fritz Sport anuncia tienda nueva en Piura",
+      "texto_linea2": "y busca local de 300 metros, 3 pisos 👀",
+      "razon_score": "Claim verificable con cifras concretas: requisito de 300 m² y 3 pisos, ciudades con fecha de viaje (Tingo María, Tarapoto, Piura) y direcciones reales de las sedes de Huánuco y Huancayo que la audiencia puede comprobar. No hay confrontación directa, por eso no llega a 10. Ojo: la oferta de S/10,000 de la razón A2 NO aparece en la transcripción de este rango (solo dice 'ganar tu billetito'), así que no se usó en el texto. El hablante figura como Tío Yolu pero se presenta como dueño de Fritz Sport, por eso el título nombra la marca y no a la persona."
+    },
+    "juez": {
+      "n": 3,
+      "tipo": "ninguno",
+      "en_juego": "Nada concreto: anuncia que busca local para nuevas tiendas en Piura, Tarapoto y Tingo María, con una invitación genérica a ganar plata. Es logística de expansión.",
+      "parecidos": [],
+      "publicar": false,
+      "fuerza": 3,
+      "linea1": "El tío Yolu busca local de 300 m² para abrir tienda en Tarapoto",
+      "linea2": "Viaja a Tingo María y Huánuco para expandir Fritz Sport",
+      "por_que": "Son planes de apertura y direcciones de sedes, sin conflicto ni emoción ni un personaje vulnerable."
+    }
+  },
+  {
+    "caso": "20260709_160221/chunks/chunk_001",
+    "inicio": "25:38",
+    "A": {
+      "score": 7,
+      "texto_linea1": "Yolu muestra la chocolatera de Cueva",
+      "texto_linea2": "y le propone una a Pocholo 👀",
+      "razon_score": "Revelación fuerte con figuras públicas reconocidas (Christian Cueva, Pocholo, César Cueto, Jordi La Pantera) y soberbia de marca ('a la altura de Homa y Kelme'). Tiene setup, escalada y propuesta en vivo, y la audiencia puede comprobar si salen las zapatillas. Pero no hay cifra concreta ni confrontación directa entre personajes, así que se queda en 7 y no sube a 9-10."
+    },
+    "B": {
+      "score": 7,
+      "texto_linea1": "Yolu muestra la chocolatera de Cueva",
+      "texto_linea2": "y ahora va por Pocholo y Cueto 👀",
+      "razon_score": "Figura pública conocida (Christian Cueva) + revelación en vivo de marca propia con diseño mostrado (Alianza + Selección) + escalada a Pocholo, César Cueto y Jordi La Pantera, con ambición explícita de igualar a Homa y Kelme. Historia con algo en juego y gancho abierto (¿quién firma?). No llega a 8-9 porque no hay confrontación directa ni cifra verificable (precio, stock, fecha); la audiencia solo puede comprobar si el lanzamiento ocurre. Nota: la transcripción etiqueta al hablante como 'Tío Yolu (host/dueño Fritz Sport)'; se usó Yolu tal cual viene, conviene confirmar el nombre antes de publicar."
+    },
+    "juez": {
+      "n": 4,
+      "tipo": "ninguno",
+      "en_juego": "Poco: es un pitch de la marca propia y de chocolateras con jugadores como Christian Cueva. Hay un posible acuerdo, pero sin conflicto ni emoción, y el momento depende de objetos que se muestran en cámara.",
+      "parecidos": [],
+      "publicar": false,
+      "fuerza": 4,
+      "linea1": "El tío Yolu anuncia chocolatera con Christian Cueva",
+      "linea2": "Quiere sacar zapatillas con Pocholo y Jordi la Pantera",
+      "por_que": "Es un pitch de productos y proyectos de marca propia con muchos nombres, sin tensión ni historia; es un momento chato aunque tenga figuras conocidas."
+    }
+  },
+  {
+    "caso": "20260722_012426/chunks/chunk_001",
+    "inicio": "00:06:10",
+    "A": {
+      "score": 8,
+      "texto_linea1": "Fritz va a probarle al Perú",
+      "texto_linea2": "un producto nuevo a solo 99 soles 😏",
+      "razon_score": "Fritz anuncia en vivo un producto en fabricación con un precio concreto (99 soles) que la audiencia podrá verificar cuando llegue. Esa promesa de valor es el gancho. No hay confrontación directa ni se nombra el producto, así que queda por debajo del 9. El cierre con los corazones blancos le da remate reconocible para la comunidad."
+    },
+    "B": {
+      "score": 7,
+      "texto_linea1": "Fritz muestra el producto que fabrica",
+      "texto_linea2": "para probarle al Perú por 99 soles 👀",
+      "razon_score": "Fritz es el sujeto activo: revela un producto en fabricación y lo reta a probarse ante el Perú con una cifra concreta (99 soles). Pero el producto nunca se nombra ni se muestra en la transcripción y no hay confrontación con otro personaje, así que el dato no es del todo verificable y no llega a 9. El cierre con los corazones blancos le da remate reconocible para la comunidad. Encaja en el patrón de Fritz anunciando lo que va a traer (meme de la tecnología), pero sin precio contrastado."
+    },
+    "juez": {
+      "n": 1,
+      "tipo": "ninguno",
+      "en_juego": "Nada concreto: presenta un producto de muestra que quiere probar y pide corazones blancos a la audiencia; no hay conflicto ni emoción clara.",
+      "parecidos": [],
+      "publicar": false,
+      "fuerza": 3,
+      "linea1": "El tío Fritz presenta un producto nuevo para probar en Perú",
+      "linea2": "Ayuda a damnificados y pide corazones blancos 🤍",
+      "por_que": "Es pitch de producto y logística de transmisión sin conflicto ni historia con alguien."
+    }
+  },
+  {
+    "caso": "20260722_012426/chunks/chunk_001",
+    "inicio": "00:07:26",
+    "A": {
+      "score": 7,
+      "texto_linea1": "Fritz presenta zapatillas para todo cliente",
+      "texto_linea2": "y botines con waterproof incluido 😏",
+      "razon_score": "Fritz pitchea su producto con vocabulario meme (todo terreno, waterproof) y la consulta al público sobre pasador o liga da base narrativa. Tiene carga cómica clara, pero no trae precio, cifra ni confrontación que la audiencia pueda verificar, así que no llega a 9-10. El claim de waterproof es comprobable de forma general, no con dato concreto."
+    },
+    "B": {
+      "score": 6,
+      "texto_linea1": "Fritz deja votar el pasador",
+      "texto_linea2": "y vende zapatías todo aterrendo waterproof 😏",
+      "razon_score": "Es humor autoconsciente del meme de 'tecnología' de Fritz. Fritz consulta al público (liga o pasador), vende zapatías 'todo aterrendo' y remata con 'viene con waterproof'. La carga cómica es real, pero no hay precio ni cifra verificable ni confrontación entre personajes. Cae en 5-6 por falta de dato comprobable, y sube a 6 y publicable por el patrón de meme y humor autoconsciente. El título deja casi textual la frase de Fritz, sin explicar el meme."
+    },
+    "juez": {
+      "n": 2,
+      "tipo": "ninguno",
+      "en_juego": "Nada: muestra opciones de zapatillas y botines y pregunta a Víctor su opinión; es pitch de producto.",
+      "parecidos": [],
+      "publicar": false,
+      "fuerza": 2,
+      "linea1": "El tío Fritz muestra sus nuevas zapatillas y botines",
+      "linea2": "Pregunta a Víctor si las vacilan XD",
+      "por_que": "Catálogo de productos sin emoción ni algo en juego."
+    }
+  },
+  {
+    "caso": "20260722_012426/chunks/chunk_001",
+    "inicio": "00:16:23",
+    "A": {
+      "score": 7,
+      "texto_linea1": "Fritz no liquida su mercadería deteriorada",
+      "texto_linea2": "la regala a los damnificados 🙏",
+      "razon_score": "Patrón generosidad con setup claro (Michael avisa de la mercadería deteriorada) y resolución en la misma ventana: Fritz decide regalar en vez de liquidar. Hay un dato interesante (unos 15 pares sin caja, pares únicos), pero lo dice un speaker sin identificar y no es del todo verificable. No hay confrontación ni claim de soberbia, así que no pasa de 7. Tono cálido y sin ironía, nombrando a quién ayuda."
+    },
+    "B": {
+      "score": 8,
+      "texto_linea1": "Fritz no liquida su mercadería deteriorada",
+      "texto_linea2": "y la regala a los damnificados 🙏",
+      "razon_score": "Encaja en el patrón de generosidad, que en la memoria del nicho rinde muy alto (Fritz y la mamita: 526K, outlier 264). Tiene setup claro (Michael avisó de la mercadería) y resolución en la misma ventana: Fritz decide regalar en vez de liquidar. Se entiende sin ver el video completo. No llega a 9 porque el único dato (unos 15 pares sin caja) es pequeño y poco verificable, y no hay confrontación entre personajes. El título nombra al personaje y a quién ayuda, y no lleva ironía, porque el gesto es sincero."
+    },
+    "juez": {
+      "n": 3,
+      "tipo": "ninguno",
+      "en_juego": "Liquidar mercadería deteriorada para regalar zapatillas a damnificados, pero se queda en logística interna con voces sin identificar.",
+      "parecidos": [],
+      "publicar": false,
+      "fuerza": 4,
+      "linea1": "El tío Fritz liquida mercadería para regalar zapatillas",
+      "linea2": "Quiere ayudar a los damnificados 🥺",
+      "por_que": "Hay intención solidaria pero es conversación logística interna sin persona humilde ni emoción visible, y no se entiende sola."
+    }
+  },
+  {
+    "caso": "20260722_012426/chunks/chunk_001",
+    "inicio": "00:22:47",
+    "A": {
+      "score": 9,
+      "texto_linea1": "Fritz regala pelota por 50 dominadas",
+      "texto_linea2": "y un ferrito si llega a 100 💪",
+      "razon_score": "Reto con reglas y cifras concretas (50 = pelota, 100 = ferrito) que la audiencia puede comprobar contando en pantalla. Tiene arco completo: setup, tensión del intento, negociación en vivo y Fritz cumpliendo la promesa. No hay confrontación entre personajes, por eso 9 y no 10. Se puede recortar a ~90s cortando los conteos."
+    },
+    "B": {
+      "score": 9,
+      "texto_linea1": "Fritz regala una pelota por 50 dominadas",
+      "texto_linea2": "y un ferrito si llegan a 100 🔥",
+      "razon_score": "Reto con reglas y premios concretos que el espectador puede verificar o intentar: 50 dominadas = pelota, 100 = ferrito. Tiene arco completo (setup, negociación en vivo de Fritz sobre si el participante asegura la pelota o arriesga, cuenta, palmas del público) y cierra con Fritz cumpliendo su promesa. Encaja en el patrón RETO/GIVEAWAY y en el de generosidad. No hay confrontación directa entre personajes, por eso 9 y no 10. Dura 235s, así que conviene recortar los conteos largos (~90s) sin perder el núcleo. El speaker [sin identificar] no se nombra en el texto."
+    },
+    "juez": {
+      "n": 4,
+      "tipo": "rivalidad_y_apuestas",
+      "en_juego": "Un participante tiene dos intentos para hacer 50 dominadas y ganar la pelota, o 100 y llevarse un ferrito (S/100); el tío Fritz lo reta y el premio sube en vivo.",
+      "parecidos": [
+        "El tío fritz realiza esfuerzo sobrehumano con tal de no regalar pelota XD",
+        "El Tio Fritz le gana los 200 Mil a Dennis 💀"
+      ],
+      "publicar": true,
+      "fuerza": 7,
+      "linea1": "El tío Fritz reta a un chico: 50 dominadas y se lleva la pelota",
+      "linea2": "Si llega a 100, gana un ferrito 💸⚽",
+      "por_que": "Reto con premio en dinero y tensión de conteo que termina en celebración, similar a retos con premio que rindieron bien; conviene recortar a la parte del reto, pues 235s es largo y arranca con presentación."
+    }
+  },
+  {
+    "caso": "20260810_023129/chunks/chunk_001",
+    "inicio": "00:00:29",
+    "A": {
+      "score": 7,
+      "texto_linea1": "Fritz le echa agua a sus botines",
+      "texto_linea2": "para probar su tecnología waterproof 😏",
+      "razon_score": "Arco completo con prueba en vivo: Fritz anuncia las Terra Fresh, reta al agua a penetrar y hace la demostración. Hay un dato que la audiencia puede comprobar (waterproof, Z-Flex, planta TerraRash), pero no trae precio ni confrontación con otro personaje, así que no llega a 9-10. Entra en el meme de la tecnología Fritz, con ironía implícita y sin explicar el meme. El resultado de la prueba no se ve claro en la transcripción, por eso se queda en 7."
+    },
+    "B": {
+      "score": 7,
+      "texto_linea1": "Fritz le echa agua a sus botines",
+      "texto_linea2": "para probar su tecnología waterproof 😏",
+      "razon_score": "Es el meme de la tecnología de Fritz con una demostración en vivo (el agua sobre los botines) y arco completo, así que funciona solo. No tiene precio ni confrontación con otro personaje, y la prueba del agua no deja un dato que la audiencia pueda verificar. Por eso se queda en 7 y no sube a 9 o 10. Comedia con ironía implícita, sin comillas y sin explicar el meme."
+    },
+    "juez": {
+      "n": 1,
+      "tipo": "ninguno",
+      "en_juego": "Nada en juego: es un pitch de producto (botines Terra Fresh, tecnología Z-Flex y waterproof) con una demostración de agua, sin conflicto, emoción ni persona vulnerable.",
+      "parecidos": [],
+      "publicar": false,
+      "fuerza": 3,
+      "linea1": "El tío Fritz prueba si los botines Terra Fresh dejan pasar el agua",
+      "linea2": "Demostración de la tecnología Z-Flex 💦",
+      "por_que": "Es publicidad de producto sin historia; el nicho premia conflicto, emoción o gesto con alguien, no pitch de zapatillas."
+    }
+  },
+  {
+    "caso": "20260810_023129/chunks/chunk_001",
+    "inicio": "00:05:57",
+    "A": {
+      "score": 7,
+      "texto_linea1": "Fritz por fin define su tecnología",
+      "texto_linea2": "botines para subir montañas con lluvia 😏",
+      "razon_score": "Meme de tecnología confirmado con Fritz armando su propia definición en vivo (todo terreno, no pesa, amortiguación Z-Flex) y cerrando con el gesto de mostrar la suela. Es muy autoparódico y tiene un dato interesante (Z-Flex), pero no hay precio ni cifra verificable ni confrontación directa con otro personaje, por eso se queda en 7 y no sube a 9-10."
+    },
+    "B": {
+      "score": 7,
+      "texto_linea1": "Fritz da su clase de tecnología",
+      "texto_linea2": "con botines todo terreno y Z-Flex 😏",
+      "razon_score": "Es el meme de tecnología de Fritz confirmado como viral, y el clip es su versión más autoparódica: arma su propia definición (todo terreno, no pesa, amortiguación Z-Flex) y remata mostrando la suela. Pierde puntos para llegar a 8-9 porque no hay precio ni cifra concreta, y tampoco confrontación con otro personaje. Z-Flex es una referencia que se puede buscar, pero no un dato duro. El chiste funciona por sí solo y deja a la audiencia comentando el meme. Es parecido a la categoría 'humor_picaro' de la memoria del nicho (meme del personaje)."
+    },
+    "juez": {
+      "n": 2,
+      "tipo": "ninguno",
+      "en_juego": "Nada en juego: el tío Fritz explica las ventajas de las zapatillas Z-Flex (amortiguación, suela, agarre) a modo de venta, sin conflicto ni emoción.",
+      "parecidos": [],
+      "publicar": false,
+      "fuerza": 2,
+      "linea1": "El tío Fritz explica la tecnología de sus zapatillas Z-Flex",
+      "linea2": "Amortiguación para subir montañas XD",
+      "por_que": "Es pitch de producto repetido y sin historia, igual que los clips chatos del fondo del nicho; además no se entiende solo sin contexto."
+    }
+  },
+  {
+    "caso": "20261003_161148/chunks/chunk_001",
+    "inicio": "00:12:04",
+    "A": {
+      "score": 6,
+      "texto_linea1": "Regala una pelota a dos hermanitos",
+      "texto_linea2": "de 2 y 6 años 🥹",
+      "razon_score": "Gesto de generosidad sincero y completo, que se entiende sin ver el resto del video. Los niños responden con emoción y el cierre con bendiciones es cálido. No hay dato verificable ni confrontación entre personajes, y los speakers están sin identificar, por lo que no se nombra a nadie. Por eso queda en 6. Encaja en el patrón de generosidad de selección manual: tono cálido, sin ironía, nombrando a quién ayuda (los hermanitos)."
+    },
+    "B": {
+      "score": 7,
+      "texto_linea1": "Regala una pelota gratis a dos hermanitos",
+      "texto_linea2": "de 2 y 6 años, felices 🥹",
+      "razon_score": "Es el tipo generosidad_con_humilde, que en la memoria del nicho rinde alto (outliers de 28 a 264). Tiene historia completa: la pregunta, los niños de 2 y 6 años que responden con emoción, la entrega de la pelota y las bendiciones. Se entiende sin ver el resto del video. No llega a 8-9 porque no hay confrontación ni dato verificable por la audiencia. Los speakers están [sin identificar], así que no se nombra a ningún personaje y la acción es el sujeto. Si el editor confirma que es Fritz, conviene reescribir el título con su nombre, porque nombrar al personaje mejora el rendimiento."
+    },
+    "juez": {
+      "n": 1,
+      "tipo": "generosidad_con_humilde",
+      "en_juego": "Un niño humilde de 2 años y su hermano de 6 reciben una pelota gratis del dueño; el gesto de regalar a los chicos.",
+      "parecidos": [
+        "Fritz apoya a chamo que jugará copa américa en Perú",
+        "Farfán le va a dar unas LV a chibolo que vino del colegio 😨"
+      ],
+      "publicar": true,
+      "fuerza": 7,
+      "linea1": "El tío Fritz regala una pelota a dos hermanitos",
+      "linea2": "de 2 y 6 años para que jueguen juntos 🥹⚽",
+      "por_que": "Gesto de generosidad del dueño con niños humildes, el mismo tipo que rinde en el nicho; arranca con la pregunta '¿tiene pelota o no?' y se entiende solo, aunque es una escena corta y sin conflicto fuerte."
+    }
+  },
+  {
+    "caso": "20261003_161148/chunks/chunk_001",
+    "inicio": "00:13:25",
+    "A": {
+      "score": 7,
+      "texto_linea1": "Pide 40 dominadas para bajar el precio",
+      "texto_linea2": "\"Yo hablo y no domino\", responde 😂",
+      "razon_score": "Reto con cifra concreta (40 dominadas, luego 30) y remate cómico claro ('yo hablo y no domino'), con intento en vivo y vuelta a la negociación. Hay tensión con resolución visible y la audiencia puede probar el reto, pero no hay confrontación entre personajes ni dato verificable de precio o stock, por eso no pasa de 7. Ambos speakers vienen [sin identificar], así que el texto no nombra a nadie y usa la acción como sujeto."
+    },
+    "B": {
+      "score": 7,
+      "texto_linea1": "Hazme 40 dominadas y te la llevas",
+      "texto_linea2": "Yo hablo y no domino 😂",
+      "razon_score": "Reto con premio y humor autoconsciente: el cliente se confiesa 'yo hablo y no domino', la apuesta baja de 40 a 30 y se intenta en vivo. Hay una cifra concreta (40 dominadas), pero ningún dato verificable de precio o stock y ninguna confrontación entre personajes, así que queda en 7. El speaker no está identificado en la transcripción, por eso el texto no nombra a nadie. Si el pipeline confirma que es Fritz, conviene reescribirlo nombrándolo."
+    },
+    "juez": {
+      "n": 2,
+      "tipo": "rivalidad_y_apuestas",
+      "en_juego": "Un reto de dominadas para llevarse algo a precio rebajado: el cliente intenta bajar el precio y Fritz negocia (40 dominadas, luego 30).",
+      "parecidos": [
+        "El tío fritz realiza esfuerzo sobrehumano con tal de no regalar pelota XD",
+        "El Tio Fritz le gana los 200 Mil a Dennis 💀"
+      ],
+      "publicar": true,
+      "fuerza": 6,
+      "linea1": "El tío Fritz reta a un cliente: 30 dominadas",
+      "linea2": "y se lleva la zapatilla a precio de ferro XD",
+      "por_que": "Reto con premio y negociación con humor ('yo hablo y no domino'), similar a los clips de retos de la cuenta propia; el final queda abierto ('ya pensé') y no se ve el desenlace, por eso no sube más."
+    }
+  },
+  {
+    "caso": "20261003_161148/chunks/chunk_001",
+    "inicio": "00:20:45",
+    "A": {
+      "score": 7,
+      "texto_linea1": "Reclama a Fabri por no avisarle",
+      "texto_linea2": "y sentencia: no van a chambear 👀",
+      "razon_score": "Tensión jefe-trabajador clara, con queja directa ('tú también tienes que avisarme, Fabri') y cierre sentenciando que no van a chambear. No hay dato verificable ni confrontación entre personajes del lore, y la transcripción es desordenada, así que no pasa de 7. Speakers sin identificar: el título usa la acción como sujeto y solo nombra a Fabri, que aparece dicho en el audio."
+    },
+    "B": {
+      "score": 7,
+      "texto_linea1": "Reclama a Fabri por no avisarle",
+      "texto_linea2": "y suelta que nadie va a chambear 😏",
+      "razon_score": "Tensión jefe-trabajador con setup (Fabri no avisó del live), queja directa ('tú también tienes que avisarme') y cierre con la frase 'yo sé que no van a chambear'. Encaja en el tipo jefe_y_trabajadores, que funciona en el nicho. No hay dato verificable (precio, cifra, stock) ni confrontación fuerte entre personajes del lore, así que no pasa de 7. Además, ningún speaker está identificado en la transcripción: se omite el nombre del personaje y solo se nombra a Fabri, que sí aparece en el audio. Si se confirma quién habla, conviene nombrarlo en L1, porque los títulos que nombran al personaje rinden más."
+    },
+    "juez": {
+      "n": 3,
+      "tipo": "ninguno",
+      "en_juego": "Nada claro: una conversación interna donde el jefe le reclama a Fabri que no avisó de un live y habla de trabajo y viaje; la transcripción es confusa.",
+      "parecidos": [],
+      "publicar": false,
+      "fuerza": 3,
+      "linea1": "El tío Fritz le reclama a Fabri por no avisarle",
+      "linea2": "del live que quería grabar",
+      "por_que": "Es logística interna y reclamo difuso, sin emoción ni conflicto que se entienda solo y con transcripción poco legible."
+    }
+  }
+]

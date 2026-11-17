@@ -234,6 +234,86 @@ def _call_claude(
         return {"score": 0, "publicar": False, "razon_score": f"JSON inválido: {e}"}
 
 
+def _completar_item(resultado: dict, config: dict, seo_base: dict, hashtags_base: list[str]) -> dict:
+    """
+    Post-proceso de la respuesta de Claude para un clip (común al modo score y al modo
+    copy): limpieza de nombres, merge de hashtags con los base y el SEO por plataforma,
+    defaults de los campos que lee el Agente 4.
+    """
+    # Limpiar nombres canónicos en el texto generado
+    if config.get("personajes"):
+        from transcripcion.transcript_cleaner import clean_known_names as _clean
+        l1 = resultado.get("texto_linea1", "")
+        l2 = resultado.get("texto_linea2", "")
+        if l1 or l2:
+            cleaned = _clean(l1 + "\n" + l2, config, silent=True)
+            partes = cleaned.split("\n", 1)
+            resultado["texto_linea1"] = partes[0].strip()
+            if len(partes) > 1:
+                resultado["texto_linea2"] = partes[1].strip()
+
+    # Mergear hashtags: base del config + específicos de Claude, sin duplicados
+    resultado["hashtags"] = _merge_hashtags(hashtags_base, resultado.get("hashtags", []))
+
+    # Default defensivo por si el prompt no pide/Claude omite el mood
+    # (usado por Agente 4 para elegir música de fondo — ver edicion_video/)
+    resultado.setdefault("mood", "neutral")
+
+    # Default defensivo por si el prompt no pide/Claude omite el estilo
+    # de texto (usado por Agente 4 para decidir el modo de subtítulo —
+    # "fijo" preserva el comportamiento previo a este campo)
+    resultado.setdefault("estilo_texto", "fijo")
+
+    # Defaults defensivos para los campos opcionales de la Fase 6
+    # (CTA y resaltado de palabra clave — ver edicion_video/)
+    resultado.setdefault("cta_texto", "")
+    resultado.setdefault("palabras_clave", [])
+
+    # Default defensivo para el relleno de fuente horizontal (Fase 7).
+    # "blur" es el default temporal (2026-07-30, ver contexto/nichos/*.yaml)
+    # mientras "imagen"/"crop" maduran — revertir a "pillarbox" cuando eso
+    # cambie.
+    resultado.setdefault("layout", "blur")
+
+    # Publicación por plataforma (SEO) — Claude redacta descripción/hashtags
+    # específicos del clip; se mezclan con los hashtags base de seo_base
+    # (contexto/nichos/<id>.yaml) igual que el merge global de arriba, para
+    # garantizar que los "siempre incluir" (ej. #Shorts) sobrevivan aunque
+    # Claude no los repita. Defaults vacíos si Claude omite el campo entero.
+    publicacion = resultado.get("publicacion") or {}
+    tiktok_seo  = seo_base.get("tiktok", {})
+    yt_seo      = seo_base.get("youtube_shorts", {})
+    tiktok_pub  = publicacion.get("tiktok") or {}
+    yt_pub      = publicacion.get("youtube_shorts") or {}
+    resultado["publicacion"] = {
+        "tiktok": {
+            "descripcion": tiktok_pub.get("descripcion", ""),
+            "hashtags": _merge_hashtags(tiktok_seo.get("hashtags", []), tiktok_pub.get("hashtags", [])),
+        },
+        "youtube_shorts": {
+            "titulo_alt":   yt_pub.get("titulo_alt", ""),
+            "descripcion":  yt_pub.get("descripcion", ""),
+            "hashtags":     _merge_hashtags(yt_seo.get("hashtags", []), yt_pub.get("hashtags", [])),
+            "tags_backend": _merge_hashtags(yt_seo.get("tags_backend", []), yt_pub.get("tags_backend", [])),
+        },
+    }
+
+    # Efecto de sonido corto (stinger/whoosh) anclado al momento de
+    # énfasis (Fase 15) — None preserva el comportamiento previo; no
+    # está en el prompt todavía (sin assets curados en
+    # edicion_video/assets/efectos_sonido/, ver docs/ESTRUCTURA_DATOS.md)
+    resultado.setdefault("efecto_sonido", None)
+
+    # layout_streaming (Fase 9) es un hecho TÉCNICO del canal (cómo
+    # está armada la escena de OBS del streamer), no una decisión de
+    # Claude — se copia tal cual desde la config del canal, nunca se
+    # le pide a Claude. Agente 4 sigue sin recibir config directamente
+    # (se mantiene "técnico puro"): esto viaja igual que mood/estilo_texto,
+    # a través de contenido.json.
+    resultado["layout_streaming"] = config.get("layout_streaming")
+    return resultado
+
+
 def run_agent(rangos_path: str, config: dict) -> list[dict]:
     rangos_file = Path(rangos_path)
     if not rangos_file.exists():
@@ -342,77 +422,7 @@ def run_agent(rangos_path: str, config: dict) -> list[dict]:
                     client, rango, clip_text, prompt, aprendizajes_context, seo_context, extra
                 )
 
-        # Limpiar nombres canónicos en el texto generado
-        if config.get("personajes"):
-            from transcripcion.transcript_cleaner import clean_known_names as _clean
-            l1 = resultado.get("texto_linea1", "")
-            l2 = resultado.get("texto_linea2", "")
-            if l1 or l2:
-                cleaned = _clean(l1 + "\n" + l2, config, silent=True)
-                partes = cleaned.split("\n", 1)
-                resultado["texto_linea1"] = partes[0].strip()
-                if len(partes) > 1:
-                    resultado["texto_linea2"] = partes[1].strip()
-
-        # Mergear hashtags: base del config + específicos de Claude, sin duplicados
-        resultado["hashtags"] = _merge_hashtags(hashtags_base, resultado.get("hashtags", []))
-
-        # Default defensivo por si el prompt no pide/Claude omite el mood
-        # (usado por Agente 4 para elegir música de fondo — ver edicion_video/)
-        resultado.setdefault("mood", "neutral")
-
-        # Default defensivo por si el prompt no pide/Claude omite el estilo
-        # de texto (usado por Agente 4 para decidir el modo de subtítulo —
-        # "fijo" preserva el comportamiento previo a este campo)
-        resultado.setdefault("estilo_texto", "fijo")
-
-        # Defaults defensivos para los campos opcionales de la Fase 6
-        # (CTA y resaltado de palabra clave — ver edicion_video/)
-        resultado.setdefault("cta_texto", "")
-        resultado.setdefault("palabras_clave", [])
-
-        # Default defensivo para el relleno de fuente horizontal (Fase 7).
-        # "blur" es el default temporal (2026-07-30, ver contexto/nichos/*.yaml)
-        # mientras "imagen"/"crop" maduran — revertir a "pillarbox" cuando eso
-        # cambie.
-        resultado.setdefault("layout", "blur")
-
-        # Publicación por plataforma (SEO) — Claude redacta descripción/hashtags
-        # específicos del clip; se mezclan con los hashtags base de seo_base
-        # (contexto/nichos/<id>.yaml) igual que el merge global de arriba, para
-        # garantizar que los "siempre incluir" (ej. #Shorts) sobrevivan aunque
-        # Claude no los repita. Defaults vacíos si Claude omite el campo entero.
-        publicacion = resultado.get("publicacion") or {}
-        tiktok_seo  = seo_base.get("tiktok", {})
-        yt_seo      = seo_base.get("youtube_shorts", {})
-        tiktok_pub  = publicacion.get("tiktok") or {}
-        yt_pub      = publicacion.get("youtube_shorts") or {}
-        resultado["publicacion"] = {
-            "tiktok": {
-                "descripcion": tiktok_pub.get("descripcion", ""),
-                "hashtags": _merge_hashtags(tiktok_seo.get("hashtags", []), tiktok_pub.get("hashtags", [])),
-            },
-            "youtube_shorts": {
-                "titulo_alt":   yt_pub.get("titulo_alt", ""),
-                "descripcion":  yt_pub.get("descripcion", ""),
-                "hashtags":     _merge_hashtags(yt_seo.get("hashtags", []), yt_pub.get("hashtags", [])),
-                "tags_backend": _merge_hashtags(yt_seo.get("tags_backend", []), yt_pub.get("tags_backend", [])),
-            },
-        }
-
-        # Efecto de sonido corto (stinger/whoosh) anclado al momento de
-        # énfasis (Fase 15) — None preserva el comportamiento previo; no
-        # está en el prompt todavía (sin assets curados en
-        # edicion_video/assets/efectos_sonido/, ver docs/ESTRUCTURA_DATOS.md)
-        resultado.setdefault("efecto_sonido", None)
-
-        # layout_streaming (Fase 9) es un hecho TÉCNICO del canal (cómo
-        # está armada la escena de OBS del streamer), no una decisión de
-        # Claude — se copia tal cual desde la config del canal, nunca se
-        # le pide a Claude. Agente 4 sigue sin recibir config directamente
-        # (se mantiene "técnico puro"): esto viaja igual que mood/estilo_texto,
-        # a través de contenido.json.
-        resultado["layout_streaming"] = config.get("layout_streaming")
+        _completar_item(resultado, config, seo_base, hashtags_base)
 
         # Aplicar score mínimo del config
         score    = resultado.get("score", 0)
@@ -447,6 +457,84 @@ def run_agent(rangos_path: str, config: dict) -> list[dict]:
     print(f"[AGENT3] ✅ Contenido guardado en {output_path}\n")
 
     return contenido
+
+
+_NOTA_COPY = """TÍTULO DECIDIDO POR EL JUEZ (no lo cambies, ni lo reescribas):
+  Línea 1: {l1}
+  Línea 2: {l2}
+Este clip YA fue aprobado para publicar: no puntúes ni decidas si publicar.
+Completa mood, estilo_texto, cta_texto, palabras_clave, layout y publicacion (TikTok y YouTube
+Shorts) de forma coherente con ESE título — la descripción debe hablar del mismo momento y
+nombrar al mismo personaje. Devuelve el mismo formato JSON (texto_linea1/2 = el título de arriba)."""
+
+
+def run_copy(juez_path: str, config: dict) -> tuple[list[dict], list[str]]:
+    """
+    Modo copy (con juez): escribe el copy solo de los rangos que el juez aprobó, a partir de
+    su título — así la descripción de cada plataforma habla del mismo momento que el texto
+    quemado. Los rechazados se registran sin llamar a Claude (trazabilidad en contenido_final).
+    Guarda contenido.json junto a juez.json. Devuelve (contenido, advertencias).
+    """
+    juez_file = Path(juez_path)
+    chunk_dir = juez_file.parent
+    decisiones = json.loads(juez_file.read_text(encoding="utf-8")).get("decisiones", [])
+
+    for _fname in ("transcripcion_enriquecida.txt", "transcripcion_completa.txt"):
+        if (chunk_dir / _fname).exists():
+            segments = _parse_segments((chunk_dir / _fname).read_text(encoding="utf-8"))
+            break
+    else:
+        segments = []
+
+    prompt        = config["contenido"]["prompt"]
+    hashtags_base = config["contenido"]["hashtags_base"]
+    prohibidas    = config.get("contenido_restricciones", {}).get("palabras_prohibidas", [])
+    canal_id      = config.get("meta", {}).get("id", "default")
+    apr_path      = Path(__file__).parent.parent / "aprendizajes" / f"{canal_id}_optimizado.md"
+    aprendizajes  = apr_path.read_text(encoding="utf-8") if apr_path.exists() else None
+    seo_base      = config.get("seo_base", {})
+    seo_context   = _format_seo_context(seo_base)
+
+    from agentes.juez import bloque_juez
+
+    aprobadas = [d for d in decisiones if d.get("publicar")]
+    print(f"\n[AGENT3] Modo copy — {len(aprobadas)} clip(s) aprobado(s) por el juez de {len(decisiones)}")
+    client = get_client() if aprobadas else None
+    contenido, advertencias = [], []
+
+    for d in sorted(decisiones, key=lambda x: _timestamp_to_seconds(str(x.get("inicio") or "0:0"))):
+        rango = d.get("rango") or {"inicio": d.get("inicio"), "fin": d.get("fin")}
+        if not d.get("publicar"):
+            contenido.append({
+                "score": d.get("fuerza") or 0, "publicar": False,
+                "texto_linea1": d.get("linea1") or "", "texto_linea2": d.get("linea2") or "",
+                "hashtags": [], "juez": bloque_juez(d), "rango_original": rango,
+            })
+            continue
+
+        l1, l2 = d.get("linea1") or "", d.get("linea2") or ""
+        print(f"[AGENT3] {rango.get('inicio')} → {rango.get('fin')}  «{l1} / {l2}»")
+        clip_text = _extract_clip(segments, rango.get("inicio", "00:00"), rango.get("fin", "00:00"))
+        resultado = _call_claude(client, rango, clip_text, prompt, aprendizajes, seo_context,
+                                 _NOTA_COPY.format(l1=l1, l2=l2))
+        _completar_item(resultado, config, seo_base, hashtags_base)
+        # El título y la decisión son del juez, no del copy
+        resultado.update(texto_linea1=l1, texto_linea2=l2, score=d.get("fuerza") or 0, publicar=True)
+        resultado.pop("razon_score", None)
+        resultado["juez"] = bloque_juez(d)
+        resultado["rango_original"] = rango
+
+        encontradas = [p for p in prohibidas if p.lower() in f"{l1} {l2}".lower()]
+        if encontradas:
+            advertencias.append(f"palabras prohibidas en el título del juez ({', '.join(encontradas)}): «{l1} / {l2}»")
+            print(f"  ⚠️  {advertencias[-1]}")
+        print(f"  ✍️  TikTok: {resultado['publicacion']['tiktok']['descripcion'][:80]}")
+        contenido.append(resultado)
+
+    (chunk_dir / "contenido.json").write_text(
+        json.dumps({"contenido": contenido}, ensure_ascii=False, indent=2), encoding="utf-8",
+    )
+    return contenido, advertencias
 
 
 # ─────────────────────────────────────────

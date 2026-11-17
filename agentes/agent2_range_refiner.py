@@ -25,6 +25,7 @@ load_dotenv()
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from core.utils import _timestamp_to_seconds, _seconds_to_timestamp, _parse_segments
 from ai_client import get_client
+from investigacion import comun
 
 # ─────────────────────────────────────────
 #  CONFIGURACIÓN
@@ -60,7 +61,47 @@ FORMATO DE RESPUESTA (modo agrupado) — solo JSON válido:
   ]
 }
 """
+
+# Con memoria del nicho (hay juez): el A2 solo define bordes; la calidad la decide el juez.
+_BORDES_SUFFIX = """
+
+MODO BORDES — PRIORIDAD SOBRE TODO LO ANTERIOR:
+Un paso posterior (el juez) decide qué se publica comparando contra clips reales del nicho.
+Tu único trabajo es definir los BORDES de cada momento. IGNORA los "CRITERIOS PARA
+DESCARTAR" de arriba: no descartes por calidad, fuerza, falta de emoción ni confianza baja.
+- conservar: false SOLO si (a) es el mismo momento que otro pico — fusiónalos en un rango —
+  o (b) no hay texto en la transcripción para ese momento.
+- ARRANCAR EN EL CONFLICTO: el inicio va donde aparece lo que está en juego (la cifra, la
+  pregunta incómoda, la emoción), con 2 a 5 segundos de margen antes; nada de presentación.
+- El fin va justo después del remate o la reacción.
+- Respeta la duración mínima y máxima del nicho.
+- En "razon" explica los bordes, no la calidad.
+"""
+
+_TOLERANCIA_PICO_S = 2
 # ─────────────────────────────────────────
+
+
+def _pico_de(pico_ts, picos: list[dict]) -> dict:
+    """
+    El pico del A1 al que corresponde un rango. Se compara en segundos: Claude a veces
+    devuelve "12:09" para un pico "00:12:09" (por eso pico_original quedaba vacío).
+    """
+    if not pico_ts or ":" not in str(pico_ts):
+        return {}
+    try:
+        objetivo = _timestamp_to_seconds(str(pico_ts))
+    except (ValueError, TypeError):
+        return {}
+    mejor = None
+    for p in picos:
+        try:
+            dif = abs(_timestamp_to_seconds(str(p.get("timestamp", ""))) - objetivo)
+        except (ValueError, TypeError):
+            continue
+        if dif <= _TOLERANCIA_PICO_S and (mejor is None or dif < mejor[0]):
+            mejor = (dif, p)
+    return mejor[1] if mejor else {}
 
 
 def _extract_context(
@@ -133,6 +174,7 @@ def _call_claude_agrupado(
     prompt: str,
     antes: int,
     despues: int,
+    sufijo_extra: str = "",
 ) -> list[dict]:
     """
     Una sola llamada con todos los picos del chunk.
@@ -146,7 +188,8 @@ def _call_claude_agrupado(
             f"PICO {i} [{pico.get('timestamp')}]\n"
             f"Razón     : {pico.get('razon', '')}\n"
             f"Confianza : {pico.get('confianza', '')}\n"
-            f"Tipo      : {pico.get('tipo', '')}\n\n"
+            f"Tipo      : {pico.get('tipo', '')}\n"
+            f"En juego  : {pico.get('en_juego', '')}\n\n"
             f"Contexto (-{antes}s/+{despues}s):\n{ctx_label}"
         )
 
@@ -155,7 +198,7 @@ def _call_claude_agrupado(
         + "\n\n".join(bloques)
     )
 
-    agrupado_prompt = prompt + _AGRUPADO_SUFFIX
+    agrupado_prompt = prompt + _AGRUPADO_SUFFIX + sufijo_extra
 
     response = client.messages.create(
         model=MODEL,
@@ -236,15 +279,19 @@ def run_agent(picos_path: str, config: dict) -> list[dict]:
 
     print(f"[AGENT2] Refinamiento agrupado — {len(picos)} picos en 1 llamada")
 
-    rangos_raw = _call_claude_agrupado(client, picos_con_contexto, prompt, antes, despues)
-
-    # Mapear pico_original por timestamp para enriquecer cada rango
-    pico_by_ts = {p.get("timestamp"): p for p in picos}
+    canal_id = (config.get("meta") or {}).get("id", "default")
+    modo_bordes = comun.cargar_memoria(canal_id) is not None
+    if modo_bordes:
+        print("[AGENT2] Memoria del nicho: modo bordes (la calidad la decide el juez)")
+    rangos_raw = _call_claude_agrupado(
+        client, picos_con_contexto, prompt, antes, despues,
+        sufijo_extra=_BORDES_SUFFIX if modo_bordes else "",
+    )
 
     rangos = []
     for rango in rangos_raw:
         pico_ts              = rango.pop("pico_timestamp", None)
-        rango["pico_original"] = pico_by_ts.get(pico_ts, {})
+        rango["pico_original"] = _pico_de(pico_ts, picos)
 
         # Momento de énfasis: segundos del pico relativos al inicio del rango
         # (usado por Agente 4 para el zoom/punch-in — ver edicion_video/).

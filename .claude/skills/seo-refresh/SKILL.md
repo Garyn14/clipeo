@@ -50,4 +50,11 @@ No hace falta tocar `agentes/agent3_viral_scorer.py` ni `contexto/context_loader
 python -c "import yaml; yaml.safe_load(open('contexto/nichos/<id>.yaml', encoding='utf-8'))"
 ```
 
-Y opcionalmente correr el Agente 3 en modo manual (skill `pipeline-manual`) sobre un rango de prueba para confirmar que el bloque `SEO BASE POR PLATAFORMA` llega actualizado en la request.
+Y opcionalmente correr el Agente 3 sobre un `rangos.json` de prueba con trazas activadas, para confirmar que el bloque `SEO BASE POR PLATAFORMA` llega actualizado en la request:
+
+```bash
+PIPELINE_TRACE_DIR=<scratchpad>/trazas python agentes/agent3_viral_scorer.py <copia de rangos.json> <id>
+# revisar <scratchpad>/trazas/001_request.json
+```
+
+(Trabajar sobre una copia: el agente escribe `contenido.json` junto al `rangos.json` que recibe.)

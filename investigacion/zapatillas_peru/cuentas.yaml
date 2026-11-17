@@ -1,0 +1,46 @@
+# Cuentas de TikTok que mide investigacion/recolectar.py para el nicho zapatillas_peru.
+# tipo: oficial (del creador) | clipper (cuenta de clips de terceros) | medio | propia (nuestra)
+# universo: personaje principal de la cuenta — orientativo: las cuentas de clips mezclan
+# nichos, el universo real de cada clip se decide por su contenido.
+# Fuentes: informes de julio (contexto/entidades/yolu_investigacion_*.md) + búsqueda con la
+# extensión de Chrome (2026-10-03).
+
+cuentas:
+  # Propia
+  - {cuenta: nandoclips93, tipo: propia, universo: mixto}
+
+  # Universo Yolu
+  - {cuenta: emprendeyolu, tipo: oficial, universo: yolu}
+  - {cuenta: tiayolu, tipo: oficial, universo: yolu}
+  - {cuenta: elmatiwasi1, tipo: oficial, universo: yolu}
+  - {cuenta: yoluclips19, tipo: clipper, universo: yolu}
+  - {cuenta: clips_yoluu, tipo: clipper, universo: yolu}
+  - {cuenta: almanegraclips, tipo: clipper, universo: yolu}
+  - {cuenta: satorugojo.clips, tipo: clipper, universo: yolu}
+  - {cuenta: babynathsclips1, tipo: clipper, universo: yolu}
+  - {cuenta: gatitoclips1.0, tipo: clipper, universo: yolu}
+  - {cuenta: full_showyolu, tipo: clipper, universo: yolu}
+  - {cuenta: hijitoclips, tipo: clipper, universo: yolu}
+
+  # Universo Fritz
+  - {cuenta: fritzsportchina, tipo: oficial, universo: fritz}
+  - {cuenta: fritzperu, tipo: oficial, universo: fritz}
+  - {cuenta: tusaliadosparaelexito, tipo: oficial, universo: fritz}
+  - {cuenta: cesar.clips1, tipo: clipper, universo: fritz}
+  - {cuenta: clip.master499, tipo: clipper, universo: fritz}
+  - {cuenta: sendooclips, tipo: clipper, universo: fritz}
+  - {cuenta: jhasminclips, tipo: clipper, universo: fritz}
+  - {cuenta: brayanclip10, tipo: clipper, universo: fritz}
+  - {cuenta: zeclips_0, tipo: clipper, universo: fritz}
+  - {cuenta: memo.clipspe, tipo: medio, universo: fritz}
+
+  # Universo Noto
+  - {cuenta: notoriousgeorge_, tipo: oficial, universo: noto}
+  - {cuenta: kicksforall.pe, tipo: oficial, universo: noto}
+  - {cuenta: luciclipsss, tipo: clipper, universo: noto}
+  - {cuenta: davidclipsx, tipo: clipper, universo: noto}
+  - {cuenta: clipsnegociospe, tipo: clipper, universo: noto}
+  - {cuenta: clipeanonymus, tipo: clipper, universo: noto}
+  - {cuenta: contenido.variado079, tipo: clipper, universo: noto}
+  - {cuenta: sofhiaclips, tipo: clipper, universo: noto}
+  - {cuenta: neutroupdates, tipo: medio, universo: noto}

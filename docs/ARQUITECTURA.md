@@ -70,9 +70,23 @@ Es el punto de entrada único del flujo normal. Recibe un modo mutuamente excluy
 
 Antes de ejecutar cualquier modo, `pipeline.py` resuelve la configuración del canal/nicho a través de `_load_config()`, que decide dinámicamente entre dos sistemas de configuración (ver sección 4).
 
+### 3.0 Orquestación por pasos — `core/pasos.py`
+
+Desde 2026-09-30 cada etapa corre como un **paso** con estado propio, al estilo de un hub de despachos: `pipeline.py` define *qué* hace cada paso (lógica de negocio) y `core/pasos.py::ejecutar_paso()` decide *cómo* se ejecuta (lógica de orquestación, agnóstica: no sabe nada de agentes ni de video).
+
+- **Pasos de sesión**: `descarga → plan → … → revision → fin`. **Por chunk**: `transcripcion → agente0 → agente1 → agente2 → agente3 → corte`.
+- **Estado por paso** en `pipeline_estado.json` (vía `ChunkManager`): `pendiente | corriendo | ok | omitido | error | esperando`, más `inicio`, `fin`, `duracion_s`, `intentos`, `error {tipo, mensaje, reintentable, detalle}`, `salidas` (archivos producidos) y `nota`. El estado del chunk (`pendiente/completado/fallido`) se deriva de sus pasos. Un estado viejo sin pasos se lee igual (pasos pendientes).
+- **Reanudación idempotente**: un paso `ok`/`omitido` se salta. Cada paso lee su entrada de disco, no de memoria.
+- **Errores clasificados** (`clasificar_error`): lo que trae atributo `reintentable` lo decide (`AIRetryableError`/`AIFatalError` de `ai_client/errors.py`, `ColabError` de la transcripción, `DescargaError` de `captura/video_capture.py`, `ErrorPaso`); `SystemExit` de un agente (entrada faltante), `KeyError`, `FileNotFoundError`, `ValueError` → no reintentables; lo desconocido → reintentable.
+- **Reintento automático** de los reintentables con espera creciente (`PIPELINE_ESPERAS_REINTENTO`, default `30,120,300`); al agotarse, o si no es reintentable, el paso queda en `error` y el chunk en `fallido`; los demás chunks siguen.
+- **Reintento manual**: `--reintentar <paso> [--chunk <id>,...]` → `ChunkManager.resetear_desde()` vuelve ese paso y los siguientes a pendiente, borra sus `salidas` y reabre `revision`/`fin`.
+- **Trazas**: durante cada paso de chunk, `PIPELINE_TRACE_DIR=<chunk>/trazas/<paso>/`; `ai_client.get_client()` guarda ahí cada llamada a Claude (`NNN_request.json` / `NNN_response.json` / `NNN_error.json`), con cualquier proveedor. Es lo que muestra la web al abrir un paso.
+- **Cierre**: si todos los chunks terminan, `revision` queda `esperando` (o `omitido` + `fin` ok si no hay clips); el panel web lo cierra al finalizar la revisión de clips.
+- **`--session-id <id>`**: la sesión es siempre `stream_data/<id>`, sin preguntas interactivas — también para videos locales.
+
 ### 3.1 Flujo interno del modo `--video` (el camino principal)
 
-1. **Resolución de input**: determina si la URL es un archivo local ya descargado o una URL remota. Si es remota, busca primero en `stream_data/*/pipeline_estado.json` una sesión previa con la misma URL, para ofrecer reanudarla en vez de re-descargar.
+1. **Resolución de input**: con `--session-id`, la sesión es `stream_data/<id>`. Si no, determina si la URL es un archivo local ya descargado (sesión = su carpeta) o una URL remota; si es remota, busca primero en `stream_data/*/pipeline_estado.json` una sesión previa con la misma URL, para ofrecer reanudarla en vez de re-descargar.
 2. **Descarga** (si no hay sesión previa): usa `captura/video_capture.py` para bajar el video completo (≤1080p) y su audio, además de metadata completa (`yt-dlp --dump-json`) que se usará después por el Agente 0.
 3. **Planificación por chunks**: `core/chunk_manager.py` divide la duración total del video en bloques de tamaño fijo (30 min por defecto) y persiste el plan + estado de avance en `pipeline_estado.json`, permitiendo reanudar procesamiento chunk por chunk tras un corte o error.
 4. **Por cada chunk pendiente**:
@@ -85,12 +99,12 @@ Antes de ejecutar cualquier modo, `pipeline.py` resuelve la configuración del c
    - Si hay rangos conservados, corre **Agente 3** (scoring + generación de título/hashtags).
    - Si `--revisar` está activo, entra en un bucle de aprobación manual por terminal antes de continuar (ver sección 8).
    - Corre **Agente 4** (corte de video) inmediatamente sobre los clips marcados `publicar` de ese chunk — no espera a que terminen todos los chunks. Esto permite ver clips generados progresivamente durante una sesión larga.
-   - Marca el chunk como completado (o fallido, con el error persistido) en el estado del `ChunkManager`.
-5. **Consolidación final**: al terminar todos los chunks, mergea los `contenido.json` de cada chunk en un único `contenido_final.json` a nivel de sesión, ordenado por score descendente.
+   - Cada una de estas etapas es un paso (sección 3.0); si una no aplica (sin picos, todos los rangos descartados, nada para publicar), los pasos siguientes del chunk quedan `omitido`.
+5. **Consolidación final**: al terminar todos los chunks, mergea los `contenido.json` de cada chunk en un único `contenido_final.json` a nivel de sesión, ordenado por score descendente, y deja el paso `revision` en `esperando`. Si algún chunk quedó con un paso en error, sale con código 1.
 
 ### 3.2 Modo `--test`
 
-Salta directamente a Agente 1 → 2 → 3 → 4 sobre una transcripción ya existente en el directorio dado. No hay chunking, descarga ni Agente 0. Es el modo usado para iterar rápido sobre prompts/config sin re-transcribir.
+Salta directamente a Agente 1 → 2 → 3 → 4 sobre una transcripción ya existente en el directorio dado. No hay chunking real, descarga ni Agente 0: se registra como un chunk único (`chunk_001`) con `descarga`/`plan`/`transcripcion`/`agente0` omitidos, así la web lo muestra igual que una sesión normal. Es el modo usado para iterar rápido sobre prompts/config sin re-transcribir.
 
 ## 4. Capa de configuración — dos sistemas coexistentes
 
@@ -123,7 +137,7 @@ En ambos casos, el resultado es un **dict plano en memoria** con las claves `met
 
 - **`captura/tiktok_capture.py`**: script de grabación standalone, independiente del pipeline de procesamiento. Graba un TikTok Live activo en chunks de duración configurable usando `yt-dlp` (con `--no-live-from-start`, obligatorio porque TikTok Live no soporta DVR), matando el árbol de procesos completo (yt-dlp + ffmpeg hijo) al cortar cada chunk o al recibir Ctrl+C, para evitar procesos huérfanos escribiendo sin límite. Registra el progreso en `captura_estado.json`. Los chunks grabados se procesan después manualmente con `pipeline.py --video <chunk.mp4>`.
 - **`captura/video_capture.py`**: usado por el modo `--video` de `pipeline.py` para descargar un video completo (no un live) de una URL, extraer su audio completo y guardar la metadata JSON del video (título, descripción, uploader) que alimenta al Agente 0.
-- **`core/chunk_manager.py`**: gestiona el plan de chunks temporales de una sesión de video ya descargado (no de captura en vivo) y el checkpointing de qué chunk está pendiente/completado/fallido, persistido en `pipeline_estado.json`.
+- **`core/chunk_manager.py`**: gestiona el plan de chunks temporales de una sesión de video ya descargado (no de captura en vivo) y el estado de cada paso de sesión y de chunk (ver sección 3.0), persistido en `pipeline_estado.json`.
 - **`transcripcion/audio_chunker.py`**: extrae con FFmpeg (input seek) el segmento de audio correspondiente a un chunk de tiempo específico del video completo.
 
 ## 6. Capa de transcripción
@@ -142,7 +156,11 @@ Capa de limpieza determinística (sin LLM) que corre justo después de transcrib
 
 No es parte de la cadena numerada 1-4; corre entre la transcripción y el Agente 1, y solo si la transcripción tiene diarización (`SPEAKER_XX`). Envía a Claude los primeros ~3 minutos de transcripción junto con la metadata del video (título, descripción) y le pide inferir quién es cada `SPEAKER_XX` por contexto (presentaciones explícitas, patrones de rol pregunta/respuesta).
 
-Clasifica cada speaker en tres estados según umbrales de confianza configurables (`umbral_alto`, `umbral_bajo`): **confirmado** (se reemplaza el label por el nombre real en el texto), **posible** (se marca `[sin identificar]` pero no se usa el nombre), **desconocido** (se marca `[sin identificar]`). Si Claude no logra identificar a nadie con confianza, hay un *fallback* que usa el `uploader` de la metadata del video para asignar el nombre del canal al speaker que más habla.
+Clasifica cada speaker en tres estados según umbrales de confianza configurables (`umbral_alto`, `umbral_bajo`): **confirmado** (se reemplaza el label por el nombre real en el texto), **posible** (se marca `[sin identificar]` pero no se usa el nombre), **desconocido** (se marca `[sin identificar]`). Si Claude no logra identificar a nadie con confianza, hay un *fallback* que usa el `uploader` de la metadata del video para asignar el nombre del canal al speaker que más habla. Desde 2026-10-03, un **posible** cuyo nombre coincide con el personaje dueño del canal se aplica como `confirmado_por_canal` (dos evidencias independientes), y la vista previa que recibe Claude son 3 ventanas de 60 s repartidas por el chunk en vez de solo los primeros 3 minutos.
+
+**Buscar amplio → decidir estricto (2026-10-03).** El juez solo puede elegir entre lo que le llega: un momento bueno que el A1 no detecta o el A2 descarta no lo rescata nadie. Por eso, con memoria del nicho, el A1 busca con los tipos que funcionan y umbral 0.5 (ante la duda, incluye), el A2 solo define bordes ("arrancar en el conflicto"; descarta únicamente duplicados o momentos sin texto), el juez es el único filtro de calidad y el A3 pasa a escribir el copy de los aprobados a partir del título del juez (antes las descripciones quedaban escritas para el título del A3, que el juez reemplazaba). Orden: `agente2 → juez → agente3 → corte`. En la primera corrida real llegaron 8 candidatos al juez en vez de 3 y se recuperó el momento de generosidad que el A2 descartaba. Las decisiones de la revisión web vuelven al juez como correcciones (`investigacion/<nicho>/correcciones.jsonl`), y `agentes/auditoria.py` mide bajo demanda lo que se escapó antes del juez.
+
+**Juez** (`agentes/juez.py`, paso `juez` entre `agente2` y `agente3`): decisión final del chunk contra la **memoria del nicho** (`investigacion/<canal_id>/referencias.yaml`, clips reales de TikTok medidos por índice outlier). Recibe todos los candidatos del A3 juntos, más el título y el canal del video y el `speaker_map`, y para cada uno fuerza una clasificación: tipo de momento viral (o "ninguno": pitch, anuncio, logística), qué está en juego, las 2 referencias reales más parecidas, publicar o no (sin tope) y fuerza 1–10, que reemplaza al `score`. Reescribe el título de los publicados con la fórmula del nicho y nombrando al personaje. Motivo: en la prueba del 2026-10-03, pegar la memoria en el prompt del A3 casi no cambiaba sus decisiones; la decisión estructurada sí (12/13 → 4/13 publicados, sin pitches). Sin memoria para el nicho, el paso se omite.
 
 Produce `transcripcion_enriquecida.txt` (la transcripción con nombres resueltos y marcas de incertidumbre) y `speaker_map.json` (el mapeo detallado). Esta transcripción enriquecida —no la raw— es la que prefieren leer los Agentes 1/2/3 cuando existe.
 
@@ -192,12 +210,12 @@ Cada ejecución (ya sea `--video` o una captura de `captura/tiktok_capture.py`) 
 
 - `metadata.json` — metadata cruda de `yt-dlp --dump-json` (título, descripción, uploader).
 - `stream_completo.mp4` / `audio/audio_completo.mp3` — video y audio fuente descargados.
-- `pipeline_estado.json` — plan de chunks y su estado (`pendiente`/`completado`/`fallido`), producido y actualizado por `ChunkManager`; es lo que permite **reanudar** una sesión interrumpida sin reprocesar chunks ya hechos.
-- `chunks/<chunk_id>/` — por chunk: `transcripcion_raw.txt`, `transcripcion_enriquecida.txt`, `transcripcion_completa.txt` (copia de compatibilidad), `speaker_map.json`, `picos.json`, `rangos.json`, `contenido.json`.
+- `pipeline_estado.json` — plan de chunks y estado de cada paso (sección 3.0), producido y actualizado por `ChunkManager` con escritura atómica (el backend lo lee mientras el pipeline escribe); es lo que permite **reanudar** una sesión interrumpida sin reprocesar pasos ya hechos.
+- `chunks/<chunk_id>/` — por chunk: `transcripcion_raw.txt`, `transcripcion_enriquecida.txt`, `transcripcion_completa.txt` (copia de compatibilidad), `speaker_map.json`, `picos.json`, `rangos.json`, `contenido.json`, y `trazas/<paso>/` con cada llamada a Claude del paso.
 - `audio_chunks/<chunk_id>.mp3` — audio extraído por chunk (solo si no había transcripción base para dividir).
 - `contenido_chunks/<chunk_id>.json` — resumen de contenido por chunk, ya post-revisión manual si aplicó.
 - `contenido_final.json` — merge de todos los `contenido_chunks/*.json` al terminar la sesión, ordenado por score.
-- `clips/clip_NNN.mp4` + `clip_NNN.json` — clips finales cortados por el Agente 4, numerados de forma continua entre chunks (vía `clip_offset`).
+- `clips/clip_c<NNN>_<NN>.mp4` + `.json` — clips finales cortados por el Agente 4, con prefijo por chunk (`clip_c002_01`, vía `clip_prefix`); el nombre queda guardado como `clip_id` en la entrada de `contenido_chunks/`. Así reintentar el corte de un chunk solo pisa sus propios archivos. Sesiones anteriores al 2026-09-30 usan numeración global `clip_NNN` (vía `clip_offset`); `core/clip_ids.py::asignar_clip_ids()` resuelve ambos esquemas para el backend y `revisar_clips.py`.
 - `clips_custom/` — clips generados manualmente con `entrenamiento/clip_manual.py`.
 
 Este diseño basado en archivos (sin base de datos) hace que **cualquier etapa sea inspeccionable y reproducible manualmente** — se puede re-correr un agente individual por CLI apuntándolo al JSON intermedio de la etapa anterior, sin tocar el resto del pipeline.
@@ -212,12 +230,15 @@ Punto de intercambio de **transporte**, no de lógica de negocio: los 4 agentes 
 
 La variable de entorno `AI_PROVIDER` decide el proveedor (`ai_client/client.py::get_client()`):
 
-- **`anthropic`** (default): devuelve el objeto real `anthropic.Anthropic(api_key=...)` sin envolver — fidelidad 100% con el SDK (reintentos, excepciones tipadas, etc.), falla fuerte con `RuntimeError` si `ANTHROPIC_API_KEY` no está configurada.
-- **`manual`**: devuelve un `ManualClient` (`ai_client/manual_provider.py`) que **no llama a ninguna API**. Cada `client.messages.create(**kwargs)` escribe `kwargs` (los mismos parámetros que irían a la API real) como JSON en `ai_client/_pending/<id>.request.json`, y bloquea el proceso haciendo poll (cada 2s, timeout 1800s) hasta que aparece `ai_client/_pending/<id>.response.json` con `{"text": "<respuesta>"}`. Ese texto se expone como `response.content[0].text`, el único punto de contacto que los 4 agentes realmente leen — así que el agente que llamó no distingue una respuesta manual de una real. Pensado para correr el pipeline completo sin gastar contra la API real: un humano, o un agente de Claude Code en la misma sesión, puede leer la request pendiente y escribir la respuesta a mano.
+- **`claude_cli`** (default desde 2026-09-30): `ClaudeCliClient` (`ai_client/cli_provider.py`) responde cada llamada con **Claude Code headless** (`claude -p --output-format json`), usando la sesión de Claude Code iniciada en la máquina — sin `ANTHROPIC_API_KEY` ni gasto de API. Cada llamada es un proceso nuevo y aislado: directorio temporal neutro, `--tools ""` (sin herramientas), `--setting-sources ""` (no carga `CLAUDE.md`, memorias ni settings), `--strict-mcp-config`, `--disable-slash-commands`, `--no-session-persistence`. Así se comporta como una llamada directa a la API: entra el prompt del agente, sale el texto. Mapeo: `system` → `--system-prompt-file` (por archivo: en Windows `claude` es un wrapper `.CMD` y `cmd.exe` corta los argumentos en el primer salto de línea — el modelo recibía solo la primera línea del prompt); `messages` → stdin (bloques de texto aplanados, `cache_control` ignorado); `model` → se ignora el id del agente y se usa `AI_CLI_MODEL` (default `sonnet`); `max_tokens`/`temperature` no tienen equivalente y se ignoran. Setea `DISABLE_AUTOUPDATER=1` en el subproceso (corridas largas chocaban con "claude.exe in use"). Errores: `api_error_status` 400/401/403/404 o "not logged in" → `AIFatalError`; 429/5xx/529, timeout (`AI_CLI_TIMEOUT`, default 600 s), salida vacía o no-JSON → `AIRetryableError` (ver `ai_client/errors.py` y sección 3.0). La respuesta trae `.meta` con `usage` y `duracion_api_ms`.
+- **`anthropic`**: devuelve el objeto real `anthropic.Anthropic(api_key=...)` sin envolver — fidelidad 100% con el SDK (reintentos, excepciones tipadas, etc.), falla fuerte con `RuntimeError` si `ANTHROPIC_API_KEY` no está configurada. Se mantiene para poder volver a la API sin tocar los agentes.
+- **`manual`** (solo depuración): devuelve un `ManualClient` (`ai_client/manual_provider.py`) que **no llama a ninguna API**. Cada `client.messages.create(**kwargs)` escribe `kwargs` (los mismos parámetros que irían a la API real) como JSON en `ai_client/_pending/<id>.request.json`, y bloquea el proceso haciendo poll (cada 2s, timeout 1800s) hasta que aparece `ai_client/_pending/<id>.response.json` con `{"text": "<respuesta>"}`. Ese texto se expone como `response.content[0].text`. Fue el mecanismo de desarrollo antes de `claude_cli` (la skill `pipeline-manual` que lo operaba quedó archivada en `archive/skills/`).
 
-Ambos proveedores exponen solo la superficie que los agentes realmente usan (`.messages.create(...)` y `.content[0].text`) — el modo manual no reimplementa el resto del SDK (streaming, otros endpoints, etc.), porque ningún agente de este pipeline los usa hoy.
+Los tres proveedores exponen solo la superficie que los agentes realmente usan (`.messages.create(...)` y `.content[0].text`) — ninguno reimplementa el resto del SDK (streaming, otros endpoints, etc.), porque ningún agente de este pipeline los usa hoy.
 
-`contexto/feedback.py` y `contexto/contexto_refresh.py` también llaman a Claude directo y **todavía no pasan por `ai_client/`** — quedaron fuera de este cambio, son una extensión natural a futuro.
+**Trazabilidad**: si `PIPELINE_TRACE_DIR` está definida, `get_client()` envuelve `.messages` de cualquier proveedor y guarda cada llamada en ese directorio (ver sección 3.0).
+
+`contexto/feedback.py` también pasa por `get_client()`. `contexto/contexto_refresh.py` sigue llamando a la API directo (usa la tool de búsqueda web del servidor) — está deprecado en la práctica, ver sección 12.
 
 **Acoplamiento con la transcripción**: en `pipeline.py` (modo `--video`), `AI_PROVIDER=manual` fuerza automáticamente `usar_colab=True` (equivalente a pasar `--colab`), aunque son mecanismos independientes — uno decide el transporte de las llamadas a Claude, el otro decide dónde corre WhisperX. La razón es puramente práctica: WhisperX local puede tardar más de una hora en un video de ~20 min, lo que vuelve inviable el flujo de prueba manual (que ya de por sí requiere respuestas humanas/de otro agente en cada paso); Colab transcribe el mismo video en minutos. Si `COLAB_TRANSCRIBE_URL` no está configurada, esto falla fuerte con el mismo `RuntimeError` de siempre (ver `transcripcion/video_transcriber.py`), no cae en silencio a WhisperX local.
 
@@ -233,6 +254,5 @@ El Agente 3 lo usa de **dos formas a la vez** (`agentes/agent3_viral_scorer.py`)
 
 ## 18. Notas sobre el estado real de la arquitectura
 
-- El **modo `--live` de `pipeline.py` está roto/huérfano**: depende de un `capture_pipeline.py` en la raíz que ya no existe (fue archivado en `archive/capture_pipeline.py`, versión v1.1 con `whisper` clásico en vez de WhisperX). El camino soportado actualmente para contenido en vivo es: `captura/tiktok_capture.py` (graba chunks del live a disco) → `pipeline.py --video <chunk.mp4>` (procesa cada chunk grabado como si fuera un video normal).
-- El `CLAUDE.md` en la raíz del repositorio describe exclusivamente esa arquitectura v1.1 archivada (un único script `capture_pipeline.py`, Whisper clásico, sin agentes 0/2/3/4 separados, sin Módulo de Contexto) — **no refleja el pipeline v2.0 actual** documentado aquí.
+- El **modo `--live` de `pipeline.py` está roto/huérfano**: depende de un `capture_pipeline.py` en la raíz que ya no existe (fue archivado en `archive/capture_pipeline.py`, versión v1.1 con `whisper` clásico en vez de WhisperX). El camino soportado actualmente para contenido en vivo es: `captura/tiktok_capture.py` (graba chunks del live a disco) → `pipeline.py --video <chunk.mp4> --session-id <id-por-chunk>` (procesa cada chunk grabado como si fuera un video normal). Sin `--session-id`, la sesión de un video local es su carpeta, y todos los `chunk_NNN.mp4` de una misma grabación compartirían un único `pipeline_estado.json`.
 - Coexisten dos sistemas de configuración con la misma interfaz pública (`ConfigLoader` v1 y `ContextLoader` v2); la selección es automática y transparente para el resto del código, pero implica que hay dos formatos YAML distintos y no intercambiables mantenidos en paralelo (`config/` vs `contexto/`).

@@ -1,0 +1,16 @@
+/*
+  Reset mínimo. El sistema de diseño real (colores, tipografía, componentes)
+  vive en App.css — este archivo existía como boilerplate del scaffold de
+  Vite con sus propias variables --bg/--text/--border/--accent, que colisionaban
+  por nombre con las de App.css y ganaban la cascada (cargaba después),
+  dejando la página con fondo blanco pese a que App.css pedía uno oscuro.
+*/
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  min-height: 100svh;
+}
