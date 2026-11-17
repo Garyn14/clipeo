@@ -61,12 +61,37 @@ def cargar(ruta: Path) -> list[dict]:
     return casos
 
 
+UMBRAL_AUDIENCIA = 1.0   # outlier >= 1: rindió sobre lo normal de la cuenta → "debía publicarse"
+
+
+def aplicar_audiencia(casos: list[dict], ruta: Path) -> list[dict]:
+    """
+    Etiqueta por audiencia (CLIP-30): en los casos de corrección cuyo clip ya se publicó, lo esperado pasa a ser
+    lo que hizo la audiencia y no la decisión del editor. `<nicho>.audiencia.yaml` es una lista de
+    {clave_correccion, video_id, outlier, titulo}; vive aparte para que un re-export no la pise.
+    """
+    if not ruta.exists():
+        return casos
+    por_clave = {e["clave_correccion"]: e for e in yaml.safe_load(ruta.read_text(encoding="utf-8")) or []}
+    for caso in casos:
+        e = por_clave.get(caso.get("clave_correccion"))
+        if not e:
+            continue
+        publicar = float(e["outlier"]) >= UMBRAL_AUDIENCIA
+        caso["esperado_editor"] = dict(caso["esperado"])
+        caso["esperado"] = {"publicar": publicar, **({"tipo": caso["esperado"]["tipo"]}
+                                                     if publicar and caso["esperado"].get("tipo") else {})}
+        caso["evidencia"] = f"audiencia: {e['outlier']}x en @nandoclips93 (video {e['video_id']})"
+    return casos
+
+
 def cargar_nicho(nicho: str, incluir_sinteticos: bool = False) -> list[dict]:
-    """Casos reales del nicho (<nicho>.yaml) y, si se pide, los sintéticos (<nicho>.sinteticos.yaml)."""
+    """Casos reales del nicho (<nicho>.yaml, con las etiquetas de <nicho>.audiencia.yaml) y, si se pide, los
+    sintéticos (<nicho>.sinteticos.yaml)."""
     casos: list[dict] = []
     reales = DIR_CASOS / f"{nicho}.yaml"
     if reales.exists():
-        casos += cargar(reales)
+        casos += aplicar_audiencia(cargar(reales), DIR_CASOS / f"{nicho}.audiencia.yaml")
     sinteticos = DIR_CASOS / f"{nicho}.sinteticos.yaml"
     if incluir_sinteticos and sinteticos.exists():
         casos += cargar(sinteticos)

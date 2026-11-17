@@ -1,36 +1,59 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-17
+> Última actualización: 2026-11-17 (traspaso entre cuentas: todo lo necesario está aquí)
 
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Sprint:** S2 · Línea base de calidad (Q1) — 17 al 29 de noviembre de 2026 (activo). S1 cerrado el 17-nov.
-- **Demo del sprint:** informe con números: cobertura del detector y acierto del juez, errores típicos y prioridades.
+- **Sprint:** S3 · Calidad con la data de Fritz — 17 al 30 de noviembre de 2026 (activo). S1 y S2 cerrados.
+- **Demo del sprint:** mismos momentos antes y después de la dirección editorial (video), juez medido con la misma
+  información que en producción, memoria actualizada con los datos de @nandoclips93.
 
 ## Tickets del sprint
 
-| Ticket | Tema | Responsable | Estado |
-|---|---|---|---|
-| CLIP-24 | Evaluación de cobertura del detector (A1 → A2) + exportador ampliado + repeticiones | Desarrollador | Integrado (demo pendiente) |
-| CLIP-20 | Casos reales (export en la laptop) | Operador | Hecho: 77 casos juez + 7 cobertura |
-| CLIP-25 | Informe de línea base (`docs/calidad/LINEA_BASE.md`) | Desarrollador | Integrado (demo pendiente) |
+| Ticket | Tema | Estado |
+|---|---|---|
+| CLIP-29 | Fidelidad de la evaluación (pistas del detector + hablantes) | Hecho: casos re-exportados por el operador; línea base v2 medida |
+| CLIP-30 | Memoria del nicho con datos de @nandoclips93 | Hecho: cambios 1–7 **aprobados** y aplicados en `referencias.yaml`; 10 casos etiquetados por audiencia (`evaluacion/casos/zapatillas_peru.audiencia.yaml`) |
+| CLIP-31 | Dirección editorial MVP | Hecho: **demo aprobada por el operador (3/3 clips mejores)**; encendida por defecto (`DIRECCION_EDITORIAL=0` la apaga) |
 
-Diseño técnico: `docs/sprints/S2.md`. S1 cerrado: ver `docs/sprints/S1.md`.
-En backlog (secundario): CLIP-16, CLIP-17, CLIP-22.
+Diseño técnico: `docs/sprints/S3.md`. Línea base: `docs/calidad/LINEA_BASE.md`.
+En backlog: CLIP-27 (medios como fuente), CLIP-28 (transcripción/hablantes), CLIP-26 (Q6 onboarding), CLIP-16/17/22.
+
+### Mediciones del juez (3 corridas c/u, resultados en `evaluacion/resultados/`)
+
+| Escenario | Archivo | Etiqueta editor: precisión / recall | Etiqueta audiencia: precisión / recall / 10 publicados |
+|---|---|---|---|
+| A. Memoria anterior, sin dirección | `20261117_174956_zapatillas_peru.json` | 0,89 / 0,27 | 0,70 / 0,24 / 4,3 de 10 |
+| B. Memoria anterior, con dirección | `20261117_184336_zapatillas_peru_direccion.json` | 0,88 / 0,31 | 0,69 / 0,27 / 4,0 de 10 |
+| C1. Memoria nueva, sin dirección | `20261117_190922_zapatillas_peru.json` | — | 0,78 / 0,21 / 5,0 de 10 |
+| C2. Memoria nueva, con dirección | `20261117_200040_zapatillas_peru_direccion.json` | — | 0,77 / 0,22 / 5,7 de 10 |
+
+- Re-puntuar con etiquetas de audiencia: cargar los casos con `evaluacion.casos.cargar_nicho()` (ya aplica
+  `zapatillas_peru.audiencia.yaml`) y recalcular VP/FP/VN/FN sobre `corridas[*].resultados[*].obtenido_publicar`.
+- Hallazgo: 40 de 50 planes de dirección descartados en B eran más cortos que el mínimo (20 s). Decisión del
+  operador: mínimo propio de la dirección = 15 s (el máximo no cambia).
 
 ## Siguiente paso
 
-Demo del S2: el operador revisa `docs/calidad/LINEA_BASE.md` y responde sus preguntas (§7); luego planificar S3.
+- Mediciones, mínimo de 15 s, informe (`LINEA_BASE.md` §8) y revisión (`S3.md` §5–7): hechos.
+- [Líder técnico] PR `sprint/S3` → `main` (REST con `gh api`), CI `pytest` en verde, comentario de revisión, merge.
+- Jira: CLIP-29/30/31 → Finalizada (transición 41) y cerrar el sprint S3 (id 3). Luego planificar S4
+  (recomendación en `LINEA_BASE.md` §8.4).
+
+### Feedback de la demo (operador, 2026-11-17)
+
+`demo_direccion` sobre la sesión `20261003_231807`: clip_c001_02 (Sorprende a Rafo) mejor (inicio y transición más
+limpios; la música era de prueba y no se evalúa), clip_c001_03 (billetera) mejor, clip_c001_04 (pilla a Rafael)
+"mucho mejor".
 
 ## Pendientes del operador
 
 - Borrar la rama `prueba/ci-bloqueo` en GitHub (PR #8 cerrado → "Delete branch").
 - Al volver el repo a privado: la protección de `main` deja de aplicarse en el plan Free y Actions depende de la cuota de la cuenta.
 
-- Demo S2: revisar el informe de línea base y responder las 3 preguntas de §7.
 
 - Configurar los Secrets `HF_TOKEN` y `AUTH_TOKEN` en Colab (ver `legacy/colab/README.md`).
 - Entorno local (opcional, para demos): WSL + Docker Engine en la laptop; carpeta `D:\clipeo` en Remote Control
@@ -40,6 +63,8 @@ Demo del S2: el operador revisa `docs/calidad/LINEA_BASE.md` y responde sus preg
 
 | Fecha | Decisión |
 |---|---|
+| 2026-11-17 | La verdad es la audiencia: con Fritz se explota la data existente; con clientes nuevos, hipótesis + refinamiento (épica Q6). El analista actúa como consultor. |
+| 2026-11-17 | Revisión visual de @nandoclips93: 6/10 del top son recortes de TV/prensa (polémica) → backlog "medios como fuente" (CLIP-27). |
 | 2026-11-17 | **Línea base:** detector cobertura 83%; juez precisión 0,94 y recall 0,25 (demasiado estricto). Prioridad sugerida: Q2 (edición) + calibrar el juez antes que Q3. |
 | 2026-11-17 | **Riesgo aceptado:** repo público temporalmente para usar GitHub Actions gratis (la cuota del plan privado la consumió otro repo). Sin secretos en el historial (revisado); quedan visibles el email de commits, investigaciones sobre figuras públicas, docs de negocio y la memoria del nicho. Volver a privado más adelante. |
 | 2026-11-17 | Foco del sistema: clips de calidad; infraestructura, nube, publicación y prospección pasan a secundario. |

@@ -160,6 +160,7 @@ class ContextLoader:
                 "contexto_despues_segundos": ref_base.get("contexto_despues_segundos", 45),
                 "duracion_minima_segundos":  ref_base.get("duracion_minima_segundos", 20),
                 "duracion_maxima_segundos":  ref_base.get("duracion_maxima_segundos", 90),
+                "direccion_duracion_minima_segundos": ref_base.get("direccion_duracion_minima_segundos"),
                 "prompt":                    ref_base.get("prompt", ""),
             },
             "contenido": {

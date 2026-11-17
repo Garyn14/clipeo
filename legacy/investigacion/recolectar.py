@@ -67,10 +67,15 @@ def main() -> None:
     ap.add_argument("nicho")
     ap.add_argument("--por-cuenta", type=int, default=60)
     ap.add_argument("--pausa", type=int, default=20, help="segundos entre cuentas")
+    ap.add_argument("--cuenta", help="medir solo esta cuenta de cuentas.yaml (sin @)")
     args = ap.parse_args()
 
     carpeta = carpeta_nicho(args.nicho)
     cuentas = yaml.safe_load((carpeta / "cuentas.yaml").read_text(encoding="utf-8"))["cuentas"]
+    if args.cuenta:
+        cuentas = [c for c in cuentas if c["cuenta"] == args.cuenta.lstrip("@")]
+        if not cuentas:
+            raise SystemExit(f"@{args.cuenta.lstrip('@')} no está en cuentas.yaml")
     ahora = datetime.now(timezone.utc)
 
     nuevas: list[dict] = []

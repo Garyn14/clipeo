@@ -121,6 +121,8 @@ def casos_de_correcciones(nicho: str, stream_data: Path) -> tuple[list[dict], li
             continue
         meta = _leer_json(session_dir / "metadata.json")
         aprobado = r.get("accion") in ("aprobado", "editado")
+        pico = (item.get("rango_original") or item.get("rango") or {}).get("pico_original") or {}
+        hablantes = _leer_json(session_dir / "chunks" / chunk_file.stem / "speaker_map.json")
         j = r.get("juez") or {}
         casos.append({
             "id": f"{nicho[:2]}-corr-{len(casos) + 1:03d}",
@@ -131,6 +133,9 @@ def casos_de_correcciones(nicho: str, stream_data: Path) -> tuple[list[dict], li
             "video": {"titulo": meta.get("title") or meta.get("fulltitle"),
                       "canal": meta.get("uploader") or meta.get("channel")},
             "candidato": {"inicio": inicio, "fin": fin},
+            # Lo mismo que recibe el juez en producción (CLIP-29): pistas del detector y hablantes.
+            **({"pico": {k: pico[k] for k in ("tipo", "en_juego") if pico.get(k)}} if pico else {}),
+            **({"hablantes": hablantes} if hablantes else {}),
             "transcripcion": ventana(texto, inicio, fin),
             "esperado": {"publicar": aprobado, **({"tipo": j["tipo"]} if aprobado and j.get("tipo") else {})},
             "evidencia": f"{r.get('accion')} por el editor" + (f": {r['razon']}" if r.get("razon") else ""),

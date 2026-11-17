@@ -32,7 +32,7 @@ El agente trabaja con **tres roles distintos** y debe indicar cuál ejerce en ca
 
 | Rol | Hace | No hace |
 |---|---|---|
-| **Analista** | Entiende el negocio, define requisitos y prioridades, mantiene los `docs/` de análisis (TO-BE, roadmap, diagnósticos), crea y prioriza tickets con criterios de aceptación, planifica sprints. | No decide cómo se construye ni escribe código. |
+| **Analista (consultor)** | Entiende el negocio, define requisitos y prioridades, mantiene los `docs/` de análisis (TO-BE, roadmap, diagnósticos), crea y prioriza tickets con criterios de aceptación, planifica sprints. **Actúa como consultor, no solo como ejecutor:** cuando el operador propone algo, presenta también el enfoque alternativo con sus pros y contras para ampliar el panorama, y deja que el operador decida. | No decide cómo se construye ni escribe código. |
 | **Líder técnico / Arquitecto** | Decide **cómo** se construye: arquitectura y decisiones técnicas (ADR), **diseño técnico de cada sprint** antes de implementar, estándares de código y pruebas, **revisión del código** del sprint, **aprobación e integración del PR del sprint**, deuda técnica. | No cambia alcance ni prioridades (analista) ni implementa (desarrollador). |
 | **Desarrollador** | Implementa los tickets del sprint según el diseño técnico, con pruebas; corrige lo que pida el líder técnico. | No cambia alcance ni diseño: si algo no cuadra, lo escala al líder técnico o al analista (comentario en Jira). |
 
@@ -42,7 +42,7 @@ El PR del sprint lo revisa e integra el líder técnico.
 ## Gestión del trabajo (Jira)
 
 - Sitio: `personal-clipeo.atlassian.net` · Proyecto **`CLIP`** · Tablero Scrum (board 1).
-- **Épicas**: CLIP-5 (F0 · Fundación), CLIP-6…10 (Q1–Q5, calidad: el foco), CLIP-11 y CLIP-12 (secundarias).
+- **Épicas**: CLIP-5 (F0 · Fundación), CLIP-6…10 (Q1–Q5, calidad: el foco), CLIP-26 (Q6 · onboarding de cliente nuevo), CLIP-11 y CLIP-12 (secundarias).
 - **Sprints de 1 semana** (lunes a domingo), S1…S10, cada uno con una **demo concreta**.
 - Los tickets se detallan **solo para el sprint siguiente**, al planificarlo.
 - Etiquetas: `F<n>`/`Q<n>` (épica), `operador` (requiere acción del operador), `externo`, `infra`, `docs`,
@@ -94,7 +94,9 @@ Estructura objetivo (se crea en CLIP-16, ver ARQUITECTURA_OBJETIVO §8):
   (`AI_PROVIDER=claude_cli`, o `manual` para depurar) y la investigación se hace en sesión (skill `seo-refresh`).
 - **Secretos nunca en el repo ni en el chat**: van en `.env` local o se piden por el formulario seguro.
 - **Portabilidad**: nada de rutas absolutas ni comandos de un solo sistema operativo.
-- **Calidad del clip** se mide con el conjunto de evaluación (`evaluacion/`, ver `evaluacion/README.md`).
+- **Calidad del clip** se mide con el conjunto de evaluación (`evaluacion/`, ver `evaluacion/README.md`) y la línea base
+  `docs/calidad/LINEA_BASE.md`. La verdad final es la **respuesta de la audiencia** (métricas de clips publicados): la
+  evaluación offline es una red de seguridad, no la meta.
 - Contenido de terceros: seguir el riesgo aceptado **R-01** de `docs/TO_BE.md` (cuentas de captación separadas,
   retiro inmediato ante solicitud, lista de exclusión).
 - Mantener `docs/ESTADO.md` al día: es la memoria compartida entre sesiones.

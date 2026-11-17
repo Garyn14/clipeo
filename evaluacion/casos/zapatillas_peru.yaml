@@ -9,6 +9,18 @@
   candidato:
     inicio: '19:49'
     fin: '20:35'
+  pico:
+    tipo: rivalidad_y_apuestas
+    en_juego: unas Jordan (Retro 4 o 3) para un turista si logra 100 dominadas
+  hablantes:
+    SPEAKER_02:
+      nombre: Tío Yolu
+      confianza: 0.72
+      estado: confirmado
+    SPEAKER_04:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
   transcripcion: '[19:30] Tío Yolu: "Bueno, buenas campeón."
 
     [19:31] Tío Yolu: "¿Cómo estamos?"
@@ -89,6 +101,18 @@
   candidato:
     inicio: 01:10
     fin: 01:54
+  pico:
+    tipo: generosidad_con_humilde
+    en_juego: un trabajador del show al que le robaron el celular y que Fritz intenta ayudar a recuperar
+  hablantes:
+    SPEAKER_02:
+      nombre: Tío Yolu
+      confianza: 0.72
+      estado: confirmado
+    SPEAKER_04:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
   transcripcion: '[00:44] Tío Yolu: "Sí te dijo Andrés, ¿no?"
 
     [00:44] Tío Yolu: "Sí, sí, sí."
@@ -194,6 +218,26 @@
   candidato:
     inicio: 00:07:07
     fin: 00:08:06
+  pico:
+    tipo: jefe_y_trabajadores
+    en_juego: el jefe confronta a Rafael por el desorden del almacén y Rafael tiene que justificarse en cámara
+  hablantes:
+    SPEAKER_00:
+      nombre: Tío Fritz
+      confianza: 0.55
+      estado: posible
+    SPEAKER_01:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_02:
+      nombre: Tío Yolu
+      confianza: 0.6
+      estado: posible
+    SPEAKER_03:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
   transcripcion: '[06:40] SPEAKER_02 [sin identificar]: "O el que recayó."
 
     [06:41] SPEAKER_02 [sin identificar]: "¿Quién?"
@@ -310,6 +354,26 @@
   candidato:
     inicio: 00:10:50
     fin: 00:11:30
+  pico:
+    tipo: rivalidad_y_apuestas
+    en_juego: un premio en efectivo ('un ferro') para el trabajador que baile mejor
+  hablantes:
+    SPEAKER_00:
+      nombre: Tío Fritz
+      confianza: 0.55
+      estado: posible
+    SPEAKER_01:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_02:
+      nombre: Tío Yolu
+      confianza: 0.6
+      estado: posible
+    SPEAKER_03:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
   transcripcion: '[10:27] SPEAKER_02 [sin identificar]: "¿Sabes cuánto sale esta vaina?"
 
     [10:30] SPEAKER_02 [sin identificar]: "Siete, nueve hermano."
@@ -422,6 +486,30 @@
   candidato:
     inicio: 00:19:05
     fin: 00:19:56
+  pico:
+    tipo: relaciones_y_emocion
+    en_juego: Fritz pide perdón a sus hijos por haberles fallado como papá y reconoce públicamente el error
+  hablantes:
+    SPEAKER_00:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_01:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_02:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_03:
+      nombre: Tío Fritz (host)
+      confianza: 0.88
+      estado: confirmado
+    SPEAKER_04:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
   transcripcion: '[18:36] SPEAKER_02 [sin identificar]: "Aunque sea un minuto, los escucho."
 
     [18:39] SPEAKER_02 [sin identificar]: "Y eso a mí me reconforta."
@@ -507,6 +595,30 @@
   candidato:
     inicio: 00:00:43
     fin: 00:01:15
+  pico:
+    tipo: jefe_y_trabajadores
+    en_juego: El jefe pilla y vacila a un trabajador por su compulsión de comprar
+  hablantes:
+    SPEAKER_00:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_01:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_02:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_03:
+      nombre: Tío Fritz (host)
+      confianza: 0.88
+      estado: confirmado
+    SPEAKER_04:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
   transcripcion: '[00:26] SPEAKER_02 [sin identificar]: "¡Tanta, tanta, tanta!"
 
     [00:34] Tu hermano vuelve rico.
@@ -584,6 +696,23 @@
   candidato:
     inicio: 00:32:36
     fin: 00:33:24
+  pico:
+    tipo: jefe_y_trabajadores
+    en_juego: la productividad del empleado frente a la exigencia del jefe, con cifras concretas (5 videos al día,
+      40 minutos, 8 horas)
+  hablantes:
+    SPEAKER_00:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_01:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_02:
+      nombre: Tío Fritz
+      confianza: 0.5
+      estado: posible
   transcripcion: '[32:08] SPEAKER_01 [sin identificar]: "¿Qué dices?"
 
     [32:16] SPEAKER_00 [sin identificar]: "Que están viendo el catálogo y no... Sí, pero no."
@@ -645,6 +774,22 @@
   candidato:
     inicio: 00:33:25
     fin: 00:34:08
+  pico:
+    tipo: jefe_y_trabajadores
+    en_juego: un trabajador que no cumplió y el jefe que exige resultados el mismo día
+  hablantes:
+    SPEAKER_00:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_01:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_02:
+      nombre: Tío Fritz
+      confianza: 0.5
+      estado: posible
   transcripcion: '[32:57] SPEAKER_00 [sin identificar]: "un video como máximo 40 minutos ocho horas de trabajo para
     dos videos no chicos por favor hola jorge"
 
@@ -692,6 +837,22 @@
   candidato:
     inicio: 00:38:42
     fin: 00:39:12
+  pico:
+    tipo: jefe_y_trabajadores
+    en_juego: el jefe llama la atención a su camarógrafo por no sacar contenido
+  hablantes:
+    SPEAKER_00:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_01:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_02:
+      nombre: Tío Fritz
+      confianza: 0.5
+      estado: posible
   transcripcion: '[38:13] SPEAKER_00 [sin identificar]: "Mami, arriba está limpio Pero ya pensás, ¿eh?"
 
     [38:19] SPEAKER_00 [sin identificar]: "6, 5, 4, 3, 2, 1, michi Horita, Pema"
@@ -782,6 +943,26 @@
   candidato:
     inicio: 00:24:04
     fin: 00:24:37
+  pico:
+    tipo: jefe_y_trabajadores
+    en_juego: el jefe reconoce y premia públicamente a su jefe de tienda
+  hablantes:
+    SPEAKER_00:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_01:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_02:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_03:
+      nombre: Tío Fritz (host)
+      confianza: 0.8
+      estado: confirmado
   transcripcion: '[24:06] Tío Fritz (host): "¡Rafiito!"
 
     [24:07] Tío Fritz (host): "¿Cómo está mi Rafiito?"
@@ -815,6 +996,26 @@
   candidato:
     inicio: 00:26:04
     fin: 00:27:04
+  pico:
+    tipo: generosidad_con_humilde
+    en_juego: un trabajador con la billetera pobre recibe una billetera de marca de regalo
+  hablantes:
+    SPEAKER_00:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_01:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_02:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_03:
+      nombre: Tío Fritz (host)
+      confianza: 0.8
+      estado: confirmado
   transcripcion: '[25:53] SPEAKER_02 [sin identificar]: "Sobre todo eso, tío."
 
     [25:55] Tío Fritz (host): "O Rofito, para ver tu billetera, ¿cómo está tu billetera?"
@@ -933,6 +1134,26 @@
   candidato:
     inicio: 00:28:47
     fin: 00:29:35
+  pico:
+    tipo: jefe_y_trabajadores
+    en_juego: la excusa del trabajador al que el jefe pilló durmiendo
+  hablantes:
+    SPEAKER_00:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_01:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_02:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_03:
+      nombre: Tío Fritz (host)
+      confianza: 0.8
+      estado: confirmado
   transcripcion: '[28:18] SPEAKER_02 [sin identificar]: "¿Cómo me tuve que encontrar así?"
 
     [28:20] SPEAKER_02 [sin identificar]: "Está fichado conmigo."
@@ -1006,6 +1227,26 @@
   candidato:
     inicio: 00:15:03
     fin: 00:15:35
+  pico:
+    tipo: jefe_y_trabajadores
+    en_juego: un trabajador recibe un premio del jefe por cuidar el almacén
+  hablantes:
+    SPEAKER_00:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_01:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_02:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_03:
+      nombre: Tío Fritz (host)
+      confianza: 0.8
+      estado: confirmado
   transcripcion: '[14:33] SPEAKER_01 [sin identificar]: "¿Qué estás quedando?"
 
     [14:37] SPEAKER_02 [sin identificar]: "No te lo le haces a mí."
@@ -1051,6 +1292,22 @@
   candidato:
     inicio: 00:35:04
     fin: 00:35:46
+  pico:
+    tipo: rivalidad_y_apuestas
+    en_juego: una pelota (y 500 dólares que el empleado dice que le prometieron) a cambio de 50 pataditas
+  hablantes:
+    SPEAKER_00:
+      nombre: Tío Fritz
+      confianza: 0.65
+      estado: confirmado
+    SPEAKER_01:
+      nombre: Tío Yolu
+      confianza: 0.55
+      estado: posible
+    SPEAKER_02:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
   transcripcion: '[34:35] SPEAKER_01 [sin identificar]: "Mira."
 
     [34:40] SPEAKER_01 [sin identificar]: "De acá sale para todo el Perú."
@@ -1112,6 +1369,22 @@
   candidato:
     inicio: 00:35:47
     fin: 00:36:36
+  pico:
+    tipo: jefe_y_trabajadores
+    en_juego: el jefe presiona a un trabajador por una solución de internet en el edificio
+  hablantes:
+    SPEAKER_00:
+      nombre: Tío Fritz
+      confianza: 0.65
+      estado: confirmado
+    SPEAKER_01:
+      nombre: Tío Yolu
+      confianza: 0.55
+      estado: posible
+    SPEAKER_02:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
   transcripcion: '[35:18] SPEAKER_01 [sin identificar]: "Ahí está la pelota, papi."
 
     [35:20] SPEAKER_01 [sin identificar]: "Ahí está la pelota."
@@ -1176,6 +1449,22 @@
   candidato:
     inicio: 00:43:22
     fin: 00:44:12
+  pico:
+    tipo: humor_picaro
+    en_juego: la burla al charlatán por su forma de vestir, con el equipo de Fritz vacilándolo
+  hablantes:
+    SPEAKER_00:
+      nombre: Tío Fritz
+      confianza: 0.65
+      estado: confirmado
+    SPEAKER_01:
+      nombre: Tío Yolu
+      confianza: 0.55
+      estado: posible
+    SPEAKER_02:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
   transcripcion: '[43:01] ¿Ya viene?
 
     [43:02] Tío Fritz: "¿Ya te ha cambiado?"
@@ -1273,6 +1562,22 @@
   candidato:
     inicio: 00:51:39
     fin: 00:52:32
+  pico:
+    tipo: jefe_y_trabajadores
+    en_juego: el jefe consiente a sus trabajadores del almacén con comida y gelatina
+  hablantes:
+    SPEAKER_00:
+      nombre: Tío Fritz
+      confianza: 0.65
+      estado: confirmado
+    SPEAKER_01:
+      nombre: Tío Yolu
+      confianza: 0.55
+      estado: posible
+    SPEAKER_02:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
   transcripcion: '[51:13] SPEAKER_01 [sin identificar]: "A ver, ábrete solo un platito, vamos a ver."
 
     [51:16] SPEAKER_02 [sin identificar]: "Ahí está."
@@ -1350,6 +1655,30 @@
   candidato:
     inicio: 00:10:04
     fin: 00:10:52
+  pico:
+    tipo: generosidad_con_humilde
+    en_juego: dos hermanitos pequeños que reciben una pelota gratis de Fritz
+  hablantes:
+    SPEAKER_00:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_01:
+      nombre: Tío Yolu (host)
+      confianza: 0.6
+      estado: posible
+    SPEAKER_02:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_03:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_04:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
   transcripcion: '[09:46] SPEAKER_01 [sin identificar]: "Bien, mami, bien."
 
     [09:47] SPEAKER_02 [sin identificar]: "Gracias."
@@ -1427,6 +1756,30 @@
   candidato:
     inicio: 00:13:23
     fin: 00:14:24
+  pico:
+    tipo: rivalidad_y_apuestas
+    en_juego: una pelota gratis a cambio de dominadas, negociando con un cliente que no sabe dominar
+  hablantes:
+    SPEAKER_00:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_01:
+      nombre: Tío Yolu (host)
+      confianza: 0.6
+      estado: posible
+    SPEAKER_02:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_03:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
+    SPEAKER_04:
+      nombre: null
+      confianza: 0.0
+      estado: desconocido
   transcripcion: '[13:16] SPEAKER_01 [sin identificar]: "Ok?"
 
     [13:19] SPEAKER_01 [sin identificar]: "Si quieres hacer una pelotita para practicar, para entrenar, para esto

@@ -63,8 +63,8 @@ def _preparar_memoria(raiz_tmp: Path, nicho: str, excluir: str | None) -> None:
         (destino / "correcciones.jsonl").write_text("\n".join(lineas) + ("\n" if lineas else ""), encoding="utf-8")
 
 
-def evaluar_caso(caso: dict) -> dict:
-    """Ejecuta el juez sobre un caso y devuelve el resultado (sin lanzar por errores de IA)."""
+def evaluar_caso(caso: dict, direccion: bool = False) -> dict:
+    """Ejecuta el juez sobre un caso (con dirección editorial si se pide) y devuelve el resultado."""
     from agentes import juez
     from investigacion import comun
 
@@ -85,11 +85,19 @@ def evaluar_caso(caso: dict) -> dict:
             "inicio": cand["inicio"],
             "fin": cand["fin"],
             "duracion_segundos": _a_segundos(cand["fin"]) - _a_segundos(cand["inicio"]),
+            # Igual que en producción (CLIP-29): pistas del detector y hablantes identificados.
+            **({"pico_original": caso["pico"]} if caso.get("pico") else {}),
         }]
+        if caso.get("hablantes"):
+            (chunk_dir / "speaker_map.json").write_text(json.dumps(caso["hablantes"], ensure_ascii=False), encoding="utf-8")
 
         raiz_original = comun.RAIZ
         comun.RAIZ = tmp
         try:
+            if direccion:   # CLIP-31: el juez evalúa el clip dirigido
+                from agentes.direccion import run_direccion
+                from evaluacion.cobertura import cargar_config
+                rangos = run_direccion(rangos, transcripcion=caso["transcripcion"], config=cargar_config(caso["nicho"]))
             salida = juez.run_juez(
                 rangos,
                 transcripcion=caso["transcripcion"],
@@ -117,6 +125,7 @@ def evaluar_caso(caso: dict) -> dict:
         "fuerza": decision.get("fuerza"),
         "titulo": " / ".join(x for x in (decision.get("linea1"), decision.get("linea2")) if x),
         "por_que": decision.get("por_que"),
+        "plan_edicion": (decision.get("rango") or {}).get("plan_edicion"),
     }
     if esperado.get("tipo"):
         resultado["acierto_tipo"] = decision.get("tipo") == esperado["tipo"]
@@ -188,6 +197,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--solo-sinteticos", action="store_true", help="solo los casos sintéticos")
     ap.add_argument("--proveedor", help="AI_PROVIDER para esta corrida (claude_cli, manual, anthropic)")
     ap.add_argument("--repeticiones", type=int, default=1, help="corridas por caso (mide la variación de la IA)")
+    ap.add_argument("--direccion", action="store_true", help="aplicar la dirección editorial antes del juez (CLIP-31)")
     ap.add_argument("--no-guardar", action="store_true", help="no escribir el archivo de resultados")
     args = ap.parse_args(argv)
 
@@ -206,7 +216,7 @@ def main(argv: list[str] | None = None) -> int:
     for n in range(1, args.repeticiones + 1):
         print(f"[EVAL] Corrida {n}/{args.repeticiones} · {len(todos)} caso(s) de {args.nicho} · "
               f"proveedor: {os.environ['AI_PROVIDER']}")
-        resultados = [evaluar_caso(c) for c in todos]
+        resultados = [evaluar_caso(c, direccion=args.direccion) for c in todos]
         resumen = resumir(resultados)
         _imprimir(resumen, resultados)
         corridas.append({"resultados": resultados, "resumen": resumen})
@@ -218,12 +228,14 @@ def main(argv: list[str] | None = None) -> int:
 
     if not args.no_guardar:
         DIR_RESULTADOS.mkdir(exist_ok=True)
-        salida = DIR_RESULTADOS / f"{datetime.now():%Y%m%d_%H%M%S}_{args.nicho}.json"
+        sufijo = "_direccion" if args.direccion else ""
+        salida = DIR_RESULTADOS / f"{datetime.now():%Y%m%d_%H%M%S}_{args.nicho}{sufijo}.json"
         salida.write_text(json.dumps({
             "nicho": args.nicho,
             "fecha": datetime.now().isoformat(timespec="seconds"),
             "proveedor": os.environ["AI_PROVIDER"],
             "repeticiones": args.repeticiones,
+            "direccion": args.direccion,
             "variacion": var,
             "inestables": inest,
             "corridas": corridas,

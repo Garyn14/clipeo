@@ -55,11 +55,13 @@ class _ClienteFalso:
 
     def __init__(self):
         self.systems = []
+        self.ultimo_mensaje = None
         self.messages = self
 
     def create(self, **kw):
         self.systems.append(kw["system"])
         contenido = kw["messages"][0]["content"]
+        self.ultimo_mensaje = contenido
         publicar = "no me alcanza" in contenido
         return _Resp(json.dumps({"candidatos": [{
             "n": 1, "tipo": "generosidad_con_humilde" if publicar else "ninguno", "en_juego": "x",
@@ -195,3 +197,51 @@ def test_analizar_por_caso_usa_mayoria():
     filas = {r["id"]: r for r in analizar.por_caso(datos)}
     assert filas["a"]["obtenido_publicar"] is True and filas["a"]["fraccion_publicar"] == 0.67
     assert filas["b"]["obtenido_publicar"] is False and filas["b"]["corridas"] == 2   # empate → no publica
+
+
+def test_evaluar_pasa_pistas_y_hablantes_al_juez(cliente):
+    """CLIP-29: el juez evaluado recibe el pico (tipo sugerido, en juego) y los hablantes, como en producción."""
+    caso = _caso(pico={"tipo": "generosidad_con_humilde", "en_juego": "la plata de una mamita"},
+                 hablantes={"SPEAKER_00": {"nombre": "Tío Fritz", "estado": "confirmado", "confianza": 0.9}})
+    evaluar.evaluar_caso(caso)
+    assert cliente.ultimo_mensaje is not None
+    assert "tipo sugerido: generosidad_con_humilde" in cliente.ultimo_mensaje
+    assert "Tío Fritz" in cliente.ultimo_mensaje
+
+
+def test_exportar_incluye_pico_y_hablantes(tmp_path, monkeypatch):
+    from investigacion import comun
+    raiz = tmp_path / "raiz"
+    (raiz / "investigacion" / "zapatillas_peru").mkdir(parents=True)
+    (raiz / "investigacion" / "zapatillas_peru" / "correcciones.jsonl").write_text(json.dumps(
+        {"session_id": "S1", "clip_id": "clip_c001_01", "accion": "aprobado", "juez": {"tipo": "x"}}))
+    sesion = tmp_path / "stream_data" / "S1"
+    (sesion / "contenido_chunks").mkdir(parents=True)
+    (sesion / "chunks" / "chunk_001").mkdir(parents=True)
+    (sesion / "contenido_chunks" / "chunk_001.json").write_text(json.dumps({"contenido": [
+        {"clip_id": "clip_c001_01", "publicar": True,
+         "rango_original": {"inicio": "01:00", "fin": "01:30", "pico_original": {"tipo": "reto", "en_juego": "300 soles", "confianza": 9}}}]}))
+    (sesion / "chunks" / "chunk_001" / "transcripcion_raw.txt").write_text("[01:00] hola")
+    (sesion / "chunks" / "chunk_001" / "speaker_map.json").write_text(json.dumps({"SPEAKER_00": {"nombre": "Tío Fritz"}}))
+    monkeypatch.setattr(comun, "RAIZ", raiz)
+    casos, _ = exportar_casos.casos_de_correcciones("zapatillas_peru", tmp_path / "stream_data")
+    assert casos[0]["pico"] == {"tipo": "reto", "en_juego": "300 soles"}
+    assert casos[0]["hablantes"]["SPEAKER_00"]["nombre"] == "Tío Fritz"
+
+
+def test_etiquetas_por_audiencia_reemplazan_al_editor(tmp_path):
+    """CLIP-30: un clip publicado se etiqueta por su resultado real (outlier >= 1 → debía publicarse)."""
+    from evaluacion import casos as casos_mod
+    base = {"nicho": "n", "origen": "correccion", "candidato": {"inicio": "1:00", "fin": "1:30"},
+            "transcripcion": "[1:00] x", "evidencia": "aprobado por el editor"}
+    casos = [dict(base, id="a", clave_correccion="s/c1", esperado={"publicar": True, "tipo": "retos"}),
+             dict(base, id="b", clave_correccion="s/c2", esperado={"publicar": False}),
+             dict(base, id="c", clave_correccion="s/c3", esperado={"publicar": True, "tipo": "jefe"})]
+    ruta = tmp_path / "n.audiencia.yaml"
+    ruta.write_text("- {clave_correccion: s/c1, video_id: '1', outlier: 0.35, titulo: t}\n"
+                    "- {clave_correccion: s/c2, video_id: '2', outlier: 23.3, titulo: t}\n", encoding="utf-8")
+    a, b, c = casos_mod.aplicar_audiencia(casos, ruta)
+    assert a["esperado"] == {"publicar": False} and a["esperado_editor"]["publicar"] is True
+    assert b["esperado"] == {"publicar": True} and "23.3x" in b["evidencia"]
+    assert c["esperado"] == {"publicar": True, "tipo": "jefe"} and "esperado_editor" not in c
+    assert casos_mod.aplicar_audiencia([dict(base, id="d", esperado={"publicar": True})], tmp_path / "no.yaml")

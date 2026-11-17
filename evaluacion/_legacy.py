@@ -12,6 +12,7 @@ if str(LEGACY) not in sys.path:
 # La consola de Windows (cp1252) no puede mostrar emojis/símbolos (⚠, ✅): forzar UTF-8 como el piloto.
 for _flujo in (sys.stdout, sys.stderr):
     try:
-        _flujo.reconfigure(encoding="utf-8", errors="replace")
+        # line_buffering: en Git Bash (sin consola real) Python guarda la salida hasta el final; así se ve en vivo
+        _flujo.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
     except (AttributeError, ValueError):
         pass

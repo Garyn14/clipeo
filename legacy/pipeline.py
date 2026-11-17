@@ -41,6 +41,7 @@ from agentes.agent1_peak_detector import run_agent as agent1
 from agentes.agent2_range_refiner  import run_agent as agent2
 from agentes.agent3_viral_scorer   import run_agent as agent3, run_copy as agent3_copy
 from agentes.juez                  import run_juez
+from agentes                       import direccion
 from edicion_video.agent4_video_cutter   import run_agent as agent4
 from agentes.agent0_speaker_identifier import identify_speakers as agent0
 from core.chunk_manager import PASOS_CHUNK, PASOS_SESION
@@ -569,7 +570,11 @@ def _procesar_chunk(
              if p.exists()),
             "",
         )
-        return run_juez(_leer_lista(rangos_p, "rangos"), transcripcion=texto, config=config,
+        rangos = _leer_lista(rangos_p, "rangos")
+        if direccion.activada():   # CLIP-31: dirección editorial antes del juez (encendida por defecto; DIRECCION_EDITORIAL=0 la apaga)
+            rangos = direccion.run_direccion(rangos, transcripcion=texto, config=config)
+            rangos_p.write_text(json.dumps({"rangos": rangos}, ensure_ascii=False, indent=2), encoding="utf-8")
+        return run_juez(rangos, transcripcion=texto, config=config,
                         session_dir=session_dir, chunk_dir=chunk_dir)
 
     paso("juez", _juez)
