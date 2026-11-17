@@ -131,6 +131,8 @@ def main() -> None:
     ap.add_argument("--nicho", default="zapatillas_peru")
     args = ap.parse_args()
 
+    from ai_client.errors import AIError
+
     origen = args.origen.resolve()
     os.chdir(origen)   # el Agente 4 copia la fuente a ./stream_data y la usa con ruta relativa (FFmpeg en Windows)
     fallos = 0
@@ -140,6 +142,10 @@ def main() -> None:
         except (ValueError, FileNotFoundError) as e:
             fallos += 1
             print(f"[DEMO] ❌ {clip_id}: {e}")
+        except AIError as e:
+            fallos += 1
+            print(f"[DEMO] ❌ {clip_id}: la IA no respondió ({e}).\n"
+                  "       Si dice 'OAuth session expired' o 'not logged in': ejecuta `claude`, luego /login, y reintenta.")
     sys.exit(1 if fallos else 0)
 
 
