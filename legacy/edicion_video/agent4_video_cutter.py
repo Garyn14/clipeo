@@ -17,6 +17,7 @@ import sys
 sys.stdout.reconfigure(encoding="utf-8")
 
 import json
+import os
 import random
 import re
 import shutil
@@ -129,23 +130,29 @@ def _pick_sound_effect(tipo: str) -> Path | None:
     return None
 
 
+_FONTS_DIR = Path(__file__).parent / "assets" / "fonts"
+
+
 def _prepare_font() -> tuple[str, str]:
     """
-    Copia la mejor fuente disponible a stream_data/ para evitar el problema
-    del colon de Windows en paths de FFmpeg.
+    Copia la mejor fuente disponible a stream_data/ y devuelve su ruta relativa, para
+    evitar el problema del colon de Windows (C:) en los filtros de FFmpeg.
 
-    Prioridad: Impact → Arial Black → Arial Bold → Arial
-    Retorna (rel_path, font_name).
+    Prioridad: fuentes libres incluidas en el repo (iguales en cualquier máquina:
+    Anton ≈ Impact, Archivo Black ≈ Arial Black) → fuentes de Windows como respaldo.
+    Retorna (rel_path, font_name); ("", "ninguna") si no hay ninguna.
     """
+    win_fonts = Path(os.environ.get("WINDIR", r"C:\Windows")) / "Fonts"
     candidates = [
-        ("Impact",      r"C:\Windows\Fonts\Impact.ttf",   "impact.ttf"),
-        ("Arial Black", r"C:\Windows\Fonts\ariblk.ttf",   "ariblk.ttf"),
-        ("Arial Bold",  r"C:\Windows\Fonts\arialbd.ttf",  "arialbd.ttf"),
-        ("Arial",       r"C:\Windows\Fonts\arial.ttf",    "arial.ttf"),
+        ("Anton",        _FONTS_DIR / "Anton-Regular.ttf",        "anton.ttf"),
+        ("Archivo Black", _FONTS_DIR / "ArchivoBlack-Regular.ttf", "archivoblack.ttf"),
+        ("Impact",       win_fonts / "Impact.ttf",                "impact.ttf"),
+        ("Arial Black",  win_fonts / "ariblk.ttf",                "ariblk.ttf"),
+        ("Arial Bold",   win_fonts / "arialbd.ttf",               "arialbd.ttf"),
+        ("Arial",        win_fonts / "arial.ttf",                 "arial.ttf"),
     ]
     Path("stream_data").mkdir(exist_ok=True)
-    for name, src_path, dest_name in candidates:
-        src  = Path(src_path)
+    for name, src, dest_name in candidates:
         dest = Path("stream_data") / dest_name
         if src.exists():
             if not dest.exists():
