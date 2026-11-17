@@ -48,11 +48,17 @@ En backlog: CLIP-27 (medios como fuente), CLIP-28 (transcripción/hablantes), CL
 
 ## Siguiente paso
 
-[Desarrollador] Implementar el S5 según `docs/sprints/S5.md`, empezando por CLIP-35. Antes, el operador:
-1. Aprueba el texto del cambio de memoria (CLIP-35, §3 del diseño).
-2. Elige el video de TV/prensa para la demo (uno no clipeado).
-3. Decide la cuenta de destino de los clips de medios (§4: misma cuenta o cuenta de captación).
-4. Carga CLIP-35 y CLIP-36 en Jira (la cuenta de Atlassian de la sesión no ve `personal-clipeo`), o da acceso al conector.
+S5 implementado en `sprint/S5` (CLIP-35, CLIP-27, CLIP-36 + fix del umbral del juez), 378 tests en verde.
+Falta:
+1. [Desarrollador] Terminar de medir CLIP-35 en el nicho (`evaluacion.evaluar --direccion --repeticiones 3`) y
+   comparar con C2.
+2. [Operador] Demo (`docs/sprints/S5.md` §7) con un video de TV/prensa no clipeado.
+3. [Operador] Decidir la cuenta de destino de los clips de medios (§4: misma cuenta o cuenta de captación).
+4. [Operador] Cargar CLIP-35 y CLIP-36 en Jira (la cuenta de Atlassian de la sesión no ve `personal-clipeo`).
+5. [Líder técnico] PR `sprint/S5` → `main` cuando 1 y 2 estén OK.
+
+**Hallazgo S5:** el umbral `juez.umbral_fuerza: 3` no se aplicaba en producción desde el S4 (bug del loader,
+corregido). Desde el S5 llegan a la revisión más clips (todo lo de fuerza ≥ 3).
 
 Hábito: publicar cada clip con su link pegado en la revisión; luego `etiquetar_audiencia --escribir`.
 
