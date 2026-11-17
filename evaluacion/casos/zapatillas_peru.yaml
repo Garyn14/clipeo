@@ -1,0 +1,3373 @@
+- id: za-corr-019
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_232147 · clip_c001_02
+  clave_correccion: 20261003_232147/clip_c001_02
+  video:
+    titulo: 'UN S1C4R1O ME VIENE A PEDIR 1 MILLON DE SOLES #fritzsport #tioyolu #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: '19:49'
+    fin: '20:35'
+  transcripcion: '[19:30] Tío Yolu: "Bueno, buenas campeón."
+
+    [19:31] Tío Yolu: "¿Cómo estamos?"
+
+    [19:33] Tío Yolu: "¿De dónde?"
+
+    [19:34] Tío Yolu: "¿Qué país?"
+
+    [19:34] Tío Yolu: "Costa Rica."
+
+    [19:35] Tío Yolu: "¿Costa Rica?"
+
+    [19:36] Tío Yolu: "Sí."
+
+    [19:37] Tío Yolu: "Óigame."
+
+    [19:37] Tío Yolu: "¿Tú sabes que nosotros tenemos tres formatos de venta?"
+
+    [19:40] SPEAKER_04 [sin identificar]: "En serio."
+
+    [19:41] Tío Yolu: "El Aule, FZ Premium, saliendo a la manito izquierda, que es esto de acá, y Frix Sport, el
+    edificio."
+
+    [19:47] Tío Yolu: "Donde hoy día estamos, día de locura."
+
+    [19:49] Tío Yolu: "Sí, claro."
+
+    [19:49] Tío Yolu: "¿Juegan al fútbol?"
+
+    [19:50] Tío Yolu: "¿Ustedes juegan al fútbol?"
+
+    [19:52] Tío Yolu: "Yo, esto."
+
+    [19:53] Tío Yolu: "¿Sí?"
+
+    [19:53] Tío Yolu: "Sí."
+
+    [19:53] Tío Yolu: "Hermano, yo tengo una dinámica."
+
+    [19:54] Tío Yolu: "Quédate ahí, mira."
+
+    [19:57] Tío Yolu: "Desde Costa Rica,"
+
+    [19:59] Tío Yolu: "desde costa rica 30 dominadas una pelota que es dominadas esto pa pa pa pa pa 30 una pelota
+    para ti 60 dominadas un ferrito y si me haces 100 dominadas te llevas una giorda"
+
+    [20:20] Tío Yolu: "Que te parece, ahí estamos, con lo que sea mi hermano, dice que el futbolista juega con lo
+    que sea, lógicamente hay con algunos modelos que puedes dar algo más pero con lo que sea, vamos o no vamos,
+    es solo con él, es solo con él, es solo con él, 30 una pelota, 60 que le dije"
+
+    [20:44] Tío Yolu: "Un ferro y si me hace 100, se lleva una Giordana."
+
+    [20:48] Tío Yolu: "Una Giordana en la que él escoja."
+
+    [20:49] Tío Yolu: "Retro 4, retro 3."
+
+    [20:51] Tío Yolu: "Uy, creo que sí me va a ganar."
+
+    [20:53] Tío Yolu: "A ver, a ver, a ver."
+
+    [20:55] SPEAKER_04 [sin identificar]: "Creo que le subo el bolo, ¿no?"
+
+    [20:56] SPEAKER_04 [sin identificar]: "Me va a ganar."
+
+    [20:57] Desde Costa Rica.'
+  esperado:
+    publicar: true
+    tipo: rivalidad_y_apuestas
+  evidencia: aprobado por el editor
+- id: za-corr-018
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_232147 · clip_c001_01
+  clave_correccion: 20261003_232147/clip_c001_01
+  video:
+    titulo: 'UN S1C4R1O ME VIENE A PEDIR 1 MILLON DE SOLES #fritzsport #tioyolu #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 01:10
+    fin: 01:54
+  transcripcion: '[00:44] Tío Yolu: "Sí te dijo Andrés, ¿no?"
+
+    [00:44] Tío Yolu: "Sí, sí, sí."
+
+    [00:45] Tío Yolu: "Ahorita que estoy afuera."
+
+    [00:49] Tío Yolu: "Al loco le han choreado su sufono ayer, pe, mira."
+
+    [00:56] Tío Yolu: "Hola mami."
+
+    [00:56] Maestro, ¿cómo estamos?
+
+    [00:58] ¿Qué tal?
+
+    [00:59] Tío Yolu: "¿Señito?"
+
+    [01:02] Tío Yolu: "¿Cómo estás?"
+
+    [01:04] Tío Yolu: "Un gusto, señito."
+
+    [01:06] Tío Yolu: "Che, loco."
+
+    [01:07] Tío Yolu: "Al loco, ¿todavía?"
+
+    [01:08] Tío Yolu: "Pero a veces pasa."
+
+    [01:09] Tío Yolu: "Al más mal."
+
+    [01:10] Tío Yolu: "Al más mal."
+
+    [01:13] Tío Yolu: "Loco, ¿cuánto te costó ese fondo?"
+
+    [01:15] Tío Yolu: "5.300 ¿Hay recompensa por el fondo o no?"
+
+    [01:17] Tío Yolu: "Sí, sí hay."
+
+    [01:18] Tío Yolu: "¿Sí?"
+
+    [01:18] Tío Yolu: "Sí hay."
+
+    [01:18] Tío Yolu: "¡Gente, escuchen!"
+
+    [01:22] Tío Yolu: "Ayer a Alonso La Locura le han arregatado el fonito."
+
+    [01:27] Tío Yolu: "¿Cuánto es la recompensa, loco?"
+
+    [01:28] Tío Yolu: "¿Dos mangos?"
+
+    [01:29] SPEAKER_04 [sin identificar]: "Dos mangos."
+
+    [01:31] SPEAKER_04 [sin identificar]: "Dos mangos, dos fresas y dos papayas."
+
+    [01:33] SPEAKER_04 [sin identificar]: "Está mal."
+
+    [01:35] Tío Yolu: "Nada, nada, loco, pero hacemos una cosa."
+
+    [01:39] Tío Yolu: "¿Qué te parece?"
+
+    [01:44] Tío Yolu: "Si alguien da en recompensa el fondo de Loco Alonso dos mangasos, iPhone 17 Pro Max, tú sabes
+    que lo bloquean todo ya, solamente te va a servir como máquina."
+
+    [01:53] Tío Yolu: "Ese es el número uno, sin hacer problemas y con ninguna de las autoridades."
+
+    [02:01] Tío Yolu: "Número dos,"
+
+    [02:05] Tío Yolu: "¿Por qué te parece si me voy a los United?"
+
+    [02:07] Tío Yolu: "¿Cuándo es el lanzamiento de iPhone?"
+
+    [02:09] Tío Yolu: "El nueve."
+
+    [02:10] Tío Yolu: "¿El nueve del otro mes?"
+
+    [02:11] Tío Yolu: "El nueve de este mes."
+
+    [02:12] Tío Yolu: "¿El nueve de este mes?"
+
+    [02:13] SPEAKER_04 [sin identificar]: "Sí, en Estados Unidos."
+
+    [02:15] Tío Yolu: "Oiga, háblame, hermano."
+
+    [02:18] Tío Yolu: "Oiga, ¿qué fecha estamos?"
+
+    [02:19] SPEAKER_04 [sin identificar]: "Hoy estamos en seis, en tres días."
+
+    [02:22] SPEAKER_04 [sin identificar]: "Seis."
+
+    [02:22] SPEAKER_04 [sin identificar]: "Se lanza en Estados Unidos."
+
+    [02:24] SPEAKER_04 [sin identificar]: "Siete, ocho, nueve."'
+  esperado:
+    publicar: true
+    tipo: jefe_y_trabajadores
+  evidencia: aprobado por el editor
+- id: za-corr-017
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_232117 · clip_c001_01
+  clave_correccion: 20261003_232117/clip_c001_01
+  video:
+    titulo: 'LOS PULPOS ME ROBARON MAS DE 1 MILLON DE SOLES DE ZAPATILLAS #fritzsport #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 00:07:07
+    fin: 00:08:06
+  transcripcion: '[06:40] SPEAKER_02 [sin identificar]: "O el que recayó."
+
+    [06:41] SPEAKER_02 [sin identificar]: "¿Quién?"
+
+    [06:43] SPEAKER_02 [sin identificar]: "Pepus."
+
+    [06:44] SPEAKER_01 [sin identificar]: "Pucha, de verdad que es una historia ese muchacho."
+
+    [06:47] SPEAKER_01 [sin identificar]: "Pero podemos... saludemos a Willy."
+
+    [06:49] SPEAKER_02 [sin identificar]: "Y él lo quiere con su mano."
+
+    [06:51] SPEAKER_02 [sin identificar]: "Cañita."
+
+    [06:53] SPEAKER_02 [sin identificar]: "Si no es con caña no pasa nada, dice."
+
+    [06:58] SPEAKER_01 [sin identificar]: "Aquí hay barro, aquí van los muchachos."
+
+    [07:00] SPEAKER_01 [sin identificar]: "El centro, ¿no?"
+
+    [07:01] SPEAKER_01 [sin identificar]: "Sí, el centro."
+
+    [07:01] SPEAKER_01 [sin identificar]: "De Puente Piedra, hay que hablar con usted."
+
+    [07:03] SPEAKER_01 [sin identificar]: "Claro."
+
+    [07:04] SPEAKER_01 [sin identificar]: "Y se puede recurrir en la noche pidiendo coche de agua."
+
+    [07:10] SPEAKER_02 [sin identificar]: "Oye, todas estas cajas, Rafael, ¿por qué no las des... las desarma?"
+
+    [07:16] SPEAKER_01 [sin identificar]: "Tío, todos estamos trasladando al..."
+
+    [07:18] SPEAKER_01 [sin identificar]: "Si te das cuenta, ¿qué vamos a hacer para el otro lado?"
+
+    [07:20] SPEAKER_01 [sin identificar]: "Todas esas cajas vacías están aqueleando toditos, están aqueleando."
+
+    [07:23] SPEAKER_01 [sin identificar]: "Todo, todo, todo, todo."
+
+    [07:24] SPEAKER_02 [sin identificar]: "Ay, va, va, va."
+
+    [07:24] SPEAKER_02 [sin identificar]: "Vamos, vamos, vamos."
+
+    [07:27] SPEAKER_02 [sin identificar]: "Méteme bien, tío, Rafa."
+
+    [07:29] SPEAKER_01 [sin identificar]: "No, nada ni una mentira, tío, al contrario."
+
+    [07:32] SPEAKER_01 [sin identificar]: "Todos subimos un piso más toditos."
+
+    [07:36] SPEAKER_02 [sin identificar]: "A ver..."
+
+    [07:37] SPEAKER_01 [sin identificar]: "Todo está ordenadito."
+
+    [07:38] SPEAKER_02 [sin identificar]: "¿Dónde?"
+
+    [07:38] SPEAKER_02 [sin identificar]: "Mira, mira."
+
+    [07:40] SPEAKER_02 [sin identificar]: "¿Qué tanto ordenado?"
+
+    [07:41] SPEAKER_02 [sin identificar]: "¿Tú a esto le llamas ordenado, Rafito?"
+
+    [07:44] SPEAKER_01 [sin identificar]: "Mira, mira."
+
+    [07:45] SPEAKER_02 [sin identificar]: "Mira eso de la llave."
+
+    [07:47] SPEAKER_02 [sin identificar]: "Todo eso está ordenado, dice."
+
+    [07:48] SPEAKER_01 [sin identificar]: "Si tú, si tú hices venido hace tres horas, encontrás todo y está bien."
+
+    [07:53] SPEAKER_01 [sin identificar]: "El fondo."
+
+    [07:54] SPEAKER_01 [sin identificar]: "¿Qué cosa se ha hecho?"
+
+    [07:55] SPEAKER_01 [sin identificar]: "Si anda aquí helado, se está rompiendo las casas para hacer las chantas."
+
+    [07:58] SPEAKER_02 [sin identificar]: "Está ordenado, dice."
+
+    [08:00] SPEAKER_01 [sin identificar]: "Ve, ya quedan pocos rezados nada más."
+
+    [08:02] SPEAKER_01 [sin identificar]: "Poquitos rezados quedan."
+
+    [08:03] SPEAKER_01 [sin identificar]: "¿Te das cuenta?"
+
+    [08:05] SPEAKER_01 [sin identificar]: "Y arriba está arriba."
+
+    [08:06] SPEAKER_01 [sin identificar]: "Ah, arriba sí está como la como lo que te estoy mencionando."
+
+    [08:09] SPEAKER_01 [sin identificar]: "Acá arriba."
+
+    [08:13] SPEAKER_02 [sin identificar]: "Esto es... Ah, madre, Rafa."
+
+    [08:22] SPEAKER_01 [sin identificar]: "Ah, su madre."
+
+    [08:24] SPEAKER_02 [sin identificar]: "25 mangos, ¿ah?"
+
+    [08:27] SPEAKER_02 [sin identificar]: "25 mangos."
+
+    [08:30] SPEAKER_02 [sin identificar]: "Somos el distribuidor, hijo, ¿qué pasa?"
+
+    [08:32] SPEAKER_02 [sin identificar]: "Somos el distribuidor, Rafito."
+
+    [08:36] SPEAKER_02 [sin identificar]: "Y si te ibas a partir de mil, le bajamos unos puntos."'
+  esperado:
+    publicar: true
+    tipo: jefe_y_trabajadores
+  evidencia: aprobado por el editor
+- id: za-corr-016
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_232117 · clip_c001_02
+  clave_correccion: 20261003_232117/clip_c001_02
+  video:
+    titulo: 'LOS PULPOS ME ROBARON MAS DE 1 MILLON DE SOLES DE ZAPATILLAS #fritzsport #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 00:10:50
+    fin: 00:11:30
+  transcripcion: '[10:27] SPEAKER_02 [sin identificar]: "¿Sabes cuánto sale esta vaina?"
+
+    [10:30] SPEAKER_02 [sin identificar]: "Siete, nueve hermano."
+
+    [10:36] SPEAKER_02 [sin identificar]: "Para ser buena vente hay que hacer buenas compras siempre."
+
+    [10:43] SPEAKER_00 [sin identificar]: "¿Tú de qué parte eres?"
+
+    [10:44] SPEAKER_02 [sin identificar]: "¿Y el otro Tunche?"
+
+    [10:47] SPEAKER_02 [sin identificar]: "Tunche, una pregunta."
+
+    [10:49] SPEAKER_02 [sin identificar]: "¿Tú de qué parte eres?"
+
+    [10:50] SPEAKER_02 [sin identificar]: "Sarapoto."
+
+    [10:53] SPEAKER_02 [sin identificar]: "Tarapoto."
+
+    [10:54] SPEAKER_02 [sin identificar]: "¿Le podemos meter un baile de la Amazonía o no?"
+
+    [10:58] SPEAKER_02 [sin identificar]: "El que baila mejor le doy un ferro."
+
+    [11:00] SPEAKER_02 [sin identificar]: "¿Puede ser o no?"
+
+    [11:03] SPEAKER_02 [sin identificar]: "¡Habla mi hermano!"
+
+    [11:03] SPEAKER_02 [sin identificar]: "¡Sin miedo al éxito!"
+
+    [11:05] SPEAKER_02 [sin identificar]: "¡Habla!"
+
+    [11:07] SPEAKER_02 [sin identificar]: "¿Va o no va?"
+
+    [11:08] SPEAKER_02 [sin identificar]: "Un ferro es un ferro."
+
+    [11:10] SPEAKER_00 [sin identificar]: "Va, va, va, va."
+
+    [11:10] SPEAKER_00 [sin identificar]: "Ven, ven, ven por acá."
+
+    [11:11] SPEAKER_00 [sin identificar]: "¡Ven por acá!"
+
+    [11:11] SPEAKER_00 [sin identificar]: "¡Ven por acá!"
+
+    [11:12] SPEAKER_00 [sin identificar]: "¡Ven por acá!"
+
+    [11:12] SPEAKER_00 [sin identificar]: "¡Ven por acá!"
+
+    [11:13] SPEAKER_00 [sin identificar]: "¡Ven por acá!"
+
+    [11:13] SPEAKER_02 [sin identificar]: "¡Ven por acá!"
+
+    [11:14] SPEAKER_02 [sin identificar]: "¡Ven por acá!"
+
+    [11:14] SPEAKER_02 [sin identificar]: "¡Ven por acá!"
+
+    [11:14] SPEAKER_02 [sin identificar]: "¡Ven por acá!"
+
+    [11:15] SPEAKER_02 [sin identificar]: "¡Ven por acá!"
+
+    [11:15] SPEAKER_02 [sin identificar]: "¡Ven por acá!"
+
+    [11:16] SPEAKER_02 [sin identificar]: "¡Ven por acá!"
+
+    [11:17] SPEAKER_02 [sin identificar]: "¡Ven por acá!"
+
+    [11:17] SPEAKER_02 [sin identificar]: "¡Ven por acá!"
+
+    [11:18] SPEAKER_02 [sin identificar]: "¡Ven por acá!"
+
+    [11:19] SPEAKER_02 [sin identificar]: "¡Ven por acá!"
+
+    [11:20] SPEAKER_02 [sin identificar]: "¡Ven por acá!"
+
+    [11:21] SPEAKER_02 [sin identificar]: "¡Ven por acá!"
+
+    [11:22] SPEAKER_00 [sin identificar]: "¡Ven por acá!"
+
+    [11:24] ¡Telo!
+
+    [11:24] SPEAKER_01 [sin identificar]: "¡Telo!"
+
+    [11:25] SPEAKER_01 [sin identificar]: "¡Telo!"
+
+    [11:25] SPEAKER_01 [sin identificar]: "¡Telo!"
+
+    [11:26] SPEAKER_01 [sin identificar]: "¡Telo!"
+
+    [11:26] SPEAKER_01 [sin identificar]: "¡Telo!"
+
+    [11:27] ¡Telo!
+
+    [11:27] SPEAKER_01 [sin identificar]: "¡Telo!"
+
+    [11:53] SPEAKER_02 [sin identificar]: "Ahí está, para los haters, ¿eh?"
+
+    [11:56] SPEAKER_02 [sin identificar]: "Un ferrito, muchachos."
+
+    [11:58] SPEAKER_02 [sin identificar]: "Tuche, tú sabes que yo cumplo, ¿eh?"'
+  esperado:
+    publicar: true
+    tipo: rivalidad_y_apuestas
+  evidencia: aprobado por el editor
+- id: za-corr-015
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_232049 · clip_c001_02
+  clave_correccion: 20261003_232049/clip_c001_02
+  video:
+    titulo: 'EL K4BR0 DE MI ADMINISTRADOR SE QUIERE IR A TRABAJAR CON EL CACHUDO DE YOLU #fritzsport #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 00:19:05
+    fin: 00:19:56
+  transcripcion: '[18:36] SPEAKER_02 [sin identificar]: "Aunque sea un minuto, los escucho."
+
+    [18:39] SPEAKER_02 [sin identificar]: "Y eso a mí me reconforta."
+
+    [18:41] SPEAKER_02 [sin identificar]: "Todos los días."
+
+    [18:44] SPEAKER_02 [sin identificar]: "refrigerio una timbra más o menos un promedio está llegando dos y 40
+    dos dos de la tarde con 40 antes de las tres están llegando pero yo también creo como por ejemplo en mi caso
+    yo hace unos años estaba un poquito descarriado pero tampoco como papás nunca es tarde para poder remendarse"
+
+    [19:07] Tío Fritz (host): "Ah, no."
+
+    [19:08] Tío Fritz (host): "Ojoa."
+
+    [19:09] Tío Fritz (host): "No, no, no."
+
+    [19:09] Tío Fritz (host): "O sea, si a veces hemos cometido algún error, por ejemplo, yo, ¿no?"
+
+    [19:13] Tío Fritz (host): "Yo ahora estoy haciendo cosas que hace cuatro años no lo hacía con mis hijos."
+
+    [19:17] Tío Fritz (host): "Estás bueno, pues, tío, porque al final de todo... Claro."
+
+    [19:20] Tío Fritz (host): "Y les he pedido disculpas, Ojoa, ¿sí?"
+
+    [19:22] Tío Fritz (host): "Yo les he dicho, hijito, perdónenme, porque ha habido un tiempo, un momento en el
+    cual yo he preferido estar haciendo otras cosas."
+
+    [19:34] Tío Fritz (host): "Ustedes pudieron estar con usted."
+
+    [19:37] Tío Fritz (host): "Y yo sé que ustedes lo saben, yo no le voy a mentir."
+
+    [19:39] Tío Fritz (host): "Porque por más que sean niños, se dan cuenta, hermano."
+
+    [19:42] Tío Fritz (host): "¿Me entienden?"
+
+    [19:43] Tío Fritz (host): "No, que tiene ocho años, que tiene cinco años, que tiene seis años."
+
+    [19:45] Tío Fritz (host): "Igual se dan cuenta, hermano."
+
+    [19:48] Tío Fritz (host): "Los niños son... Claro, porque de repente mi papá estuvo en una reunión y yo borracho."
+
+    [19:53] Tío Fritz (host): "Mi papá que se fue un paseo y nosotros... ¿Me entiendes?"
+
+    [19:59] Tío Fritz (host): "Se dan cuenta."
+
+    [20:00] Tío Fritz (host): "Entonces pedir disculpas acá."
+
+    [20:03] Tío Fritz (host): "Claro."
+
+    [20:03] Tío Fritz (host): "Sanar, sanar el corazón de los niños, hermano."
+
+    [20:05] Tío Fritz (host): "Rofito."
+
+    [20:07] Tío Fritz (host): "Muchas bendiciones."
+
+    [20:08] Tío Fritz (host): "Desculpame que te deje ahorita."
+
+    [20:11] Tío Fritz (host): "Tú sabes que tengo que irme ahorita a la tienda de Grau."
+
+    [20:13] Tío Fritz (host): "Muchos dirán, o el tío Frix almorzará."
+
+    [20:16] Tío Fritz (host): "Hoy día me tocó almorzar así."
+
+    [20:21] Tío Fritz (host): "No hay ningún problema."
+
+    [20:22] Tío Fritz (host): "No me hace más."
+
+    [20:23] Tío Fritz (host): "Tampoco me hace menos."
+
+    [20:25] Tío Fritz (host): "El día de ayer estuve comiendo en el Cala."'
+  esperado:
+    publicar: true
+    tipo: relaciones_y_emocion
+  evidencia: aprobado por el editor
+- id: za-corr-014
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_232049 · clip_c001_01
+  clave_correccion: 20261003_232049/clip_c001_01
+  video:
+    titulo: 'EL K4BR0 DE MI ADMINISTRADOR SE QUIERE IR A TRABAJAR CON EL CACHUDO DE YOLU #fritzsport #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 00:00:43
+    fin: 00:01:15
+  transcripcion: '[00:26] SPEAKER_02 [sin identificar]: "¡Tanta, tanta, tanta!"
+
+    [00:34] Tu hermano vuelve rico.
+
+    [00:35] ¿Qué pasa?
+
+    [00:37] SPEAKER_02 [sin identificar]: "¿Qué pasa, hermano?"
+
+    [00:37] SPEAKER_02 [sin identificar]: "Mira eso."
+
+    [00:38] SPEAKER_02 [sin identificar]: "Andrés, mira eso."
+
+    [00:39] SPEAKER_02 [sin identificar]: "A ti que te gusta... ...comprar a cada rato."
+
+    [00:43] SPEAKER_02 [sin identificar]: "Ah, comprar, comprar."
+
+    [00:44] SPEAKER_02 [sin identificar]: "Sobre todo comprar."
+
+    [00:45] SPEAKER_02 [sin identificar]: "A ti que te gusta comprar, Andrés."
+
+    [00:48] SPEAKER_02 [sin identificar]: "Señores, Andrés es un tipo que compra la mercadería antes que entra al
+    almacén."
+
+    [00:55] Tío Fritz (host): "Cuando está recién en la camioneta, cuando está en la camioneta, antes de bajar la
+    camioneta al almacén, hay compra."
+
+    [01:04] SPEAKER_02 [sin identificar]: "Hay compra."
+
+    [01:04] SPEAKER_02 [sin identificar]: "Mira acá."
+
+    [01:05] Tío Fritz (host): "Mira."
+
+    [01:05] SPEAKER_02 [sin identificar]: "¿Ah?"
+
+    [01:09] ¿Ah?
+
+    [01:10] Tío Fritz (host): "Son, ¿no?"
+
+    [01:11] Tío Fritz (host): "¿Total 90?"
+
+    [01:12] Tío Fritz (host): "Total 90 con choc, ¿no?"
+
+    [01:14] Tío Fritz (host): "¿Qué tal, ah?"
+
+    [01:14] Tío Fritz (host): "¿Cómo lo es?"
+
+    [01:15] No sé.
+
+    [01:26] SPEAKER_04 [sin identificar]: "Ese sí son rares."
+
+    [01:27] SPEAKER_04 [sin identificar]: "Teofreex, ¿dónde las encuentro?"
+
+    [01:28] SPEAKER_04 [sin identificar]: "Recuérdalo siempre, mi hermano."
+
+    [01:29] SPEAKER_04 [sin identificar]: "FZ Premium."
+
+    [01:30] Tío Fritz (host): "¡Pero es que es que es que es que es que es que es que es que es que es que es que
+    es que es que es que es que es que es que es que es que es que es que es que es que es que es que es que es
+    que es que es que es que es que es que es que es que es que es que es que es que es que es que es que es que
+    es que es que es que es que es que es que es que es que es que es que es que es que es que es que es que es
+    que es que es que es que es que es que es que es que es que es que es que es que es que es que es que es que
+    es que es que es que es que es que es que es que es que es que es que es que es que es que es que es que es
+    que es que es que es que es que"'
+  esperado:
+    publicar: false
+  evidencia: descartado por el editor
+- id: za-corr-013
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_232049 · clip_c002_01
+  clave_correccion: 20261003_232049/clip_c002_01
+  video:
+    titulo: 'EL K4BR0 DE MI ADMINISTRADOR SE QUIERE IR A TRABAJAR CON EL CACHUDO DE YOLU #fritzsport #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 00:32:36
+    fin: 00:33:24
+  transcripcion: '[32:08] SPEAKER_01 [sin identificar]: "¿Qué dices?"
+
+    [32:16] SPEAKER_00 [sin identificar]: "Que están viendo el catálogo y no... Sí, pero no."
+
+    [32:19] SPEAKER_00 [sin identificar]: "Chicos, buenas."
+
+    [32:34] SPEAKER_00 [sin identificar]: "Buenas, buenas."
+
+    [32:36] SPEAKER_00 [sin identificar]: "Mister Chu."
+
+    [32:38] SPEAKER_00 [sin identificar]: "Papi, escúchame."
+
+    [32:39] SPEAKER_00 [sin identificar]: "No te olvides que tienes que sacar cinco videos todos los días."
+
+    [32:42] SPEAKER_00 [sin identificar]: "¿Ya?"
+
+    [32:44] SPEAKER_00 [sin identificar]: "No puedes sacar dos videos al día, pero, man."
+
+    [32:48] SPEAKER_00 [sin identificar]: "Claro que sí, hijo."
+
+    [32:49] SPEAKER_00 [sin identificar]: "Hay que chambear, ¿ya?"
+
+    [32:51] SPEAKER_00 [sin identificar]: "¿Sí?"
+
+    [32:51] SPEAKER_00 [sin identificar]: "No, pero en serio, ¿ah?"
+
+    [32:53] SPEAKER_00 [sin identificar]: "El Fabricio va a estar viendo eso."
+
+    [32:57] SPEAKER_00 [sin identificar]: "un video como máximo 40 minutos ocho horas de trabajo para dos videos
+    no chicos por favor hola jorge"
+
+    [33:27] SPEAKER_00 [sin identificar]: "¿El de cámaras?"
+
+    [33:28] SPEAKER_00 [sin identificar]: "¿Qué fue con el de cámaras?"
+
+    [33:29] SPEAKER_00 [sin identificar]: "¿Fue a mi gato?"
+
+    [33:33] SPEAKER_00 [sin identificar]: "No te dije eso, te dije que tenía que ir hoy."
+
+    [33:37] SPEAKER_01 [sin identificar]: "¿Y dónde está el de cámaras?"
+
+    [33:41] SPEAKER_00 [sin identificar]: "Llamalo un favor."
+
+    [33:44] SPEAKER_00 [sin identificar]: "Oye, ¿el de cámaras qué está haciendo?"
+
+    [33:54] SPEAKER_00 [sin identificar]: "El que ve las cámaras eso."'
+  esperado:
+    publicar: true
+    tipo: jefe_y_trabajadores
+  evidencia: aprobado por el editor
+- id: za-corr-012
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_232049 · clip_c002_02
+  clave_correccion: 20261003_232049/clip_c002_02
+  video:
+    titulo: 'EL K4BR0 DE MI ADMINISTRADOR SE QUIERE IR A TRABAJAR CON EL CACHUDO DE YOLU #fritzsport #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 00:33:25
+    fin: 00:34:08
+  transcripcion: '[32:57] SPEAKER_00 [sin identificar]: "un video como máximo 40 minutos ocho horas de trabajo para
+    dos videos no chicos por favor hola jorge"
+
+    [33:27] SPEAKER_00 [sin identificar]: "¿El de cámaras?"
+
+    [33:28] SPEAKER_00 [sin identificar]: "¿Qué fue con el de cámaras?"
+
+    [33:29] SPEAKER_00 [sin identificar]: "¿Fue a mi gato?"
+
+    [33:33] SPEAKER_00 [sin identificar]: "No te dije eso, te dije que tenía que ir hoy."
+
+    [33:37] SPEAKER_01 [sin identificar]: "¿Y dónde está el de cámaras?"
+
+    [33:41] SPEAKER_00 [sin identificar]: "Llamalo un favor."
+
+    [33:44] SPEAKER_00 [sin identificar]: "Oye, ¿el de cámaras qué está haciendo?"
+
+    [33:54] SPEAKER_00 [sin identificar]: "El que ve las cámaras eso."
+
+    [33:58] SPEAKER_00 [sin identificar]: "Pero no estamos viendo nada, no estoy viendo avance con eso."
+
+    [34:02] SPEAKER_00 [sin identificar]: "Lo mandé para mi casa y no ha hecho nada."
+
+    [34:04] SPEAKER_01 [sin identificar]: "Pero tiene que ir ahora para llegar."
+
+    [34:16] SPEAKER_00 [sin identificar]: "Yo, bueno, que saque todo, que elimine todo y que empiece cero."
+
+    [34:23] SPEAKER_01 [sin identificar]: "Ya, por eso."
+
+    [34:27] SPEAKER_00 [sin identificar]: "Hoy día, por favor, yo quiero irme con las cámaras instaladas."
+
+    [34:31] SPEAKER_00 [sin identificar]: "Ya, hoy día."'
+  esperado:
+    publicar: true
+    tipo: jefe_y_trabajadores
+  evidencia: aprobado por el editor
+- id: za-corr-011
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_232049 · clip_c002_03
+  clave_correccion: 20261003_232049/clip_c002_03
+  video:
+    titulo: 'EL K4BR0 DE MI ADMINISTRADOR SE QUIERE IR A TRABAJAR CON EL CACHUDO DE YOLU #fritzsport #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 00:38:42
+    fin: 00:39:12
+  transcripcion: '[38:13] SPEAKER_00 [sin identificar]: "Mami, arriba está limpio Pero ya pensás, ¿eh?"
+
+    [38:19] SPEAKER_00 [sin identificar]: "6, 5, 4, 3, 2, 1, michi Horita, Pema"
+
+    [38:27] SPEAKER_00 [sin identificar]: "Oye, no te olvides, ah."
+
+    [38:46] SPEAKER_00 [sin identificar]: "Oye, escucha por un toque."
+
+    [38:47] SPEAKER_00 [sin identificar]: "Saca el micrófono."
+
+    [38:49] SPEAKER_00 [sin identificar]: "Papi, escúchame, si me das a grabar es para que me saques videos."
+
+    [38:52] SPEAKER_00 [sin identificar]: "Sí, sí."
+
+    [38:52] SPEAKER_00 [sin identificar]: "Varias veces he estado conmigo y no hay videos."
+
+    [38:55] SPEAKER_00 [sin identificar]: "Ah, no, lo lanzamos en otras redes."
+
+    [38:57] SPEAKER_00 [sin identificar]: "Tampoco la... Oye, oye, oye."
+
+    [38:59] Oye, oye, oye.
+
+    [38:59] Oye, oye.
+
+    [39:00] Oye, oye.
+
+    [39:00] Oye, oye.
+
+    [39:00] Oye, oye.
+
+    [39:01] Oye, oye.
+
+    [39:03] SPEAKER_02 [sin identificar]: "Oye, oye."
+
+    [39:04] SPEAKER_02 [sin identificar]: "Oye, oye."
+
+    [39:04] SPEAKER_02 [sin identificar]: "Oye, oye."
+
+    [39:04] SPEAKER_02 [sin identificar]: "Oye, oye."
+
+    [39:06] Oye, oye.
+
+    [39:06] Oye, oye.
+
+    [39:07] Oye, oye.
+
+    [39:07] Oye, oye.
+
+    [39:07] Oye, oye.
+
+    [39:07] Oye, oye.
+
+    [39:08] Oye, oye.
+
+    [39:08] Oye, oye.
+
+    [39:08] Oye, oye.
+
+    [39:08] Oye, oye.
+
+    [39:09] Oye, oye.
+
+    [39:09] Oye, oye.
+
+    [39:09] SPEAKER_02 [sin identificar]: "Oye, oye."
+
+    [39:09] O
+
+    [39:16] SPEAKER_00 [sin identificar]: "No quedan las gucci ahorita ¿no?"
+
+    [39:18] ¿Qué es lo que quedan?
+
+    [39:19] SPEAKER_00 [sin identificar]: "¿Una safe o no?"
+
+    [39:40] SPEAKER_02 [sin identificar]: "Ahí viene, ¿no?"'
+  esperado:
+    publicar: true
+    tipo: jefe_y_trabajadores
+  evidencia: aprobado por el editor
+- id: za-corr-010
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_231807 · clip_c001_02
+  clave_correccion: 20261003_231807/clip_c001_02
+  video:
+    titulo: 'EL TREN DE ARAGUA ME AMENAZ4 DE MUERTE POR 500 MIL SOLES #fritzsport #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 00:24:04
+    fin: 00:24:37
+  transcripcion: '[24:06] Tío Fritz (host): "¡Rafiito!"
+
+    [24:07] Tío Fritz (host): "¿Cómo está mi Rafiito?"
+
+    [24:09] Tío Fritz (host): "Oye, oye, oye, Rafiito, ¿sabes lo que más me gusta a mí últimamente?"
+
+    [24:15] Tío Fritz (host): "Que yo me puedo ir fuera del país, hermano, y tener la seguridad y la tranquilidad
+    de que mis almacenes están siendo supervisados de la mejor manera."
+
+    [24:24] Tío Fritz (host): "Es por eso, Rafiito, que te trae una sorpresa."
+
+    [24:26] Tío Fritz (host): "Ven por acá, ven por acá."
+
+    [24:27] Tío Fritz (host): "¡Qué chévere, frío!"
+
+    [24:31] Tío Fritz (host): "Ven, ven, ven, Rafo."
+
+    [24:37] Tío Fritz (host): "va dímelo, rápido pase tío, pase va, cuidado va cuidado perro, perro"'
+  esperado:
+    publicar: true
+    tipo: jefe_y_trabajadores
+  evidencia: aprobado por el editor
+- id: za-corr-009
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_231807 · clip_c001_03
+  clave_correccion: 20261003_231807/clip_c001_03
+  video:
+    titulo: 'EL TREN DE ARAGUA ME AMENAZ4 DE MUERTE POR 500 MIL SOLES #fritzsport #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 00:26:04
+    fin: 00:27:04
+  transcripcion: '[25:53] SPEAKER_02 [sin identificar]: "Sobre todo eso, tío."
+
+    [25:55] Tío Fritz (host): "O Rofito, para ver tu billetera, ¿cómo está tu billetera?"
+
+    [25:57] Tío Fritz (host): "¿Cómo está?"
+
+    [25:57] SPEAKER_02 [sin identificar]: "A ver, a ver, a ver."
+
+    [25:59] Tío Fritz (host): "Para ver tu billetera, ¿cómo está?"
+
+    [26:00] Tío Fritz (host): "¿Cómo está?"
+
+    [26:01] Tío Fritz (host): "Quiero ver en qué estado está tu billetera, en qué estado está tu billetera."
+
+    [26:04] Tío Fritz (host): "A ver."
+
+    [26:04] SPEAKER_02 [sin identificar]: "A ver, vamos a hacer la billetera acá."
+
+    [26:06] SPEAKER_02 [sin identificar]: "Ya está pobre la billetera, tío."
+
+    [26:09] SPEAKER_02 [sin identificar]: "Mira."
+
+    [26:11] SPEAKER_02 [sin identificar]: "Mira."
+
+    [26:13] SPEAKER_02 [sin identificar]: "A ver, a ver, a ver, escucha, escucha, y no se los vende esto."
+
+    [26:16] SPEAKER_02 [sin identificar]: "A ver, a ver, a ver."
+
+    [26:16] SPEAKER_02 [sin identificar]: "Esto es la peor de mentir."
+
+    [26:18] SPEAKER_02 [sin identificar]: "Oh, gente, pero no es fluro, ah."
+
+    [26:22] SPEAKER_02 [sin identificar]: "A ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver,
+    a ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver."
+
+    [26:38] Tío Fritz (host): "¡Acerca!"
+
+    [26:39] Tío Fritz (host): "¡Tenme cámara!"
+
+    [26:40] SPEAKER_02 [sin identificar]: "¡Acerca!"
+
+    [26:40] SPEAKER_02 [sin identificar]: "¡Tenme cámara, man!"
+
+    [26:42] SPEAKER_02 [sin identificar]: "Ahí está, ve."
+
+    [26:42] SPEAKER_02 [sin identificar]: "¡Ah!"
+
+    [26:43] SPEAKER_02 [sin identificar]: "Ahí está."
+
+    [26:44] SPEAKER_02 [sin identificar]: "¿Has visto o no?"
+
+    [26:45] Tío Fritz (host): "Ahí está."
+
+    [26:46] Tío Fritz (host): "O por eso te hice charlatán, ¿no?"
+
+    [26:47] Tío Fritz (host): "Me tiene un charlatán."
+
+    [26:51] Tío Fritz (host): "Escúcheme."
+
+    [26:53] Tío Fritz (host): "Uy, tan bonito."
+
+    [26:54] Tío Fritz (host): "¿Qué quieres?"
+
+    [26:55] Tío Fritz (host): "¿Una Michael Kors?"
+
+    [26:55] Tío Fritz (host): "¿Una Michael Kors?"
+
+    [26:56] Tío Fritz (host): "¿O quieres estas yonder?"
+
+    [26:59] SPEAKER_02 [sin identificar]: "Ah, estas están bonitas."
+
+    [27:01] Tío Fritz (host): "¿Cuál día es?"
+
+    [27:02] Tío Fritz (host): "Cógete una, cógete una."
+
+    [27:05] SPEAKER_02 [sin identificar]: "Chápala, chápala mi tío, chápala, chápala."
+
+    [27:11] Tío Fritz (host): "Pero ahora tienes que ganarla, rapo, porque tú ganas 15K, hermano, son 15K."
+
+    [27:14] SPEAKER_02 [sin identificar]: "Claro, de todas maneras, si voy a llegar a Beito en el Bonavi..."
+
+    [27:20] Tío Fritz (host): "Claro, pues tío."
+
+    [27:22] Tío Fritz (host): "Vamos, vamos, vamos adentro."
+
+    [27:23] Tío Fritz (host): "Toma, Víctor."
+
+    [27:24] Tío Fritz (host): "Vamos adentro, vamos adentro, vamos adentro."
+
+    [27:26] Tío Fritz (host): "Mira."
+
+    [27:27] Tío Fritz (host): "¿Qué más puede pedir el tío Charles, hermano?"
+
+    [27:29] Tío Fritz (host): "Míralo."
+
+    [27:30] Tío Fritz (host): "Subietera."
+
+    [27:30] Tío Fritz (host): "Ahí está."
+
+    [27:32] Tío Fritz (host): "Michael Kors."
+
+    [27:34] Tío Fritz (host): "Que, por cierto, para hacer buenas ventas y hacer buenas compras, hermanito, mira
+    cuánto lo chapeé."'
+  esperado:
+    publicar: true
+    tipo: jefe_y_trabajadores
+  evidencia: aprobado por el editor
+- id: za-corr-008
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_231807 · clip_c001_04
+  clave_correccion: 20261003_231807/clip_c001_04
+  video:
+    titulo: 'EL TREN DE ARAGUA ME AMENAZ4 DE MUERTE POR 500 MIL SOLES #fritzsport #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 00:28:47
+    fin: 00:29:35
+  transcripcion: '[28:18] SPEAKER_02 [sin identificar]: "¿Cómo me tuve que encontrar así?"
+
+    [28:20] SPEAKER_02 [sin identificar]: "Está fichado conmigo."
+
+    [28:21] SPEAKER_02 [sin identificar]: "Ven, ven, ven."
+
+    [28:23] Tío Fritz (host): "No, no."
+
+    [28:24] Tío Fritz (host): "Ahora tú vas a decir, este, o Rafael, pero tú no estabas jatiendo y él que te diga
+    eso, ¿ya?"
+
+    [28:31] Tío Fritz (host): "Otro día dice, ¿ya?"
+
+    [28:33] Tío Fritz (host): "Ya, ya."
+
+    [28:34] Tío Fritz (host): "Gróble, gróble."
+
+    [28:37] Tío Fritz (host): "Y vienes pa'' acá, y vienes pa'' acá, y vienes pa'' acá con la misma."
+
+    [28:40] Tío Fritz (host): "Solamente ahí eso."
+
+    [28:41] SPEAKER_02 [sin identificar]: "Ya, tres, dos... ¡Oh, tío!"
+
+    [28:49] SPEAKER_02 [sin identificar]: "¿Qué fue?"
+
+    [28:50] Tío Fritz (host): "No, Rafael, pero tú no estabas jateando, no estabas durmiendo, va, nada más."
+
+    [28:56] Tío Fritz (host): "Y tú, ¡oh!"
+
+    [28:56] Tío Fritz (host): "Te lo ha ido a pasar la voz porque ha venido un tío Frix."
+
+    [28:59] Tío Fritz (host): "Pero así, corrido, nada más, ¿ah?"
+
+    [29:01] SPEAKER_02 [sin identificar]: "Ah, ¿qué fue?"
+
+    [29:06] Tío Fritz (host): "Tengo ducha también."
+
+    [29:08] Tío Fritz (host): "Tengo ducha también."
+
+    [29:10] SPEAKER_02 [sin identificar]: "Tengo ducha también."
+
+    [29:18] SPEAKER_01 [sin identificar]: "Tío, ¿qué fue?"
+
+    [29:22] SPEAKER_01 [sin identificar]: "¿Cómo quedó durmiendo?"
+
+    [29:28] SPEAKER_02 [sin identificar]: "¿Estaba jateando?"
+
+    [29:30] SPEAKER_02 [sin identificar]: "No, jefe, creo que estaba reposando su refriguero."
+
+    [29:33] SPEAKER_02 [sin identificar]: "Ay, pero..."
+
+    [29:34] SPEAKER_02 [sin identificar]: "No, pues pasa la voz que viene el tío, el hermano... ¡Oye, Charlo, devuélveme,
+    devuélveme!"
+
+    [29:38] Tío Fritz (host): "Buenas."
+
+    [29:51] Tío Fritz (host): "este vídeo va a ser exclusivo para rs nada más no lo vamos a meter a jordan no lo
+    vamos a meter a miri no lo vamos a meter a otras marcas"'
+  esperado:
+    publicar: true
+    tipo: jefe_y_trabajadores
+  evidencia: aprobado por el editor
+- id: za-corr-007
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_231807 · clip_c001_01
+  clave_correccion: 20261003_231807/clip_c001_01
+  video:
+    titulo: 'EL TREN DE ARAGUA ME AMENAZ4 DE MUERTE POR 500 MIL SOLES #fritzsport #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 00:15:03
+    fin: 00:15:35
+  transcripcion: '[14:33] SPEAKER_01 [sin identificar]: "¿Qué estás quedando?"
+
+    [14:37] SPEAKER_02 [sin identificar]: "No te lo le haces a mí."
+
+    [14:47] Tío Fritz (host): "Ese pari estaba en ese freno solo."
+
+    [14:57] SPEAKER_02 [sin identificar]: "No es el que la quiera el carro, que la bajo yo, pero aquí sí, eso no."
+
+    [15:01] SPEAKER_02 [sin identificar]: "No."
+
+    [15:01] Es la bolsa.
+
+    [15:06] Tío Fritz (host): "Bueno, hasta que por fin llegamos, avenigito 948, hola, Victoria."
+
+    [15:09] Tío Fritz (host): "Vamos a ver cómo está nuestro almacén."
+
+    [15:12] Tío Fritz (host): "El tío Charla, le hemos traído su regalo."
+
+    [15:14] Tío Fritz (host): "El tío Charla, su camisita, su chorcito de los United, hermano, Estados Unidos, y
+    se la va a poner con su DRS-21."
+
+    [15:21] Tío Fritz (host): "Cómo no se la voy a dar si el tío Raffo para cuidándome al almacén como tiene que
+    ser, hermano."
+
+    [15:26] Tío Fritz (host): "Nada se le pierde para activo, así que vamos a premiarlo."
+
+    [15:29] SPEAKER_02 [sin identificar]: "Yo creo que se le tiene que premiar."
+
+    [15:30] Tío Fritz (host): "Ya, el otro llegando."
+
+    [15:57] oiga oiga cuérese a la derecha'
+  esperado:
+    publicar: false
+  evidencia: descartado por el editor
+- id: za-corr-006
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_231807 · clip_c002_01
+  clave_correccion: 20261003_231807/clip_c002_01
+  video:
+    titulo: 'EL TREN DE ARAGUA ME AMENAZ4 DE MUERTE POR 500 MIL SOLES #fritzsport #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 00:35:04
+    fin: 00:35:46
+  transcripcion: '[34:35] SPEAKER_01 [sin identificar]: "Mira."
+
+    [34:40] SPEAKER_01 [sin identificar]: "De acá sale para todo el Perú."
+
+    [34:42] SPEAKER_01 [sin identificar]: "De acá."
+
+    [34:43] SPEAKER_01 [sin identificar]: "Del aveniz Quito 948 es la victoria."
+
+    [34:45] SPEAKER_01 [sin identificar]: "De acá abastecemos a todo el Perú, mi hermano."
+
+    [34:49] SPEAKER_01 [sin identificar]: "A todo el Perú."
+
+    [35:06] Tío Fritz: "Dice que hizo 50 pataditas el otro día y que le dijiste una pelota."
+
+    [35:10] SPEAKER_01 [sin identificar]: "Esta pelota ve."
+
+    [35:11] Tío Fritz: "Y ahora sí, confirmado."
+
+    [35:12] SPEAKER_01 [sin identificar]: "No, no, el otro día..."
+
+    [35:16] SPEAKER_01 [sin identificar]: "Yo dije que le iba a dar una pelota, señor."
+
+    [35:18] SPEAKER_01 [sin identificar]: "Ahí está la pelota, papi."
+
+    [35:20] SPEAKER_01 [sin identificar]: "Ahí está la pelota."
+
+    [35:22] SPEAKER_02 [sin identificar]: "A mí me dijiste que me daba 500 doles."
+
+    [35:24] SPEAKER_01 [sin identificar]: "No, a cada rato..."
+
+    [35:35] SPEAKER_02 [sin identificar]: "¿Qué es eso, tío?"
+
+    [35:45] SPEAKER_02 [sin identificar]: "No, no, hasta si hay algo."
+
+    [35:50] SPEAKER_01 [sin identificar]: "Papi, escúchame, necesito internet en todo el edificio."
+
+    [35:54] SPEAKER_01 [sin identificar]: "Pero, ¿para qué más equipos?"
+
+    [35:57] SPEAKER_01 [sin identificar]: "No, si antes con los equipos que había, daba, ya no daba."
+
+    [36:00] SPEAKER_01 [sin identificar]: "Escucha, papi, tú tienes que trabajar para el tío Frix."
+
+    [36:04] SPEAKER_01 [sin identificar]: "yo hago mi like, si tu me tienes sin internet, después como no hay señal
+    ves?"
+
+    [36:10] SPEAKER_02 [sin identificar]: "No, no, ahorita voy a ver, hay unos equipos que se conectan directamente
+    a la luz porque no hay esto, tomo corrientes en la parte arriba."'
+  esperado:
+    publicar: false
+  evidencia: descartado por el editor
+- id: za-corr-005
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_231807 · clip_c002_02
+  clave_correccion: 20261003_231807/clip_c002_02
+  video:
+    titulo: 'EL TREN DE ARAGUA ME AMENAZ4 DE MUERTE POR 500 MIL SOLES #fritzsport #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 00:35:47
+    fin: 00:36:36
+  transcripcion: '[35:18] SPEAKER_01 [sin identificar]: "Ahí está la pelota, papi."
+
+    [35:20] SPEAKER_01 [sin identificar]: "Ahí está la pelota."
+
+    [35:22] SPEAKER_02 [sin identificar]: "A mí me dijiste que me daba 500 doles."
+
+    [35:24] SPEAKER_01 [sin identificar]: "No, a cada rato..."
+
+    [35:35] SPEAKER_02 [sin identificar]: "¿Qué es eso, tío?"
+
+    [35:45] SPEAKER_02 [sin identificar]: "No, no, hasta si hay algo."
+
+    [35:50] SPEAKER_01 [sin identificar]: "Papi, escúchame, necesito internet en todo el edificio."
+
+    [35:54] SPEAKER_01 [sin identificar]: "Pero, ¿para qué más equipos?"
+
+    [35:57] SPEAKER_01 [sin identificar]: "No, si antes con los equipos que había, daba, ya no daba."
+
+    [36:00] SPEAKER_01 [sin identificar]: "Escucha, papi, tú tienes que trabajar para el tío Frix."
+
+    [36:04] SPEAKER_01 [sin identificar]: "yo hago mi like, si tu me tienes sin internet, después como no hay señal
+    ves?"
+
+    [36:10] SPEAKER_02 [sin identificar]: "No, no, ahorita voy a ver, hay unos equipos que se conectan directamente
+    a la luz porque no hay esto, tomo corrientes en la parte arriba."
+
+    [36:17] SPEAKER_01 [sin identificar]: "Bueno, dale solución ya, por favor."
+
+    [36:23] SPEAKER_01 [sin identificar]: "Sí, ve, por el internet, hermano."
+
+    [36:26] SPEAKER_01 [sin identificar]: "No, es que por el internet."
+
+    [36:28] SPEAKER_01 [sin identificar]: "Y eso tiene que hablarlo Fabricio, ¿no?"
+
+    [36:30] SPEAKER_01 [sin identificar]: "Yo hago una inversión y la inversión tiene que dar resultados, ¿sí?"
+
+    [36:51] SPEAKER_02 [sin identificar]: "12 dólares de la suerte."
+
+    [36:52] SPEAKER_01 [sin identificar]: "Oh, que barato, ¿no?"
+
+    [36:53] SPEAKER_01 [sin identificar]: "Esta acá costaba 9, la negra 19 y esta no es de 90."
+
+    [36:56] SPEAKER_01 [sin identificar]: "Michael, a ver, ¿cuánto cuanta está?"
+
+    [37:00] SPEAKER_01 [sin identificar]: "No, está también 19, mira."
+
+    [37:01] Tío Fritz: "¿No tiene el mercado público?"
+
+    [37:05] SPEAKER_01 [sin identificar]: "No, a Rose me dijo, a Rose."'
+  esperado:
+    publicar: true
+    tipo: jefe_y_trabajadores
+  evidencia: aprobado por el editor
+- id: za-corr-004
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_231807 · clip_c002_03
+  clave_correccion: 20261003_231807/clip_c002_03
+  video:
+    titulo: 'EL TREN DE ARAGUA ME AMENAZ4 DE MUERTE POR 500 MIL SOLES #fritzsport #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 00:43:22
+    fin: 00:44:12
+  transcripcion: '[43:01] ¿Ya viene?
+
+    [43:02] Tío Fritz: "¿Ya te ha cambiado?"
+
+    [43:03] Tío Fritz: "¿Ya ha chorado?"
+
+    [43:03] Tío Fritz: "Acá, toma, toma, toma."
+
+    [43:04] SPEAKER_01 [sin identificar]: "Y hablamos de RS21."
+
+    [43:06] Tío Fritz: "Ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale,
+    ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale,
+    ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale,
+    ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale, ándale"
+
+    [43:25] SPEAKER_01 [sin identificar]: "Hombre, la billetera más abajo, la media más abajo, que no seas pacharaco."
+
+    [43:29] SPEAKER_01 [sin identificar]: "La media ponte así como yo, al límite, al límite, al límite."
+
+    [43:31] SPEAKER_02 [sin identificar]: "Mi marido lo juegue con eso."
+
+    [43:32] SPEAKER_02 [sin identificar]: "Ahí está, claro, claro."
+
+    [43:34] SPEAKER_02 [sin identificar]: "Porque arriba ha puesto que él se ha robado."
+
+    [43:37] SPEAKER_01 [sin identificar]: "Es esta vista."
+
+    [43:40] SPEAKER_01 [sin identificar]: "O como cambió el tío Charla, ¿no?"
+
+    [43:42] SPEAKER_01 [sin identificar]: "Mirá ve, ¿ah?"
+
+    [43:44] SPEAKER_02 [sin identificar]: "Yo he visto que él se ha chorrado solo."
+
+    [43:46] SPEAKER_02 [sin identificar]: "Que cosa."
+
+    [43:49] SPEAKER_01 [sin identificar]: "Oh, pero te viste bañado."
+
+    [43:50] SPEAKER_01 [sin identificar]: "No, sácate, te vayas con la misma, no juegas."
+
+    [43:52] SPEAKER_01 [sin identificar]: "No, no, no, no, no, no."
+
+    [43:52] SPEAKER_02 [sin identificar]: "¿Qué te pasa, tío?"
+
+    [43:54] SPEAKER_02 [sin identificar]: "Oh, ¿qué pasa?"
+
+    [43:56] SPEAKER_02 [sin identificar]: "Tío, ¿está viendo usted?"
+
+    [43:57] SPEAKER_02 [sin identificar]: "Usted... ¡Chau!"
+
+    [44:01] SPEAKER_01 [sin identificar]: "Oh, mira el tío Charla que..."
+
+    [44:03] SPEAKER_01 [sin identificar]: "Tío Charla, ¿así no vamos vestido a Tarapoto?"
+
+    [44:05] Tío Fritz: "No vamos."
+
+    [44:08] SPEAKER_01 [sin identificar]: "¿Cuál es su nueva chapa?"
+
+    [44:10] SPEAKER_01 [sin identificar]: "Juega."
+
+    [44:10] SPEAKER_01 [sin identificar]: "¿Está mal?"
+
+    [44:11] SPEAKER_01 [sin identificar]: "¿Por qué?"
+
+    [44:12] Tío Fritz: "¡Oh, tío!"
+
+    [44:13] SPEAKER_02 [sin identificar]: "¡Oh, mira qué...!"
+
+    [44:21] Tío Fritz: "Oiga, sube, sube, sube."
+
+    [44:23] Tío Fritz: "Apareció."
+
+    [44:23] Tío Fritz: "Ya tocas en tu like y a él bajo."
+
+    [44:25] Tío Fritz: "Y eso está justo lejado."
+
+    [44:29] Tío Fritz: "Cuando se regala una billetera, se le pone un billete."
+
+    [44:33] Tío Fritz: "Palabras, para la buena suerte."
+
+    [44:35] Tío Fritz: "Sí, un dólar, un dólar."
+
+    [44:36] Tío Fritz: "Bien, tengo dos."'
+  esperado:
+    publicar: true
+    tipo: humor_picaro
+  evidencia: aprobado por el editor
+- id: za-corr-003
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_231807 · clip_c002_04
+  clave_correccion: 20261003_231807/clip_c002_04
+  video:
+    titulo: 'EL TREN DE ARAGUA ME AMENAZ4 DE MUERTE POR 500 MIL SOLES #fritzsport #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 00:51:39
+    fin: 00:52:32
+  transcripcion: '[51:13] SPEAKER_01 [sin identificar]: "A ver, ábrete solo un platito, vamos a ver."
+
+    [51:16] SPEAKER_02 [sin identificar]: "Ahí está."
+
+    [51:17] SPEAKER_02 [sin identificar]: "9, 9, 2, 6, 6, 4, 1, 1, 2."
+
+    [51:19] SPEAKER_02 [sin identificar]: "Comunícate con Peco, con todos los poderes."
+
+    [51:22] SPEAKER_01 [sin identificar]: "A ver, a ver, a ver."
+
+    [51:23] SPEAKER_01 [sin identificar]: "No, no, cucharito, no, cucharito, no, cucharita."
+
+    [51:26] SPEAKER_01 [sin identificar]: "Puta, me tengo que ir ahí, espera esa."
+
+    [51:29] SPEAKER_02 [sin identificar]: "3, 3, 3."
+
+    [51:29] SPEAKER_02 [sin identificar]: "3, 33."
+
+    [51:38] SPEAKER_02 [sin identificar]: "Mira eso, ah."
+
+    [51:40] SPEAKER_02 [sin identificar]: "Torrosito con su frejolito."
+
+    [51:42] SPEAKER_01 [sin identificar]: "Ayer comiendo en Miami."
+
+    [51:44] SPEAKER_01 [sin identificar]: "Hoy comiendo en mi almacén con mi gente de Chámbame."
+
+    [51:47] SPEAKER_01 [sin identificar]: "Y acá no solamente como el tío Frieza."
+
+    [51:49] SPEAKER_01 [sin identificar]: "Acá vamos a comer todos, mi hermano."
+
+    [51:51] SPEAKER_01 [sin identificar]: "Llama más bien al tío de las gelatinas para que repartas su gelatinita."
+
+    [51:53] Tío Fritz: "Mira, apretármelo en los videos."
+
+    [51:55] Tío Fritz: "O cruciálo."
+
+    [51:57] Tío Fritz: "A ver si no molesta."
+
+    [52:00] Tío Fritz: "¿No tienes datos?"
+
+    [52:02] Tío Fritz: "Ahora abre y nos cruce."
+
+    [52:04] Tío Fritz: "Vamos."
+
+    [52:14] Tío Fritz: "Hey, el grupo naranja, el grupo naranja."
+
+    [52:21] SPEAKER_01 [sin identificar]: "Vetele risa."
+
+    [52:24] SPEAKER_01 [sin identificar]: "Cuando salga el tío Charlam, métele música de estafador."
+
+    [52:26] SPEAKER_01 [sin identificar]: "Vetele canantana."
+
+    [52:28] SPEAKER_01 [sin identificar]: "Vetele risa a todos."
+
+    [52:30] SPEAKER_01 [sin identificar]: "Desarrollate con ese video, Fabri."
+
+    [52:32] SPEAKER_02 [sin identificar]: "Lo volteamos, lo volteamos."
+
+    [52:40] SPEAKER_01 [sin identificar]: "No hay nada como la comida peruana, hermano."
+
+    [52:43] SPEAKER_01 [sin identificar]: "Tú puedes estar en Miami, en París, en Londres, pero como la comida peruana
+    no existe."'
+  esperado:
+    publicar: true
+    tipo: jefe_y_trabajadores
+  evidencia: aprobado por el editor
+- id: za-corr-002
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_161148 · clip_c001_01
+  clave_correccion: 20261003_161148/clip_c001_01
+  video:
+    titulo: 'BOTO A MIS CAJEROS POR RATEROS #fritzsport #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 00:10:04
+    fin: 00:10:52
+  transcripcion: '[09:46] SPEAKER_01 [sin identificar]: "Bien, mami, bien."
+
+    [09:47] SPEAKER_02 [sin identificar]: "Gracias."
+
+    [09:48] SPEAKER_01 [sin identificar]: "Felicidades, tío."
+
+    [10:00] SPEAKER_01 [sin identificar]: "Chata."
+
+    [10:01] SPEAKER_01 [sin identificar]: "Pucha la chata, pucha la chata."
+
+    [10:03] SPEAKER_01 [sin identificar]: "Chata."
+
+    [10:07] SPEAKER_01 [sin identificar]: "mira eso es lo que yo te digo es vera con 25 mangos mira como hace feliz
+    a un niño ¿quien puede grabar eso?"
+
+    [10:13] SPEAKER_01 [sin identificar]: "¿ah?"
+
+    [10:15] SPEAKER_01 [sin identificar]: "¿cual es el señor?"
+
+    [10:16] SPEAKER_01 [sin identificar]: "mira con 25 so lo sacas de kika mira con 25 so como puedes hacer feliz
+    a un niño ¿como estas jugando?"
+
+    [10:24] SPEAKER_01 [sin identificar]: "¿1-1?"
+
+    [10:24] SPEAKER_01 [sin identificar]: "no estamos jugando por tiro tiro a ver a ver a ver a ver a ver a ver
+    ahi ahi"
+
+    [10:37] SPEAKER_01 [sin identificar]: "¿Quién te compró tu pelota?"
+
+    [10:38] SPEAKER_03 [sin identificar]: "¿No es tuya?"
+
+    [10:41] SPEAKER_01 [sin identificar]: "¿Tuya?"
+
+    [10:42] SPEAKER_01 [sin identificar]: "¿Quién te compró tu pelota, hijo?"
+
+    [10:44] SPEAKER_01 [sin identificar]: "Tu mami."
+
+    [10:47] SPEAKER_03 [sin identificar]: "Ok."
+
+    [10:48] SPEAKER_03 [sin identificar]: "Bien."
+
+    [10:49] SPEAKER_01 [sin identificar]: "¿Y tu mami?"
+
+    [10:53] SPEAKER_01 [sin identificar]: "¿Y tu mami tuyo?"
+
+    [10:55] SPEAKER_03 [sin identificar]: "Ahí."
+
+    [10:58] SPEAKER_01 [sin identificar]: "¿Y tú cómo te llamas, hijo?"
+
+    [11:01] SPEAKER_01 [sin identificar]: "¿Cómo?"
+
+    [11:04] SPEAKER_01 [sin identificar]: "Leyson o pelotero, el sobrino, ¿no?"
+
+    [11:07] SPEAKER_01 [sin identificar]: "Leischer."
+
+    [11:09] SPEAKER_01 [sin identificar]: "Ya, a ver, tráeme una pelotita, hijo, por favor."
+
+    [11:19] SPEAKER_01 [sin identificar]: "El no sabe."
+
+    [11:21] SPEAKER_01 [sin identificar]: "¿De dónde?"
+
+    [11:22] SPEAKER_01 [sin identificar]: "Ah, claro."'
+  esperado:
+    publicar: true
+    tipo: generosidad_con_humilde
+  evidencia: aprobado por el editor
+- id: za-corr-001
+  nicho: zapatillas_peru
+  origen: correccion
+  fuente: correcciones.jsonl · 20261003_161148 · clip_c001_02
+  clave_correccion: 20261003_161148/clip_c001_02
+  video:
+    titulo: 'BOTO A MIS CAJEROS POR RATEROS #fritzsport #yolu'
+    canal: FRITZ SPORT
+  candidato:
+    inicio: 00:13:23
+    fin: 00:14:24
+  transcripcion: '[13:16] SPEAKER_01 [sin identificar]: "Ok?"
+
+    [13:19] SPEAKER_01 [sin identificar]: "Si quieres hacer una pelotita para practicar, para entrenar, para esto
+    por el otro, 25 mangasos."
+
+    [13:25] SPEAKER_00 [sin identificar]: "Tío, dime, dímelo a ver."
+
+    [13:27] SPEAKER_00 [sin identificar]: "Cuánto que te sale, ah?"
+
+    [13:28] SPEAKER_01 [sin identificar]: "Escucha, hacemos una cosa."
+
+    [13:35] SPEAKER_01 [sin identificar]: "Tú sabes que yo soy negociante."
+
+    [13:37] SPEAKER_01 [sin identificar]: "Claro."
+
+    [13:39] SPEAKER_01 [sin identificar]: "hazme 40 dominadas y te la llevas a un ferro."
+
+    [13:42] SPEAKER_00 [sin identificar]: "No llego, pero no sé, yo no sé dominar por la guata."
+
+    [13:50] SPEAKER_00 [sin identificar]: "No sé dominar, no sé dominar."
+
+    [13:51] SPEAKER_00 [sin identificar]: "Yo hablo y no domino."
+
+    [13:52] SPEAKER_01 [sin identificar]: "Ya, 30."
+
+    [13:55] SPEAKER_01 [sin identificar]: "Inténtalo, ve."
+
+    [13:56] SPEAKER_01 [sin identificar]: "Uno, dos, tres, cuatro, cinco, seis, siete, ocho."
+
+    [14:02] SPEAKER_01 [sin identificar]: "Ya ves."
+
+    [14:06] SPEAKER_01 [sin identificar]: "Pero ya tenemos que negociar, hermano."
+
+    [14:08] SPEAKER_01 [sin identificar]: "Tengo que negociar."
+
+    [14:09] SPEAKER_01 [sin identificar]: "Escúchame, ya pensé."
+
+    [14:10] SPEAKER_01 [sin identificar]: "¿Sabes que estoy viniendo a chamear?"
+
+    [14:11] SPEAKER_02 [sin identificar]: "Porque... Ah, la dímelo."
+
+    [14:18] SPEAKER_00 [sin identificar]: "Cuando vayas allá, te voy a arruinar cuenta hasta por gusto."
+
+    [14:21] SPEAKER_00 [sin identificar]: "Ya, ya."
+
+    [14:21] SPEAKER_00 [sin identificar]: "180, vale."
+
+    [14:22] SPEAKER_00 [sin identificar]: "No me hagas nada."
+
+    [14:23] SPEAKER_00 [sin identificar]: "Ya, ya."
+
+    [14:23] SPEAKER_00 [sin identificar]: "¿Ah?"
+
+    [14:34] SPEAKER_01 [sin identificar]: "del rico Tingo María ese viernes o sábado vamos a estar un día en Tingo
+    y de ahí me voy a Tarapoto se viene una tienda buen Tingo María"
+
+    [14:46] SPEAKER_01 [sin identificar]: "o en Tarapoto, así que Tarapoto, Tingo María, prepárate porque Dios mediante
+    estamos viajando con el único fin de buscar un local."'
+  esperado:
+    publicar: true
+    tipo: rivalidad_y_apuestas
+  evidencia: aprobado por el editor
+- id: za-mues-001
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @hijitoclips · 7648404896743443720
+  video:
+    titulo: null
+    canal: yolu
+  candidato:
+    inicio: 00:00
+    fin: 00:37
+  transcripcion: '[00:00] SPEAKER_00: No, pues nosotros no queremos crecimiento económico, queremos desarrollo humano.
+
+    [00:04] SPEAKER_00: Eso es nuestro convencimiento.
+
+    [00:05] SPEAKER_00: ¿De dónde vas a crear la riqueza, imbécil de...
+
+    [00:12] SPEAKER_00: Te vas contra la inversión.
+
+    [00:14] SPEAKER_00: Todo lo que quieres es para ti como estado.
+
+    [00:16] SPEAKER_00: ¿De dónde vas a crear la vida?
+
+    [00:18] SPEAKER_00: ¿Te estás hueviando al pueblo?
+
+    [00:19] SPEAKER_00: ¿Te estás cojudeando al pueblo?
+
+    [00:21] SPEAKER_00: Todo tienes que reactivarlo.
+
+    [00:23] SPEAKER_00: Si reactivas todo, si ingreses capital, si ves bien las inversiones, bien dirigidas, bien
+    controladas, podrás repartir la virqueza.
+
+    [00:33] SPEAKER_00: De la otra forma eres un mentiroso reconcha.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 45.27 · 407900 vistas
+- id: za-mues-002
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @babynathsclips1 · 7690666122324102421
+  video:
+    titulo: null
+    canal: yolu
+  candidato:
+    inicio: 00:00
+    fin: 00:26
+  transcripcion: '[00:00] SPEAKER_00: Amigo, ¿por qué tomas tanto?
+
+    [00:04] SPEAKER_00: ¿Por qué cagas tu vida por esa mujer?
+
+    [00:09] SPEAKER_00: Amigo, deja de beber, escucha mis palabras y así lo olvidarás.
+
+    [00:17] SPEAKER_00: Amigo.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 38.24 · 479900 vistas
+- id: za-mues-003
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @gatitoclips1.0 · 7691347988400164103
+  video:
+    titulo: null
+    canal: yolu
+  candidato:
+    inicio: 00:00
+    fin: 00:23
+  transcripcion: '[00:00] SPEAKER_00: ¿Cuánto pagas por eso?
+
+    [00:02] SPEAKER_00: Hermanito, el trabajo es de 8 horas.
+
+    [00:04] SPEAKER_00: El trabajo es de 8 horas y el sueldo es entre 3.000 a 3.200.
+
+    [00:09] SPEAKER_00: Pero la chamba es un poquito pesadito.
+
+    [00:14] SPEAKER_00: El que maneja Excel, para que maneja nuestro sistema de inventario, hermano.
+
+    [00:17] SPEAKER_00: No, nuestro sistema de inventario.
+
+    [00:21] SPEAKER_00: Nuestro sistema de inventario.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 32.24 · 560900 vistas
+- id: za-mues-004
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @hijitoclips · 7669891794062036232
+  video:
+    titulo: null
+    canal: yolu
+  candidato:
+    inicio: 00:00
+    fin: 02:56
+  transcripcion: '[00:00] SPEAKER_00: Nosotras antes éramos muy amigas en el partido de Dios.
+
+    [00:03] SPEAKER_00: Sí, éramos muy amigas ahí.
+
+    [00:13] SPEAKER_00: Bueno, éramos un grupo de cuatro, Yadid, Ismael, Playa y Zulil.
+
+    [00:18] SPEAKER_00: Bueno, ahora sí.
+
+    [00:19] SPEAKER_00: Quieren empezar tú.
+
+    [00:19] SPEAKER_00: Vamos a escuchar primero la versión de Zulil y luego mi versión.
+
+    [00:24] SPEAKER_00: Bueno, como ustedes saben, nosotros nos queríamos a la raíz del crimen que se operó, ¿verdad?
+
+    [00:31] SPEAKER_00: Yo jamás quería aclarar porque sentía que esas cosas ya, bueno, ya pasó y así.
+
+    [00:35] SPEAKER_00: Pero les comento de que ella, antes de operarse, ella tenía planeado un ir de aire por primera
+    vez.
+
+    [00:41] SPEAKER_00: Entonces, en el aire se trataba de ir a Plaza Norte y comprar unas cositas y de ahí irme
+    de viaje.
+
+    [00:47] SPEAKER_00: en ese momento, ¿no?
+
+    [00:48] SPEAKER_00: con tal persona entonces yo le había dicho a los muchachos para hacer el skin y me acompañara
+    solamente le voy a irse porque una noche antes ella me comentó que se quería operar pero yo pensé que no era
+    cierto porque yo le digo como, gracias Montesir y me dijo, oye me quiero operar, operamos juntas y yo dije,
+    ¿si te espera Piora?
+
+    [01:02] SPEAKER_00: pero como que, no sé, o sea, te dije suficiente pero gracias Montesir porque para operarse
+    en sí tienes que sacar citas, sacar, con tiempo pues y no sabía que ella lo tenía ahí todo escondido, o sea,
+    no sabía que no nos había contado eso en
+
+    [01:13] SPEAKER_00: al grupo de que la tenía pertenecido a ser operada hace tiempo.
+
+    [01:15] SPEAKER_00: Mami me encontró un día antes, en la noche.
+
+    [01:17] SPEAKER_00: Entonces yo dije, se va a operar, pero no sabía que era en sí y en sí.
+
+    [01:23] SPEAKER_00: Me tenías a entender, ¿no?
+
+    [01:27] SPEAKER_00: Entonces la cosa que pasó el día siguiente, ya un IRL, el que me acompañó solamente fue
+    Yaris a mi stream.
+
+    [01:33] SPEAKER_00: En primer IRL fuimos de compra, mi mamá también estaba ahí, Janice.
+
+    [01:35] SPEAKER_00: Nos fuimos y después nos llevaron a comentar los de queda, pero
+
+    [01:39] SPEAKER_00: Y yo dije, pucha, eso pero no, porque pensé que no era el 100%, ¿no?
+
+    [01:42] SPEAKER_00: Y hasta también, hasta Dios le cayó por sorpresa también, dijo.
+
+    [01:45] SPEAKER_00: O sea, a todo el grupo y a todos, la verdad, porque ya no nos avisó.
+
+    [01:47] SPEAKER_00: Entonces, ya cuando yo le envió un pequeño detalle, como un peluche, porque no quería irme,
+    o sea, yo no podía ya irme a visitar, no se podía porque justo era mi viaje, o sea, iba a venir el bus a llevarme
+    a... creo que a Chicla, y no me acuerdo dónde me iba, pero ya tenía como planeado, ¿no?
+
+    [02:01] SPEAKER_00: O sea, iba a venir el bus a recogerme en Plaza Norte y me iba a ir.
+
+    [02:04] SPEAKER_00: Entonces, le llevé como un detalle, o sea, le dije a Dios que se lo lleve para que lo puedan...
+    ¿se lo puede dar a él?
+
+    [02:09] SPEAKER_00: y ya, entonces ya cuando me voy les comento de que de ahí me estuve llamando de todo el
+    rato en mi lenca y mi lenca no me contestaba pues, osea yo entendía porque estaba operada, no se, bueno estaba
+    operada, estaba barricada entonces yo sentí que por eso no me contestó pero yo sigue insistiendo como que por
+    que no me contestaba hasta que una de esas me contestó mi mamá
+
+    [02:29] SPEAKER_00: Y su mamá me contestó de una muy mala manera.
+
+    [02:31] SPEAKER_00: Y se lo dije a ella, o sea, me contestó de una muy mala manera.
+
+    [02:34] SPEAKER_00: Y, bueno, ya le he dicho, yo le he dicho permiso para hablar de eso porque... Porque es
+    mamá, ¿no?
+
+    [02:38] SPEAKER_00: Igual de eso ya pasó hace tiempo, o sea... Ya pasó mucho antes y como que... Como que queríamos
+    entrar y ella me dio permiso para entrar, o sea, la verdad, ¿no?
+
+    [02:45] SPEAKER_00: Entonces, su mamá me contestó y me dijo, ¿estoy en animación, hijita?
+
+    [02:48] SPEAKER_00: O sea, como que me contestó de una muy mala manera.
+
+    [02:50] SPEAKER_00: Y yo no sentía por qué.
+
+    [02:51] SPEAKER_00: Y igual, sigue insistiendo en la llamada.
+
+    [02:52] SPEAKER_00: O sea, yo no sabía por qué tenía el rechazo de su familia cuando le dicen a ella.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 28.06 · 252800 vistas
+- id: za-mues-005
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @hijitoclips · 7670680111577877778
+  video:
+    titulo: null
+    canal: yolu
+  candidato:
+    inicio: 00:00
+    fin: 01:14
+  transcripcion: '[00:00] SPEAKER_00: ¿Qué tal, Westerl?
+
+    [00:01] SPEAKER_00: ¿Cómo estás?
+
+    [00:02] SPEAKER_00: Bien, muy bien.
+
+    [00:03] SPEAKER_00: ¿Cómo has llamado a usted?
+
+    [00:05] SPEAKER_00: Yo, a mí me he enciderado.
+
+    [00:06] SPEAKER_00: Yo estremeo acá en Perú hace más de 10 años.
+
+    [00:10] SPEAKER_00: Sí.
+
+    [00:11] SPEAKER_00: Vale, regalo a un hijo a un 17 para que estremee más, Nello.
+
+    [00:14] SPEAKER_00: oye el re naranjao nada hermano muchas gracias yo de verdad sigo tus streamings y te deseo
+    lo mejor papi de verdad bien eres mucha inspiracion para mucha gente que aca no?
+
+    [00:25] SPEAKER_00: esta comenzando y nada hermano de verdad vale y espero mas tarde con tapar las camaritas
+    y chupar hasta el ultimo
+
+    [00:41] SPEAKER_00: No te digo nada!
+
+    [00:52] e e'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 22.21 · 200100 vistas
+- id: za-mues-006
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @hijitoclips · 7684762437568056583
+  video:
+    titulo: null
+    canal: yolu
+  candidato:
+    inicio: 00:00
+    fin: 00:44
+  transcripcion: '[00:01] SPEAKER_00: Yo tengo 35 años.
+
+    [00:03] SPEAKER_00: ¿Por qué crees que yo no he sido papá en estos últimos años?
+
+    [00:06] SPEAKER_00: A ver, con mis últimas cuatro enamoradas.
+
+    [00:08] SPEAKER_00: ¿Te digo la verdad?
+
+    [00:09] SPEAKER_00: Yo de lo juro que no es por nada, pero yo siempre, si en caso tengo algo o alguien, yo las
+    mando a que se pongan te colectivos.
+
+    [00:17] SPEAKER_00: Ahora recién salió la bachitomía esa vaina.
+
+    [00:19] SPEAKER_00: Ya mi amor, yo te voy a decir una cosa.
+
+    [00:20] SPEAKER_01: ¿Sabes por qué también no he sido papá?
+
+    [00:26] SPEAKER_01: Y te va a oler, hermano, lo que te va a decir, huevón Porque ninguna mujer ha querido tener
+    un hijo conmigo'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 20.74 · 186900 vistas
+- id: za-mues-007
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @hijitoclips · 7659737613884001543
+  video:
+    titulo: null
+    canal: yolu
+  candidato:
+    inicio: 00:00
+    fin: 01:07
+  transcripcion: '[00:08] SPEAKER_00: El auto en cuestión, inclusive, sale durante unos minutos para estacionarse
+    mejor, de repente está apurada y quiere salir rápido, pero no, no pensemos mal, dejemos que transcurre el tiempo,
+    porque tenemos hasta las seis y media de la tarde, ¿verdad?
+
+    [00:25] SPEAKER_00: Pero aquí, a las nueve y diez de la mañana, es decir, tan solo seis minutos, seis minutos
+    después de su hora de entrada, la camioneta de la señora sale de la parroquia.
+
+    [00:35] SPEAKER_00: Igual nosotros decidimos confiar en la señora Magali, capaz olvidó de algo pero no, a las
+    9 y 12 la camioneta ya sale de la residencial cruzeta y toma dirección a la avenida, en pocas palabras y fue.
+
+    [00:46] SPEAKER_00: Entonces aquí la pregunta es, ¿cómo es que la señora Magali realizó un servicio comunitario
+    de 10 horas en tan solo 6 minutos y todavía habiendo llegado tarde?
+
+    [00:55] SPEAKER_00: O si no le preguntamos señora, ¿usted
+
+    [00:57] SPEAKER_00: regresó después de esos seis minutos, en verdad está en condiciones de decirnos que regresó
+    porque nosotros tenemos pruebas y no sólo nuestras sino las de las propias cámaras de seguridad.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 19.0 · 171200 vistas
+- id: za-mues-008
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @satorugojo.clips · 7691085873575628052
+  video:
+    titulo: null
+    canal: yolu
+  candidato:
+    inicio: 00:00
+    fin: 00:59
+  transcripcion: '[00:01] SPEAKER_00: te regala nada teniendo plata.
+
+    [00:03] SPEAKER_00: Y es que hay personas que confunden las cosas.
+
+    [00:06] SPEAKER_00: ¿Qué significa que porque una persona tenga dinero, de repente un poco más que otros tiene
+    que regalarme, no?
+
+    [00:14] SPEAKER_00: Cuando yo conocí a Jordi yo le dije, Jordi es una persona la cual no es detallista, entonces
+    Jordi tú no la tienes que pedir porque por más que tú la pidas Jordi no te lo va a dar.
+
+    [00:23] SPEAKER_00: Esa es la verdad.
+
+    [00:24] SPEAKER_00: entonces no hay lógica, recuerden que yo me enamoré así como con Yolo, yo lo conozco muy
+    bien y jamás en mi aniversario, por ejemplo hoy el 28, hoy cumplo aniversario con Yolo y jamás yo espero una
+    flor o algo así, porque está bien, así es él
+
+    [00:42] SPEAKER_00: yo lo amo pero Yuru por ejemplo es una persona que no tiene detalles pero hermana a la hora
+    que tú te enfermas no hay persona que te cuide más como Yuru no hay persona que te cuide más como Yuru cada
+    persona tiene una manera diferente de mostrar su afectación'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 17.63 · 755400 vistas
+- id: za-mues-009
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @gatitoclips1.0 · 7691148149905394951
+  video:
+    titulo: null
+    canal: yolu
+  candidato:
+    inicio: 00:00
+    fin: 00:23
+  transcripcion: '[00:00] SPEAKER_00: ¿Dónde está el Matabuachi?
+
+    [00:03] SPEAKER_00: Oye, Matías.
+
+    [00:04] SPEAKER_00: Buenas noches.
+
+    [00:04] SPEAKER_00: ¿Cómo estás, Matías?
+
+    [00:05] SPEAKER_00: Buenas noches, buenas noches.
+
+    [00:06] SPEAKER_00: Ahí está.
+
+    [00:06] SPEAKER_00: Llegó Matías.
+
+    [00:08] SPEAKER_00: Uno de los bravos.
+
+    [00:10] SPEAKER_00: En mi colegio.
+
+    [00:11] SPEAKER_00: ¿Sí?
+
+    [00:11] SPEAKER_00: ¿A dónde está Matías?
+
+    [00:13] SPEAKER_00: Tenés una cita, Matías.
+
+    [00:14] SPEAKER_00: Ah, el Matías.
+
+    [00:15] SPEAKER_00: Matías, ¿verdad que te has encontrado?
+
+    [00:16] SPEAKER_00: Dices con la... ¿Cómo se llama la albina?
+
+    [00:18] SPEAKER_00: Oye, ten cuidado, que vas a tener una flaquita.
+
+    [00:21] SPEAKER_00: ¿Sí?
+
+    [00:21] SPEAKER_00: ¿Está con tu flaquita?'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 15.91 · 276800 vistas
+- id: za-mues-010
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @yoluclips19 · 7690974131587697921
+  video:
+    titulo: null
+    canal: yolu
+  candidato:
+    inicio: 00:00
+    fin: 00:46
+  transcripcion: '[00:00] SPEAKER_01: ¿Por qué?
+
+    [00:01] SPEAKER_01: Ayer fue su aniversario, dice.
+
+    [00:06] SPEAKER_00: Sí, boludo.
+
+    [00:06] SPEAKER_00: No mames, ayer fue mi aniversario, boludo, en verdad, 28.
+
+    [00:11] SPEAKER_00: ¿Cómo?
+
+    [00:13] SPEAKER_00: Te oí, boludo.
+
+    [00:15] SPEAKER_00: Te decía, hoy 29, ¿no?
+
+    [00:17] SPEAKER_00: Hoy es 29, tío.
+
+    [00:19] SPEAKER_00: Hoy es 29, ayer fue 28.
+
+    [00:20] SPEAKER_00: Tu aniversario.
+
+    [00:21] SPEAKER_00: Ayer era mi aniversario, boludo.
+
+    [00:23] SPEAKER_00: Tu aniversario, tío.
+
+    [00:24] SPEAKER_00: Sí, sí.
+
+    [00:26] SPEAKER_00: Era... Un día como ayer...
+
+    [00:29] SPEAKER_00: Hace 15 años atrás, me conocí con mi esposa en la calle.
+
+    [00:34] SPEAKER_01: Uy, tío Diolo, ahora, ¿qué hacemos, tío Diolo?
+
+    [00:41] SPEAKER_01: Preocúpate.
+
+    [00:42] SPEAKER_00: ¿Qué me recomiendas por ganarle 15 años a mi esposa?
+
+    [00:44] SPEAKER_01: A ver, mi gente.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 13.27 · 1300000 vistas
+- id: za-mues-011
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @babynathsclips1 · 7691394093963824404
+  video:
+    titulo: null
+    canal: yolu
+  candidato:
+    inicio: 00:00
+    fin: 00:08
+  transcripcion: '[00:00] SPEAKER_00: ¡Me vendré a pedir tu mamá, de tu mamá y tu papá!
+
+    [00:04] SPEAKER_00: ¡Mantenido sin vergüenza!'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 12.39 · 155500 vistas
+- id: za-mues-012
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @hijitoclips · 7648036839575538952
+  video:
+    titulo: null
+    canal: yolu
+  candidato:
+    inicio: 00:00
+    fin: 00:59
+  transcripcion: '[00:00] SPEAKER_00: No quiero pecho, no quiero ala.
+
+    [00:03] SPEAKER_00: Mierda, hay pecho ahí, mierda.
+
+    [00:05] SPEAKER_00: Hay pecho, hay pechito ahí.
+
+    [00:07] SPEAKER_00: No hay un pechito.
+
+    [00:08] SPEAKER_00: No, esa pesa es ala, no.
+
+    [00:09] SPEAKER_00: Tengo un pecho, tío.
+
+    [00:10] SPEAKER_00: Quiero pechar como tú me gustó.
+
+    [00:12] SPEAKER_00: No, esa es una ala, tío.
+
+    [00:15] SPEAKER_00: Ese pecho, tío.
+
+    [00:15] SPEAKER_00: No, esa es una ala, tío.
+
+    [00:25] SPEAKER_00: Como el caballero limitado, nosotros trabajamos con eso.
+
+    [00:28] SPEAKER_00: Todos trabajamos con eso.
+
+    [00:31] SPEAKER_00: No podemos vender un producto que no tenemos.
+
+    [00:33] SPEAKER_00: Es por eso que el caballero limitado se ha identificado caballero limitado.
+
+    [00:37] SPEAKER_00: Explícale, explícale, explícale.
+
+    [00:38] SPEAKER_00: ¿Dónde tuve ese pecho para situar?
+
+    [00:41] SPEAKER_00: Es un cuarto, pero es un octavo.
+
+    [00:43] SPEAKER_00: ¿Cuánto me tocó el caballero limitado?
+
+    [00:44] SPEAKER_00: 20 soles.
+
+    [00:45] SPEAKER_00: ¿Cuánto?
+
+    [00:45] SPEAKER_00: 20 soles.
+
+    [00:45] SPEAKER_00: O no seas loco, viejo.
+
+    [00:53] SPEAKER_00: ¡Cuidado el codo!'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 11.66 · 105100 vistas
+- id: za-mues-013
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @hijitoclips · 7681457494836841736
+  video:
+    titulo: null
+    canal: yolu
+  candidato:
+    inicio: 00:00
+    fin: 00:38
+  transcripcion: '[00:00] SPEAKER_00: y chicos estoy feliz la verdad estoy feliz porque mañana Zuli ya se va de
+    la casa Zuli ya mañana saca sus cosas y por fin Zuli se va así que lo más probable es que el día lunes a más
+    tardar me vaya a mudar al cuarto de Zuli chicos ¡APLAUSO PORQUE SE VA ZULI CARAJO!
+
+    [00:20] SPEAKER_01: ¡APLAUSO POR FAVOR GENTE!
+
+    [00:25] SPEAKER_01: ¡APLAUSOS!
+
+    [00:25] SPEAKER_01: ¡SE VA ZULI CARAJO!
+
+    [00:30] SPEAKER_01: ¡Es aplauso, por favor!
+
+    [00:31] SPEAKER_01: ¡Estos ricos aplausos!
+
+    [00:33] SPEAKER_01: ¡Por fin su licenciado, muchachos!
+
+    [00:35] SPEAKER_01: ¡Ya era hora!'
+  esperado:
+    publicar: false
+  evidencia: grupo fondo · outlier 0.12 · 1118 vistas
+- id: za-mues-014
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @hijitoclips · 7649509997239373074
+  video:
+    titulo: null
+    canal: yolu
+  candidato:
+    inicio: 00:00
+    fin: 00:28
+  transcripcion: '[00:00] SPEAKER_00: Vamos a enfrentar con una estrategia clara Comandos policiales y militares
+    en sus industriales Rastrillajes con militares y policías en zonas más peligrosas Las Fuerzas Armadas y el INPE
+    controlarán los penales Retomaremos el control de nuestras fronteras Tendremos unidades especializadas de inteligencia
+    para proteger la Mipe y la industria Nuestro mensaje es claro El estado va a proteger al que trabaja y perseguir
+    al que den'
+  esperado:
+    publicar: false
+  evidencia: grupo fondo · outlier 0.12 · 1073 vistas
+- id: za-mues-015
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @satorugojo.clips · 7690647408799157524
+  video:
+    titulo: null
+    canal: yolu
+  candidato:
+    inicio: 00:00
+    fin: 00:39
+  transcripcion: '[00:00] SPEAKER_00: Dime mi casita, dime.
+
+    [00:02] SPEAKER_00: Me dice, trabajas las 12 horas.
+
+    [00:04] SPEAKER_00: Sí, Jorgito trabaja 12 horas, gana 3.800 con todas las bonificaciones.
+
+    [00:10] SPEAKER_00: La semana tiene 7 días y tiene una semana, tiene un día para que descansa.
+
+    [00:14] SPEAKER_00: El 28 de julio le corresponde otro sueldo, en diciembre le corresponde otro sueldo.
+
+    [00:19] SPEAKER_00: Trabajas 12 meses, cuando tú trabajas un año de acuerdo a ley, te corresponde 30 días de
+    vacaciones pagadas.
+
+    [00:26] SPEAKER_00: O sea, por lo que duermes se te paga.
+
+    [00:29] SPEAKER_00: Ese beneficio la gente tiene cuando trabaja en una empresa formal.
+
+    [00:33] SPEAKER_00: Cuando tú trabajas en una empresa informal, ni las gracias te dan.'
+  esperado:
+    publicar: false
+  evidencia: grupo fondo · outlier 0.11 · 4866 vistas
+- id: za-mues-016
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @full_showyolu · 7691350792736918817
+  video:
+    titulo: null
+    canal: yolu
+  candidato:
+    inicio: 00:00
+    fin: 00:11
+  transcripcion: '[00:01] SPEAKER_00: mis approach de 4800 mi gente 4800 y ya pues con algunos extras que siempre
+    hago como el que yo le doy 5200 casi ya'
+  esperado:
+    publicar: false
+  evidencia: grupo fondo · outlier 0.11 · 3256 vistas
+- id: za-mues-017
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @satorugojo.clips · 7691510744302603540
+  video:
+    titulo: null
+    canal: yolu
+  candidato:
+    inicio: 00:00
+    fin: 00:22
+  transcripcion: '[00:00] SPEAKER_01: No más entregar nada.
+
+    [00:02] SPEAKER_01: Toda la gente a mí me ataca.
+
+    [00:03] SPEAKER_00: Eres mentiroso.
+
+    [00:04] SPEAKER_01: ¿Por qué no te recispro?
+
+    [00:07] SPEAKER_01: Porque hoy es día de los Hallwills.
+
+    [00:09] SPEAKER_01: No más entregar nada.
+
+    [00:11] SPEAKER_00: Yo había estado de mal humor desde que amaneció.
+
+    [00:14] SPEAKER_00: Así que no me vienes a decir.
+
+    [00:17] SPEAKER_00: Entonces para evitar no te entrego nada.
+
+    [00:20] SPEAKER_00: Desde mañana estoy de mal humor.'
+  esperado:
+    publicar: false
+  evidencia: grupo fondo · outlier 0.08 · 3537 vistas
+- id: za-mues-018
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @zeclips_0 · 7620756314859293970
+  video:
+    titulo: null
+    canal: fritz
+  candidato:
+    inicio: 00:00
+    fin: 00:22
+  transcripcion: '[00:00] SPEAKER_00: toda su plata.
+
+    [00:01] SPEAKER_00: Y por otro lado, no sé el señor Acuña, no sé qué hace en este debate presidencial, porque
+    hace unas semanas lo escuché en un meeting donde decía, yo no quiero ser presidente.
+
+    [00:12] SPEAKER_00: Entonces, bueno, no sé qué, queda acá, pero en todo caso...
+
+    [00:16] SPEAKER_00: En serio, no me interesa el presidente, son los 34 millones de peruanos.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 438.07 · 2000000 vistas
+- id: za-mues-019
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @zeclips_0 · 7647193493000965394
+  video:
+    titulo: null
+    canal: fritz
+  candidato:
+    inicio: 00:00
+    fin: 00:26
+  transcripcion: '[00:00] SPEAKER_00: La llanta armada.
+
+    [00:02] SPEAKER_00: La llanta armada.
+
+    [00:03] La llanta armada.
+
+    [00:04] SPEAKER_00: La llanta armada.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 113.13 · 516500 vistas
+- id: za-mues-020
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @jhasminclips · 7691092471027141896
+  video:
+    titulo: null
+    canal: fritz
+  candidato:
+    inicio: 00:00
+    fin: 00:34
+  transcripcion: '[00:00] SPEAKER_01: pero para empezar tío Charla mira lo que se viene mira Air Max cápsula mira
+    lo que se viene acá tú sabes que te quedan tres dientes se te puede caer la caserina para que están arriesgando
+    los últimos dos dientes que te quedan
+
+    [00:20] SPEAKER_00: cuando estás en la playa, tío, se reconoce que está en la playa, va con las sandalilas,
+    hace un día calor, no hay alguien que nos atienda.
+
+    [00:27] SPEAKER_01: Pórtelo, a ver, chau.
+
+    [00:28] SPEAKER_01: Acaba del sol.
+
+    [00:29] SPEAKER_01: Pórtelo.
+
+    [00:30] SPEAKER_01: Lo sacas de las medas y yo ya me la saqué.
+
+    [00:32] SPEAKER_00: Tío, frío, pero la verdad...
+
+    [00:33] SPEAKER_00: Yo ya me la saqué.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 101.75 · 209900 vistas
+- id: za-mues-021
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @zeclips_0 · 7534971853287279928
+  video:
+    titulo: null
+    canal: fritz
+  candidato:
+    inicio: 00:00
+    fin: 00:19
+  transcripcion: '[00:00] SPEAKER_00: Yo creo que si Jotache le saca la mierda a Cristo Rata, en mi cerebro maquiavélico,
+    diría para que lo venga, en la próxima, pongo a Jotache contra Cañita.
+
+    [00:13] SPEAKER_00: A ver, ¿quién chucha me va a detener?
+
+    [00:16] SPEAKER_00: Ni nadie, huevón.
+
+    [00:18] SPEAKER_00: ¿Sí o no?'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 94.03 · 429300 vistas
+- id: za-mues-022
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @jhasminclips · 7685878874915245330
+  video:
+    titulo: null
+    canal: fritz
+  candidato:
+    inicio: 00:00
+    fin: 00:38
+  transcripcion: '[00:00] SPEAKER_00: A ver, tío Charla.
+
+    [00:18] SPEAKER_00: Tío Free, ¿cómo estás?
+
+    [00:20] SPEAKER_00: Te gusto.
+
+    [00:21] SPEAKER_00: ¿De nuevo tío Charla?
+
+    [00:23] SPEAKER_00: No, tío, estoy un poquito meditando.
+
+    [00:29] SPEAKER_00: ¿Qué pasó?
+
+    [00:31] SPEAKER_00: Estoy que concentro en todo lo que se va a hacer más tarde.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 78.62 · 162200 vistas
+- id: za-mues-023
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @jhasminclips · 7691088917902134535
+  video:
+    titulo: null
+    canal: fritz
+  candidato:
+    inicio: 00:00
+    fin: 00:20
+  transcripcion: '[00:00] SPEAKER_01: Ahí lo imprimimos.
+
+    [00:01] SPEAKER_00: Sí, Litu, tú también eres brothers, porque ahorita vamos a tomar gaseosa con bizcocho, ¿ah?
+
+    [00:04] SPEAKER_01: Ah, no, no tengo ningún problema.
+
+    [00:06] SPEAKER_00: No hay problema, listo.
+
+    [00:08] SPEAKER_01: Una pixita.
+
+    [00:10] SPEAKER_00: No, de ahí se viene la pizza.
+
+    [00:11] SPEAKER_00: Pían la pizza, chicos.
+
+    [00:12] SPEAKER_00: Yo pago la pizza, por favor.
+
+    [00:13] SPEAKER_00: En serio, píanse su pixita, ¿sí?
+
+    [00:16] SPEAKER_00: Con su gaseosita.
+
+    [00:17] SPEAKER_00: ¿Va o no va?
+
+    [00:17] SPEAKER_00: Va, va.
+
+    [00:18] SPEAKER_00: Barre contra va.
+
+    [00:19] SPEAKER_00: Ya.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 54.97 · 113400 vistas
+- id: za-mues-024
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @jhasminclips · 7687842381013536018
+  video:
+    titulo: null
+    canal: fritz
+  candidato:
+    inicio: 00:00
+    fin: 00:22
+  transcripcion: '[00:00] SPEAKER_00: ¡Mira!
+
+    [00:04] SPEAKER_00: El día que él tuvo su accidente...'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 49.05 · 101200 vistas
+- id: za-mues-025
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @jhasminclips · 7686266690987904264
+  video:
+    titulo: null
+    canal: fritz
+  candidato:
+    inicio: 00:00
+    fin: 00:35
+  transcripcion: '[00:01] SPEAKER_00: se viene voy a necesitar tarapoto prepárate porque si nos dan el ok vamos
+    a necesitar vendedores o vendedoras cajeros o cajeras personal de limpieza administrador y administradora comunicador
+    comunicador sí vamos a necesitar se vienen cosas muy bonitas se viene el tours el tour para tarapoto en estos
+    días
+
+    [00:28] SPEAKER_00: Toda la comunidad que nos sigue van a estar viendo cómo estamos, de qué manera estamos activos.
+
+    [00:33] SPEAKER_00: ¿Ok?'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 40.09 · 82700 vistas
+- id: za-mues-026
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @zeclips_0 · 7633269650742136072
+  video:
+    titulo: null
+    canal: fritz
+  candidato:
+    inicio: 00:00
+    fin: 00:31
+  transcripcion: '[00:00] SPEAKER_00: Has indicado claramente, con palabras de honor, que no vas a tener orquesta
+    el día de hoy.
+
+    [00:08] SPEAKER_00: Y me lo has repetido hasta el cansado.
+
+    [00:10] SPEAKER_00: Tus redes sociales dicen lo contrario.
+
+    [00:14] SPEAKER_00: Por lo que en estos momentos, voy a, de acuerdo a mi normativa, al desarrollar un giro incompatible,
+    voy a tener que excederte la sanción y cerrarte el ejército.
+
+    [00:25] SPEAKER_00: Eso es lo que compete desde el área de la gerencia de desarrollo económico, porque no ha
+    respetado...'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 38.75 · 176900 vistas
+- id: za-mues-027
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @brayanclip10 · 7691408534835055878
+  video:
+    titulo: null
+    canal: fritz
+  candidato:
+    inicio: 00:00
+    fin: 00:47
+  transcripcion: '[00:00] SPEAKER_00: Cuando yo me fui a Europa, hermano, me llevé mi polo Lacoste, los camiseros,
+    hermano.
+
+    [00:05] SPEAKER_00: Y los polos Ralph Lauren etiqueta morada, hermano.
+
+    [00:08] SPEAKER_00: Yo acá en mi puesto lo vendo a 30 zoos.
+
+    [00:10] SPEAKER_00: No, 30 zoos diré 90 zoos.
+
+    [00:13] SPEAKER_00: Me lo llevé para Europa, hermano.
+
+    [00:16] SPEAKER_00: Hoy te lo juro, hermano, me lo compraron todo al barrer, hermano, a 30 euros, hermano.
+
+    [00:21] SPEAKER_00: No me dijeron, hermano, algo menos, nada.
+
+    [00:23] SPEAKER_00: Me dijeron, tráeme más, me han dicho todavía.
+
+    [00:26] SPEAKER_00: Por eso voy a viajar y voy a llevar mis mercas para allá, hermano.
+
+    [00:30] SPEAKER_00: Voy a llevar mi merquita, hermano.
+
+    [00:33] SPEAKER_00: La merca vale, hermano, ¿eh?
+
+    [00:36] SPEAKER_00: Esa gente, hermano, allá de Europa, barata, hermano, la he vendido porque ellos lo venderán
+    a más, ¿eh, hermano?
+
+    [00:43] SPEAKER_00: Lo venderán ¿cuánto?
+
+    [00:44] SPEAKER_00: A 60, ¿eh?
+
+    [00:45] SPEAKER_00: 50, lo venderán.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 34.02 · 111000 vistas
+- id: za-mues-028
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @sendooclips · 7650386345650605334
+  video:
+    titulo: null
+    canal: fritz
+  candidato:
+    inicio: 00:00
+    fin: 00:15
+  transcripcion: '[00:00] SPEAKER_00: gente yo se lo dije precios de locura de la unidad se ganaba mientras sabe
+    lo mismo precios de locura de la unidad el precio mas bajo de la unidad y para toda la familia primera en todas
+    las sedes precios locura de la unidad'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 18.79 · 861600 vistas
+- id: za-mues-029
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @jhasminclips · 7686745036347755794
+  video:
+    titulo: null
+    canal: fritz
+  candidato:
+    inicio: 00:00
+    fin: 00:29
+  transcripcion: '[00:00] SPEAKER_00: Yo te voy a hacer así.
+
+    [00:05] SPEAKER_00: Mano, no me saques otro candra a mi causa, por favor.
+
+    [00:07] SPEAKER_00: Ya basta.
+
+    [00:09] SPEAKER_00: Sácame las locuras, tío.
+
+    [00:11] SPEAKER_00: Sácame las locuras, mi hermano.
+
+    [00:13] SPEAKER_00: Aquí está, mi bro.
+
+    [00:14] SPEAKER_00: ¿OK?
+
+    [00:16] SPEAKER_00: Abre.
+
+    [00:16] SPEAKER_00: Ahí está.
+
+    [00:20] SPEAKER_00: Esa es la belleza.
+
+    [00:21] SPEAKER_00: Hermano, busca las reviews.
+
+    [00:24] SPEAKER_00: Solo cosas maravillosas hablan de esta fragancia.
+
+    [00:27] SPEAKER_00: Es espectacular.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 17.26 · 35600 vistas
+- id: za-mues-030
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @zeclips_0 · 7535702496346475832
+  video:
+    titulo: null
+    canal: fritz
+  candidato:
+    inicio: 00:00
+    fin: 00:26
+  transcripcion: '[00:09] SPEAKER_00: ¡Que la muerda!
+
+    [00:10] SPEAKER_00: ¡Que la muerda!'
+  esperado:
+    publicar: false
+  evidencia: grupo fondo · outlier 0.04 · 172 vistas
+- id: za-mues-031
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @zeclips_0 · 7535700873159200005
+  video:
+    titulo: null
+    canal: fritz
+  candidato:
+    inicio: 00:00
+    fin: 00:26
+  transcripcion: '[00:00] SPEAKER_00: ¡No!
+
+    [00:00] SPEAKER_00: ¡No!
+
+    [00:00] SPEAKER_00: ¡No!
+
+    [00:00] ¡No!
+
+    [00:01] ¡No!
+
+    [00:01] ¡No!
+
+    [00:02] ¡No!
+
+    [00:03] SPEAKER_00: ¡No!
+
+    [00:03] SPEAKER_00: ¡No!'
+  esperado:
+    publicar: false
+  evidencia: grupo fondo · outlier 0.04 · 189 vistas
+- id: za-mues-032
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @zeclips_0 · 7535694288303164728
+  video:
+    titulo: null
+    canal: fritz
+  candidato:
+    inicio: 00:00
+    fin: 00:15
+  transcripcion: '[00:00] SPEAKER_00: con cuidado con cuidado con cuidado con cuidado con cuidado con cuidado'
+  esperado:
+    publicar: false
+  evidencia: grupo fondo · outlier 0.04 · 171 vistas
+- id: za-mues-033
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @zeclips_0 · 7535692913234382086
+  video:
+    titulo: null
+    canal: fritz
+  candidato:
+    inicio: 00:00
+    fin: 00:18
+  transcripcion: '[00:00] SPEAKER_00: Bueno, Kui, yo te bendigo, Kui, con el nombre de... ¿Cómo lo llamamos?
+
+    [00:13] SPEAKER_00: Frentón.
+
+    [00:14] SPEAKER_00: Frentón.
+
+    [00:15] SPEAKER_00: Guárdalo, por favor, antes de que le de un paro al corazón.'
+  esperado:
+    publicar: false
+  evidencia: grupo fondo · outlier 0.03 · 143 vistas
+- id: za-mues-034
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @zeclips_0 · 7685598493951446279
+  video:
+    titulo: null
+    canal: fritz
+  candidato:
+    inicio: 00:00
+    fin: 00:23
+  transcripcion: '[00:01] SPEAKER_00: No metas eso, estás loco, huevo.
+
+    [00:05] SPEAKER_00: Deja de meter eso, estás loco.
+
+    [00:07] SPEAKER_00: Respeta, mano.
+
+    [00:09] SPEAKER_00: No voy a hablar de terceras, nada.
+
+    [00:10] SPEAKER_00: Estás loco.
+
+    [00:17] SPEAKER_00: No me interesan otras personas.
+
+    [00:20] SPEAKER_00: Estás loco.
+
+    [00:20] SPEAKER_00: Perdón, ya ahí está.
+
+    [00:21] SPEAKER_00: No haces eso, mano.
+
+    [00:22] SPEAKER_00: Estás loco.'
+  esperado:
+    publicar: false
+  evidencia: grupo fondo · outlier 0.01 · 55 vistas
+- id: za-mues-035
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @davidclipsx · 7691162386564254984
+  video:
+    titulo: null
+    canal: noto
+  candidato:
+    inicio: 00:00
+    fin: 00:48
+  transcripcion: '[00:00] SPEAKER_00: 100% solo, definitivamente.
+
+    [00:02] SPEAKER_00: Es más, Nancy no me deja mentir.
+
+    [00:04] SPEAKER_00: Nancy se fue a vivir conmigo a Colombia.
+
+    [00:06] SPEAKER_00: Nancy vivió conmigo.
+
+    [00:07] SPEAKER_00: Cuando yo me voy a vivir a Colombia, ¿tú cuánto tiempo viviste conmigo en Colombia?
+
+    [00:11] SPEAKER_00: ¿Un año?
+
+    [00:12] SPEAKER_00: Un año.
+
+    [00:12] SPEAKER_00: Un año, dejó a sus hijas, dejó a sus dos hijas, a su marido.
+
+    [00:16] SPEAKER_00: y venía como, por ejemplo, venía como tres meses, se quedaba tres meses en Colombia, venía
+    un mes a Lima y después volvía tres meses a Colombia y volvió un mes a Lima o tres meses a Colombia y así y
+    así nos mantuvimos bastante tiempo cuando mi hermana todavía no estaba con Lordui.
+
+    [00:28] SPEAKER_00: Entonces vivíamos en mi casa Nancy, Maffer, yo y Uma.
+
+    [00:32] SPEAKER_00: Nancy era la mamá de la casa porque mi papá vivía en Lima y mi mamá vivía en Lima o en esa
+    época también vivía en Estados Unidos.
+
+    [00:38] SPEAKER_00: Entonces Nancy para los que no sabían eso es un dato curioso.
+
+    [00:42] SPEAKER_00: Nancy no es la que más tiempo ha trabajado en mi casa pero se fue a vivir conmigo a Colombia
+    cuando yo me mudé para allá.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 127.48 · 140100 vistas
+- id: za-mues-036
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @clipeanonymus · 7655883464251624724
+  video:
+    titulo: null
+    canal: noto
+  candidato:
+    inicio: 00:00
+    fin: 00:38
+  transcripcion: '[00:00] SPEAKER_00: ¡Grand Jack!
+
+    [00:01] SPEAKER_00: Un ratito mamita, un ratito que me espere.
+
+    [00:04] SPEAKER_00: ¿Cuánto te debo Grand Jack?
+
+    [00:07] SPEAKER_00: 60 soles.
+
+    [00:07] SPEAKER_00: ¿60 soles?
+
+    [00:08] SPEAKER_00: ¿En serio 60 soles?
+
+    [00:09] SPEAKER_00: Gracias muchacho.
+
+    [00:10] Muchas gracias.
+
+    [00:10] Muchas bendiciones.
+
+    [00:11] SPEAKER_00: Muchas gracias.
+
+    [00:30] SPEAKER_00: Ahí está, la música va más.
+
+    [00:32] SPEAKER_00: Yo estoy vendido, ¿ya mami?'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 104.27 · 1100000 vistas
+- id: za-mues-037
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @davidclipsx · 7689214413382978824
+  video:
+    titulo: null
+    canal: noto
+  candidato:
+    inicio: 00:00
+    fin: 00:49
+  transcripcion: '[00:00] SPEAKER_00: pero escúchenme, no contestes números desconocidos porque no, ¿QR tienes?
+
+    [00:10] SPEAKER_00: no, mejor tiene que decir su número pero no contestes números desconocidos o si no vas a
+    llegar a contestar y después te llaman a joder cuelgas pero te van a enamorar ya
+
+    [00:21] SPEAKER_00: Eso no la estén fastidiando, por favor.
+
+    [00:23] SPEAKER_00: Igual el cita solo contesta números que tiene guardado, ¿sí o no?
+
+    [00:28] SPEAKER_00: Sí.
+
+    [00:28] SPEAKER_00: Más nada.
+
+    [00:30] SPEAKER_00: Ya, listo.
+
+    [00:31] SPEAKER_00: ¿Tu número es?
+
+    [00:34] SPEAKER_00: 948.
+
+    [00:34] SPEAKER_00: 948.
+
+    [00:35] SPEAKER_00: 426.
+
+    [00:35] SPEAKER_00: 426.
+
+    [00:35] SPEAKER_00: 474.
+
+    [00:35] SPEAKER_00: 474.
+
+    [00:35] SPEAKER_00: Moradénme a mi el cita.
+
+    [00:37] SPEAKER_00: Todo es para el cita, todo es para el cita.
+
+    [00:40] SPEAKER_00: Moradén a el cita.
+
+    [00:42] SPEAKER_00: El cita, ¿te acuerdas cuánto tienes en tu cuenta?
+
+    [00:44] SPEAKER_00: Cuando termine el live vamos a ver cuánto te han moradiado.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 97.18 · 106800 vistas
+- id: za-mues-038
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @contenido.variado079 · 7648042083965537544
+  video:
+    titulo: null
+    canal: noto
+  candidato:
+    inicio: 00:00
+    fin: 00:22
+  transcripcion: '[00:02] SPEAKER_00: ¡Abajo!'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 86.04 · 781900 vistas
+- id: za-mues-039
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @contenido.variado079 · 7641369788127874311
+  video:
+    titulo: null
+    canal: noto
+  candidato:
+    inicio: 00:00
+    fin: 00:44
+  transcripcion: '[00:02] SPEAKER_00: ¿Qué es el estilo original?
+
+    [00:04] SPEAKER_00: ¿De quién?
+
+    [00:06] SPEAKER_00: Germa de trito, malta y tomataca ¿Y sorpresa?
+
+    [00:10] SPEAKER_00: Cinco cuarenta, cinco cuarenta Toma nomás ¡Claro!
+
+    [00:16] SPEAKER_00: ¿Qué es eso?
+
+    [00:18] ¿Qué es eso?
+
+    [00:19] ¿Qué es eso?
+
+    [00:19] SPEAKER_00: ¡Salud salud!
+
+    [00:34] SPEAKER_00: Como extraño a mi gente, como las extraño.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 62.18 · 565100 vistas
+- id: za-mues-040
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @davidclipsx · 7691159752839023890
+  video:
+    titulo: null
+    canal: noto
+  candidato:
+    inicio: 00:00
+    fin: 00:39
+  transcripcion: '[00:00] SPEAKER_00: el trapo encima de la toalla, dices.
+
+    [00:02] SPEAKER_00: Espérate, si esa toalla ya la usé, esa toalla la vamos a mandar a lavar.
+
+    [00:07] SPEAKER_00: Ahora toma.
+
+    [00:13] SPEAKER_00: Estamos cambiando, estamos cambiando de roles.
+
+    [00:16] SPEAKER_00: Y a partir de ahora, el que contratan para limpiar los espejos de la casa no lo llaman más,
+    ¿eh?
+
+    [00:21] SPEAKER_00: Voy a limpiar a yo.
+
+    [00:22] SPEAKER_00: Le voy a decir a mi papá que me pague a mí.
+
+    [00:24] SPEAKER_00: Ya está, niña.
+
+    [00:28] SPEAKER_00: Mira, mi casa viene dos veces a la semana a limpiar las lunas.
+
+    [00:33] SPEAKER_00: Yo lo voy a decir a mi papá, papá.
+
+    [00:35] SPEAKER_00: Págame a mí, yo lo limpio, guau.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 51.23 · 56300 vistas
+- id: za-mues-041
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @clipeanonymus · 7646539298111622408
+  video:
+    titulo: null
+    canal: noto
+  candidato:
+    inicio: 00:00
+    fin: 00:18
+  transcripcion: '[00:03] SPEAKER_00: yo le estoy diciendo de acá mira nosotros pagamos su sueldo nosotros pagamos
+    movilidad nosotros pagamos comisión la comisión es un sueldo hasta más'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 48.01 · 506500 vistas
+- id: za-mues-042
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @contenido.variado079 · 7645148059730578706
+  video:
+    titulo: null
+    canal: noto
+  candidato:
+    inicio: 00:00
+    fin: 01:48
+  transcripcion: '[00:00] SPEAKER_00: Cuando no se han ofendido, pido disculpas.
+
+    [00:03] SPEAKER_00: Yo creo que peor disculpas son de caballeros.
+
+    [00:05] SPEAKER_00: Y pido disculpas porque soy ser humano.
+
+    [00:09] SPEAKER_00: También tengo sentimientos.
+
+    [00:11] SPEAKER_00: Todo el día me he sentido mal, weón.
+
+    [00:12] SPEAKER_00: Me he sentido mal porque...
+
+    [00:16] SPEAKER_00: Simplemente dar mi porción, weón.
+
+    [00:20] SPEAKER_00: Me he sentido...
+
+    [00:22] SPEAKER_00: Dije, puta, qué hecho, weón.
+
+    [00:26] SPEAKER_00: Qué hecho, he dicho yo.
+
+    [00:30] SPEAKER_00: ¿A quién hice un daño, dije?
+
+    [00:34] SPEAKER_00: Y pienso, ¿qué daño hice?
+
+    [00:36] SPEAKER_00: ¿A quién le hice daño?
+
+    [00:38] SPEAKER_00: Hola, hola.
+
+    [00:39] SPEAKER_00: ¿A quién, dije yo, puta macho?
+
+    [00:43] SPEAKER_00: Y hasta el día de hoy me pregunto, ¿a quién le hice daño?
+
+    [00:49] SPEAKER_00: De estar arriba, porque estaba arriba siempre ayudando.
+
+    [00:52] SPEAKER_00: Hoy ya soy lo peor.
+
+    [00:55] SPEAKER_00: Hoy soy la peor basura.
+
+    [00:59] SPEAKER_00: Oye, Eddie Morales es la peor basura hoy.
+
+    [01:06] SPEAKER_00: Soy la peor disculpando mierda hoy día.
+
+    [01:16] SPEAKER_00: Eso es lo que a veces me da un poco de rabia.
+
+    [01:19] SPEAKER_00: O sea, yo sé que no es injusto, es injusto, hermano.
+
+    [01:22] SPEAKER_00: Por simplemente, o sea, por simplemente hablar lo que soy.
+
+    [01:29] SPEAKER_00: Hoy soy lo peor.
+
+    [01:32] SPEAKER_00: Lo peor, lo peor.
+
+    [01:39] SPEAKER_00: Bueno, pido disculpas del caso.
+
+    [01:46] SPEAKER_00: Cada uno libre de ser lo que quiera.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 41.19 · 374300 vistas
+- id: za-mues-043
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @clipeanonymus · 7655883955823971604
+  video:
+    titulo: null
+    canal: noto
+  candidato:
+    inicio: 00:00
+    fin: 00:23
+  transcripcion: '[00:00] SPEAKER_00: para nuestro país hermano ok la gran venezuela venezuela no está solo no está
+    solo porque aquí perú está contigo y una empresa peruana una empresa peruana haciéndose presente con este gran
+    país hermoso país venezuela dios te bendiga dios dios te bendiga venezuela vamos'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 38.57 · 406900 vistas
+- id: za-mues-044
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @contenido.variado079 · 7649212194629913874
+  video:
+    titulo: null
+    canal: noto
+  candidato:
+    inicio: 00:00
+    fin: 00:37
+  transcripcion: '[00:00] SPEAKER_00: por la por la calamina se han metido como 50 personas gratis señor iordi el
+    seguridad por la otra puerta están cobrando 20 soles y están que hacen entrar gratis puta madre jodepe jodepe
+    yo tanta plata yo invierto invierto que para que la gente que
+
+    [00:19] SPEAKER_00: y yo para que les tenga usted por favor ustedes son equipo acá y quiero que ustedes vean
+    su compromiso les digo una vez más y para finalizar esto yo ese día el evento viene mi papá viene mi mamá viene
+    mi suero su colita por favor pero no que yo soy su familia'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 35.22 · 320100 vistas
+- id: za-mues-045
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @sofhiaclips · 7640191358208085268
+  video:
+    titulo: null
+    canal: noto
+  candidato:
+    inicio: 00:00
+    fin: 00:35
+  transcripcion: '[00:00] SPEAKER_00: Quiero firmar, tío.
+
+    [00:00] SPEAKER_00: Hay que firmar.
+
+    [00:01] SPEAKER_00: ¿Qué quieres firmar?
+
+    [00:03] SPEAKER_00: ¡Los zapatitos!
+
+    [00:06] SPEAKER_00: A ver si los broto, a ver si sale al nariz, no, tío.
+
+    [00:08] SPEAKER_00: ¡Ay!
+
+    [00:08] SPEAKER_00: Ahora, ponle un audio a porfante también.
+
+    [00:11] SPEAKER_00: Tío, por favor.
+
+    [00:12] SPEAKER_00: Dale.
+
+    [00:13] SPEAKER_00: Espera, espera, espera.
+
+    [00:15] SPEAKER_00: Tío, por favor.
+
+    [00:16] SPEAKER_00: Quiero regalarle unas zapatillas.
+
+    [00:17] SPEAKER_00: ¿Puedo?
+
+    [00:19] SPEAKER_00: ¿Puedes permitirme?
+
+    [00:19] SPEAKER_00: ¿Ah?
+
+    [00:20] SPEAKER_00: No escucho bien yo.
+
+    [00:21] SPEAKER_00: Quiero regalarle unas zapatillas a mi sobrino.
+
+    [00:23] SPEAKER_00: ¿Cuál es su nombre?
+
+    [00:23] SPEAKER_00: Daniel.
+
+    [00:24] SPEAKER_00: Daniel.
+
+    [00:24] SPEAKER_00: ¿Quién dice unas zapatillas?
+
+    [00:28] SPEAKER_00: Escoge por acá, huevón, que escoge por acá, huevón.
+
+    [00:31] SPEAKER_00: Escoge por allá.
+
+    [00:31] SPEAKER_00: Oye, oye, oye, escoge en el botón, huevón.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 27.97 · 600000 vistas
+- id: za-mues-046
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @sofhiaclips · 7620627686226021648
+  video:
+    titulo: null
+    canal: noto
+  candidato:
+    inicio: 00:00
+    fin: 00:13
+  transcripcion: '[00:00] SPEAKER_00: Mira, mira cómo se mete.
+
+    [00:02] SPEAKER_00: Esto de hecho es el provincio.
+
+    [00:04] SPEAKER_00: Mira.
+
+    [00:05] SPEAKER_00: Mira.
+
+    [00:06] SPEAKER_00: Mira.
+
+    [00:07] SPEAKER_00: Entras, seguro de ser de alguna cuenta.
+
+    [00:09] SPEAKER_00: Mira quién es.'
+  esperado:
+    publicar: true
+  evidencia: grupo top · outlier 22.67 · 486200 vistas
+- id: za-mues-047
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @clipeanonymus · 7645181797743054100
+  video:
+    titulo: null
+    canal: noto
+  candidato:
+    inicio: 00:00
+    fin: 00:32
+  transcripcion: '[00:00] SPEAKER_00: ¡Uy, tengo una!
+
+    [00:01] SPEAKER_00: ¡Uy, hay polvo!
+
+    [00:02] SPEAKER_00: Mira esta grasa, por acá, enfoca ahí.
+
+    [00:04] SPEAKER_00: A ver, a ver, a ver.
+
+    [00:05] SPEAKER_00: ¡Uy, tío, esta es grasa!
+
+    [00:06] SPEAKER_00: ¡Esta no le viste a ningún lado, eh!
+
+    [00:09] SPEAKER_00: A ver, a ver.
+
+    [00:10] SPEAKER_00: No, no, no, hermano, Jordan.
+
+    [00:16] SPEAKER_00: Ahorita te voy a sacar una duracita más por acá.
+
+    [00:18] SPEAKER_00: A ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver,
+    a ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver, a ver,'
+  esperado:
+    publicar: false
+  evidencia: grupo fondo · outlier 0.07 · 726 vistas
+- id: za-mues-048
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @clipeanonymus · 7645186320943418644
+  video:
+    titulo: null
+    canal: noto
+  candidato:
+    inicio: 00:00
+    fin: 00:33
+  transcripcion: '[00:00] SPEAKER_00: y ahora lo que nos ha entrado?
+
+    [00:06] SPEAKER_00: Don Schister, ¿ah?
+
+    [00:08] SPEAKER_00: Revolución.
+
+    [00:09] SPEAKER_00: ¿Sabes a cuánto?
+
+    [00:10] SPEAKER_00: Por mayor, llévatelo a 145 soles y la unidad 175 para ir a gimnasio.
+
+    [00:18] SPEAKER_00: ¿145 soles?
+
+    [00:19] SPEAKER_00: Así es, hermano.
+
+    [00:20] SPEAKER_00: Para ir a jalar celulares.
+
+    [00:21] SPEAKER_00: ¿Qué?
+
+    [00:22] SPEAKER_00: Recordar el pasado de...'
+  esperado:
+    publicar: false
+  evidencia: grupo fondo · outlier 0.06 · 642 vistas
+- id: za-mues-049
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @clipeanonymus · 7645182693835115797
+  video:
+    titulo: null
+    canal: noto
+  candidato:
+    inicio: 00:00
+    fin: 00:14
+  transcripcion: '[00:00] SPEAKER_00: 3 perros abajo gente, 3 perros abajo'
+  esperado:
+    publicar: false
+  evidencia: grupo fondo · outlier 0.05 · 563 vistas
+- id: za-mues-050
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @contenido.variado079 · 7661434691886599431
+  video:
+    titulo: null
+    canal: noto
+  candidato:
+    inicio: 00:00
+    fin: 00:03
+  transcripcion: '[00:01] SPEAKER_00: Jajajaja'
+  esperado:
+    publicar: false
+  evidencia: grupo fondo · outlier 0.04 · 324 vistas
+- id: za-mues-051
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @nandoclips93 · 7664165268758727957
+  video:
+    titulo: null
+    canal: mixto
+  candidato:
+    inicio: 00:00
+    fin: 00:56
+  transcripcion: '[00:02] SPEAKER_00: En cajita, mamita.
+
+    [00:03] SPEAKER_00: Ciento treinta, dice.
+
+    [00:04] SPEAKER_00: ¿Cuánto tienes, ochenta?
+
+    [00:09] SPEAKER_00: ¿Quieres pagar ochenta?
+
+    [00:10] SPEAKER_00: Vamos, acompáñame.
+
+    [00:11] SPEAKER_00: Vamos a pagar tus ochenta manitas, mami.
+
+    [00:13] SPEAKER_00: Venga, venga por acá.
+
+    [00:14] SPEAKER_00: Acompáñame.
+
+    [00:18] SPEAKER_00: Un permisito, por favor.
+
+    [00:26] SPEAKER_00: Ya.
+
+    [00:27] SPEAKER_00: Ahí está la madrecita, recuerden.
+
+    [00:29] SPEAKER_00: Para hacer buenas ventas hay que hacer buenas compras.
+
+    [00:32] SPEAKER_00: La seguito, me está pidiendo un descuento y tengo que dársela.
+
+    [00:35] SPEAKER_00: Escúchame, este producto acá también, ¿ya?
+
+    [00:39] SPEAKER_00: 70.
+
+    [00:40] SPEAKER_00: No me digas nada.
+
+    [00:43] SPEAKER_00: Porque se trate de usted, madre, ¿ah?
+
+    [00:44] SPEAKER_00: Porque se trate de usted, ¿ah?
+
+    [00:46] SPEAKER_00: Dios la bendiga.
+
+    [00:47] SPEAKER_00: Mira, madrecita.
+
+    [00:48] SPEAKER_00: 70 manguitos, ¿ya?
+
+    [00:49] SPEAKER_00: De ahí, esos dos pares yo voy a firmar una autorización.
+
+    [00:52] SPEAKER_00: ¿Ya?
+
+    [00:54] SPEAKER_00: Dios la bendiga, madrecita.'
+  esperado:
+    publicar: true
+  evidencia: grupo propia_top · outlier 264.06 · 526000 vistas
+- id: za-mues-052
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @nandoclips93 · 7664266351233518868
+  video:
+    titulo: null
+    canal: mixto
+  candidato:
+    inicio: 00:00
+    fin: 01:41
+  transcripcion: '[00:00] SPEAKER_02: Para jugar a la Copa América mañana contra Estados Unidos, representando a
+    Venezuela.
+
+    [00:06] SPEAKER_02: En serio?
+
+    [00:07] SPEAKER_02: Si, para jugar a la Copa Isocuc.
+
+    [00:10] SPEAKER_02: La Copa América que van a hacer acá en Lima.
+
+    [00:13] SPEAKER_01: Si, mañana debutan contra Estados Unidos.
+
+    [00:19] SPEAKER_01: Ay, ay, ay.
+
+    [00:21] SPEAKER_01: Ya, vamos a hacer una cosa.
+
+    [00:22] SPEAKER_01: ¿A cuánto te han dicho que te van a salir?
+
+    [00:25] SPEAKER_01: Disculpa la cajita, mi hermano.
+
+    [00:26] SPEAKER_01: Vamos a ver, vamos a ver, vamos a ver, vamos a ver.
+
+    [00:29] SPEAKER_01: Vamos a ver.
+
+    [00:30] SPEAKER_01: ¿Tú qué talla eres?
+
+    [00:31] SPEAKER_00: Cuarenta y dos.
+
+    [00:32] SPEAKER_01: Cuarenta y dos.
+
+    [00:33] SPEAKER_01: Ya.
+
+    [00:34] SPEAKER_01: Éste es su caja.
+
+    [00:37] SPEAKER_01: Hola, ¿cómo estás, campeón?
+
+    [00:38] SPEAKER_01: Un favor.
+
+    [00:39] SPEAKER_01: Un servicio.
+
+    [00:40] SPEAKER_01: Ven, sobrino, por acá, por favor.
+
+    [00:41] SPEAKER_01: Un ratito, ¿sí?
+
+    [00:42] SPEAKER_01: Disculpen la molestia.
+
+    [00:43] SPEAKER_01: Un segundito nada más, por favor.
+
+    [00:45] SPEAKER_00: Leo Messi.
+
+    [00:56] SPEAKER_01: muy aparte de la nacionalidad, porque yo creo que la vida, el amor, trasciende todo lo que
+    es nacionalidades, no que soy peruano, o soy venezolano, o soy norteamericano, eso no tiene nada que ver.
+
+    [01:12] SPEAKER_01: Como vas a representar a nuestro país hermano Venezuela, te la voy a dejar.
+
+    [01:17] SPEAKER_01: Por eso, nada más y nada menos que a 49.90.
+
+    [01:20] SPEAKER_01: ¿Está bien o no?
+
+    [01:20] SPEAKER_01: ¿Está bien o no, mi hermano?
+
+    [01:24] SPEAKER_01: 49 manguitos.
+
+    [01:24] SPEAKER_01: ¿Ok?
+
+    [01:25] SPEAKER_01: Muchas bendiciones, mi hermano.
+
+    [01:26] SPEAKER_01: ¿Ok?
+
+    [01:27] SPEAKER_01: Hacemos lo mismo con esta taba para mi chamí.
+
+    [01:30] SPEAKER_01: Se acercan a caja, 49.90.
+
+    [01:31] SPEAKER_01: Esta te la vas a llevar, ¿no?
+
+    [01:33] SPEAKER_01: Va.
+
+    [01:37] SPEAKER_01: Va, sale.
+
+    [01:37] SPEAKER_01: 49.90.
+
+    [01:37] SPEAKER_01: Bendiciones, mi chamú.
+
+    [01:39] SPEAKER_01: Bendiciones, mi hermano.'
+  esperado:
+    publicar: true
+  evidencia: grupo propia_top · outlier 67.22 · 133900 vistas
+- id: za-mues-053
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @nandoclips93 · 7664467939122269460
+  video:
+    titulo: null
+    canal: mixto
+  candidato:
+    inicio: 00:00
+    fin: 00:33
+  transcripcion: '[00:00] SPEAKER_01: Se me paró mi fría, ¿qué ha puesto?
+
+    [00:06] SPEAKER_01: Se me paró mi fría, ¿qué mal ha puesto?
+
+    [00:09] SPEAKER_01: ¡Oh, gente!
+
+    [00:14] SPEAKER_01: ¡Respéteme, gente!
+
+    [00:15] SPEAKER_01: ¿Qué pasa?
+
+    [00:27] SPEAKER_01: ¡Vamos a seguir subiendo!
+
+    [00:29] SPEAKER_01: ¡Vamos a seguir subiendo!'
+  esperado:
+    publicar: true
+  evidencia: grupo propia_top · outlier 51.51 · 102600 vistas
+- id: za-mues-054
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @nandoclips93 · 7664165898139290900
+  video:
+    titulo: null
+    canal: mixto
+  candidato:
+    inicio: 00:00
+    fin: 00:16
+  transcripcion: '[00:00] SPEAKER_00: Buenas, buenas, buenas.
+
+    [00:00] SPEAKER_00: ¿Cómo le va?
+
+    [00:01] SPEAKER_00: ¿Cuándo empezaste?
+
+    [00:03] SPEAKER_00: Ayer.
+
+    [00:03] SPEAKER_00: ¿Ayer?
+
+    [00:04] SPEAKER_00: Muy bien, excelente.
+
+    [00:06] SPEAKER_00: Fricks, ¿qué es lo que están necesitando?
+
+    [00:08] SPEAKER_00: Vendedores, almaceneros, cajeros y cajeras.
+
+    [00:11] SPEAKER_00: ¿Sí?
+
+    [00:14] SPEAKER_00: ¿Qué es lo que vas a encontrar en FZ Premium?'
+  esperado:
+    publicar: true
+  evidencia: grupo propia_top · outlier 44.98 · 89600 vistas
+- id: za-mues-055
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @nandoclips93 · 7664166867329748244
+  video:
+    titulo: null
+    canal: mixto
+  candidato:
+    inicio: 00:00
+    fin: 00:18
+  transcripcion: '[00:03] SPEAKER_00: Frigs, ¿y por qué haces tu mano así?
+
+    [00:04] SPEAKER_00: ¿Acaso eres la número?
+
+    [00:06] SPEAKER_00: No, no, no, no, viene por ahí.
+
+    [00:07] SPEAKER_00: Siempre agradecer a Dios, mi hermano.
+
+    [00:09] SPEAKER_00: Siempre agradecer a Dios.
+
+    [00:13] SPEAKER_00: Sí, 70 y Ferrito.
+
+    [00:16] SPEAKER_00: ¿Ya?
+
+    [00:17] SPEAKER_00: Va.'
+  esperado:
+    publicar: true
+  evidencia: grupo propia_top · outlier 41.77 · 83200 vistas
+- id: za-mues-056
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @nandoclips93 · 7664166456778673429
+  video:
+    titulo: null
+    canal: mixto
+  candidato:
+    inicio: 00:00
+    fin: 00:17
+  transcripcion: '[00:00] SPEAKER_00: claro mira gracias a dios estamos con colita hay que bajar para dar unos regalitos
+    al público no?
+
+    [00:05] SPEAKER_00: ahi voy a bajar con unos langers ahi bajo con los langers ahi bajo con los langers nos vemos
+    mi tío, bendiciones'
+  esperado:
+    publicar: true
+  evidencia: grupo propia_top · outlier 38.86 · 77400 vistas
+- id: za-mues-057
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @nandoclips93 · 7664468260238282004
+  video:
+    titulo: null
+    canal: mixto
+  candidato:
+    inicio: 00:00
+    fin: 00:54
+  transcripcion: '[00:00] SPEAKER_00: Recuerden que para ser buenamente que hace buenas compras Milenita ha comprado
+    muchas mercaderías, está llevando para toda mi gente comas de Belaunde y Collique, La Pascana.
+
+    [00:13] SPEAKER_00: Yo siempre te voy a recomendar lo mejor.
+
+    [00:15] SPEAKER_00: Milena es una es una dama emprendedora, es digno de admirar, digno de aplaudir.
+
+    [00:22] SPEAKER_00: Yo creo que
+
+    [00:23] SPEAKER_00: millones de peruanos somos así espero que el emprendimiento pueda seguir surgiendo por mejorías
+    de familias por mejorías de del mismo perú ok entonces el perú necesita emprendedores como milena el perú necesita
+    emprendedores como es por chincha es un aliado para el éxito el perú necesita emprendedores como ovleting o
+    maría como el búnker de las zapatillas de la equipa y como muchos más
+
+    [00:47] SPEAKER_00: porque como el tío Westman también.
+
+    [00:49] SPEAKER_00: Recuerda que para hacer buenas ventas hay que hacer buenas compras y con Milena Impulse.'
+  esperado:
+    publicar: true
+  evidencia: grupo propia_top · outlier 28.92 · 57600 vistas
+- id: za-mues-058
+  nicho: zapatillas_peru
+  origen: muestra
+  fuente: muestra.jsonl · @nandoclips93 · 7664164347656129812
+  video:
+    titulo: null
+    canal: mixto
+  candidato:
+    inicio: 00:00
+    fin: 01:36
+  transcripcion: '[00:00] SPEAKER_00: ¿Estás bien, ah?
+
+    [00:01] SPEAKER_00: Aquí estamos jugando nivelos.
+
+    [00:02] SPEAKER_00: Hermano, si me ganen dos minaditas, se va a llevar la pelota.
+
+    [00:06] SPEAKER_00: Ya tú sabes, totalmente gratis.
+
+    [00:07] SPEAKER_00: Que por cierto, 24.90 te va a salir por la compra de cualquier soportiva.
+
+    [00:12] SPEAKER_00: ¿Me pueden traer una pelotita anaranjada, por favor?
+
+    [00:15] SPEAKER_00: Va.
+
+    [00:17] SPEAKER_00: Dos intentos, tanto para ti como para mí.
+
+    [00:27] SPEAKER_00: 7, 18, 19, 20, 21, 22, ¡ah!
+
+    [00:29] SPEAKER_00: empate ¿no?
+
+    [00:32] SPEAKER_00: estoy haciendo el segundo, ve ¡ah!
+
+    [00:39] SPEAKER_00: ¡ah su madre!
+
+    [00:41] SPEAKER_00: vamos abrindo, vamos 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 17
+
+    [00:59] SPEAKER_00: sobrino por favor tengo que hacer más de 24 está difícil va
+
+    [01:21] SPEAKER_00: 3, 24, 25, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
+    36, 37, 38, 39, 40, 41, 42, 43, 42, 43, 44, 45, 44, 45, 46, 47, 48, 47, 48, 49, 50, 50, 50, 50, 50, 50, 50,
+    50, 50, 50, 50, 50, 50, 50,'
+  esperado:
+    publicar: true
+  evidencia: grupo propia_top · outlier 26.0 · 51800 vistas

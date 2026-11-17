@@ -146,6 +146,24 @@ def resumir(resultados: list[dict]) -> dict:
     }
 
 
+def variacion(corridas: list[dict], metrica: str) -> dict | None:
+    """Media, mínimo y máximo de una métrica del resumen entre corridas."""
+    valores = [c["resumen"][metrica] for c in corridas if c["resumen"].get(metrica) is not None]
+    if not valores:
+        return None
+    return {"media": round(sum(valores) / len(valores), 3), "min": min(valores), "max": max(valores)}
+
+
+def inestables(corridas: list[dict]) -> list[str]:
+    """Casos en que el juez decidió distinto (publicar / no) entre corridas."""
+    por_caso: dict[str, set] = {}
+    for c in corridas:
+        for r in c["resultados"]:
+            if "error" not in r:
+                por_caso.setdefault(r["id"], set()).add(r["obtenido_publicar"])
+    return sorted(cid for cid, vals in por_caso.items() if len(vals) > 1)
+
+
 def _imprimir(resumen: dict, resultados: list[dict]) -> None:
     print("\n" + "═" * 60)
     for r in resultados:
@@ -169,6 +187,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--sinteticos", action="store_true", help="incluir casos sintéticos de prueba")
     ap.add_argument("--solo-sinteticos", action="store_true", help="solo los casos sintéticos")
     ap.add_argument("--proveedor", help="AI_PROVIDER para esta corrida (claude_cli, manual, anthropic)")
+    ap.add_argument("--repeticiones", type=int, default=1, help="corridas por caso (mide la variación de la IA)")
     ap.add_argument("--no-guardar", action="store_true", help="no escribir el archivo de resultados")
     args = ap.parse_args(argv)
 
@@ -183,10 +202,19 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Sin casos para {args.nicho} en {casos_mod.DIR_CASOS}")
         return 1
 
-    print(f"[EVAL] {len(todos)} caso(s) de {args.nicho} · proveedor: {os.environ['AI_PROVIDER']}")
-    resultados = [evaluar_caso(c) for c in todos]
-    resumen = resumir(resultados)
-    _imprimir(resumen, resultados)
+    corridas = []
+    for n in range(1, args.repeticiones + 1):
+        print(f"[EVAL] Corrida {n}/{args.repeticiones} · {len(todos)} caso(s) de {args.nicho} · "
+              f"proveedor: {os.environ['AI_PROVIDER']}")
+        resultados = [evaluar_caso(c) for c in todos]
+        resumen = resumir(resultados)
+        _imprimir(resumen, resultados)
+        corridas.append({"resultados": resultados, "resumen": resumen})
+    var = {m: variacion(corridas, m) for m in ("acierto", "precision", "recall")}
+    inest = inestables(corridas)
+    if args.repeticiones > 1:
+        print(f"[EVAL] Variación entre corridas: {var}")
+        print(f"[EVAL] Casos inestables (decisión distinta entre corridas): {inest or 'ninguno'}")
 
     if not args.no_guardar:
         DIR_RESULTADOS.mkdir(exist_ok=True)
@@ -195,8 +223,10 @@ def main(argv: list[str] | None = None) -> int:
             "nicho": args.nicho,
             "fecha": datetime.now().isoformat(timespec="seconds"),
             "proveedor": os.environ["AI_PROVIDER"],
-            "resumen": resumen,
-            "resultados": resultados,
+            "repeticiones": args.repeticiones,
+            "variacion": var,
+            "inestables": inest,
+            "corridas": corridas,
         }, ensure_ascii=False, indent=2), encoding="utf-8")
         print(f"[EVAL] Resultados: {salida.relative_to(Path.cwd()) if salida.is_relative_to(Path.cwd()) else salida}")
     return 0
