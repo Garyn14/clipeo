@@ -1,0 +1,60 @@
+{
+  "nicho": "zapatillas_peru",
+  "fecha": "2026-11-17T06:36:53",
+  "proveedor": "claude_cli",
+  "resumen": {
+    "casos": 3,
+    "evaluados": 3,
+    "errores": 0,
+    "acierto": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "matriz": {
+      "vp": 2,
+      "fp": 0,
+      "vn": 1,
+      "fn": 0
+    },
+    "acierto_tipo": 1.0
+  },
+  "resultados": [
+    {
+      "id": "zp-sint-001",
+      "origen": "sintetico",
+      "esperado_publicar": true,
+      "obtenido_publicar": true,
+      "acierto": true,
+      "tipo_esperado": "generosidad_con_humilde",
+      "tipo_obtenido": "generosidad_con_humilde",
+      "fuerza": 9,
+      "titulo": "El tío Fritz regala zapatillas a mamita / que solo tenía 40 soles para su hijo 🥹",
+      "por_que": "Es el mismo patrón del clip de mayor outlier de la cuenta (generosidad con mamita sin plata), con cifra de dinero clara en los primeros segundos, emoción y final cerrado que se entiende solo.",
+      "acierto_tipo": true
+    },
+    {
+      "id": "zp-sint-002",
+      "origen": "sintetico",
+      "esperado_publicar": false,
+      "obtenido_publicar": false,
+      "acierto": true,
+      "tipo_esperado": null,
+      "tipo_obtenido": "ninguno",
+      "fuerza": 2,
+      "titulo": "Fritz anuncia envíos a todo el Perú / Yape, Plin y tallas del 36 al 44 🛍️",
+      "por_que": "Es pitch de tienda e información logística sin historia, conflicto ni personaje en una situación; no encaja en ningún tipo que funcione."
+    },
+    {
+      "id": "zp-sint-003",
+      "origen": "sintetico",
+      "esperado_publicar": true,
+      "obtenido_publicar": true,
+      "acierto": true,
+      "tipo_esperado": "jefe_y_trabajadores",
+      "tipo_obtenido": "jefe_y_trabajadores",
+      "fuerza": 8,
+      "titulo": "El tío Fritz pilla al Charlatán / durmiendo y no le cree la excusa 😂",
+      "por_que": "Casi idéntico a un clip de 162K (outlier 78.6) y a otro que el editor aprobó: jefe pilla a trabajador durmiendo, con descuento del día y excusa en juego.",
+      "acierto_tipo": true
+    }
+  ]
+}

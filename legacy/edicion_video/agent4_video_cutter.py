@@ -17,6 +17,7 @@ import sys
 sys.stdout.reconfigure(encoding="utf-8")
 
 import json
+import os
 import random
 import re
 import shutil
@@ -129,23 +130,29 @@ def _pick_sound_effect(tipo: str) -> Path | None:
     return None
 
 
+_FONTS_DIR = Path(__file__).parent / "assets" / "fonts"
+
+
 def _prepare_font() -> tuple[str, str]:
     """
-    Copia la mejor fuente disponible a stream_data/ para evitar el problema
-    del colon de Windows en paths de FFmpeg.
+    Copia la mejor fuente disponible a stream_data/ y devuelve su ruta relativa, para
+    evitar el problema del colon de Windows (C:) en los filtros de FFmpeg.
 
-    Prioridad: Impact → Arial Black → Arial Bold → Arial
-    Retorna (rel_path, font_name).
+    Prioridad: fuentes libres incluidas en el repo (iguales en cualquier máquina:
+    Anton ≈ Impact, Archivo Black ≈ Arial Black) → fuentes de Windows como respaldo.
+    Retorna (rel_path, font_name); ("", "ninguna") si no hay ninguna.
     """
+    win_fonts = Path(os.environ.get("WINDIR", r"C:\Windows")) / "Fonts"
     candidates = [
-        ("Impact",      r"C:\Windows\Fonts\Impact.ttf",   "impact.ttf"),
-        ("Arial Black", r"C:\Windows\Fonts\ariblk.ttf",   "ariblk.ttf"),
-        ("Arial Bold",  r"C:\Windows\Fonts\arialbd.ttf",  "arialbd.ttf"),
-        ("Arial",       r"C:\Windows\Fonts\arial.ttf",    "arial.ttf"),
+        ("Anton",        _FONTS_DIR / "Anton-Regular.ttf",        "anton.ttf"),
+        ("Archivo Black", _FONTS_DIR / "ArchivoBlack-Regular.ttf", "archivoblack.ttf"),
+        ("Impact",       win_fonts / "Impact.ttf",                "impact.ttf"),
+        ("Arial Black",  win_fonts / "ariblk.ttf",                "ariblk.ttf"),
+        ("Arial Bold",   win_fonts / "arialbd.ttf",               "arialbd.ttf"),
+        ("Arial",        win_fonts / "arial.ttf",                 "arial.ttf"),
     ]
     Path("stream_data").mkdir(exist_ok=True)
-    for name, src_path, dest_name in candidates:
-        src  = Path(src_path)
+    for name, src, dest_name in candidates:
         dest = Path("stream_data") / dest_name
         if src.exists():
             if not dest.exists():
@@ -1126,11 +1133,14 @@ def run_agent(
     video_path_override: Path | None = None,
     clips_dir_override:  Path | None = None,
     clip_offset: int = 0,
+    clip_prefix: str | None = None,
 ) -> list[dict]:
     """
     video_path_override — usar este video en lugar de buscarlo en session_dir
     clips_dir_override  — guardar clips aquí en lugar de session_dir/clips/
     clip_offset         — continuar numeración desde este índice (clip_{offset+1:03d})
+    clip_prefix         — si se da, nombra {prefix}_01, {prefix}_02... (ignora clip_offset);
+                          el pipeline lo usa por chunk — ver core/clip_ids.py
     """
     contenido_file = Path(contenido_path)
     if not contenido_file.exists():
@@ -1189,8 +1199,9 @@ def run_agent(
         efecto_sonido  = item.get("efecto_sonido")
         segmentos      = item.get("segmentos")
 
-        clip_name = f"clip_{i + 1 + clip_offset:03d}.mp4"
-        meta_name = f"clip_{i + 1 + clip_offset:03d}.json"
+        clip_id   = f"{clip_prefix}_{i + 1:02d}" if clip_prefix else f"clip_{i + 1 + clip_offset:03d}"
+        clip_name = f"{clip_id}.mp4"
+        meta_name = f"{clip_id}.json"
         clip_path = clips_dir / clip_name
         meta_path = clips_dir / meta_name
 
@@ -1241,7 +1252,7 @@ def run_agent(
             "listo_para_publicar": False,
         }
         meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
-        resultados.append({"ok": ok, "meta": meta, "path": str(clip_path)})
+        resultados.append({"ok": ok, "meta": meta, "path": str(clip_path), "clip_id": clip_id})
 
     # ── Tabla resumen ────────────────────────────────────────
     exitosos = [r for r in resultados if r["ok"]]

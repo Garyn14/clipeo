@@ -1,0 +1,47 @@
+# Casos SINTÉTICOS (inventados) para probar el evaluador. No miden calidad real: los casos reales
+# salen de evaluacion/exportar_casos.py en la laptop del operador (evaluacion/casos/zapatillas_peru.yaml).
+- id: zp-sint-001
+  nicho: zapatillas_peru
+  origen: sintetico
+  fuente: inventado para probar el evaluador (generosidad con alguien humilde)
+  video: {titulo: "EN VIVO desde la tienda", canal: "Fritz Sport"}
+  candidato: {inicio: "10:05", fin: "10:40"}
+  transcripcion: |
+    [10:00] Fritz: Pasen, pasen, hoy tenemos de todo en la tienda.
+    [10:05] Señora: Tío, quería unas zapatillas para mi hijo pero solo tengo 40 soles.
+    [10:12] Fritz: ¿40 soles nada más, mamita? Esas cuestan 180.
+    [10:18] Señora: Es para el colegio, no le alcanza, ya se le rompieron las otras.
+    [10:25] Fritz: Ya, llévatelas. Guarda tu plata, mamita, que el niño estudie.
+    [10:32] Señora: Gracias tío, Dios le bendiga, de verdad.
+    [10:40] Fritz: Tranquila, para eso estamos.
+  esperado: {publicar: true, tipo: generosidad_con_humilde}
+  evidencia: sintético
+- id: zp-sint-002
+  nicho: zapatillas_peru
+  origen: sintetico
+  fuente: inventado para probar el evaluador (anuncio de tienda sin conflicto)
+  video: {titulo: "EN VIVO desde la tienda", canal: "Fritz Sport"}
+  candidato: {inicio: "20:00", fin: "20:40"}
+  transcripcion: |
+    [20:00] Fritz: Les recuerdo que tenemos envíos a todo el Perú.
+    [20:08] Fritz: Pueden pagar con Yape o Plin, el número está en la descripción.
+    [20:15] Fritz: Tallas desde la 36 hasta la 44, modelos nuevos todas las semanas.
+    [20:25] Fritz: Atendemos de lunes a sábado de 9 a 8 de la noche.
+    [20:35] Fritz: Síganme para más ofertas.
+  esperado: {publicar: false}
+  evidencia: sintético
+- id: zp-sint-003
+  nicho: zapatillas_peru
+  origen: sintetico
+  fuente: inventado para probar el evaluador (jefe pilla a su trabajador)
+  video: {titulo: "EN VIVO desde la tienda", canal: "Fritz Sport"}
+  candidato: {inicio: "05:00", fin: "05:35"}
+  transcripcion: |
+    [05:00] Fritz: Oye, ¿dónde está el Charlatán? Hace media hora no lo veo.
+    [05:06] Trabajador: Está en el almacén, tío.
+    [05:10] Fritz: A ver, vamos al almacén... ¡Ahí está! ¡Durmiendo encima de las cajas!
+    [05:18] Fritz: Charlatán, despierta, ¿así trabajas? Te voy a descontar el día.
+    [05:25] Charlatán: No, tío, solo estaba descansando la vista.
+    [05:31] Fritz: ¡Descansando la vista dice! Todos lo vieron en vivo.
+  esperado: {publicar: true, tipo: jefe_y_trabajadores}
+  evidencia: sintético

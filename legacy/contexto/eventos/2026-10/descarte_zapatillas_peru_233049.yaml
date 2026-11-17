@@ -1,0 +1,23 @@
+evento:
+  aprendizaje: Score 7 pero editor descartó — No tiene relevancia
+  clip_descartado:
+    linea1: Si trabajara como Lara, ganaría 50K
+    linea2: pero 50K se gana poco a poco 💪
+    score: 7
+  fecha: '2026-10-02'
+  nicho: zapatillas_peru
+  rango:
+    conservar: true
+    duracion_segundos: 54
+    fin: 00:10:22
+    gancho: È sempre una prima volta.
+    inicio: 00:09:28
+    momento_enfasis_seg: 0
+    pico_original: {}
+    razon: Fusión de los picos 09:28 y 10:11. Fritz habla de perseverar ('siempre
+      es una primera vez'), alguien comenta que si trabajara como Lara ganaría 50k
+      y no 20k, y Fritz responde que 50k no se ganan de la noche a la mañana, 'poco
+      a poco'. Las cifras dan un cierre claro. La parte motivacional sola era débil,
+      pero con la revelación de sueldos funciona.
+  razon_descarte: No tiene relevancia
+  tipo: descarte_manual

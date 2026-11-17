@@ -24,11 +24,31 @@ load_dotenv()
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from core.utils import _timestamp_to_seconds, _parse_segments
 from ai_client import get_client
+from investigacion import comun
 
 # ─────────────────────────────────────────
 #  CONFIGURACIÓN
 # ─────────────────────────────────────────
 MODEL           = "claude-sonnet-4-6"
+CONFIANZA_CON_JUEZ = 0.5
+
+_BLOQUE_MEMORIA = """
+
+---
+MEMORIA DEL NICHO — clips reales medidos en TikTok (evidencia, no opinión):
+{memoria}
+---
+
+CÓMO USAR LA MEMORIA — PRIORIDAD SOBRE LO ANTERIOR:
+- Busca TODOS los momentos que podrían ser de alguno de los tipos_que_funcionan, aunque
+  no estén en tu lista de señales de arriba. Un paso posterior (el juez) decide cuáles se
+  publican: tu trabajo es que no se escape ninguno bueno. Ante la duda, INCLÚYELO.
+- No marques lo que es claramente de lo_que_no_funciona (pitch, anuncio, logística sin
+  conflicto ni emoción).
+- En cada pico, "tipo" debe ser uno de los tipos de la memoria, y agrega "en_juego": qué
+  está en juego en una frase (ej. "una mamita que no tiene para pagar").
+"""
+
 MAX_WORDS       = 10_000
 CHUNK_MINUTES   = 10
 OVERLAP_MINUTES = 1
@@ -135,6 +155,15 @@ def run_agent(transcripcion_path: str, config: dict) -> list[dict]:
 
     prompt           = config["deteccion"]["prompt"]
     confianza_minima = config["deteccion"]["confianza_minima"]
+
+    # Con memoria del nicho hay juez: este paso busca AMPLIO (cobertura) y el juez decide
+    # la calidad — un momento bueno que se filtra acá no lo puede rescatar nadie después.
+    canal_id = (config.get("meta") or {}).get("id", "default")
+    memoria  = comun.cargar_memoria(canal_id)
+    if memoria is not None:
+        prompt += _BLOQUE_MEMORIA.format(memoria=memoria)
+        confianza_minima = config["deteccion"].get("confianza_minima_con_juez", CONFIANZA_CON_JUEZ)
+        print(f"[AGENT1] Memoria del nicho: búsqueda amplia (el juez decide la calidad)")
 
     session_dir = path.parent
     text        = path.read_text(encoding="utf-8")

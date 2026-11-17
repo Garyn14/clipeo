@@ -18,6 +18,8 @@ import time
 import uuid
 from pathlib import Path
 
+from ._response import TextResponse
+
 _PENDING_DIR = Path(__file__).parent / "_pending"
 
 _DEFAULT_TIMEOUT = 1800  # segundos — mismo orden que el timeout de transcripción por Colab
@@ -28,18 +30,8 @@ _MAX_DECODE_FALLOS = 5   # lecturas fallidas seguidas (archivo de respuesta a me
                          # antes de rendirse, en vez de fallar en la primera
 
 
-class _ManualBlock:
-    def __init__(self, text: str):
-        self.text = text
-
-
-class _ManualResponse:
-    def __init__(self, text: str):
-        self.content = [_ManualBlock(text)]
-
-
 class _ManualMessages:
-    def create(self, **kwargs) -> _ManualResponse:
+    def create(self, **kwargs) -> TextResponse:
         _PENDING_DIR.mkdir(parents=True, exist_ok=True)
 
         request_id = uuid.uuid4().hex[:12]
@@ -65,7 +57,7 @@ class _ManualMessages:
 
         request_path.unlink(missing_ok=True)
         self._borrar_best_effort(response_path)
-        return _ManualResponse(text)
+        return TextResponse(text)
 
     def _esperar_respuesta(self, request_id: str, response_path: Path) -> str:
         elapsed = 0

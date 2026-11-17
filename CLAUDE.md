@@ -23,41 +23,45 @@ estamos, qué ticket sigue y cómo trabajar.
 | [`docs/DIAGNOSTICO_V1_FULL.md`](docs/DIAGNOSTICO_V1_FULL.md) | **Diagnóstico del piloto real (`v1_full`)** y brechas de calidad. |
 | [`docs/DIAGNOSTICO_ACTUAL.md`](docs/DIAGNOSTICO_ACTUAL.md) | Diagnóstico inicial (sobre la base, incompleto; ver el anexo). |
 | `docs/sprints/S<n>.md` | Cierre de cada sprint: qué se hizo y cómo probar la demo. |
-| `docs/ARQUITECTURA.md`, `COMANDOS.md`, `ESTRUCTURA_DATOS.md`, `APRENDIZAJE.md` | Documentación **del piloto** (referencia). |
+| `legacy/CLAUDE.md`, `legacy/docs/` | Documentación **del piloto** `v1_full` (arquitectura, comandos, datos, aprendizaje). |
 
 ## Roles (separados)
 
-El agente trabaja con **dos roles distintos** y debe indicar cuál ejerce (`[Analista]` / `[Desarrollador]`):
+El agente trabaja con **tres roles distintos** y debe indicar cuál ejerce en cada mensaje
+(`[Analista]`, `[Líder técnico]`, `[Desarrollador]`):
 
 | Rol | Hace | No hace |
 |---|---|---|
-| **Analista** | Entiende el negocio, define requisitos y prioridades, mantiene `docs/` de análisis (TO-BE, roadmap, diagnósticos), crea y prioriza tickets con criterios de aceptación, planifica sprints. | No escribe código de producto. |
-| **Desarrollador** | Implementa **solo tickets aprobados**, con tests; abre PR; actualiza `docs/ESTADO.md` al cerrar. | No cambia el alcance ni las prioridades: si un ticket no alcanza o descubre algo nuevo, lo devuelve al analista (comentario en Jira). |
+| **Analista** | Entiende el negocio, define requisitos y prioridades, mantiene los `docs/` de análisis (TO-BE, roadmap, diagnósticos), crea y prioriza tickets con criterios de aceptación, planifica sprints. | No decide cómo se construye ni escribe código. |
+| **Líder técnico / Arquitecto** | Decide **cómo** se construye: arquitectura y decisiones técnicas (ADR), **diseño técnico de cada sprint** antes de implementar, estándares de código y pruebas, **revisión del código** del sprint, **aprobación e integración del PR del sprint**, deuda técnica. | No cambia alcance ni prioridades (analista) ni implementa (desarrollador). |
+| **Desarrollador** | Implementa los tickets del sprint según el diseño técnico, con pruebas; corrige lo que pida el líder técnico. | No cambia alcance ni diseño: si algo no cuadra, lo escala al líder técnico o al analista (comentario en Jira). |
 
-El operador aprueba lo que propone el analista y revisa lo que entrega el desarrollador.
+El **operador** aprueba el plan del analista y revisa la **demo** de cada sprint antes de cerrarlo.
+El PR del sprint lo revisa e integra el líder técnico.
 
 ## Gestión del trabajo (Jira)
 
 - Sitio: `personal-clipeo.atlassian.net` · Proyecto **`CLIP`** · Tablero Scrum (board 1).
 - **Épicas**: CLIP-5 (F0 · Fundación), CLIP-6…10 (Q1–Q5, calidad: el foco), CLIP-11 y CLIP-12 (secundarias).
-- **Sprints de 1 semana** (lunes a domingo), S1…S10. Cada sprint termina con una **demo concreta** que el
-  operador revisa personalmente antes de cerrar el sprint.
+- **Sprints de 1 semana** (lunes a domingo), S1…S10, cada uno con una **demo concreta**.
 - Los tickets se detallan **solo para el sprint siguiente**, al planificarlo.
-- Etiquetas: `F<n>` (fase), `operador` (requiere acción del operador), `externo`, `infra`, `docs`, `calidad`.
+- Etiquetas: `F<n>`/`Q<n>` (épica), `operador` (requiere acción del operador), `externo`, `infra`, `docs`,
+  `calidad`, `secundario`.
 
-### Flujo por ticket
+### Ciclo del sprint (se trabaja por sprint, no por ticket suelto)
 
-1. Mover el ticket a **En curso** en Jira.
-2. Rama `CLIP-<n>-<slug>` desde `main` (o apilada sobre el ticket del que depende).
-3. Commits con prefijo `CLIP-<n>:`.
-4. Tests y lint en verde (`pytest`, y desde CLIP-16: `ruff`, `mypy`).
-5. PR a `main` con el ticket en el título; el operador revisa y aprueba.
-6. Al integrar: ticket a **Finalizada** y actualizar `docs/ESTADO.md`.
-
-### Cierre de sprint
-
-Escribir `docs/sprints/S<n>.md` (qué se hizo, **cómo probar la demo paso a paso**, capturas o clips, pendientes),
-pedir revisión al operador y, solo con su OK, cerrar el sprint en Jira.
+1. **[Analista]** confirma los tickets del sprint y sus criterios de aceptación.
+2. **[Líder técnico]** escribe el **diseño técnico** en `docs/sprints/S<n>.md` (cómo se resuelve cada ticket,
+   orden, riesgos) en la rama `sprint/S<n>`.
+3. **[Desarrollador]** implementa todos los tickets en `sprint/S<n>`, **un commit por ticket** con prefijo
+   `CLIP-<n>:`, tests en verde; mueve cada ticket a **En curso** / **En revisión** en Jira.
+4. **[Líder técnico]** revisa el sprint completo contra el diseño y los criterios de aceptación; pide correcciones
+   al desarrollador si hace falta; deja su revisión escrita en el PR.
+5. **[Líder técnico]** abre el **PR `sprint/S<n>` → `main`**, lo aprueba e integra cuando cumple los criterios.
+   Nota: GitHub no permite aprobar formalmente un PR propio; la aprobación queda como comentario de revisión.
+6. **Demo:** se completa `docs/sprints/S<n>.md` (qué se hizo, **cómo probar la demo paso a paso**, pendientes)
+   y el **operador** la revisa. Con su OK: tickets a **Finalizada**, sprint cerrado en Jira, `docs/ESTADO.md`
+   actualizado.
 
 ## Estructura del repositorio
 
@@ -65,8 +69,9 @@ Transición en curso (ADR-008, migración *strangler*):
 
 ```
 CLAUDE.md, docs/                 ← documentación (este archivo + análisis + estado)
-legacy/                          ← PILOTO v2.0 congelado (tag piloto-v2.0); ver legacy/README.md
-legacy/tests/                    ← tests del piloto (81, todos pasan)
+legacy/                          ← PILOTO v1_full (el que se usa hoy); ver legacy/README.md y legacy/CLAUDE.md
+legacy/tests/                    ← tests del piloto (293, todos pasan)
+evaluacion/                      ← evaluación de calidad (desde CLIP-20)
 ```
 
 Estructura objetivo (se crea en CLIP-16, ver ARQUITECTURA_OBJETIVO §8):
@@ -80,16 +85,16 @@ Estructura objetivo (se crea en CLIP-16, ver ARQUITECTURA_OBJETIVO §8):
 - **v2:** con Docker Compose (se crea en CLIP-17): `docker compose up`. Base SQLite local en `./data/` (ADR-015).
 - **Piloto:** desde `legacy/` (ver `legacy/README.md`):
   `cd legacy && python pipeline.py --video <url_o_ruta> --config <canal_id> [--revisar]`.
-  Requiere `.env` (ver `.env.example`) y FFmpeg. Para lives: `captura/tiktok_capture.py` + `--video`.
-- **Tests del piloto:** `python -m pytest -q legacy/tests`.
+  Requiere `legacy/.env` (ver `.env.example`) y FFmpeg. IA por defecto: Claude Code de la máquina (`AI_PROVIDER=claude_cli`).
+- **Tests:** `pip install -r requirements-test.txt` y `python -m pytest -q tests legacy/tests` (lo mismo corre el CI en cada PR).
 
 ## Reglas de trabajo
 
-- **No gastar la API de Anthropic** salvo que el operador lo pida: los pasos de IA usan el modo operador
-  (`AI_PROVIDER=manual`, skill `pipeline-manual`) o Claude Code en sesión (skill `seo-refresh`).
+- **No gastar la API de Anthropic** salvo que el operador lo pida: los pasos de IA usan Claude Code
+  (`AI_PROVIDER=claude_cli`, o `manual` para depurar) y la investigación se hace en sesión (skill `seo-refresh`).
 - **Secretos nunca en el repo ni en el chat**: van en `.env` local o se piden por el formulario seguro.
 - **Portabilidad**: nada de rutas absolutas ni comandos de un solo sistema operativo.
-- **Calidad del clip** se mide contra el golden set (`tests/golden/`, desde CLIP-20).
+- **Calidad del clip** se mide con el conjunto de evaluación (`evaluacion/`, ver `evaluacion/README.md`).
 - Contenido de terceros: seguir el riesgo aceptado **R-01** de `docs/TO_BE.md` (cuentas de captación separadas,
   retiro inmediato ante solicitud, lista de exclusión).
 - Mantener `docs/ESTADO.md` al día: es la memoria compartida entre sesiones.

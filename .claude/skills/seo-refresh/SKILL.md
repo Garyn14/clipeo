@@ -3,15 +3,17 @@ name: seo-refresh
 description: Investiga hashtags/prácticas de SEO vigentes por plataforma (TikTok, YouTube Shorts, y a futuro Facebook Reels) para un nicho del pipeline, usando WebSearch directo en la sesión (sin gastar la API de Anthropic), y guarda el resultado curado en el bloque seo_base del YAML del nicho tras aprobación. Usar cuando el usuario pida "actualizar/refrescar los hashtags o el SEO de <nicho>" para alguna plataforma.
 ---
 
+> Skill del piloto: los comandos se ejecutan desde `legacy/` (ver `legacy/README.md`).
+
 # Refresco de SEO por plataforma (`seo_base`)
 
-Procedimiento para actualizar el bloque `seo_base` de `legacy/contexto/nichos/<id>.yaml` (hashtags base + notas de estilo por plataforma que el Agente 3 usa para armar `publicacion` en cada clip — ver `docs/ARQUITECTURA.md` §16 y `docs/ESTRUCTURA_DATOS.md`).
+Procedimiento para actualizar el bloque `seo_base` de `legacy/contexto/nichos/<id>.yaml` (hashtags base + notas de estilo por plataforma que el Agente 3 usa para armar `publicacion` en cada clip — ver `legacy/docs/ARQUITECTURA.md` §16 y `legacy/docs/ESTRUCTURA_DATOS.md`).
 
 **Por qué existe este skill en vez de un script**: `legacy/contexto/contexto_refresh.py` hacía este tipo de investigación llamando a la API de Anthropic con la *tool* de búsqueda web — quedó deprecado porque consumía mucho de la API medida (ver memoria `preferencia-claude-code-reemplaza-scripts-de-api`). El reemplazo es que un agente de Claude Code haga la investigación directo, con su propio `WebSearch`/`WebFetch`, sin pasar por `ANTHROPIC_API_KEY`.
 
 ## 1. Investigar
 
-Usar `WebSearch` para cada plataforma pedida (`tiktok`, `youtube_shorts`, y `facebook_reels` solo si ya está activo para ese nicho — ver `docs/ESTRUCTURA_DATOS.md`):
+Usar `WebSearch` para cada plataforma pedida (`tiktok`, `youtube_shorts`, y `facebook_reels` solo si ya está activo para ese nicho — ver `legacy/docs/ESTRUCTURA_DATOS.md`):
 - Mejores prácticas vigentes de la plataforma (cuántos hashtags, dónde van, qué pesa más para el algoritmo — esto cambia con el tiempo, buscar el año actual).
 - Hashtags específicos del nicho/ecosistema (ej. para `streamers_peru`: streamers peruanos, Kick Perú; para `zapatillas_peru`: vendedores de zapatillas Perú).
 
@@ -50,4 +52,11 @@ No hace falta tocar `legacy/agentes/agent3_viral_scorer.py` ni `legacy/contexto/
 python -c "import yaml; yaml.safe_load(open('legacy/contexto/nichos/<id>.yaml', encoding='utf-8'))"
 ```
 
-Y opcionalmente correr el Agente 3 en modo manual (skill `pipeline-manual`) sobre un rango de prueba para confirmar que el bloque `SEO BASE POR PLATAFORMA` llega actualizado en la request.
+Y opcionalmente correr el Agente 3 sobre un `rangos.json` de prueba con trazas activadas, para confirmar que el bloque `SEO BASE POR PLATAFORMA` llega actualizado en la request:
+
+```bash
+PIPELINE_TRACE_DIR=<scratchpad>/trazas cd legacy && python agentes/agent3_viral_scorer.py <copia de rangos.json> <id>
+# revisar <scratchpad>/trazas/001_request.json
+```
+
+(Trabajar sobre una copia: el agente escribe `contenido.json` junto al `rangos.json` que recibe.)

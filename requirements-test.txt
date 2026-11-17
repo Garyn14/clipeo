@@ -1,0 +1,10 @@
+# Dependencias livianas para correr los tests (CI). WhisperX/torch no hacen falta: los tests los simulan.
+pytest
+requests-mock
+requests
+pyyaml
+python-dotenv
+anthropic
+fastapi
+httpx
+tzdata

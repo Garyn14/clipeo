@@ -1,33 +1,40 @@
-# Piloto v2.0 (congelado)
+# Piloto `v1_full` (referencia)
 
-Código del piloto que ya produjo clips reales. Se conserva **tal cual** como referencia y para seguir
-produciendo clips mientras se construye la v2 (ADR-008, migración *strangler*). No se agregan funciones nuevas aquí:
-solo correcciones mínimas para que siga funcionando (p. ej. portabilidad, CLIP-19).
+Versión del piloto que el operador usa hoy para producir clips (rama `v1_full`, commit `1c3437a`). Es la base que
+la v2 **evoluciona**: los cambios de calidad se hacen sobre este código según `docs/ROADMAP.md`.
 
-- Versión exacta congelada: commit `5653b66` (tag `piloto-v2.0`).
-- Documentación del piloto: `docs/ARQUITECTURA.md`, `docs/COMANDOS.md`, `docs/ESTRUCTURA_DATOS.md`, `docs/APRENDIZAJE.md`.
-- Cambios respecto al commit congelado: se movió a `legacy/`, se eliminó el modo `--live` (estaba roto) y
-  `archive/` (sigue disponible en el historial git).
+- Guía completa del piloto: [`legacy/CLAUDE.md`](CLAUDE.md) y `legacy/docs/` (arquitectura, comandos, estructura
+  de datos, aprendizaje). Backend: `legacy/backend/docs/`. Frontend: `legacy/frontend/docs/`.
+- Diagnóstico: `docs/DIAGNOSTICO_V1_FULL.md`.
+- Versión anterior (base `5653b66`): tag `piloto-v2.0`.
+
+## Diferencias con la rama `v1_full` (CLIP-23)
+
+Solo de ubicación y configuración, sin cambios funcionales:
+- El código vive en `legacy/` en vez de la raíz.
+- No se copiaron: `archive/` (sigue en la rama `v1_full`), `.claude/` (el skill `seo-refresh` está en la raíz con
+  rutas ajustadas; `pipeline-manual` se eliminó porque `AI_PROVIDER=claude_cli` lo reemplaza), `.env.example` y
+  `.gitignore` (fusionados con los de la raíz).
+- Se agregó `legacy/conftest.py` para correr los tests desde la raíz.
 
 ## Cómo usarlo
 
-Todos los comandos se ejecutan **desde esta carpeta** (`cd legacy`), porque el piloto usa rutas relativas
-(`stream_data/`, `config/`, `contexto/`):
+Todos los comandos se ejecutan **desde esta carpeta**, porque el piloto usa rutas relativas (`stream_data/`,
+`config/`, `contexto/`):
 
 ```bash
 cd legacy
 pip install -r requirements.txt
 python pipeline.py --video <url_o_ruta> --config <canal_id> [--revisar]
-python pipeline.py --test stream_data/<session_id>/ --config <canal_id>
 ```
 
-Lives: `python captura/tiktok_capture.py --usuario @handle` y luego `pipeline.py --video` sobre cada chunk.
+Panel web (backend + frontend): ver `legacy/CLAUDE.md`, sección "Web panel".
 
-El `.env` del piloto se busca en el directorio de trabajo (`legacy/.env`) o en sus padres; usar el `.env.example` de la raíz.
+`.env`: copiar el `.env.example` de la raíz a `legacy/.env`.
 
 ## Tests
 
 ```bash
-python -m pytest -q legacy/tests   # desde la raíz
+python -m pytest -q legacy/tests   # desde la raíz (293 tests)
 cd legacy && python -m pytest -q   # o desde aquí
 ```

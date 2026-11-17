@@ -7,21 +7,39 @@ que antes estaban duplicadas en cada agente.
 
 import os
 import re
+import shutil
+import sys
+from pathlib import Path
 
 from dotenv import load_dotenv
 load_dotenv()
 
-_FFMPEG_BIN = (
-    r"C:\Users\Garyn\AppData\Local\Microsoft\WinGet\Packages"
-    r"\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe"
-    r"\ffmpeg-8.1.1-full_build\bin"
-)
+
+def _ffmpeg_bin_dir() -> str | None:
+    """
+    Directorio de FFmpeg a agregar al PATH, o None si basta con el del sistema.
+
+    1. `FFMPEG_BIN_DIR` (variable de entorno o .env), si está definida.
+    2. Si `ffmpeg` ya está en el PATH: None.
+    3. Solo en Windows: instalación de WinGet (Gyan.FFmpeg) bajo %LOCALAPPDATA%, si existe.
+    """
+    explicito = os.environ.get("FFMPEG_BIN_DIR", "").strip()
+    if explicito:
+        return explicito
+    if shutil.which("ffmpeg"):
+        return None
+    if sys.platform == "win32":
+        base = Path(os.environ.get("LOCALAPPDATA", "")) / "Microsoft" / "WinGet" / "Packages"
+        for exe in sorted(base.glob("Gyan.FFmpeg*/*/bin/ffmpeg.exe"), reverse=True):
+            return str(exe.parent)
+    return None
 
 
 def setup_ffmpeg_path() -> None:
-    """Inyecta el directorio de FFmpeg en PATH si aún no está."""
-    if _FFMPEG_BIN not in os.environ.get("PATH", ""):
-        os.environ["PATH"] = _FFMPEG_BIN + os.pathsep + os.environ.get("PATH", "")
+    """Agrega al PATH el directorio de FFmpeg si hace falta (ver _ffmpeg_bin_dir)."""
+    bin_dir = _ffmpeg_bin_dir()
+    if bin_dir and bin_dir not in os.environ.get("PATH", ""):
+        os.environ["PATH"] = bin_dir + os.pathsep + os.environ.get("PATH", "")
 
 
 def _timestamp_to_seconds(ts: str) -> int:

@@ -14,9 +14,11 @@ import re
 from datetime import date
 from pathlib import Path
 
-import anthropic
 from dotenv import load_dotenv
 load_dotenv()
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from ai_client import get_client
 
 STREAM_DATA  = Path("stream_data")
 APRENDIZAJES = Path(__file__).parent.parent / "aprendizajes"
@@ -101,7 +103,7 @@ def _call_claude(canal_id: str, feedbacks: list[dict]) -> dict:
         '  "razon": "por qué es o no generalizable"\n'
         "}"
     )
-    client   = anthropic.Anthropic()
+    client   = get_client()
     response = client.messages.create(
         model=MODEL,
         max_tokens=1024,

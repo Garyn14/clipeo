@@ -24,7 +24,7 @@ load_dotenv()
 import anthropic
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from ai_client import get_client
+from ai_client import AIError, get_client
 
 SYSTEM_PROMPT = """Eres un identificador de hablantes para contenido
 en español latino.
@@ -73,20 +73,58 @@ FORMATO DE RESPUESTA — solo JSON válido:
 }"""
 
 
-def _extract_preview(raw_text: str, max_seconds: int = 180) -> str:
-    """Extrae los primeros max_seconds segundos de la transcripción raw."""
-    lines   = []
+def _extract_preview(raw_text: str, ventanas: int = 3, segundos: int = 60) -> str:
+    """
+    Toma `ventanas` tramos de `segundos` repartidos por la transcripción (inicio, mitad,
+    final): los primeros minutos suelen ser presentación o anuncios, y alguien dice un nombre
+    más adelante. Con una transcripción corta devuelve todo.
+    """
     pattern = re.compile(r"\[(\d+):(\d+)\]")
-
+    con_tiempo = []
     for line in raw_text.splitlines():
         m = pattern.match(line)
         if m:
-            secs = int(m.group(1)) * 60 + int(m.group(2))
-            if secs > max_seconds:
-                break
-        lines.append(line)
+            con_tiempo.append((int(m.group(1)) * 60 + int(m.group(2)), line))
+    if not con_tiempo:
+        return raw_text
 
-    return "\n".join(lines)
+    t0, t1 = con_tiempo[0][0], con_tiempo[-1][0]
+    if t1 - t0 <= ventanas * segundos:
+        return "\n".join(l for _, l in con_tiempo)
+
+    paso = (t1 - t0 - segundos) / max(ventanas - 1, 1)
+    bloques = []
+    for i in range(ventanas):
+        desde = t0 + i * paso
+        tramo = [l for s, l in con_tiempo if desde <= s < desde + segundos]
+        if tramo:
+            bloques.append("\n".join(tramo))
+    return "\n[...]\n".join(bloques)
+
+
+def _personaje_del_uploader(metadata: dict, config: dict) -> dict | None:
+    """El personaje del roster que es dueño del canal que subió el video, o None."""
+    uploader = (
+        metadata.get("uploader") or
+        metadata.get("channel") or
+        metadata.get("channel_id") or ""
+    ).lower().strip()
+    if not uploader:
+        return None
+    for personaje in config.get("personajes", []):
+        for nombre in personaje.get("nombres", []):
+            n = nombre.lower()
+            if n in uploader or uploader in n:
+                return personaje
+    return None
+
+
+def _es_el_dueno(nombre_asignado: str, dueno: dict | None) -> bool:
+    """¿El nombre que dio Claude corresponde al personaje dueño del canal?"""
+    if not dueno or not nombre_asignado:
+        return False
+    asignado = nombre_asignado.lower()
+    return any(n.lower() in asignado for n in dueno.get("nombres", []) if n)
 
 
 def _unique_speakers(raw_text: str) -> list[str]:
@@ -172,30 +210,21 @@ def _fallback_single_speaker(
     Cuando Claude no identifica ningún speaker con confianza, usa el uploader
     del metadata para asignar el speaker que más habla al personaje del canal.
     """
-    uploader = (
-        metadata.get("uploader") or
-        metadata.get("channel") or
-        metadata.get("channel_id") or ""
-    ).lower().strip()
-
-    for personaje in config.get("personajes", []):
-        for nombre in personaje.get("nombres", []):
-            if nombre.lower() in uploader or uploader in nombre.lower():
-                speaker_counts: dict[str, int] = {}
-                for line in transcripcion.splitlines():
-                    if "SPEAKER_" in line:
-                        token = line.split(":")[0].strip()
-                        if "SPEAKER_" in token:
-                            speaker_counts[token] = speaker_counts.get(token, 0) + 1
-                if speaker_counts:
-                    main_speaker    = max(speaker_counts, key=speaker_counts.get)
-                    nombre_canonico = personaje["nombres"][0]
-                    print(
-                        f"[AGENT0] Fallback metadata: {main_speaker} → "
-                        f"{nombre_canonico}  (uploader: {uploader})"
-                    )
-                    return {main_speaker: nombre_canonico}
-    return {}
+    personaje = _personaje_del_uploader(metadata, config)
+    if not personaje:
+        return {}
+    speaker_counts: dict[str, int] = {}
+    for line in transcripcion.splitlines():
+        if "SPEAKER_" in line:
+            token = line.split(":")[0].strip()
+            if "SPEAKER_" in token:
+                speaker_counts[token] = speaker_counts.get(token, 0) + 1
+    if not speaker_counts:
+        return {}
+    main_speaker    = max(speaker_counts, key=speaker_counts.get)
+    nombre_canonico = personaje["nombres"][0]
+    print(f"[AGENT0] Fallback metadata: {main_speaker} → {nombre_canonico}")
+    return {main_speaker: nombre_canonico}
 
 
 def identify_speakers(
@@ -241,7 +270,7 @@ def identify_speakers(
     print(f"[AGENT0] Speakers detectados: {len(speakers)}  ({', '.join(speakers)})")
 
     client  = get_client()
-    preview = _extract_preview(raw_text, max_seconds=180)
+    preview = _extract_preview(raw_text)
     roster  = _build_roster_context(config or {}, metadata)
     if roster:
         n_personajes = len((config or {}).get("personajes", []))
@@ -251,6 +280,10 @@ def identify_speakers(
         result    = _call_claude(client, preview, metadata, roster)
         mapa      = result.get("mapa", {})
         confianza = result.get("confianza", {})
+    except AIError:
+        # Fallo de transporte (límite de uso, CLI caído...): que el orquestador lo vea y
+        # reintente, en vez de degradar en silencio a speakers genéricos.
+        raise
     except Exception as e:
         print(f"[AGENT0] ⚠ Claude falló ({e}) — usando speakers genéricos")
         mapa      = {s: s for s in speakers}
@@ -272,13 +305,20 @@ def identify_speakers(
             print("[AGENT0] ✅ Fallback aplicado")
 
     # Clasificar cada speaker según umbrales
+    dueno = _personaje_del_uploader(metadata, config or {})
     speaker_map_detallado: dict[str, dict] = {}
     for spk in speakers:
         nombre_raw = mapa.get(spk, spk)
         conf       = confianza.get(spk, 0.0)
         tiene_nombre = (nombre_raw != spk)
 
-        if conf >= umbral_alto:
+        if umbral_bajo <= conf < umbral_alto and tiene_nombre and _es_el_dueno(nombre_raw, dueno):
+            # Posible + coincide con el dueño del canal que subió el video: hay dos evidencias
+            # independientes. Sin esto, los títulos salían sin el nombre del personaje.
+            estado       = "confirmado_por_canal"
+            nombre_final = nombre_raw
+            print(f"[AGENT0] {spk} → {nombre_final} (posible {conf:.2f} + dueño del canal → aplicado)")
+        elif conf >= umbral_alto:
             estado        = "confirmado"
             nombre_final  = nombre_raw if tiene_nombre else spk
             print(f"[AGENT0] {spk} → {nombre_final} (confirmado, {conf:.2f})")
@@ -303,7 +343,7 @@ def identify_speakers(
     for line in raw_text.splitlines():
         new_line = line
         for spk, info in speaker_map_detallado.items():
-            if info["estado"] == "confirmado":
+            if info["estado"] in ("confirmado", "confirmado_por_canal"):
                 new_line = new_line.replace(spk, info["nombre"])
             else:
                 # Marca [sin identificar] sólo en la etiqueta de hablante

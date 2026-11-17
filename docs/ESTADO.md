@@ -6,7 +6,7 @@
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
-- **Piloto de referencia:** rama `v1_full` (ver `docs/DIAGNOSTICO_V1_FULL.md`); se moverá a `legacy/` en CLIP-23.
+- **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
 - **Sprint:** S1 · Base del piloto real + evaluación — 16 al 22 de noviembre de 2026 (activo).
 - **Demo del sprint:** `v1_full` funcionando desde `legacy/` con sus tests en verde, y un comando que evalúa casos
   de referencia construidos con los datos de investigación.
@@ -18,21 +18,25 @@
 | CLIP-13 | Documentación de análisis a `main` | Desarrollador | Finalizada |
 | CLIP-14 | Congelar piloto (`legacy/`, tag `piloto-v2.0`) | Desarrollador | Finalizada |
 | CLIP-15 | `CLAUDE.md` + `docs/ESTADO.md` + convención Jira | Desarrollador | Finalizada |
-| CLIP-23 | Reemplazar `legacy/` por `v1_full` | Desarrollador | Pendiente (siguiente) |
-| CLIP-20 | Conjunto de evaluación con datos de investigación (Q1) | Desarrollador + validación del operador | Pendiente |
-| CLIP-19 | Portabilidad (quitar rutas de Windows) | Desarrollador | Pendiente |
-| CLIP-18 | CI con los tests de `legacy/` | Desarrollador | Pendiente |
-| CLIP-21 | Notebook de Colab versionado | **Operador** (exportar) + Desarrollador | Pendiente |
+| CLIP-23 | Reemplazar `legacy/` por `v1_full` | Desarrollador | Integrado en `main` (demo pendiente) |
+| CLIP-20 | Conjunto de evaluación con datos de investigación (Q1) | Desarrollador + **operador** (exportar casos) | Integrado; falta el export del operador |
+| CLIP-19 | Portabilidad (quitar rutas de Windows) | Desarrollador | Integrado en `main` (demo pendiente) |
+| CLIP-18 | CI con los tests de `legacy/` | Desarrollador | Integrado; **bloqueado** hasta resolver la facturación de GitHub Actions |
+| CLIP-21 | Notebook de Colab versionado | Desarrollador | Integrado en `main` (demo pendiente) |
 
 Orden previsto: 23 → 20 → 19 → 18. En backlog (secundario): CLIP-16, CLIP-17, CLIP-22.
 
 ## Siguiente paso
 
-CLIP-23: reemplazar `legacy/` por `v1_full`.
+Demo del S1 por el operador (`docs/sprints/S1.md` §7). Luego planificar S2 (línea base de calidad).
 
 ## Pendientes del operador
 
-- CLIP-21: exportar el notebook de Colab (.ipynb, sin claves) y compartirlo.
+- GitHub: resolver la facturación de Actions (Settings → Billing & plans) y activar la protección de `main`.
+
+- CLIP-20: en la laptop, `python -m evaluacion.exportar_casos zapatillas_peru` y subir `evaluacion/casos/zapatillas_peru.yaml` (ver `evaluacion/README.md`).
+
+- Configurar los Secrets `HF_TOKEN` y `AUTH_TOKEN` en Colab (ver `legacy/colab/README.md`).
 - Entorno local (opcional, para demos): WSL + Docker Engine en la laptop; carpeta `D:\clipeo` en Remote Control
   (hoy figura "no disponible" para sesiones en la nube; alternativa: sesión local de Claude Code).
 
