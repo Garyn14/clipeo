@@ -213,12 +213,64 @@ Cada ejecución vive en `stream_data/<session_id>/` (formato `YYYYMMDD_HHMMSS`, 
 
 | Archivo | Escrito por | Contiene |
 |---|---|---|
-| `metadata.json` | `captura/video_capture.py` | Dump crudo de `yt-dlp --dump-json`: título, descripción, uploader, duración, etc. Lo consume el Agente 0 (para inferir speakers) y el Agente 3 (fallback de nombre de personaje). |
+| `metadata.json` | `captura/video_capture.py` | Dump crudo de `yt-dlp --dump-json` (primer subpaso de la Descarga): título, descripción, uploader, duración, etc. Un resumen (`titulo`, `canal`, `duracion_s`, `miniatura`) se copia al bloque `video` de `pipeline_estado.json` para la web. Lo consume el Agente 0 (para inferir speakers) y el Agente 3 (fallback de nombre de personaje). |
 | `stream_completo.mp4` | `captura/video_capture.py` | Video fuente completo descargado (≤1080p). |
 | `audio/audio_completo.mp3` | `captura/video_capture.py` | Audio completo extraído del video. |
 | `captura_estado.json` | `captura/tiktok_capture.py` | Solo en sesiones de captura en vivo: usuario, url, `chunk_segundos`, lista de chunks grabados con su rango de tiempo real y estado (`listo`/`parcial`). |
-| `pipeline_estado.json` | `core/chunk_manager.py` | Plan de chunks de **procesamiento** (distinto del de captura): url, config, duración total, tamaño de chunk, y un dict `chunks` con `{inicio_segundos, fin_segundos, inicio_ts, fin_ts, estado: pendiente\|completado\|fallido, error?}` por chunk. Es lo que permite reanudar una sesión cortada. |
+| `pipeline_estado.json` | `core/chunk_manager.py` (vía `core/pasos.py`) | Plan de chunks de **procesamiento** (distinto del de captura) y estado de cada paso — ver 2.1.1. Es lo que permite reanudar una sesión cortada y lo que la web dibuja como círculos. |
 | `contenido_final.json` | `pipeline.py` | Merge de todos los `contenido_chunks/*.json` de la sesión, ordenado por `score` descendente. Mismo esquema que `contenido.json` (ver abajo). |
+
+### 2.1.1 Esquema de `pipeline_estado.json`
+
+```json
+{
+  "url": "<url o ruta local>", "config": "<canal_id>", "modo": "automatico|manual|test",
+  "creado": "2026-09-30T21:25:10",
+  "duracion_total_segundos": 7800, "chunk_minutos": 30,
+  "pasos": {
+    "descarga": <paso>, "plan": <paso>, "revision": <paso>, "fin": <paso>
+  },
+  "chunks": {
+    "chunk_001": {
+      "inicio_segundos": 0, "fin_segundos": 1800, "inicio_ts": "00:00:00", "fin_ts": "00:30:00",
+      "estado": "pendiente|completado|fallido", "error": "<mensaje, si fallido>",
+      "pasos": {
+        "transcripcion": <paso>, "agente0": <paso>, "agente1": <paso>,
+        "agente2": <paso>, "agente3": <paso>, "corte": <paso>
+      }
+    }
+  }
+}
+```
+
+`<paso>`:
+
+```json
+{
+  "estado": "pendiente|corriendo|ok|omitido|error|esperando",
+  "inicio": "ISO", "fin": "ISO", "duracion_s": 12.3, "intentos": 1,
+  "error": {"tipo": "AIRetryableError", "mensaje": "...", "reintentable": true, "detalle": "<traceback>", "fecha": "ISO"},
+  "salidas": ["chunks/chunk_001/picos.json"],
+  "nota": "5 pico(s)",
+  "ia": {"llamadas": 1, "errores": 0, "trazas": "agente1"},
+  "historial": [
+    {"tipo": "intento", "n": 1, "origen": "inicial", "espera_previa_s": null,
+     "inicio": "ISO", "fin": "ISO", "duracion_s": 3.1, "resultado": "error",
+     "error": {"tipo": "AIRetryableError", "mensaje": "...", "reintentable": true, "fecha": "ISO"},
+     "llamadas": [1, 1]},
+    {"tipo": "intento", "n": 2, "origen": "automatico", "espera_previa_s": 30, "...": "...", "resultado": "ok", "llamadas": [2, 2]},
+    {"tipo": "reinicio", "fecha": "ISO", "desde": "transcripcion", "chunk": "chunk_001"},
+    {"tipo": "intento", "n": 3, "origen": "relanzado", "...": "..."}
+  ]
+}
+```
+
+- `estado` del chunk se deriva de sus pasos (cualquier `error` → `fallido`; todos `ok`/`omitido` → `completado`).
+- `salidas` son rutas relativas a la sesión: lo que `--reintentar` borra al resetear el paso.
+- `subpasos` (desde 2026-10-03, hoy solo en `descarga`): tareas internas del paso, `[{"id", "label", "estado": "pendiente|corriendo|ok|error", "detalle", "progreso": {"pct", "bytes", "total", "velocidad", "eta_s", "pista", "pistas"}|null}]`. Se reinician en cada intento (`core/pasos.py::Subpasos`; el progreso se escribe como mucho una vez por segundo). La Descarga corre `metadata` (yt-dlp `--dump-json`, valida la URL antes de bajar nada) → `video` → `audio` → `duracion`.
+- `historial` (desde 2026-10-02) es la línea de tiempo del paso, lo que dibuja el modal de la web. Cada intento es un evento `intento`: `origen` = `inicial` (el primero), `automatico` (reintento tras esperar `espera_previa_s`) o `relanzado` (primer intento de una corrida nueva cuando ya había historia). `resultado` = `corriendo|ok|omitido|error|interrumpido`. El `error` va sin `detalle`; el traceback solo queda en `error` del paso (el último). `llamadas` = rango `[desde, hasta]` de números de traza en `trazas/<paso>/`, o `null`. `--reintentar` **conserva** `historial` e `intentos` (acumulado) y agrega un evento `reinicio` en el paso reintentado y en los siguientes que tenían historia. Las trazas ya no se borran al reintentar: la numeración sigue y cada intento apunta a las suyas. Pasos anteriores a este campo no lo tienen (se lee como `[]`).
+- `revision` queda `esperando` cuando todos los chunks terminaron; el panel web lo pasa a `ok` (y `fin` a `ok`) al finalizar la revisión de clips.
+- Un `pipeline_estado.json` previo a los pasos (solo `chunks` con `estado`) se sigue leyendo: los pasos faltantes aparecen como `pendiente`.
 
 ### 2.2 Archivos por chunk (`chunks/<chunk_id>/`)
 
@@ -227,24 +279,32 @@ Cada ejecución vive en `stream_data/<session_id>/` (formato `YYYYMMDD_HHMMSS`, 
 | `transcripcion_raw.txt` | `transcripcion/video_transcriber.py` | Texto plano, una línea por segmento: `[MM:SS] SPEAKER_XX: "texto"` (con diarización) o `[MM:SS] texto` (sin ella). Timestamps ya ajustados al offset real dentro del video completo. |
 | `transcripcion_enriquecida.txt` | `agentes/agent0_speaker_identifier.py` | Mismo formato, con `SPEAKER_XX` reemplazado por el nombre real donde la confianza fue alta, o marcado `SPEAKER_XX [sin identificar]:` donde no. Es la que prefieren leer los Agentes 1/2/3 cuando existe. |
 | `transcripcion_completa.txt` | varios | Copia de compatibilidad de la transcripción vigente (raw o enriquecida) bajo el nombre legacy que usan los modos `--test` y la lectura por defecto de los agentes. |
-| `speaker_map.json` | `agentes/agent0_speaker_identifier.py` | `{"SPEAKER_00": {"nombre": <string|null>, "confianza": <float>, "estado": "confirmado"\|"posible"\|"desconocido"}, ...}` |
+| `speaker_map.json` | `agentes/agent0_speaker_identifier.py` | `{"SPEAKER_00": {"nombre": <string|null>, "confianza": <float>, "estado": "confirmado"\|"confirmado_por_canal"\|"posible"\|"desconocido"}, ...}` — `confirmado_por_canal`: un "posible" que coincide con el dueño del canal (uploader), se aplica igual que un confirmado |
+| `juez.json` | `agentes/juez.py` | `{"memoria": "investigacion/<nicho>/referencias.yaml", "decisiones": [{"n", "inicio", "fin", "publicar", "linea1", "linea2", "tipo", "en_juego", "parecidos": [...], "fuerza", "por_que", "rango": {...rango del A2}}]}`. Con juez, `contenido.json` lo escribe el A3 en modo copy: los aprobados con el título del juez, `score` = fuerza, el copy por plataforma y un bloque `juez`; los rechazados con `publicar: false` y su bloque `juez` (sin copy) |
+| `auditoria.json` | `agentes/auditoria.py` (bajo demanda) | `{"detectados": <n rangos que llegaron al juez>, "perdidos": [{"timestamp", "tipo", "en_juego", "por_que"}]}` |
 | `picos.json` | `agentes/agent1_peak_detector.py` | `{"picos": [{"timestamp": "MM:SS", "razon": <string>, "confianza": <float 0-1>, "tipo"?: <string>}, ...]}` — ya filtrado por `confianza_minima`. |
 | `rangos.json` | `agentes/agent2_range_refiner.py` | `{"rangos": [{"conservar": <bool>, "inicio": "HH:MM:SS", "fin": "HH:MM:SS", "duracion_segundos": <int>, "razon": <string>, "gancho": <string>, "pico_original": {...picos.json item}, "momento_enfasis_seg"?: <float>}, ...]}` — puede haber menos rangos que picos (fusión de picos solapados) o rangos con `"conservar": false` (descartados, sin campos de tiempo). `momento_enfasis_seg` (opcional): timestamp del pico original relativo al inicio del rango — usado por Agente 4 para el zoom/punch-in (ver `edicion_video/agent4_video_cutter.py::_build_vf_zoom`). |
 | `contenido.json` | `agentes/agent3_viral_scorer.py` | `{"contenido": [{"score": <int 1-10>, "publicar": <bool>, "texto_linea1": <string>, "texto_linea2": <string>, "hashtags": [<string>,...], "razon_score": <string>, "rango_original": {...rangos.json item}, "mood": <string>, "estilo_texto": "sin_texto"\|"fijo"\|"fijo_inicial"\|"dinamico"\|"dinamico_con_titulo", "cta_texto": <string>, "palabras_clave": [<string>,...], "layout": "pillarbox"\|"blur"\|"imagen"\|"crop", "layout_streaming": <dict\|null>, "efecto_sonido": <string\|null>, "publicacion": {"tiktok": {"descripcion": <string>, "hashtags": [<string>,...]}, "youtube_shorts": {"titulo_alt": <string>, "descripcion": <string>, "hashtags": [<string>,...], "tags_backend": [<string>,...]}}}, ...]}` — solo incluye rangos que tenían `conservar: true`. Si `--revisar` estaba activo, este archivo se reescribe tras la revisión con los `publicar` ajustados y ediciones de texto/rango aplicadas. Campos editoriales (`mood`, `estilo_texto`, `cta_texto`, `palabras_clave`, `layout`) los decide Claude vía el prompt de nicho, con defaults defensivos en `agent3_viral_scorer.py` si los omite — **nota: `layout` tiene hoy `"blur"` como default (prompt y fallback defensivo), no `"pillarbox"` — decisión temporal (2026-07-30) mientras `"imagen"`/`"crop"` maduran, ver el comentario sobre el bloque LAYOUT en `contexto/nichos/streamers_peru.yaml` y `zapatillas_peru.yaml`. Excepción: `layout: "imagen"` (Fase 13), `layout: "crop"` (Fase 14) y `efecto_sonido` (Fase 15) todavía NO están en el prompt de Claude** (imagen: no hay imágenes curadas en `edicion_video/assets/imagenes_relleno/`; crop: implementado pero sin probar con una corrida real de Agente 3 todavía; efecto_sonido: no hay efectos curados en `edicion_video/assets/efectos_sonido/`) — hoy los tres solo se pueden forzar manualmente vía `entrenamiento/clip_manual.py --layout imagen|crop` / `--efecto-sonido <tipo>`. `efecto_sonido` solo suena si el clip también tiene `momento_enfasis_seg` (Fase 5) — se ancla ahí vía `adelay`, sin ese instante el efecto se omite. `layout_streaming` es la ÚNICA excepción de origen — es un hecho técnico del canal (no editorial), copiado tal cual desde la config del canal (bloque `layout_streaming` en el YAML), nunca pedido a Claude — ver `_build_vf_splitscreen`. **`publicacion`** (2026-07-31): descripción + hashtags YA ARMADOS por plataforma, listos para copiar/pegar al publicar — no confundir con `texto_linea1`/`texto_linea2`, que es el texto quemado en el video. Claude redacta el contenido específico del clip; los `hashtags`/`tags_backend` se mezclan post-hoc con la base de `seo_base` del nicho (`_merge_hashtags` en `agent3_viral_scorer.py`) para garantizar que los hashtags "siempre incluir" (ej. `#Shorts`) sobrevivan aunque Claude no los repita. `facebook_reels` no está en este campo todavía — mismo criterio de plataforma-no-activa que `layout: "imagen"/"crop"`. Ningún agente/herramienta lo automatiza hacia la plataforma real — sigue siendo el usuario quien publica a mano, esto solo le ahorra redactarlo. **Compilación multi-segmento (Fase 11, motor de Agente 4 ya implementado, Agente 2/3 pendientes)**: en vez de `rango_original`, una entrada de compilación tendría `"segmentos": [{"inicio", "fin"}, ...]` y opcionalmente `"duracion_total"` — ver `_cut_compilation`. |
+
+| `trazas/<paso>/NNN_request.json` | `ai_client/client.py` | Cada llamada a Claude del paso: los mismos kwargs que recibe `messages.create()` (`model`, `system`, `messages`, `max_tokens`). |
+| `trazas/<paso>/NNN_response.json` | `ai_client/client.py` | `{"text": <respuesta>, "duracion_s": <float>, "meta": {"proveedor", "modelo", "duracion_api_ms", "usage"}}`. |
+| `trazas/<paso>/NNN_error.json` | `ai_client/client.py` | En lugar del response si la llamada falló: `{"tipo", "mensaje", "duracion_s"}`. |
+
+En modo `--test` el "chunk" es la propia carpeta de sesión, así que `trazas/` queda en la raíz de la sesión. Las trazas de un paso se borran cuando el paso arranca de cero (primera vez o tras `--reintentar`).
 
 ### 2.3 Archivos de nivel de sesión derivados de chunks
 
 | Archivo | Contenido |
 |---|---|
-| `contenido_chunks/<chunk_id>.json` | Copia de `contenido.json` de ese chunk, guardada aparte para poder mergear todos los chunks al final sin re-leer `chunks/*/contenido.json`. |
+| `contenido_chunks/<chunk_id>.json` | Copia de `contenido.json` de ese chunk, guardada aparte para poder mergear todos los chunks al final sin re-leer `chunks/*/contenido.json`. Tras el corte, cada entrada con clip lleva `"clip_id"` (ej. `"clip_c002_01"`): es la fuente de verdad del nombre de su archivo en `clips/`. La revisión web marca además `"revision_descartado": true` en las descartadas. |
 | `audio_chunks/<chunk_id>.mp3` | Audio extraído para ese rango de tiempo (solo si no había una transcripción base previa para dividir en vez de re-extraer). |
 
 ### 2.4 Clips generados
 
 | Archivo | Escrito por | Esquema |
 |---|---|---|
-| `clips/clip_NNN.mp4` | `edicion_video/agent4_video_cutter.py` | Video vertical 1080x1920 con subtítulo quemado (o sin él, si el subtítulo falló). Numeración continua entre chunks de la misma sesión (`clip_offset`). |
-| `clips/clip_NNN.json` | `edicion_video/agent4_video_cutter.py` | `{"clip": <filename>, "texto_linea1", "texto_linea2", "hashtags", "score", "duracion_segundos", "listo_para_publicar": false}` — el flag queda siempre en `false`; publicarlo o no es una decisión humana posterior. |
+| `clips/clip_c<NNN>_<NN>.mp4` | `edicion_video/agent4_video_cutter.py` | Video vertical 1080x1920 con subtítulo quemado (o sin él, si el subtítulo falló). Nombre por chunk: `clip_c002_01` = primer clip del `chunk_002` (vía `clip_prefix`), así reintentar el corte de un chunk no renumera los demás. Sesiones anteriores al 2026-09-30: `clip_NNN`, numeración continua entre chunks (`clip_offset`); `core/clip_ids.py` resuelve ambos. |
+| `clips/<clip_id>.json` | `edicion_video/agent4_video_cutter.py` | `{"clip": <filename>, "texto_linea1", "texto_linea2", "hashtags", "score", "duracion_segundos", "listo_para_publicar": false}` — el flag queda en `false` hasta que se aprueba el clip en la revisión (web o `revisar_clips.py`). |
 | `clips_custom/custom_<timestamp>.mp4` + `.json` | `entrenamiento/clip_manual.py` | Igual que arriba más `{"inicio", "fin", "config", "creado_manual": true, "fecha"}`. Separado de `clips/` para no interferir con la numeración automática. |
 
 ### 2.5 Cómo leerlo de punta a punta
@@ -258,10 +318,21 @@ transcripcion_raw.txt
       → picos.json
         → rangos.json
           → contenido.json  (posiblemente reescrito tras --revisar)
-            → contenido_chunks/<chunk_id>.json (copia)
-            → clips/clip_NNN.mp4 + .json
+            → contenido_chunks/<chunk_id>.json (copia; recibe "clip_id" tras el corte)
+            → clips/clip_c<NNN>_<NN>.mp4 + .json
 ```
 
 y a nivel de sesión, al terminar todos los chunks: `contenido_chunks/*.json` → `contenido_final.json`.
 
 Como cada flecha es un archivo real en disco (no estado en memoria entre procesos), cualquier etapa puede re-ejecutarse manualmente apuntando al archivo de la etapa anterior sin tocar las demás — ver COMANDOS.md §3.
+
+
+## investigacion/<nicho>/ — memoria del nicho
+
+| Archivo | Quién lo escribe | Contenido |
+|---|---|---|
+| `cuentas.yaml` | a mano | Cuentas de TikTok a medir: `{cuenta, tipo: oficial\|clipper\|medio\|propia, universo}` |
+| `videos.jsonl` | `investigacion/recolectar.py` | Un video por línea: métricas (vistas, likes, comentarios, compartidos, duración, fecha), `texto` (descripción), cuenta y universo. El outlier se calcula al leer (`comun.calcular_outliers`) |
+| `muestra.jsonl` + `muestra/<id>/` | `investigacion/muestrear.py`, `transcribir_muestra.py` | Clips elegidos (top/fondo por universo + éxitos propios); por clip: `video.mp4`, `fotogramas.jpg`, `audio.mp3`, `transcripcion.txt` (gitignored) |
+| `referencias.yaml` | Claude en sesión (curado) | La memoria: hallazgos, fórmula del título, `tipos_que_funcionan` con ejemplos medidos, `lo_que_no_funciona`. La leen A1, A2, el juez y la auditoría |
+| `correcciones.jsonl` | revisión web (`backend/app/services/review_actions.py`) | Una decisión del editor por línea: `{fecha, session_id, clip_id, accion: aprobado\|editado\|descartado, juez: {tipo, fuerza, linea1, linea2}, titulo_final, razon}`. Las últimas 30 entran al prompt del juez |

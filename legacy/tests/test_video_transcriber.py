@@ -11,7 +11,12 @@ import json
 import pytest
 import requests
 
-from transcripcion.video_transcriber import _transcribe_via_colab, _write_word_timings
+from transcripcion import video_transcriber
+from transcripcion.video_transcriber import (
+    _normalizar_url_colab,
+    _transcribe_via_colab,
+    _write_word_timings,
+)
 
 TRANSCRIBE_URL = "https://fake-colab.trycloudflare.com/transcribe"
 
@@ -21,9 +26,27 @@ def status_url(job_id: str) -> str:
 
 
 @pytest.fixture(autouse=True)
-def colab_env(monkeypatch):
+def colab_env(monkeypatch, tmp_path):
     monkeypatch.setenv("COLAB_TRANSCRIBE_URL", TRANSCRIBE_URL)
     monkeypatch.delenv("COLAB_AUTH_TOKEN", raising=False)
+    # Sin esto, el .env real del proyecto pisaría la URL falsa (se relee en cada llamada).
+    monkeypatch.setattr(video_transcriber, "_ENV_PATH", tmp_path / "no_existe.env")
+
+
+@pytest.fixture
+def env_file(monkeypatch, tmp_path):
+    path = tmp_path / ".env"
+    monkeypatch.setattr(video_transcriber, "_ENV_PATH", path)
+    return path
+
+
+def _mock_job_ok(requests_mock, base: str, job_id: str):
+    requests_mock.post(f"{base}/transcribe", status_code=202, json={"job_id": job_id})
+    requests_mock.get(
+        f"{base}/status/{job_id}",
+        status_code=200,
+        json={"status": "done", "segments": [], "language": "es", "processing_seconds": 1.0},
+    )
 
 
 @pytest.fixture
@@ -152,6 +175,88 @@ def test_connection_error_en_polling(requests_mock, audio_file):
 
     with pytest.raises(RuntimeError):
         _transcribe_via_colab(audio_file, timeout=5, poll_interval=0.01)
+
+
+def test_envia_el_idioma_a_colab(requests_mock, audio_file):
+    _mock_job_ok(requests_mock, "https://fake-colab.trycloudflare.com", "jl")
+
+    _transcribe_via_colab(audio_file, timeout=5, poll_interval=0.01)
+
+    assert b'name="language"' in requests_mock.request_history[0].body
+    assert b"\r\n\r\nes\r\n" in requests_mock.request_history[0].body
+
+
+def test_idioma_distinto_falla_sin_reintentar(requests_mock, audio_file):
+    requests_mock.post(TRANSCRIBE_URL, status_code=202, json={"job_id": "jit"})
+    requests_mock.get(status_url("jit"), status_code=200, json={
+        "status": "done", "segments": [{"start": 0, "text": "Non c'è l'elettronica?"}], "language": "it",
+    })
+
+    with pytest.raises(video_transcriber.ColabError, match="'it' en vez de 'es'") as exc:
+        _transcribe_via_colab(audio_file, timeout=5, poll_interval=0.01)
+    assert exc.value.reintentable is False
+
+
+@pytest.mark.parametrize("entrada, esperado", [
+    ("https://x.trycloudflare.com", "https://x.trycloudflare.com/transcribe"),
+    ("https://x.trycloudflare.com/", "https://x.trycloudflare.com/transcribe"),
+    ("https://x.trycloudflare.com/transcribe", "https://x.trycloudflare.com/transcribe"),
+    ("  https://x.trycloudflare.com/transcribe/ ", "https://x.trycloudflare.com/transcribe"),
+    ("", ""),
+])
+def test_normalizar_url_colab(entrada, esperado):
+    assert _normalizar_url_colab(entrada) == esperado
+
+
+def test_url_sin_sufijo_en_env_file(requests_mock, audio_file, env_file):
+    env_file.write_text("COLAB_TRANSCRIBE_URL=https://nuevo.trycloudflare.com\n", encoding="utf-8")
+    _mock_job_ok(requests_mock, "https://nuevo.trycloudflare.com", "j1")
+
+    result = _transcribe_via_colab(audio_file, timeout=5, poll_interval=0.01)
+
+    assert result["status"] == "done"
+    assert requests_mock.request_history[0].url == "https://nuevo.trycloudflare.com/transcribe"
+
+
+def test_env_file_gana_sobre_os_environ(requests_mock, audio_file, env_file):
+    # os.environ conserva la URL del arranque (TRANSCRIBE_URL); el archivo tiene la nueva.
+    env_file.write_text(
+        "COLAB_TRANSCRIBE_URL=https://nuevo.trycloudflare.com/transcribe\n"
+        "COLAB_AUTH_TOKEN=tok-nuevo\n",
+        encoding="utf-8",
+    )
+    _mock_job_ok(requests_mock, "https://nuevo.trycloudflare.com", "j2")
+
+    _transcribe_via_colab(audio_file, timeout=5, poll_interval=0.01)
+
+    post = requests_mock.request_history[0]
+    assert post.url == "https://nuevo.trycloudflare.com/transcribe"
+    assert post.headers["Authorization"] == "Bearer tok-nuevo"
+
+
+def test_cambio_de_env_entre_intentos(requests_mock, audio_file, env_file):
+    env_file.write_text("COLAB_TRANSCRIBE_URL=https://viejo.trycloudflare.com\n", encoding="utf-8")
+    requests_mock.post("https://viejo.trycloudflare.com/transcribe", exc=requests.exceptions.ConnectionError)
+
+    with pytest.raises(video_transcriber.ColabError, match="viejo.trycloudflare.com"):
+        _transcribe_via_colab(audio_file, timeout=5, poll_interval=0.01)
+
+    # El usuario corrige .env mientras el paso espera el reintento.
+    env_file.write_text("COLAB_TRANSCRIBE_URL=https://nuevo.trycloudflare.com\n", encoding="utf-8")
+    _mock_job_ok(requests_mock, "https://nuevo.trycloudflare.com", "j3")
+
+    result = _transcribe_via_colab(audio_file, timeout=5, poll_interval=0.01)
+
+    assert result["status"] == "done"
+
+
+def test_env_file_sin_la_clave_cae_a_os_environ(requests_mock, audio_file, env_file):
+    env_file.write_text("HF_TOKEN=x\n", encoding="utf-8")
+    _mock_job_ok(requests_mock, "https://fake-colab.trycloudflare.com", "j4")
+
+    _transcribe_via_colab(audio_file, timeout=5, poll_interval=0.01)
+
+    assert requests_mock.request_history[0].url == TRANSCRIBE_URL
 
 
 def test_write_word_timings_extrae_palabras_con_offset(tmp_path):

@@ -1126,11 +1126,14 @@ def run_agent(
     video_path_override: Path | None = None,
     clips_dir_override:  Path | None = None,
     clip_offset: int = 0,
+    clip_prefix: str | None = None,
 ) -> list[dict]:
     """
     video_path_override — usar este video en lugar de buscarlo en session_dir
     clips_dir_override  — guardar clips aquí en lugar de session_dir/clips/
     clip_offset         — continuar numeración desde este índice (clip_{offset+1:03d})
+    clip_prefix         — si se da, nombra {prefix}_01, {prefix}_02... (ignora clip_offset);
+                          el pipeline lo usa por chunk — ver core/clip_ids.py
     """
     contenido_file = Path(contenido_path)
     if not contenido_file.exists():
@@ -1189,8 +1192,9 @@ def run_agent(
         efecto_sonido  = item.get("efecto_sonido")
         segmentos      = item.get("segmentos")
 
-        clip_name = f"clip_{i + 1 + clip_offset:03d}.mp4"
-        meta_name = f"clip_{i + 1 + clip_offset:03d}.json"
+        clip_id   = f"{clip_prefix}_{i + 1:02d}" if clip_prefix else f"clip_{i + 1 + clip_offset:03d}"
+        clip_name = f"{clip_id}.mp4"
+        meta_name = f"{clip_id}.json"
         clip_path = clips_dir / clip_name
         meta_path = clips_dir / meta_name
 
@@ -1241,7 +1245,7 @@ def run_agent(
             "listo_para_publicar": False,
         }
         meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
-        resultados.append({"ok": ok, "meta": meta, "path": str(clip_path)})
+        resultados.append({"ok": ok, "meta": meta, "path": str(clip_path), "clip_id": clip_id})
 
     # ── Tabla resumen ────────────────────────────────────────
     exitosos = [r for r in resultados if r["ok"]]

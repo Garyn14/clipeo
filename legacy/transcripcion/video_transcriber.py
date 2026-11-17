@@ -16,13 +16,28 @@ import json
 import os
 import time
 from pathlib import Path
-from dotenv import load_dotenv
+from urllib.parse import urlparse
+from dotenv import dotenv_values, load_dotenv
 import requests
 
 load_dotenv()
 
+_ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
+
 from core.utils import setup_ffmpeg_path
 setup_ffmpeg_path()
+
+
+class ColabError(RuntimeError):
+    """
+    Fallo de la transcripción remota. `reintentable` lo lee el orquestador de pasos
+    (core/pasos.py): túnel caído, timeouts o 5xx se reintentan solos; falta de URL o
+    rechazo de auth (4xx) requieren corregir .env antes.
+    """
+
+    def __init__(self, mensaje: str, reintentable: bool = True):
+        super().__init__(mensaje)
+        self.reintentable = reintentable
 
 
 def _write_word_timings(segments: list, dest_path: Path, offset_segundos: float = 0) -> int:
@@ -54,17 +69,50 @@ def _write_word_timings(segments: list, dest_path: Path, offset_segundos: float 
     return len(palabras)
 
 
-def _transcribe_via_colab(audio_path: Path, timeout: int = 1800, poll_interval: int = 10) -> dict:
+def _status_reintentable(status_code: int) -> bool:
+    # 401/403: token incorrecto; 404: URL vieja de otro túnel... salvo 408/429, un 4xx no
+    # se arregla reintentando. Cloudflare devuelve 5xx/530 cuando el túnel está caído.
+    return status_code >= 500 or status_code in (408, 429)
+
+
+def _normalizar_url_colab(url: str) -> str:
+    # Acepta la URL del túnel tal cual la muestra Colab, con o sin /transcribe.
+    url = url.strip().rstrip("/")
+    if url and not url.endswith("/transcribe"):
+        url += "/transcribe"
+    return url
+
+
+def _colab_config() -> tuple[str, str]:
+    """
+    (url, token) de Colab leídos de .env en CADA llamada: el túnel cambia con cada
+    reinicio del notebook, y así el siguiente reintento de una corrida en curso
+    toma la URL nueva sin relanzar. El archivo gana sobre os.environ (que quedó
+    con el valor del arranque); sin valor en el archivo, cae a os.environ.
+    """
+    archivo = dotenv_values(_ENV_PATH) if _ENV_PATH.exists() else {}
+
+    def _valor(clave: str) -> str:
+        return (archivo.get(clave) or os.environ.get(clave, "")).strip()
+
+    return _normalizar_url_colab(_valor("COLAB_TRANSCRIBE_URL")), _valor("COLAB_AUTH_TOKEN")
+
+
+def _transcribe_via_colab(
+    audio_path: Path, timeout: int = 1800, poll_interval: int = 10, language: str = "es",
+) -> dict:
     """
     Envía el audio al endpoint remoto de Colab (patrón submit+poll, para evitar
     el timeout de 100s de Cloudflare) y devuelve {"segments": [...], "language": ...}
     Lanza RuntimeError con mensaje claro si algo falla — NUNCA cae a local silenciosamente.
     """
-    url   = os.environ.get("COLAB_TRANSCRIBE_URL", "").strip()
-    token = os.environ.get("COLAB_AUTH_TOKEN", "").strip()
+    url, token = _colab_config()
 
     if not url:
-        raise RuntimeError("COLAB_TRANSCRIBE_URL no configurada en .env — no se puede usar --colab")
+        raise ColabError(
+            "COLAB_TRANSCRIBE_URL no configurada en .env — no se puede usar --colab",
+            reintentable=False,
+        )
 
     size_mb = audio_path.stat().st_size / (1024 * 1024)
     print(f"[COLAB] Enviando audio ({size_mb:.1f} MB) a {url}...")
@@ -79,23 +127,28 @@ def _transcribe_via_colab(audio_path: Path, timeout: int = 1800, poll_interval: 
             response = requests.post(
                 url,
                 files={"audio": (audio_path.name, f)},
+                # Sin idioma, WhisperX lo adivina con los primeros segundos y puede
+                # transcribir español como italiano (pasó en 20261002_215006)
+                data={"language": language},
                 headers=headers,
                 timeout=120,
             )
     except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
-        raise RuntimeError(
-            f"Colab no respondió al envío en 120s — verifica que el notebook y el túnel estén activos"
+        raise ColabError(
+            f"Colab ({urlparse(url).netloc}) no respondió al envío en 120s — verifica que "
+            f"el notebook y el túnel estén activos y que COLAB_TRANSCRIBE_URL sea la actual"
         ) from e
 
     if response.status_code != 202:
-        raise RuntimeError(
-            f"Colab respondió con error {response.status_code}: {response.text}"
+        raise ColabError(
+            f"Colab respondió con error {response.status_code}: {response.text}",
+            reintentable=_status_reintentable(response.status_code),
         )
 
     submit_data = response.json()
     job_id      = submit_data.get("job_id")
     if not job_id:
-        raise RuntimeError("Colab no devolvió job_id")
+        raise ColabError("Colab no devolvió job_id")
 
     status_url = url.rsplit("/transcribe", 1)[0] + f"/status/{job_id}"
     print(f"[COLAB] Job {job_id} enviado — esperando resultado (polling cada {poll_interval}s)...")
@@ -103,7 +156,7 @@ def _transcribe_via_colab(audio_path: Path, timeout: int = 1800, poll_interval: 
     data = None
     while True:
         if time.time() - t0 > timeout:
-            raise RuntimeError(
+            raise ColabError(
                 f"Colab no terminó el job {job_id} en {timeout}s — timeout de polling"
             )
 
@@ -112,13 +165,14 @@ def _transcribe_via_colab(audio_path: Path, timeout: int = 1800, poll_interval: 
         try:
             status_response = requests.get(status_url, headers=headers, timeout=30)
         except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
-            raise RuntimeError(
+            raise ColabError(
                 f"Colab no respondió al consultar estado del job {job_id} — verifica el túnel"
             ) from e
 
         if status_response.status_code != 200:
-            raise RuntimeError(
-                f"Colab respondió con error {status_response.status_code} al consultar estado: {status_response.text}"
+            raise ColabError(
+                f"Colab respondió con error {status_response.status_code} al consultar estado: {status_response.text}",
+                reintentable=_status_reintentable(status_response.status_code),
             )
 
         status_data = status_response.json()
@@ -126,11 +180,19 @@ def _transcribe_via_colab(audio_path: Path, timeout: int = 1800, poll_interval: 
 
         if status == "done":
             data = status_data
+            detectado = (data.get("language") or "").lower()
+            if detectado and detectado != language:
+                # Seguir con texto en otro idioma arruina en cascada A0–A3: mejor frenar acá
+                raise ColabError(
+                    f"Colab transcribió en '{detectado}' en vez de '{language}' — revisa que el "
+                    f"notebook use el idioma que manda el pipeline",
+                    reintentable=False,
+                )
             break
         elif status == "error":
-            raise RuntimeError(status_data.get("error", "error desconocido en Colab"))
+            raise ColabError(status_data.get("error", "error desconocido en Colab"))
         elif status != "processing":
-            raise RuntimeError(f"Colab devolvió un status desconocido: {status!r}")
+            raise ColabError(f"Colab devolvió un status desconocido: {status!r}")
         # status == "processing": seguir esperando
 
     t1 = time.time()
@@ -296,7 +358,7 @@ def transcribe_chunk(
     Retorna Path a transcripcion_completa.txt.
     """
     if usar_colab:
-        data     = _transcribe_via_colab(audio_path)
+        data     = _transcribe_via_colab(audio_path, language=language)
         segments = data.get("segments", [])
 
         chunk_dir.mkdir(parents=True, exist_ok=True)

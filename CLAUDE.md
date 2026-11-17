@@ -23,7 +23,7 @@ estamos, qué ticket sigue y cómo trabajar.
 | [`docs/DIAGNOSTICO_V1_FULL.md`](docs/DIAGNOSTICO_V1_FULL.md) | **Diagnóstico del piloto real (`v1_full`)** y brechas de calidad. |
 | [`docs/DIAGNOSTICO_ACTUAL.md`](docs/DIAGNOSTICO_ACTUAL.md) | Diagnóstico inicial (sobre la base, incompleto; ver el anexo). |
 | `docs/sprints/S<n>.md` | Cierre de cada sprint: qué se hizo y cómo probar la demo. |
-| `docs/ARQUITECTURA.md`, `COMANDOS.md`, `ESTRUCTURA_DATOS.md`, `APRENDIZAJE.md` | Documentación **del piloto** (referencia). |
+| `legacy/CLAUDE.md`, `legacy/docs/` | Documentación **del piloto** `v1_full` (arquitectura, comandos, datos, aprendizaje). |
 
 ## Roles (separados)
 
@@ -69,8 +69,9 @@ Transición en curso (ADR-008, migración *strangler*):
 
 ```
 CLAUDE.md, docs/                 ← documentación (este archivo + análisis + estado)
-legacy/                          ← PILOTO v2.0 congelado (tag piloto-v2.0); ver legacy/README.md
-legacy/tests/                    ← tests del piloto (81, todos pasan)
+legacy/                          ← PILOTO v1_full (el que se usa hoy); ver legacy/README.md y legacy/CLAUDE.md
+legacy/tests/                    ← tests del piloto (293, todos pasan)
+evaluacion/                      ← evaluación de calidad (desde CLIP-20)
 ```
 
 Estructura objetivo (se crea en CLIP-16, ver ARQUITECTURA_OBJETIVO §8):
@@ -84,13 +85,13 @@ Estructura objetivo (se crea en CLIP-16, ver ARQUITECTURA_OBJETIVO §8):
 - **v2:** con Docker Compose (se crea en CLIP-17): `docker compose up`. Base SQLite local en `./data/` (ADR-015).
 - **Piloto:** desde `legacy/` (ver `legacy/README.md`):
   `cd legacy && python pipeline.py --video <url_o_ruta> --config <canal_id> [--revisar]`.
-  Requiere `.env` (ver `.env.example`) y FFmpeg. Para lives: `captura/tiktok_capture.py` + `--video`.
+  Requiere `legacy/.env` (ver `.env.example`) y FFmpeg. IA por defecto: Claude Code de la máquina (`AI_PROVIDER=claude_cli`).
 - **Tests del piloto:** `python -m pytest -q legacy/tests`.
 
 ## Reglas de trabajo
 
-- **No gastar la API de Anthropic** salvo que el operador lo pida: los pasos de IA usan el modo operador
-  (`AI_PROVIDER=manual`, skill `pipeline-manual`) o Claude Code en sesión (skill `seo-refresh`).
+- **No gastar la API de Anthropic** salvo que el operador lo pida: los pasos de IA usan Claude Code
+  (`AI_PROVIDER=claude_cli`, o `manual` para depurar) y la investigación se hace en sesión (skill `seo-refresh`).
 - **Secretos nunca en el repo ni en el chat**: van en `.env` local o se piden por el formulario seguro.
 - **Portabilidad**: nada de rutas absolutas ni comandos de un solo sistema operativo.
 - **Calidad del clip** se mide contra el golden set (`tests/golden/`, desde CLIP-20).

@@ -41,13 +41,14 @@ from edicion_video.agent4_video_cutter import (
     _prepare_font,
     _cut_clip,
 )
+from core.clip_ids import asignar_clip_ids
 from core.utils import _timestamp_to_seconds
 
 
-def _clip_paths(clips_dir: Path, indice: int) -> tuple[Path, Path]:
+def _clip_paths(clips_dir: Path, clip_id: str) -> tuple[Path, Path]:
     return (
-        clips_dir / f"clip_{indice:03d}.mp4",
-        clips_dir / f"clip_{indice:03d}.json",
+        clips_dir / f"{clip_id}.mp4",
+        clips_dir / f"{clip_id}.json",
     )
 
 
@@ -77,22 +78,21 @@ def main() -> None:
         print(f"[REVISAR] ❌ contenido_chunks/ está vacío")
         sys.exit(1)
 
-    # Recolectar, en orden global, solo las entradas marcadas publicar=true
-    # (ese orden es el mismo que usó Agente 4 para numerar clip_NNN).
+    # Recolectar, en orden global, solo las entradas marcadas publicar=true, con el
+    # nombre de clip que les dio Agente 4 (ver core/clip_ids.py).
     chunk_data = {cf: json.loads(cf.read_text(encoding="utf-8")) for cf in chunk_files}
+    chunks = [(cf, chunk_data[cf].get("contenido", [])) for cf in chunk_files]
 
-    entradas = []  # cada item: {chunk_file, contenido, pos}
-    for cf in chunk_files:
-        contenido = chunk_data[cf].get("contenido", [])
-        for pos, item in enumerate(contenido):
-            if item.get("publicar"):
-                entradas.append({"chunk_file": cf, "contenido": contenido, "pos": pos})
+    entradas = [  # cada item: {chunk_file, contenido, pos, clip_id}
+        {"chunk_file": cf, "contenido": chunk_data[cf].get("contenido", []), "pos": pos, "clip_id": clip_id}
+        for cf, pos, clip_id in asignar_clip_ids(chunks, lambda item: item.get("publicar"))
+    ]
 
-    n_clips_existentes = len(list(clips_dir.glob("clip_*.mp4"))) if clips_dir.exists() else 0
-    if len(entradas) != n_clips_existentes:
+    faltantes = [e["clip_id"] for e in entradas if not (clips_dir / f"{e['clip_id']}.mp4").exists()]
+    if faltantes:
         print(
-            f"[REVISAR] ⚠ {len(entradas)} clips marcados 'publicar' en contenido_chunks/ "
-            f"pero {n_clips_existentes} .mp4 en clips/ — no coinciden, revisá manualmente antes de continuar."
+            f"[REVISAR] ⚠ {len(faltantes)} clip(s) marcados 'publicar' en contenido_chunks/ "
+            f"sin .mp4 en clips/ ({', '.join(faltantes[:5])}) — revisá manualmente antes de continuar."
         )
         sys.exit(1)
 
@@ -115,7 +115,7 @@ def main() -> None:
     for i, e in enumerate(entradas, 1):
         clip = e["contenido"][e["pos"]]
         rango = clip.get("rango_original", {})
-        clip_path, meta_path = _clip_paths(clips_dir, i)
+        clip_path, meta_path = _clip_paths(clips_dir, e["clip_id"])
 
         print(
             f"{'─'*42}\n"

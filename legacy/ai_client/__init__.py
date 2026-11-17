@@ -9,5 +9,6 @@ Uso interno:
 """
 
 from .client import get_client
+from .errors import AIError, AIFatalError, AIRetryableError
 
-__all__ = ["get_client"]
+__all__ = ["get_client", "AIError", "AIFatalError", "AIRetryableError"]

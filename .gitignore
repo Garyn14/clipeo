@@ -5,8 +5,17 @@ cookies.txt
 __pycache__/
 *.pyc
 .pytest_cache/
+node_modules/
+
+# Piloto (legacy/ = v1_full)
 test_chunk.mp3
 stream_data/
 live_check_cache.json
 _tiktok_rate_state.json
 legacy/ai_client/_pending/
+legacy/frontend/dist/
+legacy/backend/runs_logs/
+# Cola de publicación (SQLite, incluye tokens de TikTok)
+legacy/backend/publicacion.db*
+# Videos/audio/fotogramas descargados para fichas de referencia (pesados, regenerables)
+legacy/investigacion/*/muestra/

@@ -6,7 +6,7 @@
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
-- **Piloto de referencia:** rama `v1_full` (ver `docs/DIAGNOSTICO_V1_FULL.md`); se moverá a `legacy/` en CLIP-23.
+- **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
 - **Sprint:** S1 · Base del piloto real + evaluación — 16 al 22 de noviembre de 2026 (activo).
 - **Demo del sprint:** `v1_full` funcionando desde `legacy/` con sus tests en verde, y un comando que evalúa casos
   de referencia construidos con los datos de investigación.
@@ -18,7 +18,7 @@
 | CLIP-13 | Documentación de análisis a `main` | Desarrollador | Finalizada |
 | CLIP-14 | Congelar piloto (`legacy/`, tag `piloto-v2.0`) | Desarrollador | Finalizada |
 | CLIP-15 | `CLAUDE.md` + `docs/ESTADO.md` + convención Jira | Desarrollador | Finalizada |
-| CLIP-23 | Reemplazar `legacy/` por `v1_full` | Desarrollador | Pendiente (siguiente) |
+| CLIP-23 | Reemplazar `legacy/` por `v1_full` | Desarrollador | Implementado en `sprint/S1` |
 | CLIP-20 | Conjunto de evaluación con datos de investigación (Q1) | Desarrollador + validación del operador | Pendiente |
 | CLIP-19 | Portabilidad (quitar rutas de Windows) | Desarrollador | Pendiente |
 | CLIP-18 | CI con los tests de `legacy/` | Desarrollador | Pendiente |
@@ -28,7 +28,7 @@ Orden previsto: 23 → 20 → 19 → 18. En backlog (secundario): CLIP-16, CLIP-
 
 ## Siguiente paso
 
-CLIP-23: reemplazar `legacy/` por `v1_full`.
+CLIP-19 (portabilidad) y CLIP-20 (evaluación), en la rama `sprint/S1`.
 
 ## Pendientes del operador
 
