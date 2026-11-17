@@ -20,9 +20,9 @@
 | CLIP-15 | `CLAUDE.md` + `docs/ESTADO.md` + convención Jira | Desarrollador | Finalizada |
 | CLIP-23 | Reemplazar `legacy/` por `v1_full` | Desarrollador | Implementado en `sprint/S1` |
 | CLIP-20 | Conjunto de evaluación con datos de investigación (Q1) | Desarrollador + validación del operador | Pendiente |
-| CLIP-19 | Portabilidad (quitar rutas de Windows) | Desarrollador | Pendiente |
+| CLIP-19 | Portabilidad (quitar rutas de Windows) | Desarrollador | Implementado en `sprint/S1` |
 | CLIP-18 | CI con los tests de `legacy/` | Desarrollador | Pendiente |
-| CLIP-21 | Notebook de Colab versionado | **Operador** (exportar) + Desarrollador | Pendiente |
+| CLIP-21 | Notebook de Colab versionado | Desarrollador | Implementado en `sprint/S1` |
 
 Orden previsto: 23 → 20 → 19 → 18. En backlog (secundario): CLIP-16, CLIP-17, CLIP-22.
 
@@ -32,7 +32,7 @@ CLIP-19 (portabilidad) y CLIP-20 (evaluación), en la rama `sprint/S1`.
 
 ## Pendientes del operador
 
-- CLIP-21: exportar el notebook de Colab (.ipynb, sin claves) y compartirlo.
+- Configurar los Secrets `HF_TOKEN` y `AUTH_TOKEN` en Colab (ver `legacy/colab/README.md`).
 - Entorno local (opcional, para demos): WSL + Docker Engine en la laptop; carpeta `D:\clipeo` en Remote Control
   (hoy figura "no disponible" para sesiones en la nube; alternativa: sesión local de Claude Code).
 
