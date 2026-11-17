@@ -72,7 +72,7 @@ def test_config_real_del_nicho_carga():
 
 def test_evaluar_juez_con_repeticiones(monkeypatch, capsys):
     decisiones = iter([True, False, True, True, False, True])  # 3 casos x 2 corridas
-    monkeypatch.setattr(evaluar, "evaluar_caso", lambda c: {
+    monkeypatch.setattr(evaluar, "evaluar_caso", lambda c, **_: {
         "id": c["id"], "esperado_publicar": True, "obtenido_publicar": (o := next(decisiones)), "acierto": o,
         "tipo_obtenido": "x", "titulo": "t"})
     assert evaluar.main(["zapatillas_peru", "--solo-sinteticos", "--repeticiones", "2", "--no-guardar"]) == 0

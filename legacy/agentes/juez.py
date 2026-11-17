@@ -149,7 +149,14 @@ def run_juez(
             f"tipo sugerido: {pico['tipo']}" if pico.get("tipo") else "",
             f"en juego: {pico['en_juego']}" if pico.get("en_juego") else "",
         ) if x)
-        texto = _extract_clip(segmentos, inicio, fin) or "(sin texto en el rango)"
+        plan = r.get("plan_edicion")
+        if plan:   # dirección editorial (CLIP-31): se juzga el clip dirigido, en orden de montaje
+            from agentes.direccion import texto_del_plan
+            texto = texto_del_plan(segmentos, plan["segmentos"])
+            pista = ", ".join(x for x in (pista, f"clip dirigido: {plan.get('estructura', 'lineal')}, "
+                                                 f"{len(plan['segmentos'])} tramo(s)") if x)
+        else:
+            texto = _extract_clip(segmentos, inicio, fin) or "(sin texto en el rango)"
         bloques.append(
             f"=== CANDIDATO {n} ({inicio} → {fin}, {r.get('duracion_segundos')}s)"
             + (f" — {pista}" if pista else "") + f" ===\n{texto}\n"

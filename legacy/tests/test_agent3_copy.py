@@ -111,3 +111,34 @@ def test_todo_rechazado_no_llama_a_claude(chunk, monkeypatch):
     contenido, _ = a3.run_copy(str(chunk / "juez.json"), CONFIG)
 
     assert not any(c["publicar"] for c in contenido)
+
+
+def _juez_con_plan(tmp_path, plan):
+    (tmp_path / "transcripcion_completa.txt").write_text(
+        "[12:00] a ver a ver\n[12:04] Tío Fritz: ¿Quieren una pelota gratis?\n[12:30] ¡Gracias tío!\n",
+        encoding="utf-8")
+    d = decision(1, True, "00:12:00", "El tío Fritz regala una pelota")
+    d["rango"].update(fin="00:12:40", plan_edicion=plan)
+    (tmp_path / "juez.json").write_text(json.dumps({"decisiones": [d]}), encoding="utf-8")
+    return tmp_path / "juez.json"
+
+
+def test_copy_con_plan_de_un_tramo_mueve_los_bordes(tmp_path, monkeypatch):
+    """CLIP-31: un tramo → corte normal con los bordes de la dirección, y el copy habla de ese tramo."""
+    cliente = ClienteCopy()
+    monkeypatch.setattr(a3, "get_client", lambda: cliente)
+    plan = {"estructura": "lineal", "segmentos": [{"inicio": "00:12:04", "fin": "00:12:35"}]}
+    (clip,), _ = a3.run_copy(str(_juez_con_plan(tmp_path, plan)), CONFIG)
+    assert "segmentos" not in clip
+    assert (clip["rango_original"]["inicio"], clip["rango_original"]["fin"]) == ("00:12:04", "00:12:35")
+    assert "a ver a ver" not in json.dumps(cliente.recibidos[0]["messages"], ensure_ascii=False)
+
+
+def test_copy_con_gancho_primero_pasa_el_montaje_al_corte(tmp_path, monkeypatch):
+    """CLIP-31: gancho primero → `segmentos` en orden de montaje (Agente 4 usa `_cut_compilation`)."""
+    cliente = ClienteCopy()
+    monkeypatch.setattr(a3, "get_client", lambda: cliente)
+    segs = [{"inicio": "00:12:30", "fin": "00:12:33"}, {"inicio": "00:12:04", "fin": "00:12:35"}]
+    (clip,), _ = a3.run_copy(str(_juez_con_plan(tmp_path, {"estructura": "gancho_primero", "segmentos": segs})), CONFIG)
+    assert clip["segmentos"] == segs
+    assert "[— corte —]" in json.dumps(cliente.recibidos[0]["messages"], ensure_ascii=False)

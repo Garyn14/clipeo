@@ -514,7 +514,17 @@ def run_copy(juez_path: str, config: dict) -> tuple[list[dict], list[str]]:
 
         l1, l2 = d.get("linea1") or "", d.get("linea2") or ""
         print(f"[AGENT3] {rango.get('inicio')} → {rango.get('fin')}  «{l1} / {l2}»")
-        clip_text = _extract_clip(segments, rango.get("inicio", "00:00"), rango.get("fin", "00:00"))
+        # Dirección editorial (CLIP-31): el plan se aplica ANTES del copy, para que hable del clip dirigido
+        plan, montaje = rango.get("plan_edicion"), None
+        if plan and (len(plan["segmentos"]) > 1 or plan.get("estructura") == "gancho_primero"):
+            montaje = plan["segmentos"]   # varios tramos → `_cut_compilation` del Agente 4
+        elif plan:                        # un solo tramo: se corta como siempre, con los bordes de la dirección
+            rango["inicio"], rango["fin"] = plan["segmentos"][0]["inicio"], plan["segmentos"][0]["fin"]
+        if montaje:
+            from agentes.direccion import texto_del_plan
+            clip_text = texto_del_plan(segments, montaje)
+        else:
+            clip_text = _extract_clip(segments, rango.get("inicio", "00:00"), rango.get("fin", "00:00"))
         resultado = _call_claude(client, rango, clip_text, prompt, aprendizajes, seo_context,
                                  _NOTA_COPY.format(l1=l1, l2=l2))
         _completar_item(resultado, config, seo_base, hashtags_base)
@@ -523,6 +533,8 @@ def run_copy(juez_path: str, config: dict) -> tuple[list[dict], list[str]]:
         resultado.pop("razon_score", None)
         resultado["juez"] = bloque_juez(d)
         resultado["rango_original"] = rango
+        if montaje:
+            resultado["segmentos"] = montaje
 
         encontradas = [p for p in prohibidas if p.lower() in f"{l1} {l2}".lower()]
         if encontradas:
