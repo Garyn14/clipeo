@@ -148,3 +148,19 @@ def test_exportar_desde_sesion_simulada(tmp_path, monkeypatch):
     assert any("NOEXISTE" in a for a in avisos)
     for c in casos:
         casos_mod.validar(c)
+
+
+def test_salida_en_utf8_para_la_consola_de_windows():
+    import importlib
+    import io
+    import sys
+
+    from evaluacion import _legacy
+    viejo = sys.stdout
+    sys.stdout = io.TextIOWrapper(io.BytesIO(), encoding="cp1252")
+    try:
+        importlib.reload(_legacy)
+        print("⚠ ✅")          # con cp1252 esto lanzaba UnicodeEncodeError
+        assert sys.stdout.encoding.lower() == "utf-8"
+    finally:
+        sys.stdout = viejo
