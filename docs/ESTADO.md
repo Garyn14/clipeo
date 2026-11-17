@@ -15,16 +15,18 @@
 
 | Ticket | Tema | Responsable | Estado |
 |---|---|---|---|
-| CLIP-29 | Fidelidad de la evaluación (pistas del detector + hablantes) | Desarrollador + **operador** (re-exportar) | Pendiente |
-| CLIP-30 | Memoria del nicho con datos de @nandoclips93 | Desarrollador + **operador** (aprobar cambios) | Pendiente |
-| CLIP-31 | Dirección editorial MVP (arrancar en el conflicto, recortar relleno) | Desarrollador | Pendiente |
+| CLIP-29 | Fidelidad de la evaluación (pistas del detector + hablantes) | Desarrollador + **operador** (re-exportar) | Código listo; espera el re-export |
+| CLIP-30 | Memoria del nicho con datos de @nandoclips93 | Desarrollador + **operador** (aprobar cambios) | Propuesta lista (`docs/calidad/MEMORIA_PROPUESTA_S3.md`); espera aprobación |
+| CLIP-31 | Dirección editorial MVP (arrancar en el conflicto, recortar relleno) | Desarrollador | En revisión (`DIRECCION_EDITORIAL=1`, `evaluar --direccion`, `demo_direccion`) |
 
 Diseño técnico: `docs/sprints/S3.md`. Línea base: `docs/calidad/LINEA_BASE.md`.
 En backlog: CLIP-27 (medios como fuente), CLIP-28 (transcripción/hablantes), CLIP-26 (Q6 onboarding), CLIP-16/17/22.
 
 ## Siguiente paso
 
-[Desarrollador] CLIP-30 (datos de @nandoclips93), luego CLIP-29 y CLIP-31.
+Bloqueado en el operador: (1) re-exportar los casos una vez; (2) aprobar la propuesta de memoria.
+Luego [Desarrollador]: editar `referencias.yaml`, medir el juez (3 corridas) sin y con dirección y con la memoria nueva;
+[Líder técnico]: revisión en `docs/sprints/S3.md` §5 (anotar el desvío: la dirección corre dentro del paso `juez`), PR y demo.
 
 ## Pendientes del operador
 
