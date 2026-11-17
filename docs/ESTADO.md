@@ -14,23 +14,23 @@
 
 | Ticket | Tema | Responsable | Estado |
 |---|---|---|---|
-| CLIP-24 | Evaluación de cobertura del detector (A1 → A2) + exportador ampliado + repeticiones | Desarrollador | Implementado en `sprint/S2` |
-| CLIP-20 | Casos reales (export en la laptop) | **Operador** | **Listo para exportar** (rama `sprint/S2`) |
-| CLIP-25 | Informe de línea base (`docs/calidad/LINEA_BASE.md`) | Desarrollador | Pendiente (depende de CLIP-20) |
+| CLIP-24 | Evaluación de cobertura del detector (A1 → A2) + exportador ampliado + repeticiones | Desarrollador | Integrado (demo pendiente) |
+| CLIP-20 | Casos reales (export en la laptop) | Operador | Hecho: 77 casos juez + 7 cobertura |
+| CLIP-25 | Informe de línea base (`docs/calidad/LINEA_BASE.md`) | Desarrollador | Integrado (demo pendiente) |
 
 Diseño técnico: `docs/sprints/S2.md`. S1 cerrado: ver `docs/sprints/S1.md`.
 En backlog (secundario): CLIP-16, CLIP-17, CLIP-22.
 
 ## Siguiente paso
 
-Export de casos reales por el operador (CLIP-20) → CLIP-25 (informe de línea base).
+Demo del S2: el operador revisa `docs/calidad/LINEA_BASE.md` y responde sus preguntas (§7); luego planificar S3.
 
 ## Pendientes del operador
 
 - Borrar la rama `prueba/ci-bloqueo` en GitHub (PR #8 cerrado → "Delete branch").
 - Al volver el repo a privado: la protección de `main` deja de aplicarse en el plan Free y Actions depende de la cuota de la cuenta.
 
-- CLIP-20: exportar casos reales **cuando el desarrollador avise** (después de CLIP-24), para hacerlo una sola vez.
+- Demo S2: revisar el informe de línea base y responder las 3 preguntas de §7.
 
 - Configurar los Secrets `HF_TOKEN` y `AUTH_TOKEN` en Colab (ver `legacy/colab/README.md`).
 - Entorno local (opcional, para demos): WSL + Docker Engine en la laptop; carpeta `D:\clipeo` en Remote Control
@@ -40,6 +40,7 @@ Export de casos reales por el operador (CLIP-20) → CLIP-25 (informe de línea 
 
 | Fecha | Decisión |
 |---|---|
+| 2026-11-17 | **Línea base:** detector cobertura 83%; juez precisión 0,94 y recall 0,25 (demasiado estricto). Prioridad sugerida: Q2 (edición) + calibrar el juez antes que Q3. |
 | 2026-11-17 | **Riesgo aceptado:** repo público temporalmente para usar GitHub Actions gratis (la cuota del plan privado la consumió otro repo). Sin secretos en el historial (revisado); quedan visibles el email de commits, investigaciones sobre figuras públicas, docs de negocio y la memoria del nicho. Volver a privado más adelante. |
 | 2026-11-17 | Foco del sistema: clips de calidad; infraestructura, nube, publicación y prospección pasan a secundario. |
 | 2026-11-17 | `v1_full` es el piloto de referencia; se evoluciona (no se reescribe). Roadmap v0.3 con épicas Q1–Q5. |
