@@ -40,16 +40,13 @@ En backlog: CLIP-27 (medios como fuente), CLIP-28 (transcripción/hablantes), CL
 
 | Ticket | Tema | Estado |
 |---|---|---|
-| CLIP-32 | Umbral del juez | Análisis hecho (`S4.md` §2). **Decisión del operador: publicar si fuerza ≥ 3; fuerza ≥ 7 = prioridad.** Falta implementar |
+| CLIP-32 | Umbral del juez | **Hecho** (commit d232ba5): `juez.umbral_fuerza: 3`, `prioridad` si fuerza ≥ 7, `python -m evaluacion.umbral` |
 | CLIP-33 | Clips publicados → evaluación | Herramienta hecha (`evaluacion/etiquetar_audiencia.py`, commit d157c2e). **Decisión: opción A** — el operador pega el link de TikTok al publicar, en el panel de revisión. Falta implementar |
-| CLIP-34 | Medios como fuente (PoC) | **Decisión: el agente busca 1–2 videos de TV/prensa sobre Fritz y el operador los aprueba** antes de procesarlos |
+| CLIP-34 | Medios como fuente (PoC) | Candidatos propuestos, **esperando aprobación del operador**: (1) Panorama, entrevista exclusiva tras el ataque (YouTube `eudv9pU4Vvo`, 13 min) — probable fuente de "chaleco antibala" 40x y "llora en Panorama" 1,6x; (2) Magaly TV, "pichangas millonarias" (`-lMVPYu-GMo`, 2,5 min) — probable fuente de "máquina contadora de billetes" 64x. Idea: transcribir con subtítulos automáticos de YouTube (`yt-dlp --write-auto-subs`, sin Colab) y correr detector → juez; comprobar si encuentra los momentos que rindieron |
 
 ## Siguiente paso (cualquier sesión puede continuar desde aquí)
 
-1. [Desarrollador] CLIP-32: `juez.umbral_fuerza: 3` en `legacy/contexto/nichos/zapatillas_peru.yaml`; en
-   `legacy/agentes/juez.py`, si hay umbral: `publicar = fuerza >= umbral`, guardar la decisión original en
-   `publicar_juez` y `prioridad = fuerza >= 7`. Tests. `evaluacion/evaluar.py` debe usar el mismo umbral.
-   Herramienta `python -m evaluacion.umbral <resultado.json>` (tabla por umbral vs tasa base + AUC).
+1. CLIP-32: hecho. Opcional: mostrar la `prioridad` (⭐) en la revisión web.
 2. [Desarrollador] CLIP-33 opción A: campo "link publicado" por clip en la revisión web (`legacy/backend`,
    `legacy/frontend`) que se guarda junto a la corrección (`investigacion/<nicho>/correcciones.jsonl` o un
    `publicados.jsonl`); `etiquetar_audiencia` lo usa como cruce exacto (prioridad sobre duración/título).
