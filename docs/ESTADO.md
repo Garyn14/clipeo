@@ -1,7 +1,7 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-17
+> Última actualización: 2026-11-17 (traspaso entre cuentas: todo lo necesario está aquí)
 
 ## Ahora
 
@@ -13,20 +13,51 @@
 
 ## Tickets del sprint
 
-| Ticket | Tema | Responsable | Estado |
-|---|---|---|---|
-| CLIP-29 | Fidelidad de la evaluación (pistas del detector + hablantes) | Desarrollador + **operador** (re-exportar) | Código listo; espera el re-export |
-| CLIP-30 | Memoria del nicho con datos de @nandoclips93 | Desarrollador + **operador** (aprobar cambios) | Propuesta lista (`docs/calidad/MEMORIA_PROPUESTA_S3.md`); espera aprobación |
-| CLIP-31 | Dirección editorial MVP (arrancar en el conflicto, recortar relleno) | Desarrollador | En revisión (`DIRECCION_EDITORIAL=1`, `evaluar --direccion`, `demo_direccion`) |
+| Ticket | Tema | Estado |
+|---|---|---|
+| CLIP-29 | Fidelidad de la evaluación (pistas del detector + hablantes) | Hecho: casos re-exportados por el operador; línea base v2 medida |
+| CLIP-30 | Memoria del nicho con datos de @nandoclips93 | Hecho: cambios 1–7 **aprobados** y aplicados en `referencias.yaml`; 10 casos etiquetados por audiencia (`evaluacion/casos/zapatillas_peru.audiencia.yaml`) |
+| CLIP-31 | Dirección editorial MVP | Hecho: **demo aprobada por el operador (3/3 clips mejores)**; encendida por defecto (`DIRECCION_EDITORIAL=0` la apaga) |
 
 Diseño técnico: `docs/sprints/S3.md`. Línea base: `docs/calidad/LINEA_BASE.md`.
 En backlog: CLIP-27 (medios como fuente), CLIP-28 (transcripción/hablantes), CLIP-26 (Q6 onboarding), CLIP-16/17/22.
 
-## Siguiente paso
+### Mediciones del juez (3 corridas c/u, resultados en `evaluacion/resultados/`)
 
-Bloqueado en el operador: (1) re-exportar los casos una vez; (2) aprobar la propuesta de memoria.
-Luego [Desarrollador]: editar `referencias.yaml`, medir el juez (3 corridas) sin y con dirección y con la memoria nueva;
-[Líder técnico]: revisión en `docs/sprints/S3.md` §5 (anotar el desvío: la dirección corre dentro del paso `juez`), PR y demo.
+| Escenario | Archivo | Etiqueta editor: precisión / recall | Etiqueta audiencia: precisión / recall / 10 publicados |
+|---|---|---|---|
+| A. Memoria anterior, sin dirección | `20261117_174956_zapatillas_peru.json` | 0,89 / 0,27 | 0,70 / 0,24 / 4,3 de 10 |
+| B. Memoria anterior, con dirección | `20261117_184336_zapatillas_peru_direccion.json` | 0,88 / 0,31 | 0,69 / 0,27 / 4,0 de 10 |
+| C1. Memoria nueva, sin dirección | `20261117_190922_zapatillas_peru.json` | — | 0,78 / 0,21 / 5,0 de 10 |
+| C2. Memoria nueva, con dirección | (corriendo al escribir esto; si no está en `resultados/`, re-correr) | — | — |
+
+- Re-puntuar con etiquetas de audiencia: cargar los casos con `evaluacion.casos.cargar_nicho()` (ya aplica
+  `zapatillas_peru.audiencia.yaml`) y recalcular VP/FP/VN/FN sobre `corridas[*].resultados[*].obtenido_publicar`.
+- Hallazgo: 40 de 50 planes de dirección descartados en B eran más cortos que el mínimo (20 s). Decisión del
+  operador: mínimo propio de la dirección = 15 s (el máximo no cambia).
+
+## Siguiente paso (cualquier sesión puede continuar desde aquí)
+
+1. [Desarrollador] Si falta el resultado C2: `python -m evaluacion.evaluar zapatillas_peru --repeticiones 3 --direccion`
+   (≈1 h, usa Claude Code: `AI_PROVIDER=claude_cli`) y subir el JSON a `evaluacion/resultados/`.
+2. [Desarrollador] **Pendiente de aplicar** (se difirió para no mezclar la medición C2): en
+   `legacy/contexto/nichos/zapatillas_peru.yaml`, bloque `refinamiento_base`, agregar
+   `direccion_duracion_minima_segundos: 15` (el código ya lo lee, commit ab3776b). Commit `CLIP-31:`.
+3. [Desarrollador] Informe antes/después en `docs/calidad/LINEA_BASE.md` (nueva sección "S3"): tabla A/B/C1/C2,
+   hallazgo de duración, feedback de la demo, conclusión.
+4. [Líder técnico] Revisión en `docs/sprints/S3.md` §5. Anotar desvío del diseño: la dirección corre **dentro del paso
+   `juez`** (no como paso nuevo) para no migrar el estado de pasos ni la web. Limitación: en montajes de varios
+   tramos el título solo aparece en el primero.
+5. [Líder técnico] PR `sprint/S3` → `main` con `gh api` (REST), esperar CI `pytest` en verde, comentario de revisión,
+   merge. Completar `docs/sprints/S3.md` §6 (demo: ya aprobada por el operador, ver abajo).
+6. Jira (`personal-clipeo.atlassian.net`, proyecto CLIP, sprint id 3): CLIP-29/30/31 → Finalizada (transición 41),
+   cerrar el sprint S3; actualizar este archivo.
+
+### Feedback de la demo (operador, 2026-11-17)
+
+`demo_direccion` sobre la sesión `20261003_231807`: clip_c001_02 (Sorprende a Rafo) mejor (inicio y transición más
+limpios; la música era de prueba y no se evalúa), clip_c001_03 (billetera) mejor, clip_c001_04 (pilla a Rafael)
+"mucho mejor".
 
 ## Pendientes del operador
 
