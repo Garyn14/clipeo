@@ -7,7 +7,7 @@
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Sprint:** S3 · Calidad con la data de Fritz — 17 al 30 de noviembre de 2026 (activo). S1 y S2 cerrados.
+- **Sprint:** S3 cerrado el 2026-11-17 (PR Garyn14/clipeo#10 integrado, demo aprobada). Próximo: planificar S4.
 - **Demo del sprint:** mismos momentos antes y después de la dirección editorial (video), juez medido con la misma
   información que en producción, memoria actualizada con los datos de @nandoclips93.
 
@@ -72,6 +72,7 @@ limpios; la música era de prueba y no se evalúa), clip_c001_03 (billetera) mej
 
 | Fecha | Decisión |
 |---|---|
+| 2026-11-17 | Cierre S3: dirección editorial encendida por defecto (demo 3/3 mejor); memoria con datos de @nandoclips93; 10 casos etiquetados por audiencia; mínimo de 15 s para la dirección (máximo sin cambio). |
 | 2026-11-17 | La verdad es la audiencia: con Fritz se explota la data existente; con clientes nuevos, hipótesis + refinamiento (épica Q6). El analista actúa como consultor. |
 | 2026-11-17 | Revisión visual de @nandoclips93: 6/10 del top son recortes de TV/prensa (polémica) → backlog "medios como fuente" (CLIP-27). |
 | 2026-11-17 | **Línea base:** detector cobertura 83%; juez precisión 0,94 y recall 0,25 (demasiado estricto). Prioridad sugerida: Q2 (edición) + calibrar el juez antes que Q3. |
