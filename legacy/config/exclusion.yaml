@@ -1,0 +1,5 @@
+# Lista de exclusión (R-01, docs/TO_BE.md): canales y personas que pidieron no ser clipeados.
+# Se revisa al descargar, al aprobar un clip y antes de cada envío. Solo nombres públicos.
+# Agregar con: python -m investigacion.retirar --canal "<canal>" --aplicar
+canales: []    # uploader/channel que reporta yt-dlp (ej. "Panorama")
+personas: []   # entidades o nombres (ej. "Tío Fritz")

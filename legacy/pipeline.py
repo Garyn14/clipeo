@@ -838,6 +838,11 @@ def _run_video_chunks(
         if fuente_sesion and not fuente_sesion.get("canal_origen"):
             fuente_sesion["canal_origen"] = video.get("canal") or video.get("uploader") or video.get("channel")
             mgr.actualizar_sesion(fuente=fuente_sesion)
+        # CLIP-36 (R-01): un canal o persona excluidos no se procesan (antes de bajar el video)
+        from core import exclusion
+        motivo = exclusion.motivo(canal=video.get("canal"), persona=(fuente_sesion or {}).get("sobre"))
+        if motivo:
+            raise ErrorPaso(f"No se procesa: {motivo}", reintentable=False)
 
     _aplicar_reintento(mgr, reintentar, chunk_reintentar)
 

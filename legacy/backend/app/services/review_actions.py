@@ -98,6 +98,11 @@ def _encolar_publicacion(session_dir: Path, clip_id: str, clip: dict) -> None:
         return
     if not nicho:
         return
+    from core import exclusion
+    motivo = exclusion.motivo_fuente(clip.get("fuente"))   # CLIP-36 (R-01)
+    if motivo:
+        print(f"[REVISION] ⚠ {clip_id} no se encola: {motivo}")
+        return
     from app.publicacion.db import PLATAFORMAS
     for plataforma in PLATAFORMAS:
         try:
