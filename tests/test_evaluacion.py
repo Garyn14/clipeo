@@ -176,3 +176,9 @@ def test_exportar_con_origen_lee_datos_locales_y_correcciones_del_repo(tmp_path,
     assert str(origen / "investigacion" / "zapatillas_peru" / "muestra") in salida
     assert "sin " not in salida.split("correcciones.jsonl")[0][-40:]   # las correcciones sí se encontraron
     assert "no está en" in salida                                     # pero sus sesiones no están en el origen
+
+
+def test_rango_de_acepta_rango_original():
+    assert exportar_casos._rango_de({"rango_original": {"inicio": "01:00", "fin": "01:30"}}) == ("01:00", "01:30")
+    assert exportar_casos._rango_de({"inicio": "02:00", "fin": "02:10", "rango_original": {"inicio": "x", "fin": "y"}}) == ("02:00", "02:10")
+    assert exportar_casos._rango_de({"rango_original": None}) == (None, None)

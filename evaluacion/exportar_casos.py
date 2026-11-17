@@ -64,6 +64,14 @@ def _leer_json(p: Path) -> dict:
         return {}
 
 
+def _rango_de(item: dict) -> tuple[str | None, str | None]:
+    """Inicio y fin del clip: claves directas, `rango` o `rango_original` (formato de las sesiones de v1_full)."""
+    for fuente in (item, item.get("rango") or {}, item.get("rango_original") or {}):
+        if isinstance(fuente, dict) and fuente.get("inicio") and fuente.get("fin"):
+            return fuente["inicio"], fuente["fin"]
+    return None, None
+
+
 def _transcripcion_chunk(chunk_dir: Path) -> str | None:
     for nombre in ("transcripcion_enriquecida.txt", "transcripcion_completa.txt", "transcripcion_raw.txt"):
         p = chunk_dir / nombre
@@ -106,8 +114,7 @@ def casos_de_correcciones(nicho: str, stream_data: Path) -> tuple[list[dict], li
             avisos.append(f"{clave}: no está en {stream_data}")
             continue
         chunk_file, item = encontrado
-        rango = item.get("rango") or {}
-        inicio, fin = item.get("inicio") or rango.get("inicio"), item.get("fin") or rango.get("fin")
+        inicio, fin = _rango_de(item)
         texto = _transcripcion_chunk(session_dir / "chunks" / chunk_file.stem)
         if not (inicio and fin and texto):
             avisos.append(f"{clave}: sin rango o sin transcripción")
@@ -150,8 +157,7 @@ def casos_de_cobertura(nicho: str, stream_data: Path) -> tuple[list[dict], list[
             avisos.append(f"cobertura {clave}: no está en {stream_data}")
             continue
         chunk_file, item = encontrado
-        rango = item.get("rango") or {}
-        inicio, fin = item.get("inicio") or rango.get("inicio"), item.get("fin") or rango.get("fin")
+        inicio, fin = _rango_de(item)
         if not (inicio and fin):
             continue
         grupo = por_chunk.setdefault((r["session_id"], chunk_file.stem),
