@@ -51,3 +51,11 @@ def test_assemble_personaje_sin_apodos():
     assembled = ctx._assemble(nicho_data, [entidad_test], [])
 
     assert assembled["personajes"] == [{"id": "test", "nombres": ["Test Uno"]}]
+
+
+def test_umbral_del_juez_del_nicho_real_llega_a_la_config():
+    """S5: `juez:` está en el primer nivel del YAML; antes el loader lo buscaba en `nicho:` y llegaba {}."""
+    from pathlib import Path
+    contexto = Path(__file__).resolve().parents[1] / "contexto"
+    config = ContextLoader(contexto_dir=str(contexto)).load_nicho("zapatillas_peru")
+    assert config["juez"].get("umbral_fuerza") == 3
