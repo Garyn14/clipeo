@@ -117,3 +117,55 @@ texto, **sin ver los videos**; los casos dudosos se validan contigo en la demo (
    manda tu criterio o la memoria.
 2. Los **anuncios** que rindieron (grupo C), ¿son buenos clips o fueron excepciones?
 3. ¿Confirmas que los clips **fuera del nicho** (grupo A) no deberían contar para zapatillas_peru?
+
+---
+
+## 8. Sprint S3 — antes y después (2026-11-17)
+
+Juez sobre los mismos 77 casos, 3 corridas por escenario (media). Cambios del S3:
+- **Fidelidad (CLIP-29):** el juez recibe las pistas del detector y el mapa de hablantes, como en producción.
+- **Dirección editorial (CLIP-31):** el juez evalúa el clip dirigido (arranque en el conflicto, sin relleno).
+- **Memoria nueva (CLIP-30):** cambios 1–7 aprobados (datos de 73 videos de @nandoclips93).
+- **Etiquetas por audiencia (CLIP-30):** los 10 casos ya publicados se etiquetan por su resultado real
+  (outlier ≥ 1 → debía publicarse: 4 de 10), no por la aprobación del editor.
+
+### 8.1 Resultados
+
+| Escenario | Precisión | Recall | Acierta los 10 publicados |
+|---|---|---|---|
+| S2 · línea base (sin pistas ni hablantes; etiqueta editor) | 0,94 | 0,25 | — |
+| A · fiel a producción, memoria anterior (etiqueta editor) | 0,89 | 0,27 | — |
+| B · A + dirección (etiqueta editor) | 0,88 | 0,31 | — |
+| A · re-puntuado con etiqueta de audiencia | 0,70 | 0,24 | 4,3 / 10 |
+| B · re-puntuado con etiqueta de audiencia | 0,69 | 0,27 | 4,0 / 10 |
+| C1 · memoria nueva, sin dirección (audiencia) | 0,78 | 0,21 | 5,0 / 10 |
+| **C2 · memoria nueva + dirección (audiencia)** | **0,77** | **0,22** | **5,7 / 10** |
+
+Archivos: `evaluacion/resultados/20261117_174956…` (A), `…184336…_direccion` (B), `…190922…` (C1),
+`…200040…_direccion` (C2). Re-puntuación con audiencia: `evaluacion.casos.cargar_nicho()` aplica
+`casos/zapatillas_peru.audiencia.yaml`.
+
+### 8.2 Lectura
+
+1. **Fidelidad:** con la información de producción el juez casi no cambia (0,94/0,25 → 0,89/0,27). La brecha del S2
+   no explicaba su rigidez.
+2. **Dirección editorial:** +4 puntos de recall sin perder precisión (etiqueta editor) y mejor acierto de tipo
+   (50% → 65%). **Demo del operador: 3 de 3 clips mejores.** Se enciende por defecto.
+3. **Memoria nueva:** la precisión medida contra la audiencia sube (0,70 → 0,78) y acierta más de los 10 publicados
+   (4,3 → 5,0; con dirección 5,7). El recall baja un poco: el juez se vuelve más selectivo, alineado a lo que rinde.
+4. **Lo que no cambia:** el juez sigue aprobando solo ~1 de cada 4–5 momentos buenos. Con n = 10 publicados la
+   señal es débil (en C1 varió 6/5/4 entre corridas): **la verdad sigue siendo la audiencia**, y hacen falta más
+   clips publicados con resultado para calibrar.
+
+### 8.3 Hallazgos
+
+- **Duración:** en B, 40 de 50 planes de dirección descartados eran más cortos que el mínimo de 20 s (la dirección
+  quería 10–19 s). 5 de los 37 clips propios que rindieron sobre lo normal duran 16–18 s. **Decisión del operador:**
+  mínimo propio de la dirección = 15 s (máximo sin cambio). En C2 todavía se usó 20 s (28 descartes por duración).
+- **Inestables:** 6–7 casos cambian de decisión entre corridas (incluyen "regala billetera" y "pilla a Rafael").
+
+### 8.4 Recomendación para el S4
+
+- Recalibrar el juez para recall (hoy deja pasar ~1 de 4–5 momentos buenos), midiendo contra la audiencia.
+- Sumar al conjunto de evaluación cada clip publicado con su resultado (aprendizaje continuo, Q5).
+- Medios como fuente (CLIP-27): es el tipo que más rinde en la cuenta (7/7) y el pipeline no lo procesa.

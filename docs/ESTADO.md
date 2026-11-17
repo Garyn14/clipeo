@@ -29,29 +29,19 @@ En backlog: CLIP-27 (medios como fuente), CLIP-28 (transcripción/hablantes), CL
 | A. Memoria anterior, sin dirección | `20261117_174956_zapatillas_peru.json` | 0,89 / 0,27 | 0,70 / 0,24 / 4,3 de 10 |
 | B. Memoria anterior, con dirección | `20261117_184336_zapatillas_peru_direccion.json` | 0,88 / 0,31 | 0,69 / 0,27 / 4,0 de 10 |
 | C1. Memoria nueva, sin dirección | `20261117_190922_zapatillas_peru.json` | — | 0,78 / 0,21 / 5,0 de 10 |
-| C2. Memoria nueva, con dirección | (corriendo al escribir esto; si no está en `resultados/`, re-correr) | — | — |
+| C2. Memoria nueva, con dirección | `20261117_200040_zapatillas_peru_direccion.json` | — | 0,77 / 0,22 / 5,7 de 10 |
 
 - Re-puntuar con etiquetas de audiencia: cargar los casos con `evaluacion.casos.cargar_nicho()` (ya aplica
   `zapatillas_peru.audiencia.yaml`) y recalcular VP/FP/VN/FN sobre `corridas[*].resultados[*].obtenido_publicar`.
 - Hallazgo: 40 de 50 planes de dirección descartados en B eran más cortos que el mínimo (20 s). Decisión del
   operador: mínimo propio de la dirección = 15 s (el máximo no cambia).
 
-## Siguiente paso (cualquier sesión puede continuar desde aquí)
+## Siguiente paso
 
-1. [Desarrollador] Si falta el resultado C2: `python -m evaluacion.evaluar zapatillas_peru --repeticiones 3 --direccion`
-   (≈1 h, usa Claude Code: `AI_PROVIDER=claude_cli`) y subir el JSON a `evaluacion/resultados/`.
-2. [Desarrollador] **Pendiente de aplicar** (se difirió para no mezclar la medición C2): en
-   `legacy/contexto/nichos/zapatillas_peru.yaml`, bloque `refinamiento_base`, agregar
-   `direccion_duracion_minima_segundos: 15` (el código ya lo lee, commit ab3776b). Commit `CLIP-31:`.
-3. [Desarrollador] Informe antes/después en `docs/calidad/LINEA_BASE.md` (nueva sección "S3"): tabla A/B/C1/C2,
-   hallazgo de duración, feedback de la demo, conclusión.
-4. [Líder técnico] Revisión en `docs/sprints/S3.md` §5. Anotar desvío del diseño: la dirección corre **dentro del paso
-   `juez`** (no como paso nuevo) para no migrar el estado de pasos ni la web. Limitación: en montajes de varios
-   tramos el título solo aparece en el primero.
-5. [Líder técnico] PR `sprint/S3` → `main` con `gh api` (REST), esperar CI `pytest` en verde, comentario de revisión,
-   merge. Completar `docs/sprints/S3.md` §6 (demo: ya aprobada por el operador, ver abajo).
-6. Jira (`personal-clipeo.atlassian.net`, proyecto CLIP, sprint id 3): CLIP-29/30/31 → Finalizada (transición 41),
-   cerrar el sprint S3; actualizar este archivo.
+- Mediciones, mínimo de 15 s, informe (`LINEA_BASE.md` §8) y revisión (`S3.md` §5–7): hechos.
+- [Líder técnico] PR `sprint/S3` → `main` (REST con `gh api`), CI `pytest` en verde, comentario de revisión, merge.
+- Jira: CLIP-29/30/31 → Finalizada (transición 41) y cerrar el sprint S3 (id 3). Luego planificar S4
+  (recomendación en `LINEA_BASE.md` §8.4).
 
 ### Feedback de la demo (operador, 2026-11-17)
 
