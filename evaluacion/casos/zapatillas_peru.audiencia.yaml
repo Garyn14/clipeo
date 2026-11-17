@@ -8,8 +8,8 @@
 - {clave_correccion: 20261003_232049/clip_c002_02, video_id: "7695152684055137588", outlier: 1.74, titulo: "El tío Fritz reclama al encargado de cámaras que no hizo nada"}
 - {clave_correccion: 20261003_161148/clip_c001_02, video_id: "7692661751048965396", outlier: 0.77, titulo: "El tío Fritz reta a cliente 40 dominadas y se lleva la pelota"}
 - {clave_correccion: 20261003_231807/clip_c001_04, video_id: "7695827097788386581", outlier: 0.65, titulo: "El tío Fritz pilla a Rafael durmiendo y no le cree la excusa"}
-# Mismo video publicado que el anterior (el editor aprobó dos tramos de la misma pillada a Rafael).
-- {clave_correccion: 20261003_232117/clip_c001_01, video_id: "7695827097788386581", outlier: 0.65, titulo: "El tío Fritz pilla a Rafael (almacén desordenado)"}
+# (S4, CLIP-33) Se quitó 20261003_232117/clip_c001_01: no se publicó (59 s, ningún video coincide en duración ni título);
+# en el S3 se le había asignado por error el video de "pilla a Rafael durmiendo".
 - {clave_correccion: 20261003_232117/clip_c001_02, video_id: "7694911390292774165", outlier: 0.32, titulo: "El tío Fritz reta a sus trabajadores: el que baile mejor gana un ferro"}
 - {clave_correccion: 20261003_232049/clip_c001_02, video_id: "7695076144248311061", outlier: 0.28, titulo: "Tío Fritz pide perdón a sus hijos"}
 - {clave_correccion: 20261003_161148/clip_c001_01, video_id: "7692660440236641537", outlier: 0.22, titulo: "El tío Fritz regala pelota a dos hermanitos"}
