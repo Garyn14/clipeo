@@ -7,7 +7,9 @@
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Sprint:** S4 cerrado el 2026-11-17 (Garyn14/clipeo#12, demo hecha). S1–S4 cerrados. Próximo: planificar S5.
+- **Sprint:** **S5 · Medios como fuente en producción** (opción A aprobada el 2026-11-17), rama `sprint/S5`,
+  diseño en `docs/sprints/S5.md`. Tickets: CLIP-35 (memoria) → CLIP-27 (fuente de medios) → CLIP-36 (R-01).
+  S1–S4 cerrados.
 - **Demo del sprint:** mismos momentos antes y después de la dirección editorial (video), juez medido con la misma
   información que en producción, memoria actualizada con los datos de @nandoclips93.
 
@@ -46,12 +48,13 @@ En backlog: CLIP-27 (medios como fuente), CLIP-28 (transcripción/hablantes), CL
 
 ## Siguiente paso
 
-[Analista] Planificar el S5 con el operador. Propuesta:
-1. **CLIP-27 · Medios como fuente en producción** (probado en CLIP-34: Panorama 6/6 encontrados; alcance en
-   `docs/calidad/MEDIOS_POC.md` §3): descarga en la laptop, contexto "sobre quién trata", aprobación por video.
-2. **Memoria:** en medios, defender la originalidad u origen de lo que vende es `medios_y_polemica`, no pitch
-   ("LV y Gucci originales" 58x fue rechazado). Requiere aprobación del operador.
-3. **Publicar con link:** cada clip publicado con su link pegado en la revisión; luego `etiquetar_audiencia --escribir`.
+[Desarrollador] Implementar el S5 según `docs/sprints/S5.md`, empezando por CLIP-35. Antes, el operador:
+1. Aprueba el texto del cambio de memoria (CLIP-35, §3 del diseño).
+2. Elige el video de TV/prensa para la demo (uno no clipeado).
+3. Decide la cuenta de destino de los clips de medios (§4: misma cuenta o cuenta de captación).
+4. Carga CLIP-35 y CLIP-36 en Jira (la cuenta de Atlassian de la sesión no ve `personal-clipeo`), o da acceso al conector.
+
+Hábito: publicar cada clip con su link pegado en la revisión; luego `etiquetar_audiencia --escribir`.
 
 ### Notas para operar en la laptop
 
