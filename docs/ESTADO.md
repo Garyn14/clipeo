@@ -7,7 +7,7 @@
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Sprint:** S3 cerrado el 2026-11-17 (PR Garyn14/clipeo#10 integrado, demo aprobada). Próximo: planificar S4.
+- **Sprint:** S4 cerrado el 2026-11-17 (Garyn14/clipeo#12, demo hecha). S1–S4 cerrados. Próximo: planificar S5.
 - **Demo del sprint:** mismos momentos antes y después de la dirección editorial (video), juez medido con la misma
   información que en producción, memoria actualizada con los datos de @nandoclips93.
 
@@ -46,11 +46,19 @@ En backlog: CLIP-27 (medios como fuente), CLIP-28 (transcripción/hablantes), CL
 
 ## Siguiente paso
 
-- S4 implementado y revisado (`docs/sprints/S4.md` §5); PR `sprint/S4` → `main`.
-- **Operador:** demo del S4 (`S4.md` §6): ⭐ prioridad y link publicado en la revisión, `etiquetar_audiencia`, y
-  correr Panorama con `medios_poc` en la laptop. Con su OK: CLIP-32/33/34 → Finalizada, cerrar sprint S4 (id 4).
-- Luego [Analista] planificar S5. Candidatos: CLIP-27 (medios como fuente, alcance en `MEDIOS_POC.md` §3),
-  publicar más clips con link para fortalecer la evaluación por audiencia, mejorar el criterio del juez (AUC ≈ 0,6).
+[Analista] Planificar el S5 con el operador. Propuesta:
+1. **CLIP-27 · Medios como fuente en producción** (probado en CLIP-34: Panorama 6/6 encontrados; alcance en
+   `docs/calidad/MEDIOS_POC.md` §3): descarga en la laptop, contexto "sobre quién trata", aprobación por video.
+2. **Memoria:** en medios, defender la originalidad u origen de lo que vende es `medios_y_polemica`, no pitch
+   ("LV y Gucci originales" 58x fue rechazado). Requiere aprobación del operador.
+3. **Publicar con link:** cada clip publicado con su link pegado en la revisión; luego `etiquetar_audiencia --escribir`.
+
+### Notas para operar en la laptop
+
+- Panel: `CLIPEO_STREAM_DATA=/d/clipeo/stream_data python -m uvicorn app.main:app --reload --port 8000` (en
+  `legacy/backend`) y `npm run dev` (en `legacy/frontend`) → http://localhost:5173.
+- Los links pegados quedan en `legacy/investigacion/zapatillas_peru/publicados.jsonl` (subirlo al repo con git).
+- YouTube bloquea descargas desde la nube: `medios_poc` y descargas de medios se corren en la laptop.
 
 ### Feedback de la demo (operador, 2026-11-17)
 
