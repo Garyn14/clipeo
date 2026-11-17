@@ -164,3 +164,16 @@ def test_salida_en_utf8_para_la_consola_de_windows():
         assert sys.stdout.encoding.lower() == "utf-8"
     finally:
         sys.stdout = viejo
+
+
+def test_exportar_con_origen_lee_del_proyecto_anterior(tmp_path, monkeypatch, capsys):
+    from investigacion import comun
+    monkeypatch.setattr(comun, "RAIZ", comun.RAIZ)       # se restaura al terminar
+    origen = tmp_path / "anterior"
+    (origen / "investigacion" / "zapatillas_peru").mkdir(parents=True)
+    (origen / "stream_data").mkdir()
+    assert exportar_casos.main(["zapatillas_peru", "--origen", str(origen)]) == 1   # sin datos: no arma casos
+    salida = capsys.readouterr().out
+    assert str(origen / "stream_data") in salida
+    assert comun.RAIZ == origen
+    assert exportar_casos.main(["zapatillas_peru", "--origen", str(tmp_path / "no_existe")]) == 1
