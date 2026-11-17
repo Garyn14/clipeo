@@ -42,15 +42,15 @@ En backlog: CLIP-27 (medios como fuente), CLIP-28 (transcripción/hablantes), CL
 |---|---|---|
 | CLIP-32 | Umbral del juez | **Hecho** (commit d232ba5): `juez.umbral_fuerza: 3`, `prioridad` si fuerza ≥ 7, `python -m evaluacion.umbral` |
 | CLIP-33 | Clips publicados → evaluación | **Hecho**: `evaluacion/etiquetar_audiencia.py` (link pegado > duración+fecha+título) y campo "Link del video ya publicado" en la revisión web (commit c72363e) |
-| CLIP-34 | Medios como fuente (PoC) | Candidatos propuestos, **esperando aprobación del operador**: (1) Panorama, entrevista exclusiva tras el ataque (YouTube `eudv9pU4Vvo`, 13 min) — probable fuente de "chaleco antibala" 40x y "llora en Panorama" 1,6x; (2) Magaly TV, "pichangas millonarias" (`-lMVPYu-GMo`, 2,5 min) — probable fuente de "máquina contadora de billetes" 64x. Idea: transcribir con subtítulos automáticos de YouTube (`yt-dlp --write-auto-subs`, sin Colab) y correr detector → juez; comprobar si encuentra los momentos que rindieron |
+| CLIP-34 | Medios como fuente (PoC) | **Hecho** con Magaly (`docs/calidad/MEDIOS_POC.md`): encuentra el momento que más rindió (fuerza 7, `medios_y_polemica`). Panorama: correr en la laptop (YouTube bloquea la nube) |
 
-## Siguiente paso (cualquier sesión puede continuar desde aquí)
+## Siguiente paso
 
-1. CLIP-32: hecho. Opcional: mostrar la `prioridad` (⭐) en la revisión web.
-2. CLIP-33: hecho. Uso: al publicar un clip, pegar su link en la revisión; luego `python -m evaluacion.etiquetar_audiencia zapatillas_peru --escribir` (tras medir la cuenta con `recolectar.py --cuenta`).
-3. [Analista] CLIP-34: buscar 1–2 videos públicos de TV/prensa sobre Fritz (Magaly, Panorama…), proponerlos al
-   operador; con su OK, pasarlos por el piloto sin publicar e informar en `docs/calidad/MEDIOS_POC.md`.
-4. [Líder técnico] Revisión en `S4.md` §5, PR `sprint/S4` → `main`, demo §6, cierre en Jira y aquí.
+- S4 implementado y revisado (`docs/sprints/S4.md` §5); PR `sprint/S4` → `main`.
+- **Operador:** demo del S4 (`S4.md` §6): ⭐ prioridad y link publicado en la revisión, `etiquetar_audiencia`, y
+  correr Panorama con `medios_poc` en la laptop. Con su OK: CLIP-32/33/34 → Finalizada, cerrar sprint S4 (id 4).
+- Luego [Analista] planificar S5. Candidatos: CLIP-27 (medios como fuente, alcance en `MEDIOS_POC.md` §3),
+  publicar más clips con link para fortalecer la evaluación por audiencia, mejorar el criterio del juez (AUC ≈ 0,6).
 
 ### Feedback de la demo (operador, 2026-11-17)
 
