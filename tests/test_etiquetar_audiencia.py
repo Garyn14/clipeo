@@ -48,3 +48,11 @@ def test_titulo_de_portada_desempata_entre_duraciones_parecidas():
     res = ea.cruzar(clips, videos)
     assert [(c["id"], v["id"]) for c, v in res["automaticos"]] == [("a", "v1")]
     assert [c["id"] for c in res["sin_publicar"]] == ["b"]
+
+
+def test_link_pegado_gana_sobre_duracion():
+    """Si el operador pegó el link, el cruce es exacto aunque la duración apunte a otro video."""
+    res = ea.cruzar([_clip("a", 48)], [_video("v1", 48), _video("v2", 30)], enlaces={"s/a": "v2"})
+    assert [(c["id"], v["id"]) for c, v in res["por_link"]] == [("a", "v2")] and not res["automaticos"]
+    nuevas, _ = ea.actualizar([], res)
+    assert nuevas[0]["fuente"] == "link" and nuevas[0]["video_id"] == "v2"

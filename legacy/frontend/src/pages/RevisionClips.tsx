@@ -105,6 +105,7 @@ function ClipCard({
   const [inicio, setInicio] = useState(clip.rango_original.inicio ?? "");
   const [fin, setFin] = useState(clip.rango_original.fin ?? "");
   const [razon, setRazon] = useState("");
+  const [link, setLink] = useState(clip.publicado?.tiktok?.url ?? "");
 
   const approveMutation = useMutation({
     mutationFn: () => api.approveClip(sessionId, clip.clip_id),
@@ -124,6 +125,12 @@ function ClipCard({
       setEditando(false);
       onChanged();
     },
+  });
+
+  // CLIP-33: el link del video publicado enlaza el clip con su resultado real (etiqueta por audiencia)
+  const publicadoMutation = useMutation({
+    mutationFn: () => api.registrarPublicado(sessionId, clip.clip_id, link),
+    onSuccess: onChanged,
   });
 
   const discardMutation = useMutation({
@@ -150,6 +157,9 @@ function ClipCard({
         <span>{clip.clip_id}</span>
         <span className={`score-badge ${scoreClase}`}>{clip.score}/10</span>
         {clip.listo_para_publicar && <span className="pill pill-ok">aprobado</span>}
+        {(clip.juez?.fuerza ?? 0) >= 7 && (
+          <span className="pill pill-ok" title="Fuerza 7 o más: revisar primero">⭐ prioridad</span>
+        )}
       </h3>
 
       {clip.tiene_video && (
@@ -186,6 +196,28 @@ function ClipCard({
               )}
               {clip.juez.por_que && <p className="hint">{clip.juez.por_que}</p>}
             </details>
+          )}
+
+          {clip.listo_para_publicar && (
+            <div className="link-publicado">
+              <input
+                type="url"
+                placeholder="Link del video ya publicado en TikTok"
+                value={link}
+                onChange={(e) => setLink(e.target.value)}
+              />
+              <button
+                className="btn btn-secondary"
+                onClick={() => publicadoMutation.mutate()}
+                disabled={!link.trim() || publicadoMutation.isPending}
+              >
+                {clip.publicado?.tiktok ? "Actualizar link" : "Guardar link"}
+              </button>
+              {clip.publicado?.tiktok && <span className="hint"> ✓ enlazado</span>}
+              {publicadoMutation.isError && (
+                <p className="hint">{(publicadoMutation.error as Error).message}</p>
+              )}
+            </div>
           )}
 
           <div className="acciones">

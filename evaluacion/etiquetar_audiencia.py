@@ -9,6 +9,9 @@ La metadata de TikTok no trae el texto del video, así que el cruce es por **dur
   - el video se publicó entre 2 días antes y 10 días después de la revisión (`correcciones.jsonl`);
   - el video tiene al menos --dias-min días al medirlo (vistas maduras). El outlier se recalcula contra la mediana
     de la última medición de la cuenta (`investigacion/comun.calcular_outliers`).
+**Primero, el link:** si el operador pegó el link del video al publicar (revisión web → `publicados.jsonl`), el
+cruce es exacto. Para el resto:
+
 Desempate por **título**: si se conoce el texto de la portada del video (`cuenta_propia.jsonl`, campo
 `titulo_pantalla`), se compara con el título del clip (el del juez o el final del editor, que es el que se quema en
 el video). Título casi idéntico (≥ 0,85) → automático aunque haya otros candidatos por duración; ninguno parecido
@@ -132,10 +135,35 @@ def parecido(a: str, b: str) -> float:
     return difflib.SequenceMatcher(None, _norm(a), _norm(b)).ratio() if a and b else 0.0
 
 
-def cruzar(clips: list[dict], videos: list[dict]) -> dict[str, list]:
+def leer_publicados(ruta: Path) -> dict[str, str]:
+    """Clave sesion/clip → video_id de TikTok, desde los links pegados en la revisión (el último gana)."""
+    enlaces: dict[str, str] = {}
+    if ruta.exists():
+        for linea in ruta.read_text(encoding="utf-8").splitlines():
+            if linea.strip():
+                r = json.loads(linea)
+                if r.get("plataforma", "tiktok") == "tiktok":
+                    enlaces[f"{r['session_id']}/{r['clip_id']}"] = str(r["video_id"])
+    return enlaces
+
+
+def cruzar(clips: list[dict], videos: list[dict], enlaces: dict[str, str] | None = None) -> dict[str, list]:
     """{'automaticos': [(clip, video)], 'dudosos': [(clip, [videos])], 'sin_publicar': [clip]}."""
-    res = {"automaticos": [], "dudosos": [], "sin_publicar": []}
+    res = {"automaticos": [], "dudosos": [], "sin_publicar": [], "por_link": [], "link_sin_medir": []}
     confirmados_por_titulo = set()
+    enlaces = enlaces or {}
+    por_id = {str(v["id"]): v for v in videos}
+    usados = set()
+    for c in clips:
+        vid = enlaces.get(c["clave"])
+        if vid:
+            if vid in por_id:
+                res["por_link"].append((c, por_id[vid]))
+                usados.add(vid)
+            else:
+                res["link_sin_medir"].append(c)   # video aún sin medir o sin vistas maduras
+    clips = [c for c in clips if c["clave"] not in enlaces]
+    videos = [v for v in videos if str(v["id"]) not in usados]
     for c in clips:
         r = c["revision"]
         en_fecha = [v for v in videos
@@ -175,21 +203,23 @@ def cruzar(clips: list[dict], videos: list[dict]) -> dict[str, list]:
     return res
 
 
-def entrada(c: dict, v: dict) -> dict:
+def entrada(c: dict, v: dict, fuente: str = "automatica") -> dict:
     return {"clave_correccion": c["clave"], "video_id": str(v["id"]), "outlier": round(float(v["outlier"]), 2),
-            "titulo": v.get("titulo_pantalla") or "", "fuente": "automatica",
+            "titulo": v.get("titulo_pantalla") or "", "fuente": fuente,
             "duracion_s": v["_dur"], "publicado": v["_pub"].isoformat()}
 
 
 def actualizar(existentes: list[dict], res: dict) -> tuple[list[dict], list[str]]:
     """Fusiona: manuales se conservan; automáticas se reemplazan; avisa cuando el cruce contradice una manual."""
     auto = {c["clave"]: (c, v) for c, v in res["automaticos"]}
+    links = {c["clave"]: (c, v) for c, v in res.get("por_link", [])}
+    auto.update(links)
     sin_pub = {c["clave"] for c in res["sin_publicar"]}
     avisos, salida = [], []
     for e in existentes:
         clave = e["clave_correccion"]
         if e.get("fuente", "manual") != "manual":
-            continue  # las automáticas se recalculan
+            continue  # las automáticas y por link se recalculan
         if clave in auto and str(auto[clave][1]["id"]) != str(e["video_id"]):
             avisos.append(f"{clave}: etiqueta manual → video {e['video_id']}, el cruce dice {auto[clave][1]['id']}")
         elif clave in sin_pub:
@@ -197,7 +227,7 @@ def actualizar(existentes: list[dict], res: dict) -> tuple[list[dict], list[str]
                           "su duración en esas fechas (revisar)")
         salida.append(e)
         auto.pop(clave, None)
-    salida += [entrada(c, v) for c, v in auto.values()]
+    salida += [entrada(c, v, "link" if c["clave"] in links else "automatica") for c, v in auto.values()]
     return salida, avisos
 
 
@@ -216,9 +246,13 @@ def main() -> None:
     portadas = titulos_de_portada(carpeta / "cuenta_propia.jsonl")
     videos = [{**v, "titulo_pantalla": portadas.get(str(v["id"]), "")}
               for v in videos_propios(ruta_videos, args.dias_min)]
-    res = cruzar(clips_aprobados(casos, revision, titulos), videos)
+    res = cruzar(clips_aprobados(casos, revision, titulos), videos, leer_publicados(carpeta / "publicados.jsonl"))
 
-    print(f"[AUDIENCIA] {len(res['automaticos'])} automático(s) · {len(res['dudosos'])} dudoso(s) · "
+    for c, v in res["por_link"]:
+        print(f"  🔗 {c['id']} {c['clave']} → video {v['id']} (link pegado) outlier {float(v['outlier']):.2f}")
+    for c in res["link_sin_medir"]:
+        print(f"  … {c['id']} {c['clave']}: tiene link pero el video aún no está medido o no tiene vistas maduras")
+    print(f"[AUDIENCIA] {len(res['por_link'])} por link · {len(res['automaticos'])} automático(s) · {len(res['dudosos'])} dudoso(s) · "
           f"{len(res['sin_publicar'])} sin publicar (o sin vistas maduras)")
     for c, v in res["automaticos"]:
         print(f"  ✓ {c['id']} {c['clave']} ({c['dur']}s) → video {v['id']} ({v['_dur']}s, {v['_pub']}) "

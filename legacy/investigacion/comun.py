@@ -41,6 +41,14 @@ def registrar_correccion(nicho: str, registro: dict) -> None:
         f.write(json.dumps(registro, ensure_ascii=False) + "\n")
 
 
+def registrar_publicado(nicho: str, registro: dict) -> None:
+    """CLIP-33: enlace clip ↔ video publicado (pegado en la revisión) en investigacion/<nicho>/publicados.jsonl."""
+    archivo = carpeta_nicho(nicho) / "publicados.jsonl"
+    archivo.parent.mkdir(parents=True, exist_ok=True)
+    with archivo.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(registro, ensure_ascii=False) + "\n")
+
+
 def cargar_correcciones(nicho: str, n: int = 30) -> str:
     """Las últimas `n` decisiones del editor, resumidas en una línea cada una ("" si no hay)."""
     archivo = carpeta_nicho(nicho) / "correcciones.jsonl"

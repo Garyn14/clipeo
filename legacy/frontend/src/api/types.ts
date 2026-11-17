@@ -254,6 +254,8 @@ export interface ClipView {
   descartado: boolean;
   tiene_video: boolean;
   listo_para_publicar: boolean;
+  /** CLIP-33: link del video ya publicado, por plataforma */
+  publicado?: Record<string, { url: string; video_id: string }>;
 }
 
 export interface EditClipBody {
