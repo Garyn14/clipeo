@@ -90,6 +90,8 @@ tipos_que_funcionan:
     descripcion: >
       El personaje en TV o prensa, o en una polémica: dinero cuestionado, "puro show", originalidad de lo que
       vende, extorsión, seguridad. Es lo que más rinde en la cuenta propia (7 de 7 sobre lo normal, mediana 51x).
+      Incluye al personaje DEFENDIENDO en TV o prensa la originalidad, el origen o la legalidad de lo que vende
+      o de su dinero: aunque hable del producto, es polémica, no pitch.
     ejemplos:
       - {titulo: "Máquina contadora de billetes en una pichanga de 100K soles", vistas: 323000, outlier: 64.7, cuenta: nandoclips93, propia: true}
       - {titulo: "Fritz jura que Louis Vuitton y Gucci son 100% originales en su tienda", vistas: 290000, outlier: 58.1, cuenta: nandoclips93, propia: true}
@@ -100,6 +102,7 @@ tipos_que_funcionan:
     descripcion: >
       Una comparación concreta de precio (de X a Y) o el reclamo de ser el número uno, dicho con seguridad.
       NO la charla técnica del producto ni el lanzamiento de un modelo (Shenlong 0,2x, chocolateras 0,3x).
+      NO cuando lo dice para defenderse en TV o prensa (eso es medios_y_polemica).
     ejemplos:
       - {titulo: "El tío Fritz muestra la verdadera tecnología de 599.00 a 99.90", vistas: 184100, outlier: 36.9, cuenta: nandoclips93, propia: true}
       - {titulo: "El Tío Fritz dice ser el número uno sin competencia en Adidas y Reebok", vistas: 94000, outlier: 18.8, cuenta: nandoclips93, propia: true}
