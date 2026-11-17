@@ -94,7 +94,7 @@ Estructura objetivo (se crea en CLIP-16, ver ARQUITECTURA_OBJETIVO §8):
   (`AI_PROVIDER=claude_cli`, o `manual` para depurar) y la investigación se hace en sesión (skill `seo-refresh`).
 - **Secretos nunca en el repo ni en el chat**: van en `.env` local o se piden por el formulario seguro.
 - **Portabilidad**: nada de rutas absolutas ni comandos de un solo sistema operativo.
-- **Calidad del clip** se mide contra el golden set (`tests/golden/`, desde CLIP-20).
+- **Calidad del clip** se mide con el conjunto de evaluación (`evaluacion/`, ver `evaluacion/README.md`).
 - Contenido de terceros: seguir el riesgo aceptado **R-01** de `docs/TO_BE.md` (cuentas de captación separadas,
   retiro inmediato ante solicitud, lista de exclusión).
 - Mantener `docs/ESTADO.md` al día: es la memoria compartida entre sesiones.
