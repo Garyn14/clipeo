@@ -1,6 +1,6 @@
 # Clipeo v2 — Roadmap
 
-> Estado: **v0.3 aprobada** · Fecha: 2026-11-17 · Reemplaza la v0.2 (F0–F7).
+> Estado: **v0.4 aprobada** · Fecha: 2026-11-17 · Reemplaza la v0.3.
 > Base: [`DIAGNOSTICO_V1_FULL.md`](DIAGNOSTICO_V1_FULL.md) (piloto real) y el foco acordado con el operador.
 
 ---
@@ -29,22 +29,26 @@ Se **evoluciona**, no se reescribe.
 | **Q3 · Detección con más señales** | CLIP-8 | Encontrar más momentos buenos (audio, energía, risas, chat); auditoría en el flujo |
 | **Q4 · Control visual** | CLIP-9 | Ningún clip con defectos visuales llega a la revisión |
 | **Q5 · Aprendizaje continuo** | CLIP-10 | Medir clips propios publicados y actualizar la memoria con evidencia; extenderla a otros nichos |
+| **Q6 · Onboarding de cliente nuevo** | CLIP-26 | Cold start: memoria inicial desde cuentas parecidas, exploración decreciente, refinamiento con métricas propias |
 | Secundario · Plataforma | CLIP-11 | Engine agnóstico, Docker, nube vs. local, automatización 24/7 |
 | Secundario · Publicación y clientes | CLIP-12 | Mejoras de publicación, clientes, reportes, prospección, trámites de APIs |
 
-## 3. Sprints (1 semana, demo revisada por el operador)
+## 3. Sprints (1 semana nominal, demo revisada por el operador)
 
-| Sprint | Fechas | Épica | Demo |
-|---|---|---|---|
-| **S1** | 16–22 nov | F0 + Q1 | `v1_full` funcionando desde `legacy/` con sus tests en verde y un comando que evalúa casos de referencia |
-| **S2** | 23–29 nov | Q1 | Informe de línea base: cobertura del detector y acierto del juez, con números |
-| **S3** | 30 nov–6 dic | Q2 | Mismos clips antes y después, lado a lado |
-| **S4** | 7–13 dic | Q3 | Más momentos buenos que la línea base, medido |
-| **S5** | 14–20 dic | Q4 | Defectos visuales detectados y corregidos solos |
-| **S6** | 21–27 dic | Q5 | Primer informe del analista semanal con reglas propuestas; memoria de `streamers_peru` |
-| S7–S10 | 28 dic–24 ene | — | Por planificar según resultados (más calidad o temas secundarios) |
+| Sprint | Fechas | Épica | Demo | Estado |
+|---|---|---|---|---|
+| **S1** | 16–17 nov | F0 + Q1 | `v1_full` en `legacy/` + evaluador | ✅ Cerrado |
+| **S2** | 17 nov | Q1 | Línea base: cobertura 83%, juez precisión 0,94 / recall 0,25 | ✅ Cerrado |
+| **S3** | 17–30 nov | Q1 + Q2 + Q5 | Dirección editorial (antes/después), juez con la información de producción, memoria con los datos de @nandoclips93 | Activo |
+| S4+ | — | — | Por planificar según resultados | — |
 
-Cada mejora de Q2–Q5 se acepta solo si **mejora o no empeora** la línea base de Q1.
+**Principio (2026-11-17):** no sabemos qué quiere la gente hasta salir a la cancha. Con un cliente con historia (Fritz)
+se explota la data existente; con clientes nuevos se parte de una hipótesis y se refina con sus métricas (Q6). La
+evaluación offline protege contra regresiones; la verdad es la audiencia.
+
+**Backlog priorizado:** medios como fuente (CLIP-27: 6 de los 10 mejores clips de @nandoclips93 son de TV/prensa),
+transcripción y hablantes (CLIP-28), exploración controlada al publicar, Q3 detección con más señales, Q4 control
+visual, Q6 onboarding.
 
 ## 4. Decisiones pendientes (secundarias)
 
