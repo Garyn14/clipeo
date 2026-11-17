@@ -18,19 +18,21 @@
 | CLIP-13 | Documentación de análisis a `main` | Desarrollador | Finalizada |
 | CLIP-14 | Congelar piloto (`legacy/`, tag `piloto-v2.0`) | Desarrollador | Finalizada |
 | CLIP-15 | `CLAUDE.md` + `docs/ESTADO.md` + convención Jira | Desarrollador | Finalizada |
-| CLIP-23 | Reemplazar `legacy/` por `v1_full` | Desarrollador | Implementado en `sprint/S1` |
-| CLIP-20 | Conjunto de evaluación con datos de investigación (Q1) | Desarrollador + **operador** (exportar casos) | Implementado en `sprint/S1`; falta el export del operador |
-| CLIP-19 | Portabilidad (quitar rutas de Windows) | Desarrollador | Implementado en `sprint/S1` |
-| CLIP-18 | CI con los tests de `legacy/` | Desarrollador | Implementado en `sprint/S1` |
-| CLIP-21 | Notebook de Colab versionado | Desarrollador | Implementado en `sprint/S1` |
+| CLIP-23 | Reemplazar `legacy/` por `v1_full` | Desarrollador | Integrado en `main` (demo pendiente) |
+| CLIP-20 | Conjunto de evaluación con datos de investigación (Q1) | Desarrollador + **operador** (exportar casos) | Integrado; falta el export del operador |
+| CLIP-19 | Portabilidad (quitar rutas de Windows) | Desarrollador | Integrado en `main` (demo pendiente) |
+| CLIP-18 | CI con los tests de `legacy/` | Desarrollador | Integrado; **bloqueado** hasta resolver la facturación de GitHub Actions |
+| CLIP-21 | Notebook de Colab versionado | Desarrollador | Integrado en `main` (demo pendiente) |
 
 Orden previsto: 23 → 20 → 19 → 18. En backlog (secundario): CLIP-16, CLIP-17, CLIP-22.
 
 ## Siguiente paso
 
-Revisión del líder técnico e integración del sprint (PR `sprint/S1` → `main`).
+Demo del S1 por el operador (`docs/sprints/S1.md` §7). Luego planificar S2 (línea base de calidad).
 
 ## Pendientes del operador
+
+- GitHub: resolver la facturación de Actions (Settings → Billing & plans) y activar la protección de `main`.
 
 - CLIP-20: en la laptop, `python -m evaluacion.exportar_casos zapatillas_peru` y subir `evaluacion/casos/zapatillas_peru.yaml` (ver `evaluacion/README.md`).
 
