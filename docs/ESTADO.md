@@ -14,8 +14,8 @@
 
 | Ticket | Tema | Responsable | Estado |
 |---|---|---|---|
-| CLIP-24 | Evaluación de cobertura del detector (A1 → A2) + exportador ampliado + repeticiones | Desarrollador | Pendiente (siguiente) |
-| CLIP-20 | Casos reales (export en la laptop) | **Operador** | Pendiente: esperar aviso tras CLIP-24 |
+| CLIP-24 | Evaluación de cobertura del detector (A1 → A2) + exportador ampliado + repeticiones | Desarrollador | Implementado en `sprint/S2` |
+| CLIP-20 | Casos reales (export en la laptop) | **Operador** | **Listo para exportar** (rama `sprint/S2`) |
 | CLIP-25 | Informe de línea base (`docs/calidad/LINEA_BASE.md`) | Desarrollador | Pendiente (depende de CLIP-20) |
 
 Diseño técnico: `docs/sprints/S2.md`. S1 cerrado: ver `docs/sprints/S1.md`.
@@ -23,7 +23,7 @@ En backlog (secundario): CLIP-16, CLIP-17, CLIP-22.
 
 ## Siguiente paso
 
-CLIP-24 (cobertura del detector) en la rama `sprint/S2`.
+Export de casos reales por el operador (CLIP-20) → CLIP-25 (informe de línea base).
 
 ## Pendientes del operador
 

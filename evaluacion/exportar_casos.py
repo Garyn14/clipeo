@@ -128,6 +128,50 @@ def casos_de_correcciones(nicho: str, stream_data: Path) -> tuple[list[dict], li
     return list(reversed(casos)), avisos
 
 
+def casos_de_cobertura(nicho: str, stream_data: Path) -> tuple[list[dict], list[str]]:
+    """Un caso por chunk con correcciones: transcripción completa + rangos aprobados y descartados."""
+    from investigacion import comun
+
+    archivo = comun.carpeta_nicho(nicho) / "correcciones.jsonl"
+    if not archivo.exists():
+        return [], []
+    ultima: dict[str, dict] = {}
+    for r in (json.loads(l) for l in archivo.read_text(encoding="utf-8").splitlines() if l.strip()):
+        ultima[f"{r.get('session_id')}/{r.get('clip_id')}"] = r      # la última decisión manda
+    por_chunk: dict[tuple, dict] = {}
+    avisos = []
+    for clave, r in ultima.items():
+        session_dir = stream_data / r["session_id"]
+        encontrado = _buscar_clip(session_dir, r["clip_id"]) if session_dir.exists() else None
+        if encontrado is None:
+            avisos.append(f"cobertura {clave}: no está en {stream_data}")
+            continue
+        chunk_file, item = encontrado
+        rango = item.get("rango") or {}
+        inicio, fin = item.get("inicio") or rango.get("inicio"), item.get("fin") or rango.get("fin")
+        if not (inicio and fin):
+            continue
+        grupo = por_chunk.setdefault((r["session_id"], chunk_file.stem),
+                                     {"session_dir": session_dir, "esperados": [], "descartados": []})
+        destino = "esperados" if r.get("accion") in ("aprobado", "editado") else "descartados"
+        grupo[destino].append({"inicio": inicio, "fin": fin, "clip_id": r["clip_id"]})
+    casos = []
+    for (sesion, chunk), g in sorted(por_chunk.items()):
+        texto = _transcripcion_chunk(g["session_dir"] / "chunks" / chunk)
+        if not texto or not g["esperados"]:
+            avisos.append(f"cobertura {sesion}/{chunk}: sin transcripción o sin aprobados")
+            continue
+        casos.append({
+            "id": f"{nicho[:2]}-cob-{len(casos) + 1:03d}",
+            "nicho": nicho,
+            "fuente": f"{sesion} · {chunk}",
+            "transcripcion": texto,
+            "esperados": g["esperados"],
+            "descartados": g["descartados"],
+        })
+    return casos, avisos
+
+
 def casos_de_muestra(nicho: str) -> tuple[list[dict], list[str]]:
     from investigacion import comun
 
@@ -168,10 +212,13 @@ def main(argv: list[str] | None = None) -> int:
                     help="carpeta de sesiones del piloto (default: legacy/stream_data)")
     args = ap.parse_args(argv)
 
+    from evaluacion import cobertura
+
     corr, avisos_c = casos_de_correcciones(args.nicho, args.stream_data)
+    cob, avisos_cob = casos_de_cobertura(args.nicho, args.stream_data)
     mues, avisos_m = casos_de_muestra(args.nicho)
     todos = corr + mues
-    for aviso in avisos_c + avisos_m:
+    for aviso in avisos_c + avisos_m + avisos_cob:
         print(f"  ⚠ {aviso}")
     if not todos:
         print("No se pudo armar ningún caso.")
@@ -181,6 +228,10 @@ def main(argv: list[str] | None = None) -> int:
     buenos = sum(1 for c in todos if c["esperado"]["publicar"])
     print(f"[EXPORT] {len(todos)} casos ({len(corr)} de correcciones, {len(mues)} de la muestra) · "
           f"{buenos} publicar / {len(todos) - buenos} no publicar → {salida}")
+    if cob:
+        salida_cob = cobertura.ruta_casos(args.nicho)
+        cobertura.guardar(cob, salida_cob)
+        print(f"[EXPORT] {len(cob)} caso(s) de cobertura (chunks completos) → {salida_cob}")
     return 0
 
 
