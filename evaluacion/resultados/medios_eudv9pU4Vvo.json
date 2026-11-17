@@ -1,0 +1,522 @@
+{
+  "video": "eudv9pU4Vvo",
+  "fecha": "2026-11-17T18:34:55",
+  "nicho": "zapatillas_peru",
+  "lineas_transcripcion": 76,
+  "decisiones": [
+    {
+      "n": 1,
+      "inicio": "00:00:24",
+      "fin": "00:01:08",
+      "publicar": true,
+      "publicar_juez": true,
+      "prioridad": false,
+      "linea1": "Fritz llora en entrevista exclusiva",
+      "linea2": "empezó con 70 soles y hoy pide ayuda 🥺",
+      "tipo": "medios_y_polemica",
+      "en_juego": "El emprendedor que empezó con 70 soles ruega en TV que no lo olviden mientras vive amenazas de extorsión",
+      "parecidos": [
+        "Fritz confiesa que sus vendedores usan chaleco antibala",
+        "El tío Fritz con seguridad del estado luego de sufrir atentado"
+      ],
+      "fuerza": 6,
+      "por_que": "Emoción real en TV con algo en juego (su vida y su empresa), cercano a los clips de polémica y atentado de la cuenta propia.",
+      "rango": {
+        "conservar": true,
+        "inicio": "00:00:24",
+        "fin": "00:01:08",
+        "duracion_segundos": 44,
+        "razon": "Arranca en 'empezó con 70 soles', donde aparece la emoción. Incluye 'no sabía que salir adelante tenía que pagar la vida', el llanto, el pedido 'no nos olvide' y cierra en 'no lo merecemos'. Fusiona los picos 00:00, 00:26 y 00:54.",
+        "gancho": "Algo que empezó en el año 2010 con 70 soles, yo nunca me imaginé que esto iba a pasar.",
+        "pico_original": {
+          "timestamp": "00:00:26",
+          "razon": "Fritz llora al contar que empezó con 70 soles en 2010 y que no sabía que salir adelante costaría vidas",
+          "confianza": 0.88,
+          "tipo": "relaciones_y_emocion",
+          "en_juego": "un emprendedor que empezó de cero y hoy vive bajo amenazas"
+        },
+        "momento_enfasis_seg": 2,
+        "plan_edicion": {
+          "estructura": "lineal",
+          "segmentos": [
+            {
+              "inicio": "00:00:26",
+              "fin": "00:01:03"
+            }
+          ],
+          "por_que": "Arranca en 'empezó con 70 soles' y el llanto del rey de las zapatillas, con la emoción y lo que está en juego (nadie merece pagar con la vida), cerrando en 'no lo merecemos'."
+        }
+      }
+    },
+    {
+      "n": 2,
+      "inicio": "00:01:57",
+      "fin": "00:02:56",
+      "publicar": true,
+      "publicar_juez": true,
+      "prioridad": true,
+      "linea1": "Fritz confiesa que sus vendedores",
+      "linea2": "usan chaleco antibalas tras atentados 😨",
+      "tipo": "medios_y_polemica",
+      "en_juego": "Las tiendas convertidas en búnkers, vendedores con chaleco antibala y su angustia por los atentados",
+      "parecidos": [
+        "Fritz confiesa que sus vendedores usan chaleco antibala",
+        "El tío Fritz con seguridad del estado luego de sufrir atentado"
+      ],
+      "fuerza": 8,
+      "por_que": "Casi idéntico al clip de 40x de la cuenta propia sobre chalecos antibala, con el atentado como evento.",
+      "rango": {
+        "conservar": true,
+        "inicio": "00:01:57",
+        "fin": "00:02:56",
+        "duracion_segundos": 59,
+        "razon": "Empieza con la pregunta por el monto exigido y su respuesta 'bien fuerte'. Sigue con los dos atentados en una semana, las tiendas convertidas en búnkers y el chaleco antibala. Cierra en 'me gustaría ya despertar y que termine'. Fusiona los picos 01:59 y 02:25, que cuentan la misma historia.",
+        "gancho": "Entonces, el monto en general que te han exigido... Es un monto bien fuerte.",
+        "pico_original": {
+          "timestamp": "00:01:59",
+          "razon": "Le preguntan por el monto de extorsión exigido y responde que es 'bien fuerte'",
+          "confianza": 0.8,
+          "tipo": "evento_fuerte",
+          "en_juego": "cuánto dinero le exigen los extorsionadores"
+        },
+        "momento_enfasis_seg": 2,
+        "plan_edicion": {
+          "estructura": "lineal",
+          "segmentos": [
+            {
+              "inicio": "00:02:25",
+              "fin": "00:02:50"
+            }
+          ],
+          "por_que": "Salta la presentación y va directo a los atentados, los chalecos antibalas y el 'me siento en una pesadilla', polémica y evento fuerte que cierra con la emoción."
+        }
+      }
+    },
+    {
+      "n": 3,
+      "inicio": "00:03:15",
+      "fin": "00:03:47",
+      "publicar": true,
+      "publicar_juez": true,
+      "prioridad": true,
+      "linea1": "Fritz cuenta billetes y admite",
+      "linea2": "que las pichangas son puro show 💸",
+      "tipo": "medios_y_polemica",
+      "en_juego": "Si las pichangas y los billetes de alta apuesta son reales o puro show",
+      "parecidos": [
+        "Fritz confiesa que las pichangas de 200k y el Corvette eran puro show",
+        "Máquina contadora de billetes en una pichanga de 100K soles"
+      ],
+      "fuerza": 8,
+      "por_que": "Combina billetes y confesión de show, ambos con outlier alto en la cuenta propia.",
+      "rango": {
+        "conservar": true,
+        "inicio": "00:03:15",
+        "fin": "00:03:47",
+        "duracion_segundos": 32,
+        "razon": "Empieza con el conteo de billetes y la frase 'para los que dicen que es puro show'. Cierra en 'eso no es real', justo antes de que la narración pase al siguiente bloque.",
+        "gancho": "Para los que dicen que es puro show, ahí está, hermanito.",
+        "pico_original": {
+          "timestamp": "00:03:15",
+          "razon": "Cuenta billetes ('para los que dicen que es puro show') y confiesa que los números de las apuestas son show, no real",
+          "confianza": 0.96,
+          "tipo": "medios_y_polemica",
+          "en_juego": "si las apuestas y los billetes de Fritz son reales o actuados"
+        },
+        "momento_enfasis_seg": 0,
+        "plan_edicion": {
+          "estructura": "lineal",
+          "segmentos": [
+            {
+              "inicio": "00:03:15",
+              "fin": "00:03:47"
+            }
+          ],
+          "por_que": "Mezcla el conteo de billetes con la confesión de que las pichangas son puro show y cierra en 'Eso no es real', que es la polémica que más rinde."
+        }
+      }
+    },
+    {
+      "n": 4,
+      "inicio": "00:04:16",
+      "fin": "00:04:48",
+      "publicar": false,
+      "publicar_juez": false,
+      "prioridad": false,
+      "linea1": "Fritz se siente preocupado",
+      "linea2": "por el personal tras los atentados",
+      "tipo": "ninguno",
+      "en_juego": "Su preocupación por el personal, dicho en tercera persona; sin conflicto concreto",
+      "parecidos": [],
+      "fuerza": 3,
+      "por_que": "Monólogo genérico, corto y cortado, sin historia clara ni gesto con alguien.",
+      "rango": {
+        "conservar": true,
+        "inicio": "00:04:16",
+        "fin": "00:04:48",
+        "duracion_segundos": 32,
+        "razon": "Arranca unos segundos antes de la llamada con su hijo ('Siempre serás mi campeón. Te amo'). Cierra cuando Fritz explica que lo único que sabe hacer es trabajar, antes de que cambie el tema.",
+        "gancho": "Siempre serás mi campeón. Te amo.",
+        "pico_original": {
+          "timestamp": "00:04:19",
+          "razon": "Llamada con su hijo: 'Siempre serás mi campeón. Te amo', en pleno contexto de amenazas",
+          "confianza": 0.78,
+          "tipo": "relaciones_y_emocion",
+          "en_juego": "la familia de Fritz frente al miedo por los atentados"
+        },
+        "momento_enfasis_seg": 3,
+        "plan_edicion": {
+          "estructura": "lineal",
+          "segmentos": [
+            {
+              "inicio": "00:04:29",
+              "fin": "00:04:48"
+            }
+          ],
+          "por_que": "Solo queda el momento de preocupación por el personal y la frase 'lo único que sé hacer es trabajar'; el resto es narración de TV y el clip es flojo y corto."
+        }
+      }
+    },
+    {
+      "n": 5,
+      "inicio": "00:04:56",
+      "fin": "00:05:31",
+      "publicar": false,
+      "publicar_juez": false,
+      "prioridad": false,
+      "linea1": "Fritz iba a entregar carpas",
+      "linea2": "a damnificados y lo frena el atentado",
+      "tipo": "generosidad_con_humilde",
+      "en_juego": "Ayuda a damnificados del terremoto en Venezuela interrumpida por el atentado",
+      "parecidos": [
+        "Fritz apoya a emprendedora",
+        "Fritz apoya a chamo que jugará copa américa en Perú"
+      ],
+      "fuerza": 4,
+      "por_que": "Los beneficiarios son genéricos, sin persona concreta, y el final queda cortado a media frase.",
+      "rango": {
+        "conservar": true,
+        "inicio": "00:04:56",
+        "fin": "00:05:31",
+        "duracion_segundos": 35,
+        "razon": "Empieza con el terremoto en Venezuela y las carpas y colchones. Incluye el horario de entrega (10 pm) y el atentado a las 8:52. Cierra en 'estaba demasiado nervioso', antes de la narración sobre sus redes.",
+        "gancho": "Todos sabemos lo que Venezuela acaba de vivir, lo del terremoto.",
+        "pico_original": {
+          "timestamp": "00:04:58",
+          "razon": "Tras el primer atentado, Fritz llevó carpas y colchones inflables a Venezuela por el terremoto; el ataque ocurrió justo antes de la entrega",
+          "confianza": 0.7,
+          "tipo": "generosidad_con_humilde",
+          "en_juego": "ayuda humanitaria a damnificados interrumpida por un atentado"
+        },
+        "momento_enfasis_seg": 2,
+        "plan_edicion": {
+          "estructura": "lineal",
+          "segmentos": [
+            {
+              "inicio": "00:04:58",
+              "fin": "00:05:30"
+            }
+          ],
+          "por_que": "Cuenta cómo mandó ayuda a Venezuela el mismo día del atentado y se paró la entrega, con nervios reales; historia de ayuda con algo en juego, aunque de menor potencial."
+        }
+      }
+    },
+    {
+      "n": 6,
+      "inicio": "00:05:54",
+      "fin": "00:06:31",
+      "publicar": false,
+      "publicar_juez": false,
+      "prioridad": false,
+      "linea1": "Fritz asegura que vende originales",
+      "linea2": "y paga impuestos con la ley 📺",
+      "tipo": "medios_y_polemica",
+      "en_juego": "Defiende en prensa que vende productos originales y paga impuestos",
+      "parecidos": [
+        "Fritz jura que Louis Vuitton y Gucci son 100% originales en su tienda",
+        "Magaly pregunta cómo justifica 100K en efectivo el de zapatillas"
+      ],
+      "fuerza": 5,
+      "por_que": "Es defensa en prensa pero muy tibia, sin la pregunta incómoda ni la polémica visible, y el tramo transcrito está cortado.",
+      "rango": {
+        "conservar": true,
+        "inicio": "00:05:54",
+        "fin": "00:06:31",
+        "duracion_segundos": 37,
+        "razon": "Empieza con la narración de su fama en internet como contexto breve. Incluye que vende productos originales 'con toda la ley', los impuestos y el precio accesible. Cierra antes de que la narración pase a las apuestas.",
+        "gancho": "Para que puedan comprar productos originales con toda la ley.",
+        "pico_original": {
+          "timestamp": "00:06:15",
+          "razon": "Fritz defiende que vende productos originales 'con toda la ley', pagando impuestos y a precio accesible",
+          "confianza": 0.85,
+          "tipo": "medios_y_polemica",
+          "en_juego": "la legalidad y originalidad de lo que vende"
+        },
+        "momento_enfasis_seg": 21
+      }
+    },
+    {
+      "n": 7,
+      "inicio": "00:07:32",
+      "fin": "00:08:31",
+      "publicar": true,
+      "publicar_juez": true,
+      "prioridad": true,
+      "linea1": "Fritz confiesa que las pichangas",
+      "linea2": "de 200K eran puro show XD",
+      "tipo": "medios_y_polemica",
+      "en_juego": "Admite que las pichangas de 200K y 100K son falsas y parte del show",
+      "parecidos": [
+        "Fritz confiesa que las pichangas de 200k y el Corvette eran puro show",
+        "Máquina contadora de billetes en una pichanga de 100K soles"
+      ],
+      "fuerza": 9,
+      "por_que": "Es casi el mismo momento del clip de 51x de la cuenta propia: confesión directa y cifra grande.",
+      "rango": {
+        "conservar": true,
+        "inicio": "00:07:32",
+        "fin": "00:08:31",
+        "duracion_segundos": 59,
+        "razon": "Empieza en las apuestas exorbitantes pagadas en vivo, que son lo que está en juego. Sigue con 'otra verdad que puede sacudir ese espectáculo' y la confesión de que la pichanga de 200K es show. Cierra en 'eso es show', antes del corte de transcripción. Fusiona los picos 07:06 y 07:51.",
+        "gancho": "Las apuestas exorbitantes mostradas y pagadas en vivo, billete sobre billete.",
+        "pico_original": {
+          "timestamp": "00:07:51",
+          "razon": "Confiesa: 'Esa pichanga de 200K, de 100K es show... todo eso es falso, es parte de vender'. Se pregunta de dónde sacaría 200,000 por un partido",
+          "confianza": 0.97,
+          "tipo": "medios_y_polemica",
+          "en_juego": "la admisión de que las pichangas de alta apuesta son puro show"
+        },
+        "momento_enfasis_seg": 19,
+        "plan_edicion": {
+          "estructura": "lineal",
+          "segmentos": [
+            {
+              "inicio": "00:07:51",
+              "fin": "00:08:22"
+            }
+          ],
+          "por_que": "Empieza en 'esa pichanga de 200K es show' y la confesión de que todo es falso y parte de vender, el núcleo de la polémica, cortado en 'así se mueve'."
+        }
+      }
+    },
+    {
+      "n": 8,
+      "inicio": "00:08:32",
+      "fin": "00:09:10",
+      "publicar": true,
+      "publicar_juez": true,
+      "prioridad": true,
+      "linea1": "Fritz admite que el Corvette",
+      "linea2": "no era suyo, era prestado 😳",
+      "tipo": "medios_y_polemica",
+      "en_juego": "Admite que el Corvette con el que entró no era suyo, era prestado",
+      "parecidos": [
+        "Fritz confiesa que las pichangas de 200k y el Corvette eran puro show",
+        "Fritz confiesa que sus vendedores usan chaleco antibala"
+      ],
+      "fuerza": 7,
+      "por_que": "Confesión corta y fuerte sobre el lujo exhibido, del mismo tipo que el Corvette de 51x.",
+      "rango": {
+        "conservar": true,
+        "inicio": "00:08:32",
+        "fin": "00:09:10",
+        "duracion_segundos": 38,
+        "razon": "Empieza justo después de la confesión del pico anterior. Incluye 'ese Corvette con el que entré no es mío' y cierra en 'es parte del show'. No hay texto transcrito entre 08:32 y 08:59, pero el rango lo cubre.",
+        "gancho": "Ese Corvette con el que entré no es mío, ni siquiera es mío, hermano. Me lo prestaron para yo entrar.",
+        "pico_original": {
+          "timestamp": "00:08:32",
+          "razon": "Admite que el Corvette con el que entró a la pichanga no es suyo: se lo prestaron para el show",
+          "confianza": 0.95,
+          "tipo": "medios_y_polemica",
+          "en_juego": "el lujo exhibido (Corvette) era prestado"
+        },
+        "momento_enfasis_seg": 0,
+        "plan_edicion": {
+          "estructura": "lineal",
+          "segmentos": [
+            {
+              "inicio": "00:08:59",
+              "fin": "00:09:21"
+            }
+          ],
+          "por_que": "Se queda con la confesión de que el Corvette no es suyo y es prestado, un remate fuerte y autocontenido de 'puro show'."
+        }
+      }
+    },
+    {
+      "n": 9,
+      "inicio": "00:09:20",
+      "fin": "00:10:09",
+      "publicar": false,
+      "publicar_juez": false,
+      "prioridad": false,
+      "linea1": "Fritz muestra Louis Vuitton y Gucci",
+      "linea2": "y asegura que son originales",
+      "tipo": "producto_y_precio",
+      "en_juego": "Muestra de marcas de lujo y afirmación de que son originales, sin conflicto propio",
+      "parecidos": [
+        "Fritz jura que Louis Vuitton y Gucci son 100% originales en su tienda"
+      ],
+      "fuerza": 4,
+      "por_que": "El tramo es pitch de producto; el cuestionamiento solo aparece al final y queda cortado, y el tipo sugerido no coincide.",
+      "rango": {
+        "conservar": true,
+        "inicio": "00:09:20",
+        "fin": "00:10:09",
+        "duracion_segundos": 49,
+        "razon": "Empieza con 'hace 16 años empezó a vender en la cochera de la casa de su mamá'. Incluye el sueño de expandir la marca y las noches sin dormir. Cierra en 'algo bueno y accesible', antes del cambio a las marcas de lujo.",
+        "gancho": "Hace 16 años empezó a vender en la cochera de la casa de su mamá.",
+        "pico_original": {
+          "timestamp": "00:09:22",
+          "razon": "Contraste: de vender en la cochera de la casa de su mamá hace 16 años a una marca que sueña con expandirse al mundo; noches sin dormir",
+          "confianza": 0.72,
+          "tipo": "relaciones_y_emocion",
+          "en_juego": "el contraste entre sus inicios humildes y su éxito actual"
+        },
+        "momento_enfasis_seg": 2,
+        "plan_edicion": {
+          "estructura": "lineal",
+          "segmentos": [
+            {
+              "inicio": "00:10:10",
+              "fin": "00:10:28"
+            }
+          ],
+          "por_que": "Defiende que sus modelos Louis Vuitton, Dolce Gabbana y Gucci son 100% originales, pero se queda en el pitch sin la duda de los medios; se recorta a lo esencial."
+        }
+      }
+    },
+    {
+      "n": 10,
+      "inicio": "00:10:10",
+      "fin": "00:11:03",
+      "publicar": true,
+      "publicar_juez": true,
+      "prioridad": true,
+      "linea1": "Fritz niega lavado de dinero:",
+      "linea2": "\"a mí nadie me ha regalado\" 😤",
+      "tipo": "medios_y_polemica",
+      "en_juego": "Responde a las dudas por su crecimiento: niega que su dinero sea lavado",
+      "parecidos": [
+        "Magaly pregunta cómo justifica 100K en efectivo el de zapatillas",
+        "Fritz jura que Louis Vuitton y Gucci son 100% originales en su tienda"
+      ],
+      "fuerza": 8,
+      "por_que": "Responde a la pregunta incómoda sobre el origen de su dinero, igual que el clip de Magaly (55x).",
+      "rango": {
+        "conservar": true,
+        "inicio": "00:10:10",
+        "fin": "00:11:03",
+        "duracion_segundos": 53,
+        "razon": "Empieza con las marcas Louis Vuitton, Dolce Gabbana y Gucci presentadas como '100% originales'. Sigue con 'las redes apuntan con el dedo' y la pregunta 'nadie te puede señalar'. Cierra en 'no es lavado, no es dinero chueco, es un trabajo de día a día'. Fusiona los picos 10:10 y 10:28.",
+        "gancho": "Modelos y marcas 100% originales.",
+        "pico_original": {
+          "timestamp": "00:10:10",
+          "razon": "Muestra Louis Vuitton, Dolce Gabbana y Gucci jurando que son '100% originales'",
+          "confianza": 0.9,
+          "tipo": "medios_y_polemica",
+          "en_juego": "la originalidad de las marcas de lujo que vende"
+        },
+        "momento_enfasis_seg": 0,
+        "plan_edicion": {
+          "estructura": "lineal",
+          "segmentos": [
+            {
+              "inicio": "00:10:28",
+              "fin": "00:11:03"
+            }
+          ],
+          "por_que": "Arranca con la duda sobre su crecimiento y la pregunta 'nadie te puede señalar', y remata con 'no es lavado, no es dinero chueco'; polémica de dinero cuestionado."
+        }
+      }
+    },
+    {
+      "n": 11,
+      "inicio": "00:11:26",
+      "fin": "00:12:05",
+      "publicar": true,
+      "publicar_juez": true,
+      "prioridad": true,
+      "linea1": "Guardia del tío Fritz lucha",
+      "linea2": "por su vida tras segundo atentado 🚨",
+      "tipo": "evento_fuerte",
+      "en_juego": "Un guardia herido de bala lucha por su vida tras el segundo atentado y 180 empleos en riesgo",
+      "parecidos": [
+        "El tío Fritz con seguridad del estado luego de sufrir atentado",
+        "🚨 ACCIDENTE 🚨 Tío Fritz"
+      ],
+      "fuerza": 8,
+      "por_que": "Noticia real con una vida en juego, igual que los clips de atentado y accidente que superaron 38x y 113x.",
+      "rango": {
+        "conservar": true,
+        "inicio": "00:11:26",
+        "fin": "00:12:05",
+        "duracion_segundos": 39,
+        "razon": "Empieza en el segundo atentado del martes 28 de junio. Incluye al guardia en UCI con los balazos y el pedido de donantes de sangre. Cierra en 'esperemos que se pueda recuperar', antes del siguiente tramo.",
+        "gancho": "Martes 28 de junio, segundo atentado remece otro local del Tío Fritz.",
+        "pico_original": {
+          "timestamp": "00:11:28",
+          "razon": "Segundo atentado: un miembro de su seguridad lucha por su vida en UCI y piden donantes de sangre",
+          "confianza": 0.88,
+          "tipo": "evento_fuerte",
+          "en_juego": "la vida de un guardia herido de bala y la familia de trabajadores"
+        },
+        "momento_enfasis_seg": 2,
+        "plan_edicion": {
+          "estructura": "lineal",
+          "segmentos": [
+            {
+              "inicio": "00:11:28",
+              "fin": "00:12:20"
+            }
+          ],
+          "por_que": "Cuenta el segundo atentado y el guardia de seguridad herido en cuidados intensivos con 'somos una familia'; evento real con emoción, y se corta antes de la narración final."
+        }
+      }
+    },
+    {
+      "n": 12,
+      "inicio": "00:12:07",
+      "fin": "00:12:54",
+      "publicar": true,
+      "publicar_juez": true,
+      "prioridad": true,
+      "linea1": "Fritz pide ayuda al Ministro",
+      "linea2": "del Interior: \"no nos dejen solos\" 🙏",
+      "tipo": "evento_fuerte",
+      "en_juego": "Fritz y sus 180 trabajadores piden ayuda a gritos a las autoridades por la extorsión",
+      "parecidos": [
+        "El tío Fritz con seguridad del estado luego de sufrir atentado",
+        "🚨 ACCIDENTE 🚨 Tío Fritz"
+      ],
+      "fuerza": 7,
+      "por_que": "Súplica emocional en TV con algo en juego real (seguridad y empleos), parecida al clip del atentado.",
+      "rango": {
+        "conservar": true,
+        "inicio": "00:12:07",
+        "fin": "00:12:54",
+        "duracion_segundos": 47,
+        "razon": "Empieza con 'la familia está muy preocupada' y los más de 180 trabajadores. Incluye el pedido al Ministro del Interior y cierra en el ruego 'por favor, no nos dejen solos'.",
+        "gancho": "Ministro del Interior, próximo presidente de la República, ayúdennos, por favor.",
+        "pico_original": {
+          "timestamp": "00:12:20",
+          "razon": "Más de 180 trabajadores piden ayuda a gritos al Ministro del Interior; Fritz suplica 'no nos dejen solos'",
+          "confianza": 0.85,
+          "tipo": "evento_fuerte",
+          "en_juego": "180 empleos y vidas amenazadas por la extorsión"
+        },
+        "momento_enfasis_seg": 13,
+        "plan_edicion": {
+          "estructura": "lineal",
+          "segmentos": [
+            {
+              "inicio": "00:12:31",
+              "fin": "00:12:52"
+            }
+          ],
+          "por_que": "Empieza en el pedido de ayuda al Ministro del Interior y remata con 'no nos dejen solos', súplica emocional que se entiende sola."
+        }
+      }
+    }
+  ]
+}
