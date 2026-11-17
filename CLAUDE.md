@@ -10,24 +10,36 @@ estamos, qué ticket sigue y cómo trabajar.
 2. Produce clips verticales virales adaptados al objetivo de cada cliente, los revisa y los publica en varias plataformas.
 3. Se compone de un **engine agnóstico** de orquestación (`engine/`) y un **sistema de clips** encima (`clips/`).
 4. Restricción clave: **costo ≈ 0** hasta tener ingresos (IA vía Claude Code como "operador IA", transcripción gratuita, todo local en Docker).
-5. Estado: **migrando del piloto (v2.0) a la v2** según el roadmap; el piloto sigue produciendo clips mientras tanto.
+5. **Foco actual: la calidad del clip.** Se evoluciona el piloto real (`v1_full`) según `docs/ROADMAP.md` v0.3; lo demás es secundario.
 
 ## Mapa de documentos
 
 | Documento | Para qué |
 |---|---|
 | [`docs/ESTADO.md`](docs/ESTADO.md) | **Dónde estamos ahora**: sprint, ticket en curso, siguiente paso, bloqueos. |
-| [`docs/ROADMAP.md`](docs/ROADMAP.md) | Fases F0–F7 y sus hitos. |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md) | Foco, épicas Q1–Q5 y sprints. |
 | [`docs/ARQUITECTURA_OBJETIVO.md`](docs/ARQUITECTURA_OBJETIVO.md) | Arquitectura v2 y decisiones (ADR-001…015). |
 | [`docs/TO_BE.md`](docs/TO_BE.md) | Visión, procesos, requisitos, riesgos (incl. R-01 contenido de terceros). |
-| [`docs/DIAGNOSTICO_ACTUAL.md`](docs/DIAGNOSTICO_ACTUAL.md) | Diagnóstico del piloto (AS-IS). |
+| [`docs/DIAGNOSTICO_V1_FULL.md`](docs/DIAGNOSTICO_V1_FULL.md) | **Diagnóstico del piloto real (`v1_full`)** y brechas de calidad. |
+| [`docs/DIAGNOSTICO_ACTUAL.md`](docs/DIAGNOSTICO_ACTUAL.md) | Diagnóstico inicial (sobre la base, incompleto; ver el anexo). |
 | `docs/sprints/S<n>.md` | Cierre de cada sprint: qué se hizo y cómo probar la demo. |
 | `docs/ARQUITECTURA.md`, `COMANDOS.md`, `ESTRUCTURA_DATOS.md`, `APRENDIZAJE.md` | Documentación **del piloto** (referencia). |
+
+## Roles (separados)
+
+El agente trabaja con **dos roles distintos** y debe indicar cuál ejerce (`[Analista]` / `[Desarrollador]`):
+
+| Rol | Hace | No hace |
+|---|---|---|
+| **Analista** | Entiende el negocio, define requisitos y prioridades, mantiene `docs/` de análisis (TO-BE, roadmap, diagnósticos), crea y prioriza tickets con criterios de aceptación, planifica sprints. | No escribe código de producto. |
+| **Desarrollador** | Implementa **solo tickets aprobados**, con tests; abre PR; actualiza `docs/ESTADO.md` al cerrar. | No cambia el alcance ni las prioridades: si un ticket no alcanza o descubre algo nuevo, lo devuelve al analista (comentario en Jira). |
+
+El operador aprueba lo que propone el analista y revisa lo que entrega el desarrollador.
 
 ## Gestión del trabajo (Jira)
 
 - Sitio: `personal-clipeo.atlassian.net` · Proyecto **`CLIP`** · Tablero Scrum (board 1).
-- **Épicas = fases**: CLIP-5 (F0) … CLIP-12 (F7).
+- **Épicas**: CLIP-5 (F0 · Fundación), CLIP-6…10 (Q1–Q5, calidad: el foco), CLIP-11 y CLIP-12 (secundarias).
 - **Sprints de 1 semana** (lunes a domingo), S1…S10. Cada sprint termina con una **demo concreta** que el
   operador revisa personalmente antes de cerrar el sprint.
 - Los tickets se detallan **solo para el sprint siguiente**, al planificarlo.
