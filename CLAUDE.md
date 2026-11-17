@@ -27,37 +27,41 @@ estamos, qué ticket sigue y cómo trabajar.
 
 ## Roles (separados)
 
-El agente trabaja con **dos roles distintos** y debe indicar cuál ejerce (`[Analista]` / `[Desarrollador]`):
+El agente trabaja con **tres roles distintos** y debe indicar cuál ejerce en cada mensaje
+(`[Analista]`, `[Líder técnico]`, `[Desarrollador]`):
 
 | Rol | Hace | No hace |
 |---|---|---|
-| **Analista** | Entiende el negocio, define requisitos y prioridades, mantiene `docs/` de análisis (TO-BE, roadmap, diagnósticos), crea y prioriza tickets con criterios de aceptación, planifica sprints. | No escribe código de producto. |
-| **Desarrollador** | Implementa **solo tickets aprobados**, con tests; abre PR; actualiza `docs/ESTADO.md` al cerrar. | No cambia el alcance ni las prioridades: si un ticket no alcanza o descubre algo nuevo, lo devuelve al analista (comentario en Jira). |
+| **Analista** | Entiende el negocio, define requisitos y prioridades, mantiene los `docs/` de análisis (TO-BE, roadmap, diagnósticos), crea y prioriza tickets con criterios de aceptación, planifica sprints. | No decide cómo se construye ni escribe código. |
+| **Líder técnico / Arquitecto** | Decide **cómo** se construye: arquitectura y decisiones técnicas (ADR), **diseño técnico de cada sprint** antes de implementar, estándares de código y pruebas, **revisión del código** del sprint, **aprobación e integración del PR del sprint**, deuda técnica. | No cambia alcance ni prioridades (analista) ni implementa (desarrollador). |
+| **Desarrollador** | Implementa los tickets del sprint según el diseño técnico, con pruebas; corrige lo que pida el líder técnico. | No cambia alcance ni diseño: si algo no cuadra, lo escala al líder técnico o al analista (comentario en Jira). |
 
-El operador aprueba lo que propone el analista y revisa lo que entrega el desarrollador.
+El **operador** aprueba el plan del analista y revisa la **demo** de cada sprint antes de cerrarlo.
+El PR del sprint lo revisa e integra el líder técnico.
 
 ## Gestión del trabajo (Jira)
 
 - Sitio: `personal-clipeo.atlassian.net` · Proyecto **`CLIP`** · Tablero Scrum (board 1).
 - **Épicas**: CLIP-5 (F0 · Fundación), CLIP-6…10 (Q1–Q5, calidad: el foco), CLIP-11 y CLIP-12 (secundarias).
-- **Sprints de 1 semana** (lunes a domingo), S1…S10. Cada sprint termina con una **demo concreta** que el
-  operador revisa personalmente antes de cerrar el sprint.
+- **Sprints de 1 semana** (lunes a domingo), S1…S10, cada uno con una **demo concreta**.
 - Los tickets se detallan **solo para el sprint siguiente**, al planificarlo.
-- Etiquetas: `F<n>` (fase), `operador` (requiere acción del operador), `externo`, `infra`, `docs`, `calidad`.
+- Etiquetas: `F<n>`/`Q<n>` (épica), `operador` (requiere acción del operador), `externo`, `infra`, `docs`,
+  `calidad`, `secundario`.
 
-### Flujo por ticket
+### Ciclo del sprint (se trabaja por sprint, no por ticket suelto)
 
-1. Mover el ticket a **En curso** en Jira.
-2. Rama `CLIP-<n>-<slug>` desde `main` (o apilada sobre el ticket del que depende).
-3. Commits con prefijo `CLIP-<n>:`.
-4. Tests y lint en verde (`pytest`, y desde CLIP-16: `ruff`, `mypy`).
-5. PR a `main` con el ticket en el título; el operador revisa y aprueba.
-6. Al integrar: ticket a **Finalizada** y actualizar `docs/ESTADO.md`.
-
-### Cierre de sprint
-
-Escribir `docs/sprints/S<n>.md` (qué se hizo, **cómo probar la demo paso a paso**, capturas o clips, pendientes),
-pedir revisión al operador y, solo con su OK, cerrar el sprint en Jira.
+1. **[Analista]** confirma los tickets del sprint y sus criterios de aceptación.
+2. **[Líder técnico]** escribe el **diseño técnico** en `docs/sprints/S<n>.md` (cómo se resuelve cada ticket,
+   orden, riesgos) en la rama `sprint/S<n>`.
+3. **[Desarrollador]** implementa todos los tickets en `sprint/S<n>`, **un commit por ticket** con prefijo
+   `CLIP-<n>:`, tests en verde; mueve cada ticket a **En curso** / **En revisión** en Jira.
+4. **[Líder técnico]** revisa el sprint completo contra el diseño y los criterios de aceptación; pide correcciones
+   al desarrollador si hace falta; deja su revisión escrita en el PR.
+5. **[Líder técnico]** abre el **PR `sprint/S<n>` → `main`**, lo aprueba e integra cuando cumple los criterios.
+   Nota: GitHub no permite aprobar formalmente un PR propio; la aprobación queda como comentario de revisión.
+6. **Demo:** se completa `docs/sprints/S<n>.md` (qué se hizo, **cómo probar la demo paso a paso**, pendientes)
+   y el **operador** la revisa. Con su OK: tickets a **Finalizada**, sprint cerrado en Jira, `docs/ESTADO.md`
+   actualizado.
 
 ## Estructura del repositorio
 
