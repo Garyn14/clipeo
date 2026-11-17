@@ -36,12 +36,26 @@ En backlog: CLIP-27 (medios como fuente), CLIP-28 (transcripción/hablantes), CL
 - Hallazgo: 40 de 50 planes de dirección descartados en B eran más cortos que el mínimo (20 s). Decisión del
   operador: mínimo propio de la dirección = 15 s (el máximo no cambia).
 
-## Siguiente paso
+## Tickets del S4
 
-- Mediciones, mínimo de 15 s, informe (`LINEA_BASE.md` §8) y revisión (`S3.md` §5–7): hechos.
-- [Líder técnico] PR `sprint/S3` → `main` (REST con `gh api`), CI `pytest` en verde, comentario de revisión, merge.
-- Jira: CLIP-29/30/31 → Finalizada (transición 41) y cerrar el sprint S3 (id 3). Luego planificar S4
-  (recomendación en `LINEA_BASE.md` §8.4).
+| Ticket | Tema | Estado |
+|---|---|---|
+| CLIP-32 | Umbral del juez | Análisis hecho (`S4.md` §2). **Decisión del operador: publicar si fuerza ≥ 3; fuerza ≥ 7 = prioridad.** Falta implementar |
+| CLIP-33 | Clips publicados → evaluación | Herramienta hecha (`evaluacion/etiquetar_audiencia.py`, commit d157c2e). **Decisión: opción A** — el operador pega el link de TikTok al publicar, en el panel de revisión. Falta implementar |
+| CLIP-34 | Medios como fuente (PoC) | **Decisión: el agente busca 1–2 videos de TV/prensa sobre Fritz y el operador los aprueba** antes de procesarlos |
+
+## Siguiente paso (cualquier sesión puede continuar desde aquí)
+
+1. [Desarrollador] CLIP-32: `juez.umbral_fuerza: 3` en `legacy/contexto/nichos/zapatillas_peru.yaml`; en
+   `legacy/agentes/juez.py`, si hay umbral: `publicar = fuerza >= umbral`, guardar la decisión original en
+   `publicar_juez` y `prioridad = fuerza >= 7`. Tests. `evaluacion/evaluar.py` debe usar el mismo umbral.
+   Herramienta `python -m evaluacion.umbral <resultado.json>` (tabla por umbral vs tasa base + AUC).
+2. [Desarrollador] CLIP-33 opción A: campo "link publicado" por clip en la revisión web (`legacy/backend`,
+   `legacy/frontend`) que se guarda junto a la corrección (`investigacion/<nicho>/correcciones.jsonl` o un
+   `publicados.jsonl`); `etiquetar_audiencia` lo usa como cruce exacto (prioridad sobre duración/título).
+3. [Analista] CLIP-34: buscar 1–2 videos públicos de TV/prensa sobre Fritz (Magaly, Panorama…), proponerlos al
+   operador; con su OK, pasarlos por el piloto sin publicar e informar en `docs/calidad/MEDIOS_POC.md`.
+4. [Líder técnico] Revisión en `S4.md` §5, PR `sprint/S4` → `main`, demo §6, cierre en Jira y aquí.
 
 ### Feedback de la demo (operador, 2026-11-17)
 
