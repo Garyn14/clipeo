@@ -182,3 +182,16 @@ def test_rango_de_acepta_rango_original():
     assert exportar_casos._rango_de({"rango_original": {"inicio": "01:00", "fin": "01:30"}}) == ("01:00", "01:30")
     assert exportar_casos._rango_de({"inicio": "02:00", "fin": "02:10", "rango_original": {"inicio": "x", "fin": "y"}}) == ("02:00", "02:10")
     assert exportar_casos._rango_de({"rango_original": None}) == (None, None)
+
+
+def test_analizar_por_caso_usa_mayoria():
+    from evaluacion import analizar
+    base = {"esperado_publicar": True, "origen": "muestra", "tipo_obtenido": "x"}
+    datos = {"corridas": [
+        {"resultados": [dict(base, id="a", obtenido_publicar=True), dict(base, id="b", obtenido_publicar=False)]},
+        {"resultados": [dict(base, id="a", obtenido_publicar=True), dict(base, id="b", obtenido_publicar=True)]},
+        {"resultados": [dict(base, id="a", obtenido_publicar=False), {"id": "b", "error": "x"}]},
+    ]}
+    filas = {r["id"]: r for r in analizar.por_caso(datos)}
+    assert filas["a"]["obtenido_publicar"] is True and filas["a"]["fraccion_publicar"] == 0.67
+    assert filas["b"]["obtenido_publicar"] is False and filas["b"]["corridas"] == 2   # empate → no publica
