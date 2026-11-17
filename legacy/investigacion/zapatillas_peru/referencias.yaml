@@ -2,11 +2,15 @@
 # Clips reales de TikTok medidos con yt-dlp (2026-10-03). outlier = vistas / mediana de la cuenta
 # (cuánto rindió respecto de lo normal para esa cuenta). texto_pantalla leído de los fotogramas.
 # Fuente de métricas: investigacion/zapatillas_peru/videos.jsonl · muestra: muestra.jsonl
+# 2026-11-17 (CLIP-30, aprobado por el operador): ajustes con 73 videos de la cuenta propia
+# (cuenta_propia.jsonl; propuesta y evidencia en docs/calidad/MEMORIA_PROPUESTA_S3.md).
 
-actualizado: 2026-10-03
+actualizado: 2026-11-17
 metodo: >
   1.178 videos de 21 cuentas (creadores, cuentas de clips, medios y la cuenta propia @nandoclips93);
   se compara el 25% de mayor outlier contra el 25% menor y se leen los fotogramas de 58 clips.
+  2026-11-17: 73 videos de la cuenta propia @nandoclips93 clasificados por categoría (mediana 4.990 vistas);
+  donde la cuenta propia contradice al resto del nicho, manda la cuenta propia (es la audiencia del cliente).
 
 hallazgos:
   - id: historia_no_formato
@@ -37,7 +41,11 @@ formula_titulo: >
 
 tipos_que_funcionan:
   - tipo: generosidad_con_humilde
-    descripcion: El personaje ayuda, regala o descuenta a alguien humilde/vulnerable (mamita, carguero, niño, empleada).
+    descripcion: >
+      El personaje ayuda, regala o descuenta a alguien humilde/vulnerable (mamita, carguero, niño, empleada).
+      Funciona cuando hay una persona vulnerable CON una necesidad concreta que se entiende (no tenía cómo pagar,
+      viaja a jugar la Copa América, emprende). El regalo genérico o anunciado sin esa historia no rinde
+      ("regala pelota a dos hermanitos" 0,2x; "SÍ REGALA DE VERDAD" 0,2x; "bendice al futbolista" 0,2x).
     ejemplos:
       - {titulo: "El tío Fritz hace descuento a mamita que no tenía cómo pagar", vistas: 526000, outlier: 264.1, cuenta: nandoclips93, propia: true}
       - {titulo: "ESTE HUMILDE CARGUERO LE COBRÓ CONCIENTEMENTE 60 SO AL TIO FRITZ POR UN CHAMBÓN", vistas: 1100000, outlier: 104.3, cuenta: clipeanonymus}
@@ -55,8 +63,14 @@ tipos_que_funcionan:
       - {titulo: "Matiwasi se inventa serenata para luana", vistas: 155500, outlier: 12.4, cuenta: babynathsclips1}
       - {titulo: "EL TIO FRITZ AGRADECIDO CON EL PASTORCITO POR LO QUE PASO 🥲🥲", vistas: 101200, outlier: 49.1, cuenta: jhasminclips}
   - tipo: jefe_y_trabajadores
-    descripcion: El dueño con sus empleados (premia, pilla, exige) o una oferta de trabajo con sueldo.
+    descripcion: >
+      El dueño con sus empleados (premia, pilla, exige) o una oferta de trabajo con sueldo. NO hace falta un
+      conflicto fuerte: en la cuenta propia rinden la sorpresa, el premio, la exigencia concreta o la pillada
+      (6 de 8 sobre lo normal). Basta con que se entienda la relación jefe–trabajador y qué pasa.
     ejemplos:
+      - {titulo: "El tío Fritz sorprende a Rafo por supervisar bien sus almacenes", vistas: 116200, outlier: 23.3, cuenta: nandoclips93, propia: true}
+      - {titulo: "El jefe de tienda mete floro al tío Fritz", vistas: 49700, outlier: 10.0, cuenta: nandoclips93, propia: true}
+      - {titulo: "El tío Fritz exige cinco videos diarios a su editor y lo presiona", vistas: 37900, outlier: 7.6, cuenta: nandoclips93, propia: true}
       - {titulo: "EL TIO FRITZ ENCUENTRA A EL CHARLANTAN DURMIENDO XD", vistas: 162200, outlier: 78.6, cuenta: jhasminclips}
       - {titulo: "EL TIO FRITZ CONSINTIENDO ASUS TRABAJADORES 🤭👏", vistas: 113400, outlier: 55.0, cuenta: jhasminclips}
       - {titulo: "El tío Fritz busca personal con sueldo acorde al mercado XD", vistas: 89600, outlier: 45.0, cuenta: nandoclips93, propia: true}
@@ -64,11 +78,32 @@ tipos_que_funcionan:
       - {titulo: "Las comisiones en Fritzsport superan facilmente el mismo sueldo", vistas: 506500, outlier: 48.0, cuenta: clipeanonymus}
       - {titulo: "MATIWASI SUBIO PARA SUPERVISAR LA EMPRES4 😎", vistas: 276800, outlier: 15.9, cuenta: gatitoclips1.0}
   - tipo: rivalidad_y_apuestas
-    descripcion: Indirectas entre tiendas, apuestas de dinero, retos con premio.
+    descripcion: >
+      Indirectas entre tiendas, apuestas de dinero, retos con premio. OJO: los retos de dominadas están AGOTADOS
+      en la cuenta propia (0 de 8 sobre lo normal, mediana 0,35x): un reto con premio no basta por sí solo. Solo
+      vale si trae algo nuevo: un rival con nombre, una cifra grande o un giro inesperado.
     ejemplos:
       - {titulo: "El tío Fritz manda indirecta a Yolu — La número uno es Dios", vistas: 83200, outlier: 41.8, cuenta: nandoclips93, propia: true}
       - {titulo: "El Tio Fritz le gana los 200 Mil a Dennis 💀", vistas: 861600, outlier: 18.8, cuenta: sendooclips}
       - {titulo: "El tío fritz realiza esfuerzo sobrehumano con tal de no regalar pelota XD", vistas: 51800, outlier: 26.0, cuenta: nandoclips93, propia: true}
+  - tipo: medios_y_polemica
+    descripcion: >
+      El personaje en TV o prensa, o en una polémica: dinero cuestionado, "puro show", originalidad de lo que
+      vende, extorsión, seguridad. Es lo que más rinde en la cuenta propia (7 de 7 sobre lo normal, mediana 51x).
+    ejemplos:
+      - {titulo: "Máquina contadora de billetes en una pichanga de 100K soles", vistas: 323000, outlier: 64.7, cuenta: nandoclips93, propia: true}
+      - {titulo: "Fritz jura que Louis Vuitton y Gucci son 100% originales en su tienda", vistas: 290000, outlier: 58.1, cuenta: nandoclips93, propia: true}
+      - {titulo: "Magaly pregunta cómo justifica 100K en efectivo el de zapatillas", vistas: 276800, outlier: 55.5, cuenta: nandoclips93, propia: true}
+      - {titulo: "Fritz confiesa que las pichangas de 200k y el Corvette eran puro show", vistas: 256400, outlier: 51.4, cuenta: nandoclips93, propia: true}
+      - {titulo: "Fritz confiesa que sus vendedores usan chaleco antibala", vistas: 199800, outlier: 40.0, cuenta: nandoclips93, propia: true}
+  - tipo: producto_y_precio
+    descripcion: >
+      Una comparación concreta de precio (de X a Y) o el reclamo de ser el número uno, dicho con seguridad.
+      NO la charla técnica del producto ni el lanzamiento de un modelo (Shenlong 0,2x, chocolateras 0,3x).
+    ejemplos:
+      - {titulo: "El tío Fritz muestra la verdadera tecnología de 599.00 a 99.90", vistas: 184100, outlier: 36.9, cuenta: nandoclips93, propia: true}
+      - {titulo: "El Tío Fritz dice ser el número uno sin competencia en Adidas y Reebok", vistas: 94000, outlier: 18.8, cuenta: nandoclips93, propia: true}
+      - {titulo: "Fritz corrige el precio en vivo antes de que lo llamen Floro", vistas: 22700, outlier: 4.6, cuenta: nandoclips93, propia: true}
   - tipo: evento_fuerte
     descripcion: Accidente, atentado, algo que pasó de verdad y es noticia.
     ejemplos:
@@ -82,8 +117,16 @@ tipos_que_funcionan:
       - {titulo: "EL CHARLANTAN CON LA TECNOLOGÍA DE DESTAPADOR DEL TIO FRITZ 😮😮", vistas: 209900, outlier: 101.8, cuenta: jhasminclips}
 
 lo_que_no_funciona:
-  descripcion: Personaje presente pero sin historia — nada en juego, sin emoción ni conflicto, o el momento es chato.
+  descripcion: >
+    Personaje presente pero sin historia — nada en juego, sin emoción ni conflicto, o el momento es chato.
+    En la cuenta propia además: anuncios de negocio (tienda nueva, contenedores, ventas; 1 de 6 sobre lo normal),
+    salvo la oferta de trabajo con sueldo; "nada pasa" (fotos, saludos) y monólogos sobre su vida.
   ejemplos:
+    - {titulo: "Fritz abre tienda propia en Pueblo Libre: permiso municipal ya aprobado", outlier: 0.16, cuenta: nandoclips93, propia: true}
+    - {titulo: "Fritz aumenta sus ventas en más del 70% por el mundial", outlier: 0.16, cuenta: nandoclips93, propia: true}
+    - {titulo: "Todos quieren una foto con el tío Fritz", outlier: 0.09, cuenta: nandoclips93, propia: true}
+    - {titulo: "El tío Fritz es graduado de la universidad de la vida", outlier: 0.13, cuenta: nandoclips93, propia: true}
+    - {titulo: "Fritz lanza el reto 500 dominadas y te llevo 300 mangos", outlier: 0.33, cuenta: nandoclips93, propia: true}
     - {titulo: "Yolu reclamando su hot wheels", outlier: 0.08, cuenta: satorugojo.clips}
     - {titulo: "CUÁNTO GANA JORGITO", outlier: 0.11, cuenta: satorugojo.clips}
     - {titulo: "Nuevo Jorgito revela cuánto gana como camaraman", outlier: 0.11, cuenta: full_showyolu}
@@ -93,3 +136,5 @@ lo_que_no_funciona:
 notas:
   - Las cuentas de clips mezclan nichos (Sideral, política, Emil); el universo se asigna por el contenido del clip.
   - Formato de la cuenta propia: video horizontal con barras negras y título en caja blanca arriba; rinde igual que el formato vertical de otras cuentas cuando la historia es buena.
+  - "Hipótesis (no es regla para el juez): las publicaciones en tanda el mismo día coinciden con bajo rendimiento
+    (tandas 19–26 jul y 4 oct en la cuenta propia). Es un tema de publicación (Q5), no de selección."
