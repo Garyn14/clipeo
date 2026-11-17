@@ -76,6 +76,7 @@ def load_clip_view(session_dir: Path, entrada: dict) -> dict:
         "publicacion":         item.get("publicacion", {}),
         "rango_original":      item.get("rango_original", {}),
         "juez":                item.get("juez"),  # por qué lo eligió el juez (None antes del juez)
+        "fuente":              item.get("fuente"),  # CLIP-27: medios de terceros (None en streams)
         "descartado":          bool(item.get("revision_descartado", False)),
         "tiene_video":         clip_mp4_path.exists(),
         "listo_para_publicar": tecnico.get("listo_para_publicar", False),

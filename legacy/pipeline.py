@@ -46,6 +46,7 @@ from edicion_video.agent4_video_cutter   import run_agent as agent4
 from agentes.agent0_speaker_identifier import identify_speakers as agent0
 from core.chunk_manager import PASOS_CHUNK, PASOS_SESION
 from core.clip_ids import prefijo_chunk
+from core import fuente as fuente_mod
 from core.pasos import ErrorPaso, PasoFallido, Subpasos, ejecutar_paso
 
 STREAM_DATA = Path("stream_data")
@@ -336,6 +337,7 @@ def run_pipeline(
     session_id: str | None = None,
     reintentar: str | None = None,
     chunk_reintentar: str | None = None,
+    fuente_nueva: dict | None = None,
 ) -> None:
 
     _banner(cfg, mode, url)
@@ -350,6 +352,7 @@ def run_pipeline(
         _run_video_chunks(
             cfg, config, url, revisar=revisar, usar_colab=usar_colab, manual=manual,
             session_id=session_id, reintentar=reintentar, chunk_reintentar=chunk_reintentar,
+            fuente_nueva=fuente_nueva,
         )
 
     # ── MODO LIVE ─────────────────────────────────────────────
@@ -772,6 +775,7 @@ def _run_video_chunks(
     cfg, config: dict, url: str, revisar: bool = False, usar_colab: bool = False,
     manual: bool = False, session_id: str | None = None,
     reintentar: str | None = None, chunk_reintentar: str | None = None,
+    fuente_nueva: dict | None = None,
 ) -> None:
     from core.chunk_manager import ChunkManager
 
@@ -819,6 +823,22 @@ def _run_video_chunks(
     else:
         print(f"[PIPELINE] Retomando {session_dir.name}...")
 
+    # CLIP-27: la fuente queda en la sesión; retomar o reintentar nunca la pierde ni la cambia
+    fuente_sesion = mgr._estado.get("fuente")
+    if fuente_nueva and not fuente_sesion:
+        mgr.actualizar_sesion(fuente=fuente_nueva)
+        fuente_sesion = fuente_nueva
+    elif fuente_nueva and fuente_sesion.get("sobre") != fuente_nueva.get("sobre"):
+        print(f"[PIPELINE] ⚠ la sesión ya es de medios sobre «{fuente_sesion.get('sobre')}»; se conserva")
+    if fuente_sesion:
+        print(f"[PIPELINE] Fuente: {fuente_sesion['tipo']} · sobre {fuente_sesion.get('sobre')}")
+
+    def _al_leer_metadata(video: dict) -> None:
+        mgr.actualizar_sesion(video=video)
+        if fuente_sesion and not fuente_sesion.get("canal_origen"):
+            fuente_sesion["canal_origen"] = video.get("canal") or video.get("uploader") or video.get("channel")
+            mgr.actualizar_sesion(fuente=fuente_sesion)
+
     _aplicar_reintento(mgr, reintentar, chunk_reintentar)
 
     # ── 2. Pasos de sesión: descarga + plan ────────────────
@@ -828,7 +848,7 @@ def _run_video_chunks(
         info = download_video(
             url, session_dir,
             subpasos=Subpasos(mgr, None, "descarga", SUBPASOS_DESCARGA),
-            on_metadata=lambda video: mgr.actualizar_sesion(video=video),
+            on_metadata=_al_leer_metadata,
         )
         return {
             "salidas": [info["video_path"], info["audio_path"], session_dir / "metadata.json"],
@@ -921,7 +941,7 @@ def _run_video_chunks(
 # ─────────────────────────────────────────
 #  ENTRY POINT
 # ─────────────────────────────────────────
-if __name__ == "__main__":
+def main() -> None:
     parser = argparse.ArgumentParser(
         prog="pipeline.py",
         description="IDEA MILLONARIA — Pipeline v2.0",
@@ -972,9 +992,24 @@ if __name__ == "__main__":
              "(default: todos los chunks con ese paso en error)",
     )
 
+    parser.add_argument(
+        "--medios", action="store_true", default=False,
+        help="Solo --video: el video es de TV/prensa (contenido de terceros, R-01). Requiere --sobre.",
+    )
+    parser.add_argument(
+        "--sobre", metavar="ENTIDAD", default=None,
+        help="Con --medios: de quién trata el video (id de contexto/entidades/, ej. fritz, o un nombre)",
+    )
+
     args = parser.parse_args()
     if args.chunk and not args.reintentar:
         parser.error("--chunk solo tiene sentido junto con --reintentar")
+    if args.medios and not args.video:
+        parser.error("--medios solo funciona con --video")
+    if args.medios and not args.sobre:
+        parser.error("--medios requiere --sobre <entidad> (de quién trata el video)")
+    if args.sobre and not args.medios:
+        parser.error("--sobre solo tiene sentido junto con --medios")
 
     # Cargar configuración antes de cualquier procesamiento
     config, cfg = _load_config(args.config)
@@ -998,4 +1033,9 @@ if __name__ == "__main__":
             cfg, config, url=args.video, mode="video",
             revisar=args.revisar, usar_colab=usar_colab, manual=args.manual,
             session_id=args.session_id, reintentar=args.reintentar, chunk_reintentar=args.chunk,
+            fuente_nueva=fuente_mod.nueva("medios", args.sobre, args.video) if args.medios else None,
         )
+
+
+if __name__ == "__main__":
+    main()

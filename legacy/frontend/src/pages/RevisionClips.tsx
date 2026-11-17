@@ -160,6 +160,11 @@ function ClipCard({
         {(clip.juez?.fuerza ?? 0) >= 7 && (
           <span className="pill pill-ok" title="Fuerza 7 o más: revisar primero">⭐ prioridad</span>
         )}
+        {clip.fuente?.tipo === "medios" && (
+          <span className="pill" title={`Contenido de terceros (R-01) · sobre ${clip.fuente.sobre ?? "?"}`}>
+            📺 medios · {clip.fuente.canal_origen ?? "canal desconocido"}
+          </span>
+        )}
       </h3>
 
       {clip.tiene_video && (

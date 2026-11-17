@@ -496,6 +496,10 @@ def run_copy(juez_path: str, config: dict) -> tuple[list[dict], list[str]]:
     seo_context   = _format_seo_context(seo_base)
 
     from agentes.juez import bloque_juez
+    from core import fuente as _fuente
+
+    fuente_sesion = _fuente.leer(chunk_dir)   # CLIP-27: viaja en cada clip (revisión web, R-01)
+    credito = _fuente.credito(fuente_sesion)
 
     aprobadas = [d for d in decisiones if d.get("publicar")]
     print(f"\n[AGENT3] Modo copy — {len(aprobadas)} clip(s) aprobado(s) por el juez de {len(decisiones)}")
@@ -509,6 +513,7 @@ def run_copy(juez_path: str, config: dict) -> tuple[list[dict], list[str]]:
                 "score": d.get("fuerza") or 0, "publicar": False,
                 "texto_linea1": d.get("linea1") or "", "texto_linea2": d.get("linea2") or "",
                 "hashtags": [], "juez": bloque_juez(d), "rango_original": rango,
+                **({"fuente": fuente_sesion} if fuente_sesion else {}),
             })
             continue
 
@@ -535,6 +540,13 @@ def run_copy(juez_path: str, config: dict) -> tuple[list[dict], list[str]]:
         resultado["rango_original"] = rango
         if montaje:
             resultado["segmentos"] = montaje
+        if fuente_sesion:
+            resultado["fuente"] = fuente_sesion
+        if credito:   # R-01: crédito al titular en cada plataforma
+            for pub in resultado["publicacion"].values():
+                desc = (pub.get("descripcion") or "").rstrip()
+                if credito not in desc:
+                    pub["descripcion"] = f"{desc}\n\n{credito}" if desc else credito
 
         encontradas = [p for p in prohibidas if p.lower() in f"{l1} {l2}".lower()]
         if encontradas:

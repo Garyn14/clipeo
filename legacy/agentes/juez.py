@@ -21,6 +21,7 @@ from pathlib import Path
 
 from agentes.agent3_viral_scorer import _extract_clip, _parse_segments
 from ai_client import AIRetryableError, get_client
+from core import fuente
 from investigacion import comun
 
 MODEL = "claude-sonnet-4-6"
@@ -75,12 +76,15 @@ def _leer_json(path: Path) -> dict:
         return {}
 
 
-def _contexto_video(session_dir: Path, chunk_dir: Path) -> str:
+def _contexto_video(session_dir: Path, chunk_dir: Path, fuente_sesion: dict | None = None) -> str:
     meta = _leer_json(session_dir / "metadata.json")
     lineas = [
         f"VIDEO: «{meta.get('title') or meta.get('fulltitle') or '(sin título)'}»",
         f"CANAL: {meta.get('uploader') or meta.get('channel') or '(desconocido)'}",
     ]
+    bloque_fuente = fuente.bloque_juez(fuente_sesion)   # CLIP-27: medios (TV/prensa) y sobre quién trata
+    if bloque_fuente:
+        lineas.append(bloque_fuente)
     speakers = _leer_json(chunk_dir / "speaker_map.json")
     identificados = [
         f"  {spk}: {info.get('nombre')} ({info.get('estado')}, {info.get('confianza')})"
@@ -135,12 +139,16 @@ def run_juez(
     config: dict,
     session_dir: Path,
     chunk_dir: Path,
+    fuente_sesion: dict | None = None,
 ) -> dict:
     """
     Juzga los rangos conservados por el A2 y escribe chunk_dir/juez.json (una decisión por
     candidato, con su rango completo — es lo que consume el A3 en modo copy).
+    `fuente_sesion` (CLIP-27): si no se pasa, se lee de pipeline_estado.json de la sesión.
     Devuelve el dict de resultado del paso ({"salidas", "nota"} u {"omitido", "nota"}).
     """
+    if fuente_sesion is None:
+        fuente_sesion = fuente.leer(session_dir)
     canal_id = (config.get("meta") or {}).get("id", "default")
     system = system_prompt(canal_id)
     if system is None:
@@ -151,7 +159,7 @@ def run_juez(
         return {"omitido": True, "nota": "sin candidatos"}
 
     segmentos = _parse_segments(transcripcion)
-    bloques = [_contexto_video(session_dir, chunk_dir), ""]
+    bloques = [_contexto_video(session_dir, chunk_dir, fuente_sesion), ""]
     for n, r in enumerate(candidatos, 1):
         inicio, fin = r.get("inicio", "00:00"), r.get("fin", "00:00")
         pico = r.get("pico_original") or {}

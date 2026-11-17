@@ -74,6 +74,8 @@ def main() -> None:
     ap.add_argument("video", help="id o URL de YouTube")
     ap.add_argument("--nicho", default="zapatillas_peru")
     ap.add_argument("--vtt", type=Path, help="subtítulos ya descargados (.vtt)")
+    ap.add_argument("--sobre", help="de quién trata el video (id de entidad o nombre): contexto de medios del juez (CLIP-27)")
+    ap.add_argument("--canal", help="canal de origen, si se conoce (para el contexto del juez)")
     args = ap.parse_args()
 
     from agentes import juez
@@ -91,7 +93,12 @@ def main() -> None:
         rangos = run_direccion(rangos, transcripcion=transcripcion, config=config) if rangos else []
         decisiones = []
         if rangos:
-            juez.run_juez(rangos, transcripcion=transcripcion, config=config, session_dir=Path(tmp), chunk_dir=Path(tmp))
+            fuente_sesion = None
+            if args.sobre:
+                from core import fuente
+                fuente_sesion = {**fuente.nueva("medios", args.sobre, args.video), "canal_origen": args.canal}
+            juez.run_juez(rangos, transcripcion=transcripcion, config=config, session_dir=Path(tmp),
+                          chunk_dir=Path(tmp), fuente_sesion=fuente_sesion)
             decisiones = json.loads((Path(tmp) / "juez.json").read_text(encoding="utf-8"))["decisiones"]
 
     DIR_RESULTADOS.mkdir(exist_ok=True)
