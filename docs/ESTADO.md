@@ -21,14 +21,14 @@
 | CLIP-23 | Reemplazar `legacy/` por `v1_full` | Desarrollador | Implementado en `sprint/S1` |
 | CLIP-20 | Conjunto de evaluación con datos de investigación (Q1) | Desarrollador + **operador** (exportar casos) | Implementado en `sprint/S1`; falta el export del operador |
 | CLIP-19 | Portabilidad (quitar rutas de Windows) | Desarrollador | Implementado en `sprint/S1` |
-| CLIP-18 | CI con los tests de `legacy/` | Desarrollador | Pendiente |
+| CLIP-18 | CI con los tests de `legacy/` | Desarrollador | Implementado en `sprint/S1` |
 | CLIP-21 | Notebook de Colab versionado | Desarrollador | Implementado en `sprint/S1` |
 
 Orden previsto: 23 → 20 → 19 → 18. En backlog (secundario): CLIP-16, CLIP-17, CLIP-22.
 
 ## Siguiente paso
 
-CLIP-18 (CI); luego revisión del líder técnico e integración del sprint.
+Revisión del líder técnico e integración del sprint (PR `sprint/S1` → `main`).
 
 ## Pendientes del operador
 

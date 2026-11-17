@@ -86,7 +86,7 @@ Estructura objetivo (se crea en CLIP-16, ver ARQUITECTURA_OBJETIVO §8):
 - **Piloto:** desde `legacy/` (ver `legacy/README.md`):
   `cd legacy && python pipeline.py --video <url_o_ruta> --config <canal_id> [--revisar]`.
   Requiere `legacy/.env` (ver `.env.example`) y FFmpeg. IA por defecto: Claude Code de la máquina (`AI_PROVIDER=claude_cli`).
-- **Tests del piloto:** `python -m pytest -q legacy/tests`.
+- **Tests:** `pip install -r requirements-test.txt` y `python -m pytest -q tests legacy/tests` (lo mismo corre el CI en cada PR).
 
 ## Reglas de trabajo
 
