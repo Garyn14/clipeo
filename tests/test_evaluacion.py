@@ -55,11 +55,13 @@ class _ClienteFalso:
 
     def __init__(self):
         self.systems = []
+        self.ultimo_mensaje = None
         self.messages = self
 
     def create(self, **kw):
         self.systems.append(kw["system"])
         contenido = kw["messages"][0]["content"]
+        self.ultimo_mensaje = contenido
         publicar = "no me alcanza" in contenido
         return _Resp(json.dumps({"candidatos": [{
             "n": 1, "tipo": "generosidad_con_humilde" if publicar else "ninguno", "en_juego": "x",
@@ -195,3 +197,33 @@ def test_analizar_por_caso_usa_mayoria():
     filas = {r["id"]: r for r in analizar.por_caso(datos)}
     assert filas["a"]["obtenido_publicar"] is True and filas["a"]["fraccion_publicar"] == 0.67
     assert filas["b"]["obtenido_publicar"] is False and filas["b"]["corridas"] == 2   # empate → no publica
+
+
+def test_evaluar_pasa_pistas_y_hablantes_al_juez(cliente):
+    """CLIP-29: el juez evaluado recibe el pico (tipo sugerido, en juego) y los hablantes, como en producción."""
+    caso = _caso(pico={"tipo": "generosidad_con_humilde", "en_juego": "la plata de una mamita"},
+                 hablantes={"SPEAKER_00": {"nombre": "Tío Fritz", "estado": "confirmado", "confianza": 0.9}})
+    evaluar.evaluar_caso(caso)
+    assert cliente.ultimo_mensaje is not None
+    assert "tipo sugerido: generosidad_con_humilde" in cliente.ultimo_mensaje
+    assert "Tío Fritz" in cliente.ultimo_mensaje
+
+
+def test_exportar_incluye_pico_y_hablantes(tmp_path, monkeypatch):
+    from investigacion import comun
+    raiz = tmp_path / "raiz"
+    (raiz / "investigacion" / "zapatillas_peru").mkdir(parents=True)
+    (raiz / "investigacion" / "zapatillas_peru" / "correcciones.jsonl").write_text(json.dumps(
+        {"session_id": "S1", "clip_id": "clip_c001_01", "accion": "aprobado", "juez": {"tipo": "x"}}))
+    sesion = tmp_path / "stream_data" / "S1"
+    (sesion / "contenido_chunks").mkdir(parents=True)
+    (sesion / "chunks" / "chunk_001").mkdir(parents=True)
+    (sesion / "contenido_chunks" / "chunk_001.json").write_text(json.dumps({"contenido": [
+        {"clip_id": "clip_c001_01", "publicar": True,
+         "rango_original": {"inicio": "01:00", "fin": "01:30", "pico_original": {"tipo": "reto", "en_juego": "300 soles", "confianza": 9}}}]}))
+    (sesion / "chunks" / "chunk_001" / "transcripcion_raw.txt").write_text("[01:00] hola")
+    (sesion / "chunks" / "chunk_001" / "speaker_map.json").write_text(json.dumps({"SPEAKER_00": {"nombre": "Tío Fritz"}}))
+    monkeypatch.setattr(comun, "RAIZ", raiz)
+    casos, _ = exportar_casos.casos_de_correcciones("zapatillas_peru", tmp_path / "stream_data")
+    assert casos[0]["pico"] == {"tipo": "reto", "en_juego": "300 soles"}
+    assert casos[0]["hablantes"]["SPEAKER_00"]["nombre"] == "Tío Fritz"

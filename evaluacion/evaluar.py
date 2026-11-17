@@ -85,7 +85,11 @@ def evaluar_caso(caso: dict) -> dict:
             "inicio": cand["inicio"],
             "fin": cand["fin"],
             "duracion_segundos": _a_segundos(cand["fin"]) - _a_segundos(cand["inicio"]),
+            # Igual que en producción (CLIP-29): pistas del detector y hablantes identificados.
+            **({"pico_original": caso["pico"]} if caso.get("pico") else {}),
         }]
+        if caso.get("hablantes"):
+            (chunk_dir / "speaker_map.json").write_text(json.dumps(caso["hablantes"], ensure_ascii=False), encoding="utf-8")
 
         raiz_original = comun.RAIZ
         comun.RAIZ = tmp
