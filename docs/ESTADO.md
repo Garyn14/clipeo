@@ -7,35 +7,30 @@
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Sprint:** S1 · Base del piloto real + evaluación — 16 al 22 de noviembre de 2026 (activo).
-- **Demo del sprint:** `v1_full` funcionando desde `legacy/` con sus tests en verde, y un comando que evalúa casos
-  de referencia construidos con los datos de investigación.
+- **Sprint:** S2 · Línea base de calidad (Q1) — 17 al 29 de noviembre de 2026 (activo). S1 cerrado el 17-nov.
+- **Demo del sprint:** informe con números: cobertura del detector y acierto del juez, errores típicos y prioridades.
 
 ## Tickets del sprint
 
 | Ticket | Tema | Responsable | Estado |
 |---|---|---|---|
-| CLIP-13 | Documentación de análisis a `main` | Desarrollador | Finalizada |
-| CLIP-14 | Congelar piloto (`legacy/`, tag `piloto-v2.0`) | Desarrollador | Finalizada |
-| CLIP-15 | `CLAUDE.md` + `docs/ESTADO.md` + convención Jira | Desarrollador | Finalizada |
-| CLIP-23 | Reemplazar `legacy/` por `v1_full` | Desarrollador | Integrado en `main` (demo pendiente) |
-| CLIP-20 | Conjunto de evaluación con datos de investigación (Q1) | Desarrollador + **operador** (exportar casos) | Integrado; falta el export del operador |
-| CLIP-19 | Portabilidad (quitar rutas de Windows) | Desarrollador | Integrado en `main` (demo pendiente) |
-| CLIP-18 | CI con los tests de `legacy/` | Desarrollador | Integrado y verificado (`main` protegida) |
-| CLIP-21 | Notebook de Colab versionado | Desarrollador | Integrado en `main` (demo pendiente) |
+| CLIP-24 | Evaluación de cobertura del detector (A1 → A2) + exportador ampliado + repeticiones | Desarrollador | Pendiente (siguiente) |
+| CLIP-20 | Casos reales (export en la laptop) | **Operador** | Pendiente: esperar aviso tras CLIP-24 |
+| CLIP-25 | Informe de línea base (`docs/calidad/LINEA_BASE.md`) | Desarrollador | Pendiente (depende de CLIP-20) |
 
-Orden previsto: 23 → 20 → 19 → 18. En backlog (secundario): CLIP-16, CLIP-17, CLIP-22.
+Diseño técnico: `docs/sprints/S2.md`. S1 cerrado: ver `docs/sprints/S1.md`.
+En backlog (secundario): CLIP-16, CLIP-17, CLIP-22.
 
 ## Siguiente paso
 
-Demo del S1 por el operador (`docs/sprints/S1.md` §7). Luego planificar S2 (línea base de calidad).
+CLIP-24 (cobertura del detector) en la rama `sprint/S2`.
 
 ## Pendientes del operador
 
 - Borrar la rama `prueba/ci-bloqueo` en GitHub (PR #8 cerrado → "Delete branch").
 - Al volver el repo a privado: la protección de `main` deja de aplicarse en el plan Free y Actions depende de la cuota de la cuenta.
 
-- CLIP-20: en la laptop, `python -m evaluacion.exportar_casos zapatillas_peru` y subir `evaluacion/casos/zapatillas_peru.yaml` (ver `evaluacion/README.md`).
+- CLIP-20: exportar casos reales **cuando el desarrollador avise** (después de CLIP-24), para hacerlo una sola vez.
 
 - Configurar los Secrets `HF_TOKEN` y `AUTH_TOKEN` en Colab (ver `legacy/colab/README.md`).
 - Entorno local (opcional, para demos): WSL + Docker Engine en la laptop; carpeta `D:\clipeo` en Remote Control
