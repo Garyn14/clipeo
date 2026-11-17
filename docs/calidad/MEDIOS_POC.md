@@ -11,7 +11,7 @@ usar Colab). Herramienta: `python -m evaluacion.medios_poc <url> [--vtt archivo]
 | Video | Resultado |
 |---|---|
 | Magaly TV, "pichangas millonarias" (`-lMVPYu-GMo`, 2,5 min) | ✅ Procesado |
-| Panorama, entrevista exclusiva tras el ataque (`eudv9pU4Vvo`, 13 min) | ⏸ YouTube bloquea la descarga desde la nube ("confirma que no eres un bot"); se corre en la laptop |
+| Panorama, entrevista exclusiva tras el ataque (`eudv9pU4Vvo`, 13 min) | ✅ Procesado en la laptop del operador (desde la nube YouTube pide "confirmar que no eres un bot") |
 
 ## 2. Resultado (Magaly)
 
@@ -22,6 +22,25 @@ usar Colab). Herramienta: `python -m evaluacion.medios_poc <url> [--vtt archivo]
   rinde en la cuenta propia.
 - Es el mismo tema de tu clip con mejor resultado ("Máquina contadora de billetes en una pichanga de 100K soles",
   64x): **el sistema reconoce el momento que la audiencia premió.**
+
+## 2b. Resultado (Panorama) — contra clips propios ya publicados de esa entrevista
+
+Detector: 15 picos → 11 momentos; juez: 8 aprobados (7 con ⭐ prioridad), 3 rechazados.
+
+| Clip propio publicado | Outlier real | Sistema |
+|---|---|---|
+| Fritz confiesa que las pichangas de 200k y el Corvette eran puro show | 51x | ✅ ⭐ 9/10 (Corvette aparte: ⭐ 7/10) |
+| Fritz confiesa que sus vendedores usan chaleco antibala | 40x | ✅ ⭐ 8/10 |
+| Fritz confiesa que los billetes y los partidos son puro show | 23x | ✅ ⭐ 7/10 |
+| Máquina contadora de billetes en una pichanga de 100K soles | 64x | ✅ 6/10 (conteo de billetes) |
+| Fritz llora en Panorama por empezar con 70 soles y vivir bajo extorsión | 1,6x | ✅ ⭐ 7/10 (sobrevalorado) |
+| **Fritz jura que Louis Vuitton y Gucci son 100% originales en su tienda** | **58x** | ❌ **3/10 "pitch de producto"** |
+
+- **Encuentra los 6 momentos publicados y aprueba 5.** Propone además otros no publicados (lavado de dinero ⭐ 8/10,
+  guardia en cuidados intensivos ⭐ 8/10).
+- **Error a corregir en la memoria:** en medios, defender la originalidad o el origen de lo que vende es **polémica**
+  (`medios_y_polemica`), no `producto_y_precio` ni pitch. Propuesta para el S5, con aprobación del operador.
+- La emoción sin polémica (llanto) se sobrevalora: la audiencia sigue siendo la verdad.
 
 ## 3. Qué falta para usarlo en producción (alcance propuesto para CLIP-27)
 
@@ -39,9 +58,7 @@ usar Colab). Herramienta: `python -m evaluacion.medios_poc <url> [--vtt archivo]
 **Recomendación:** avanzar con CLIP-27 como "fuente de medios" con aprobación del operador por video, empezando por
 la descarga en la laptop y el contexto "sobre quién trata".
 
-## 4. Pendiente
+## 4. Conclusión
 
-Correr Panorama en la laptop:
-```bash
-python -m evaluacion.medios_poc https://www.youtube.com/watch?v=eudv9pU4Vvo
-```
+Medios como fuente **funciona**: con subtítulos automáticos el sistema encuentra los momentos que la audiencia
+premió (Magaly 1/1, Panorama 6/6 encontrados, 5/6 aprobados). Recomendación: CLIP-27 en el S5.
