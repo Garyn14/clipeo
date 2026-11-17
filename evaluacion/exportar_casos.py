@@ -14,8 +14,8 @@ Uso (desde la raíz del repo):
     python -m evaluacion.exportar_casos zapatillas_peru
     python -m evaluacion.exportar_casos zapatillas_peru --origen "D:/ruta/al/proyecto/anterior"
 
---origen: carpeta raíz de la copia del piloto donde se produjeron los clips (la que tiene stream_data/ e
-investigacion/). Lee de ahí las sesiones, la muestra y las correcciones, sin copiar nada.
+--origen: carpeta donde están los datos locales que no se suben al repo (stream_data/ e
+investigacion/<nicho>/muestra/). Las correcciones y muestra.jsonl se leen del repo (legacy/investigacion/).
 """
 
 from __future__ import annotations
@@ -175,16 +175,17 @@ def casos_de_cobertura(nicho: str, stream_data: Path) -> tuple[list[dict], list[
     return casos, avisos
 
 
-def casos_de_muestra(nicho: str) -> tuple[list[dict], list[str]]:
+def casos_de_muestra(nicho: str, dir_muestra: Path | None = None) -> tuple[list[dict], list[str]]:
     from investigacion import comun
 
     carpeta = comun.carpeta_nicho(nicho)
+    dir_muestra = dir_muestra or carpeta / "muestra"
     archivo = carpeta / "muestra.jsonl"
     if not archivo.exists():
         return [], [f"sin {archivo}"]
     casos, avisos = [], []
     for fila in (json.loads(l) for l in archivo.read_text(encoding="utf-8").splitlines() if l.strip()):
-        trans = carpeta / "muestra" / str(fila["id"]) / "transcripcion.txt"
+        trans = dir_muestra / str(fila["id"]) / "transcripcion.txt"
         if not trans.exists():
             avisos.append(f"muestra {fila['id']}: sin transcripcion.txt")
             continue
@@ -217,21 +218,17 @@ def main(argv: list[str] | None = None) -> int:
                     help="carpeta de sesiones (default: <origen>/stream_data o legacy/stream_data)")
     args = ap.parse_args(argv)
 
-    if args.origen is not None:
-        from investigacion import comun
-        if not (args.origen / "investigacion").is_dir():
-            print(f"{args.origen} no tiene la carpeta investigacion/: ¿es la raíz del proyecto anterior?")
-            return 1
-        comun.RAIZ = args.origen      # muestra y correcciones se leen del proyecto anterior
+    base = args.origen or _legacy.LEGACY
     if args.stream_data is None:
-        args.stream_data = (args.origen or _legacy.LEGACY) / "stream_data"
-    print(f"[EXPORT] Sesiones: {args.stream_data}")
+        args.stream_data = base / "stream_data"
+    dir_muestra = base / "investigacion" / args.nicho / "muestra"
+    print(f"[EXPORT] Sesiones: {args.stream_data} · transcripciones de la muestra: {dir_muestra}")
 
     from evaluacion import cobertura
 
     corr, avisos_c = casos_de_correcciones(args.nicho, args.stream_data)
     cob, avisos_cob = casos_de_cobertura(args.nicho, args.stream_data)
-    mues, avisos_m = casos_de_muestra(args.nicho)
+    mues, avisos_m = casos_de_muestra(args.nicho, dir_muestra)
     todos = corr + mues
     for aviso in avisos_c + avisos_m + avisos_cob:
         print(f"  ⚠ {aviso}")
