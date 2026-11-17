@@ -13,7 +13,8 @@ solo decide; nunca corta video.
 Un plan inválido (tiempos fuera del rango, tramos muy cortos, duración fuera de los límites del config) se descarta
 y el candidato sigue con su rango original: este paso nunca rompe el pipeline.
 
-Se activa con DIRECCION_EDITORIAL=1 (pipeline.py, paso "juez"). Apagado, el pipeline queda como antes.
+Encendida por defecto (decisión del operador, 2026-11-17: demo 3/3 mejor y +recall del juez sin perder precisión).
+Se apaga con DIRECCION_EDITORIAL=0; apagada, el pipeline queda como antes. Corre dentro del paso "juez" (pipeline.py).
 """
 
 from __future__ import annotations
@@ -125,7 +126,7 @@ def _parsear(raw: str, n: int) -> list[dict]:
 
 
 def activada() -> bool:
-    return os.environ.get("DIRECCION_EDITORIAL", "").strip().lower() in ("1", "true", "si", "sí")
+    return os.environ.get("DIRECCION_EDITORIAL", "1").strip().lower() not in ("0", "false", "no")
 
 
 def run_direccion(rangos: list[dict], *, transcripcion: str, config: dict) -> list[dict]:
@@ -133,7 +134,8 @@ def run_direccion(rangos: list[dict], *, transcripcion: str, config: dict) -> li
     canal_id = (config.get("meta") or {}).get("id", "default")
     memoria = comun.cargar_memoria(canal_id) or "(el nicho no tiene memoria: aplica el criterio general)"
     ref = config.get("refinamiento") or {}
-    dur_min, dur_max = int(ref.get("duracion_minima_segundos", 15)), int(ref.get("duracion_maxima_segundos", 90))
+    dur_min = int(ref.get("direccion_duracion_minima_segundos") or ref.get("duracion_minima_segundos", 15))
+    dur_max = int(ref.get("duracion_maxima_segundos", 90))
     candidatos = [r for r in rangos if r.get("conservar") and r.get("inicio") and r.get("fin")]
     if not candidatos:
         return rangos

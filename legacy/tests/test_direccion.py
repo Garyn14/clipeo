@@ -73,9 +73,9 @@ def test_run_direccion_agrega_plan_valido_y_descarta_invalido(monkeypatch):
 
 def test_activada_por_variable(monkeypatch):
     monkeypatch.delenv("DIRECCION_EDITORIAL", raising=False)
+    assert direccion.activada()            # encendida por defecto
+    monkeypatch.setenv("DIRECCION_EDITORIAL", "0")
     assert not direccion.activada()
-    monkeypatch.setenv("DIRECCION_EDITORIAL", "1")
-    assert direccion.activada()
 
 
 def test_juez_usa_el_texto_del_clip_dirigido(monkeypatch, tmp_path):
@@ -90,3 +90,13 @@ def test_juez_usa_el_texto_del_clip_dirigido(monkeypatch, tmp_path):
     assert "clip dirigido: gancho_primero" in mensaje and "relleno" not in mensaje
     decision = json.loads((tmp_path / "juez.json").read_text(encoding="utf-8"))["decisiones"][0]
     assert decision["rango"]["plan_edicion"]["estructura"] == "gancho_primero"
+
+
+def test_minimo_propio_de_la_direccion(monkeypatch):
+    """El mínimo de la dirección (15 s) puede ser menor que el del detector (20 s); el máximo es el mismo."""
+    cliente = _Cliente({"candidatos": [{"n": 1, "segmentos": [{"inicio": "10:05", "fin": "10:22"}]}]})
+    monkeypatch.setattr(direccion, "get_client", lambda: cliente)
+    config = {"meta": {"id": "x"}, "refinamiento": {"duracion_minima_segundos": 20, "duracion_maxima_segundos": 90,
+                                                  "direccion_duracion_minima_segundos": 15}}
+    (r,) = direccion.run_direccion([dict(RANGO)], transcripcion="[10:05] hola", config=config)
+    assert r["plan_edicion"]["segmentos"] == [{"inicio": "00:10:05", "fin": "00:10:22"}]

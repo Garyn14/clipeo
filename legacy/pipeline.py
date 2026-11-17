@@ -571,7 +571,7 @@ def _procesar_chunk(
             "",
         )
         rangos = _leer_lista(rangos_p, "rangos")
-        if direccion.activada():   # CLIP-31: dirección editorial antes del juez (DIRECCION_EDITORIAL=1)
+        if direccion.activada():   # CLIP-31: dirección editorial antes del juez (encendida por defecto; DIRECCION_EDITORIAL=0 la apaga)
             rangos = direccion.run_direccion(rangos, transcripcion=texto, config=config)
             rangos_p.write_text(json.dumps({"rangos": rangos}, ensure_ascii=False, indent=2), encoding="utf-8")
         return run_juez(rangos, transcripcion=texto, config=config,

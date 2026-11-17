@@ -7,7 +7,7 @@ Se ejecuta en la laptop del operador (los videos de las sesiones están ahí):
 
 Por cada clip:
   1. busca el clip en `stream_data/<sesion>/contenido_chunks/*.json` (campo `clip_id`) y su chunk;
-  2. si el clip ya trae un plan de edición (pipeline con DIRECCION_EDITORIAL=1) lo usa; si no, llama a la
+  2. si el clip ya trae un plan de edición (pipeline con la dirección encendida) lo usa; si no, llama a la
      dirección editorial (Claude Code, `AI_PROVIDER=claude_cli`: sin costo de API) sobre su rango original;
   3. corta con el Agente 4 del piloto, con el mismo título:
        antes.mp4      → el rango original (como se cortó en producción)
