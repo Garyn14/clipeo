@@ -1,0 +1,52 @@
+{
+  "video": "-lMVPYu-GMo",
+  "fecha": "2026-11-17T21:44:56",
+  "nicho": "zapatillas_peru",
+  "decisiones": [
+    {
+      "n": 1,
+      "inicio": "00:00:41",
+      "fin": "00:01:30",
+      "publicar": true,
+      "publicar_juez": true,
+      "prioridad": true,
+      "linea1": "Periodista cuestiona pichangas de 200 mil soles",
+      "linea2": "con fajos de billetes cual narcos 😱",
+      "tipo": "medios_y_polemica",
+      "en_juego": "Dinero cuestionado: apuestas de 50 mil a 200 mil soles en efectivo en una pichanga, con dudas de control (SBS, Sunat) y de permisos.",
+      "parecidos": [
+        "Magaly pregunta cómo justifica 100K en efectivo el de zapatillas",
+        "Fritz confiesa que las pichangas de 200k y el Corvette eran puro show"
+      ],
+      "fuerza": 7,
+      "por_que": "Es polémica mediática sobre dinero en efectivo y apuestas de 200K, el tipo que más rinde en la cuenta propia (mediana 51x), y arranca directo en las cifras sin presentación.",
+      "rango": {
+        "conservar": true,
+        "inicio": "00:00:41",
+        "fin": "00:01:30",
+        "duracion_segundos": 49,
+        "razon": "Fusiona los picos 1, 2 y 3, que cuentan la misma historia. El inicio va 3 segundos antes de la cifra de 50,000 a 200,000 soles, justo después del contraste con las apuestas de 10 o 20 soles. Incluye la exhibición de fajos 'cual narcos', el '¿quién lo controla? ¿la SBS? ¿la Sunat?' y cierra en el remate 'necesitaría tener un permiso especial'. El pico 4 queda fuera para respetar la duración máxima: su pregunta ocupa 01:32 a 01:49 y alargaría el clip a unos 68 segundos.",
+        "gancho": "No, no, estos streamers se han dado en apostar cantidades desde los 50,000, 100,000, 200,000 soles.",
+        "pico_original": {
+          "timestamp": "00:44",
+          "razon": "La prensa expone que los streamers apuestan entre 50,000 y 200,000 soles en pichangas, frente a las apuestas normales de 10 o 20 soles por cabeza. Es el contraste de cifras que abre el reportaje.",
+          "confianza": 0.85,
+          "tipo": "medios_y_polemica",
+          "en_juego": "apuestas de hasta 200,000 soles en una pichanga de streamers"
+        },
+        "momento_enfasis_seg": 3,
+        "plan_edicion": {
+          "estructura": "lineal",
+          "segmentos": [
+            {
+              "inicio": "00:00:41",
+              "fin": "00:01:30"
+            }
+          ],
+          "por_que": "Arranca en las apuestas de 50, 100 y 200 mil soles y en los fajos exhibidos 'cual narcos', y cierra con la pregunta de quién controla ese dinero y el permiso especial, sin la presentación de las apuestas de 10 soles ni la entrada al invitado legal."
+        }
+      }
+    }
+  ],
+  "lineas_transcripcion": 18
+}

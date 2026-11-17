@@ -245,3 +245,20 @@ def test_etiquetas_por_audiencia_reemplazan_al_editor(tmp_path):
     assert b["esperado"] == {"publicar": True} and "23.3x" in b["evidencia"]
     assert c["esperado"] == {"publicar": True, "tipo": "jefe"} and "esperado_editor" not in c
     assert casos_mod.aplicar_audiencia([dict(base, id="d", esperado={"publicar": True})], tmp_path / "no.yaml")
+
+
+def test_umbral_metricas_y_auc():
+    from evaluacion import umbral
+    datos = [(8, True), (3, True), (2, False), (3, False), (1, True)]
+    m = umbral.metricas(datos, 3)
+    assert (round(m["precision"], 2), round(m["recall"], 2)) == (0.67, 0.67)
+    assert umbral.auc([(9, True), (1, False)]) == 1.0 and umbral.auc([(5, True), (5, False)]) == 0.5
+
+
+def test_vtt_a_transcripcion_quita_repeticiones_y_agrupa():
+    from evaluacion.medios_poc import vtt_a_transcripcion
+    vtt = ("WEBVTT\nKind: captions\nLanguage: es\n\n"
+           "00:00:00.000 --> 00:00:02.310 align:start\nLes<00:00:00.200><c> voy</c>\n\n"
+           "00:00:02.320 --> 00:00:05.070 align:start\nLes voy\nlluvia de dólares\n\n"
+           "00:00:08.440 --> 00:00:10.990 align:start\nlluvia de dólares\nstreamers\n")
+    assert vtt_a_transcripcion(vtt) == "[00:00] Les voy lluvia de dólares streamers"

@@ -98,6 +98,11 @@ export const api = {
       method: "POST",
       body: JSON.stringify(body),
     }),
+  registrarPublicado: (sessionId: string, clipId: string, url: string) =>
+    request<ClipView>(`/sessions/${sessionId}/clips/${clipId}/publicado`, {
+      method: "POST",
+      body: JSON.stringify({ url }),
+    }),
   discardClip: (sessionId: string, clipId: string, body: DiscardClipBody) =>
     request<{ ok: boolean }>(`/sessions/${sessionId}/clips/${clipId}/discard`, {
       method: "POST",

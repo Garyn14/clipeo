@@ -118,6 +118,16 @@ def system_prompt(canal_id: str) -> str | None:
     return JUEZ_PROMPT.format(memoria=memoria, correcciones=bloque)
 
 
+FUERZA_PRIORIDAD = 7   # CLIP-32: fuerza >= 7 fue buena 16 de 16 veces en la evaluación del S3
+
+
+def _fuerza(valor) -> int:
+    try:
+        return int(float(valor))
+    except (TypeError, ValueError):
+        return 0
+
+
 def run_juez(
     rangos: list[dict],
     *,
@@ -171,16 +181,23 @@ def run_juez(
     )
     veredictos = _parsear(resp.content[0].text, len(candidatos))
 
+    umbral = (config.get("juez") or {}).get("umbral_fuerza")
     decisiones = []
     for n, (r, v) in enumerate(zip(candidatos, veredictos), 1):
-        publicar = bool(v.get("publicar"))
-        marca = "✅" if publicar else "❌"
+        publicar_juez = bool(v.get("publicar"))
+        fuerza = _fuerza(v.get("fuerza"))
+        # CLIP-32: con umbral, decide la fuerza (la decisión propia del juez queda en publicar_juez)
+        publicar = fuerza >= umbral if umbral is not None else publicar_juez
+        prioridad = fuerza >= FUERZA_PRIORIDAD
+        marca = ("⭐" if prioridad and publicar else "✅") if publicar else "❌"
         print(f"  {marca} {v.get('fuerza')}/10 [{v.get('tipo')}] {v.get('linea1', '')} — {v.get('por_que', '')}")
         decisiones.append({
             "n": n,
             "inicio": r.get("inicio"),
             "fin": r.get("fin"),
             "publicar": publicar,
+            "publicar_juez": publicar_juez,
+            "prioridad": prioridad,
             "linea1": v.get("linea1"),
             "linea2": v.get("linea2"),
             **{k: v.get(k) for k in ("tipo", "en_juego", "parecidos", "fuerza", "por_que")},

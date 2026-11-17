@@ -79,6 +79,7 @@ def load_clip_view(session_dir: Path, entrada: dict) -> dict:
         "descartado":          bool(item.get("revision_descartado", False)),
         "tiene_video":         clip_mp4_path.exists(),
         "listo_para_publicar": tecnico.get("listo_para_publicar", False),
+        "publicado":           item.get("publicado", {}),   # CLIP-33: {plataforma: {url, video_id}}
     }
 
 

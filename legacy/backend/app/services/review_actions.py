@@ -10,6 +10,7 @@ no se modifican.
 """
 
 import json
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -19,7 +20,7 @@ from edicion_video.agent4_video_cutter import (
     _find_video, _detect_video_info, _prepare_font, _cut_clip,
 )
 from core.utils import _timestamp_to_seconds
-from investigacion.comun import registrar_correccion
+from investigacion.comun import registrar_correccion, registrar_publicado
 
 from app.services.clip_index import find_clip_entry, list_clips, load_clip_view, regenerate_contenido_final
 
@@ -326,3 +327,40 @@ def finalizar_revision(session_id: str) -> None:
     ahora = datetime.now().isoformat(timespec="seconds")
     mgr.actualizar_paso(None, "revision", estado="ok", fin=ahora, nota="revisado en la web")
     mgr.actualizar_paso(None, "fin", estado="ok", fin=ahora)
+
+
+# ── CLIP-33: link del video publicado ────────────────────────────────────────────────────────────
+_PATRONES_LINK = [
+    ("tiktok", re.compile(r"tiktok\.com/@[^/]+/video/(\d+)")),
+    ("youtube", re.compile(r"youtube\.com/shorts/([\w-]{6,})")),
+    ("youtube", re.compile(r"youtu\.be/([\w-]{6,})")),
+    ("youtube", re.compile(r"youtube\.com/watch\?(?:.*&)?v=([\w-]{6,})")),
+]
+
+
+class LinkInvalidoError(ValueError):
+    pass
+
+
+def video_de_link(url: str) -> tuple[str, str]:
+    """(plataforma, video_id) de un link de TikTok o YouTube; LinkInvalidoError si no se reconoce."""
+    for plataforma, patron in _PATRONES_LINK:
+        m = patron.search(url or "")
+        if m:
+            return plataforma, m.group(1)
+    raise LinkInvalidoError("Pega el link completo del video (TikTok: …/@cuenta/video/123…; YouTube: …/shorts/…)")
+
+
+def registrar_link_publicado(session_id: str, clip_id: str, url: str) -> dict:
+    """Guarda en el clip el link del video publicado y lo registra para la evaluación (etiqueta por audiencia)."""
+    session_dir, entrada = _resolve(session_id, clip_id)
+    plataforma, video_id = video_de_link(url.strip())
+    contenido = _load_contenido(entrada["chunk_file"])
+    contenido[entrada["pos"]].setdefault("publicado", {})[plataforma] = {"url": url.strip(), "video_id": video_id}
+    _save_contenido(entrada["chunk_file"], contenido)
+    nicho = _nicho(session_dir)
+    if nicho:
+        registrar_publicado(nicho, {"fecha": datetime.now().isoformat(timespec="seconds"),
+                                    "session_id": session_dir.name, "clip_id": clip_id,
+                                    "plataforma": plataforma, "video_id": video_id, "url": url.strip()})
+    return load_clip_view(session_dir, entrada)

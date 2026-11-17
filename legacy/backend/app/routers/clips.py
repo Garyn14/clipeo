@@ -16,6 +16,10 @@ class EditBody(BaseModel):
     fin: str | None = None
 
 
+class PublicadoBody(BaseModel):
+    url: str
+
+
 class DiscardBody(BaseModel):
     canal_id: str | None = None
     razon: str | None = None
@@ -67,3 +71,14 @@ def discard(session_id: str, clip_id: str, body: DiscardBody):
     except review_actions.ClipNotFoundError:
         raise HTTPException(404, "Clip no encontrado")
     return {"ok": True}
+
+
+@router.post("/{clip_id}/publicado")
+def publicado(session_id: str, clip_id: str, body: PublicadoBody):
+    """CLIP-33: el operador pega el link del video ya publicado (enlaza el clip con su resultado real)."""
+    try:
+        return review_actions.registrar_link_publicado(session_id, clip_id, body.url)
+    except review_actions.ClipNotFoundError:
+        raise HTTPException(404, "Clip no encontrado")
+    except review_actions.LinkInvalidoError as e:
+        raise HTTPException(422, str(e))

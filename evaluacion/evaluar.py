@@ -19,6 +19,7 @@ Escribe evaluacion/resultados/<fecha>_<nicho>.json e imprime un resumen.
 from __future__ import annotations
 
 import argparse
+import functools
 import json
 import os
 import shutil
@@ -63,6 +64,17 @@ def _preparar_memoria(raiz_tmp: Path, nicho: str, excluir: str | None) -> None:
         (destino / "correcciones.jsonl").write_text("\n".join(lineas) + ("\n" if lineas else ""), encoding="utf-8")
 
 
+@functools.lru_cache(maxsize=None)
+def _config_juez(nicho: str) -> dict:
+    """Bloque `juez` del nicho (umbral de fuerza, CLIP-32), igual que en el pipeline."""
+    from evaluacion.cobertura import cargar_config
+
+    try:
+        return dict(cargar_config(nicho).get("juez") or {})
+    except Exception:   # nicho sin config v2 (p. ej. en tests): sin umbral
+        return {}
+
+
 def evaluar_caso(caso: dict, direccion: bool = False) -> dict:
     """Ejecuta el juez sobre un caso (con dirección editorial si se pide) y devuelve el resultado."""
     from agentes import juez
@@ -101,7 +113,7 @@ def evaluar_caso(caso: dict, direccion: bool = False) -> dict:
             salida = juez.run_juez(
                 rangos,
                 transcripcion=caso["transcripcion"],
-                config={"meta": {"id": caso["nicho"]}},
+                config={"meta": {"id": caso["nicho"]}, "juez": _config_juez(caso["nicho"])},
                 session_dir=session_dir,
                 chunk_dir=chunk_dir,
             )

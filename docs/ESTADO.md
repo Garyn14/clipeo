@@ -36,11 +36,21 @@ En backlog: CLIP-27 (medios como fuente), CLIP-28 (transcripción/hablantes), CL
 - Hallazgo: 40 de 50 planes de dirección descartados en B eran más cortos que el mínimo (20 s). Decisión del
   operador: mínimo propio de la dirección = 15 s (el máximo no cambia).
 
+## Tickets del S4
+
+| Ticket | Tema | Estado |
+|---|---|---|
+| CLIP-32 | Umbral del juez | **Hecho** (commit d232ba5): `juez.umbral_fuerza: 3`, `prioridad` si fuerza ≥ 7, `python -m evaluacion.umbral` |
+| CLIP-33 | Clips publicados → evaluación | **Hecho**: `evaluacion/etiquetar_audiencia.py` (link pegado > duración+fecha+título) y campo "Link del video ya publicado" en la revisión web (commit c72363e) |
+| CLIP-34 | Medios como fuente (PoC) | **Hecho** con Magaly (`docs/calidad/MEDIOS_POC.md`): encuentra el momento que más rindió (fuerza 7, `medios_y_polemica`). Panorama: correr en la laptop (YouTube bloquea la nube) |
+
 ## Siguiente paso
 
-[Analista] Planificar el S4 con el operador. Propuesta (ver `docs/calidad/LINEA_BASE.md` §8.4):
-recalibrar el juez para recall midiendo contra la audiencia, sumar cada clip publicado con su resultado al conjunto
-de evaluación (Q5) y medios como fuente (CLIP-27, el tipo que más rinde: 7/7).
+- S4 implementado y revisado (`docs/sprints/S4.md` §5); PR `sprint/S4` → `main`.
+- **Operador:** demo del S4 (`S4.md` §6): ⭐ prioridad y link publicado en la revisión, `etiquetar_audiencia`, y
+  correr Panorama con `medios_poc` en la laptop. Con su OK: CLIP-32/33/34 → Finalizada, cerrar sprint S4 (id 4).
+- Luego [Analista] planificar S5. Candidatos: CLIP-27 (medios como fuente, alcance en `MEDIOS_POC.md` §3),
+  publicar más clips con link para fortalecer la evaluación por audiencia, mejorar el criterio del juez (AUC ≈ 0,6).
 
 ### Feedback de la demo (operador, 2026-11-17)
 

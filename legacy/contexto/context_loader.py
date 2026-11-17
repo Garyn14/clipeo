@@ -151,6 +151,7 @@ class ContextLoader:
                 "descripcion": nicho.get("descripcion"),
             },
             "identificacion": copy.deepcopy(nicho.get("identificacion", {})),
+            "juez":           copy.deepcopy(nicho.get("juez", {})),
             "deteccion": {
                 "confianza_minima": det_base.get("confianza_minima", 0.75),
                 "prompt":           det_prompt,
