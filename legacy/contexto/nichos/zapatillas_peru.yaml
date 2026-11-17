@@ -515,6 +515,11 @@ contenido_base:
       }
     }
 
+# Juez (CLIP-32, decisión del operador 2026-11-17): publica si fuerza >= umbral_fuerza. La fuerza casi no separa
+# buenos de malos (AUC 0,59), así que el umbral bajo deja pasar a revisión el 80% de lo bueno; fuerza >= 7 = prioridad.
+juez:
+  umbral_fuerza: 3
+
 refinamiento_base:
   contexto_antes_segundos: 45
   contexto_despues_segundos: 45

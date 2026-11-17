@@ -245,3 +245,11 @@ def test_etiquetas_por_audiencia_reemplazan_al_editor(tmp_path):
     assert b["esperado"] == {"publicar": True} and "23.3x" in b["evidencia"]
     assert c["esperado"] == {"publicar": True, "tipo": "jefe"} and "esperado_editor" not in c
     assert casos_mod.aplicar_audiencia([dict(base, id="d", esperado={"publicar": True})], tmp_path / "no.yaml")
+
+
+def test_umbral_metricas_y_auc():
+    from evaluacion import umbral
+    datos = [(8, True), (3, True), (2, False), (3, False), (1, True)]
+    m = umbral.metricas(datos, 3)
+    assert (round(m["precision"], 2), round(m["recall"], 2)) == (0.67, 0.67)
+    assert umbral.auc([(9, True), (1, False)]) == 1.0 and umbral.auc([(5, True), (5, False)]) == 0.5

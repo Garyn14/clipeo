@@ -100,3 +100,21 @@ def test_minimo_propio_de_la_direccion(monkeypatch):
                                                   "direccion_duracion_minima_segundos": 15}}
     (r,) = direccion.run_direccion([dict(RANGO)], transcripcion="[10:05] hola", config=config)
     assert r["plan_edicion"]["segmentos"] == [{"inicio": "00:10:05", "fin": "00:10:22"}]
+
+
+@pytest.mark.parametrize("umbral, fuerza, esperado_publicar, prioridad", [
+    (None, 3, False, False),   # sin umbral decide el juez (que dijo no)
+    (3, 3, True, False),       # con umbral decide la fuerza
+    (3, 2, False, False),
+    (3, 8, True, True),        # fuerza >= 7 → prioridad
+])
+def test_juez_con_umbral_de_fuerza(monkeypatch, tmp_path, umbral, fuerza, esperado_publicar, prioridad):
+    """CLIP-32: con juez.umbral_fuerza la decisión sale de la fuerza; la del juez queda en publicar_juez."""
+    from agentes import juez
+    cliente = _Cliente({"candidatos": [{"n": 1, "tipo": "x", "publicar": False, "fuerza": fuerza,
+                                        "linea1": "a", "linea2": "b"}]})
+    monkeypatch.setattr(juez, "get_client", lambda: cliente)
+    config = {"meta": {"id": "zapatillas_peru"}, **({"juez": {"umbral_fuerza": umbral}} if umbral else {})}
+    juez.run_juez([dict(RANGO)], transcripcion="[10:00] hola", config=config, session_dir=tmp_path, chunk_dir=tmp_path)
+    d = json.loads((tmp_path / "juez.json").read_text(encoding="utf-8"))["decisiones"][0]
+    assert (d["publicar"], d["prioridad"], d["publicar_juez"]) == (esperado_publicar, prioridad, False)
