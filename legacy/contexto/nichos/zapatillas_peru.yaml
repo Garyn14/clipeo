@@ -520,6 +520,9 @@ refinamiento_base:
   contexto_despues_segundos: 45
   duracion_minima_segundos: 20
   duracion_maxima_segundos: 90
+  # Dirección editorial (CLIP-31): puede dejar el clip más corto que el detector. 5 de los 37 clips de la cuenta
+  # propia que rindieron sobre lo normal duran 16–18 s. Aprobado por el operador (2026-11-17); el máximo no cambia.
+  direccion_duracion_minima_segundos: 15
   prompt: |
     Eres un editor experto en contenido viral del nicho
     de zapatillas peruanas en TikTok y YouTube.
