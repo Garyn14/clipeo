@@ -17,11 +17,20 @@ COLAB_AUTH_TOKEN se releen del archivo en cada intento de transcripción
 reintento de una corrida en curso.
 """
 
+from pathlib import Path
+
 from dotenv import dotenv_values, set_key
 
 from app.paths import PROJECT_ROOT
 
-ENV_PATH = PROJECT_ROOT / ".env"
+def _resolver_env() -> Path:
+    """legacy/.env si existe; si no, el .env de la raíz del repo (en la laptop del operador vive ahí: sin esto las
+    credenciales de TikTok/YouTube no se encontraban y la publicación quedaba en 'requiere_reconexion')."""
+    propio, raiz = PROJECT_ROOT / ".env", PROJECT_ROOT.parent / ".env"
+    return propio if propio.exists() or not raiz.exists() else raiz
+
+
+ENV_PATH = _resolver_env()
 
 ENV_FIELDS = [
     {
