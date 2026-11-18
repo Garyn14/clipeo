@@ -57,6 +57,13 @@ Falta:
 4. [Operador] Cargar CLIP-35 y CLIP-36 en Jira (la cuenta de Atlassian de la sesión no ve `personal-clipeo`).
 5. [Líder técnico] PR `sprint/S5` → `main` cuando 1 y 2 estén OK.
 
+**Demo S5 (2026-11-18):** Latina Noticias, 2 clips; el operador los revisó y aprobó ambos.
+
+**S6 (aprobado por el operador el 2026-11-18): edición profesional (Q2 visual + Q4)**, empezando por un diagnóstico:
+5 clips propios vs 5 top de otras cuentas (encuadre, subtítulos, ritmo, audio), base
+`legacy/modulo_edicion_patrones_clipeo.md`. Pendiente aparte: transcripción más rápida que WhisperX local (opciones:
+subtítulos de YouTube para medios, API de Whisper gratuita, Colab automatizado).
+
 **Hallazgo S5:** el umbral `juez.umbral_fuerza: 3` no se aplicaba en producción desde el S4 (bug del loader,
 corregido). Desde el S5 llegan a la revisión más clips (todo lo de fuerza ≥ 3).
 
