@@ -88,7 +88,7 @@ def test_evaluar_caso_acierta_y_falla(cliente):
 def test_sin_filtracion_quita_la_correccion_del_caso(cliente):
     from investigacion import comun
     lineas = (comun.carpeta_nicho("zapatillas_peru") / "correcciones.jsonl").read_text(encoding="utf-8").splitlines()
-    r = json.loads(lineas[0])
+    r = json.loads(lineas[-1])   # la más reciente: el juez solo ve las últimas 30 (la primera puede quedar fuera)
     clave = f"{r['session_id']}/{r['clip_id']}"
     titulo = (r.get("juez") or {}).get("linea1")
     assert titulo
