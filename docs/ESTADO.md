@@ -1,7 +1,7 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-18 (S8 implementado)
+> Última actualización: 2026-11-18 (S8 y S9 implementados, validación del operador al final)
 
 ## Ahora
 
@@ -10,6 +10,9 @@
 - **Sprint:** **S8 · Medios a escala** (`docs/sprints/S8.md`, rama `sprint/S8`): CLIP-43 (búsqueda de fuentes de
   medios para aprobar: 13 candidatos en `investigacion/zapatillas_peru/fuentes_medios.jsonl`), CLIP-44 (experimento
   de título caja vs contorno, medido con la audiencia), CLIP-45 (720p: no es bug). 423 tests. S1–S7 cerrados.
+- **S9** (`docs/sprints/S9.md`, rama `sprint/S9` sobre `sprint/S8`): CLIP-46 (en streams el encuadre sigue al dueño
+  del canal). CLIP-47 (picos de audio para el detector) **descartado con datos**: 15% de aciertos vs 19% del azar.
+  PR #22 (S8) abierto sin integrar: **el operador valida S8 y S9 al final**.
 - **Siguiente para el operador:** aprobar fuentes (`python -m investigacion.fuentes_medios listar zapatillas_peru`),
   publicar con link y, con ≥ 10 clips por variante, `python -m evaluacion.experimento_titulo zapatillas_peru`.
 - Modelo SFace y caras de referencia **fuera del repo**: en otra máquina, descargar SFace (`legacy/edicion_video/assets/

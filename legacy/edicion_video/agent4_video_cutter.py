@@ -1278,6 +1278,9 @@ def run_agent(
         from edicion_video.encuadre import FRANJA_MEDIOS
         franja         = FRANJA_MEDIOS if (item.get("fuente") or {}).get("tipo") == "medios" else 0.0
         persona        = (item.get("fuente") or {}).get("sobre")   # CLIP-40: el encuadre sigue a esta persona
+        if not persona:   # CLIP-46: en streams, el dueño del canal
+            from edicion_video.encuadre import canal_de_sesion, persona_del_canal
+            persona = persona_del_canal(canal_de_sesion(session_dir))
 
         clip_id   = f"{clip_prefix}_{i + 1:02d}" if clip_prefix else f"clip_{i + 1 + clip_offset:03d}"
         clip_name = f"{clip_id}.mp4"

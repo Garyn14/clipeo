@@ -389,3 +389,39 @@ def encuadrar(video_path, inicio_s: float, duracion_s: float, ancho: int, alto: 
     print(f"         Encuadre: 4:5 siguiendo caras ({con_cara}/{len(muestras)} muestras, {len(plan)} puntos de cámara)"
           f" · acercamiento en {len(secciones)} tramo(s), {acercado:.0f}s")
     return filtro(plan, secciones, alto)
+
+
+# ── CLIP-46: en streams, la persona es el dueño del canal ───
+
+DIR_ENTIDADES = Path(__file__).resolve().parent.parent / "contexto" / "entidades"
+
+
+def persona_del_canal(canal: str | None, dir_entidades: Path | None = None) -> str | None:
+    """Nombre de la entidad dueña del canal ("FRITZ SPORT" / "FritzSport" → "Tío Fritz"), o None. Coincide si el
+    id de la entidad o una palabra larga de su nombre aparece en el nombre del canal (sin espacios ni tildes)."""
+    if not canal:
+        return None
+    import yaml
+    canal_n = slug(canal).replace("_", "")
+    for ruta in sorted((dir_entidades or DIR_ENTIDADES).glob("*.yaml")):
+        try:
+            ent = (yaml.safe_load(ruta.read_text(encoding="utf-8")) or {}).get("entidad") or {}
+        except (OSError, yaml.YAMLError):
+            continue
+        nombre = ent.get("nombre")
+        claves = {slug(str(ent.get("id") or ""))} | {w for w in slug(nombre or "").split("_") if len(w) > 3}
+        if nombre and any(k and k in canal_n for k in claves):
+            return str(nombre)
+    return None
+
+
+def canal_de_sesion(dir_: Path) -> str | None:
+    """Canal del video de la sesión (metadata.json), desde la sesión o desde un chunk."""
+    import json
+    for cand in (Path(dir_), Path(dir_).parent.parent):
+        try:
+            meta = json.loads((cand / "metadata.json").read_text(encoding="utf-8"))
+            return meta.get("uploader") or meta.get("channel")
+        except (OSError, ValueError):
+            continue
+    return None

@@ -287,3 +287,45 @@ def test_slug_y_referencias(tmp_path, monkeypatch):
     np.save(tmp_path / "tio_fritz.npy", np.eye(2, 128))
     assert encuadre.cargar_referencias("Tío Fritz").shape == (2, 128)
     assert encuadre.cargar_referencias(None) is None
+
+
+# ── S9: en streams el encuadre sigue al dueño del canal (CLIP-46) ──
+
+def test_persona_del_canal_por_entidad(tmp_path):
+    (tmp_path / "fritz.yaml").write_text('entidad: {id: fritz, nombre: "Tío Fritz"}\n', encoding="utf-8")
+    (tmp_path / "yolu.yaml").write_text('entidad: {id: yolu, nombre: "Tío Yolu"}\n', encoding="utf-8")
+    assert encuadre.persona_del_canal("FRITZ SPORT", tmp_path) == "Tío Fritz"
+    assert encuadre.persona_del_canal("FritzSport", tmp_path) == "Tío Fritz"
+    assert encuadre.persona_del_canal("Tio Yolu Oficial", tmp_path) == "Tío Yolu"
+    assert encuadre.persona_del_canal("Latina Noticias", tmp_path) is None
+    assert encuadre.persona_del_canal(None, tmp_path) is None
+
+
+def test_canal_de_sesion_desde_chunk(tmp_path):
+    import json
+    chunk = tmp_path / "chunks" / "chunk_001"; chunk.mkdir(parents=True)
+    (tmp_path / "metadata.json").write_text(json.dumps({"uploader": "FRITZ SPORT"}), encoding="utf-8")
+    assert encuadre.canal_de_sesion(chunk) == "FRITZ SPORT"
+    assert encuadre.canal_de_sesion(tmp_path / "otra") is None
+
+
+def test_run_agent_en_stream_pasa_el_duenio_del_canal(monkeypatch, tmp_path):
+    import json
+    from pathlib import Path
+    from edicion_video import agent4_video_cutter as a4
+    personas = []
+
+    def cortar(video, inicio, fin, l1, l2, salida, *a, **k):
+        personas.append(k.get("persona")); Path(salida).write_bytes(b"\x00"); return True
+    monkeypatch.setattr(a4, "_cut_clip", cortar)
+    monkeypatch.setattr(a4, "_detect_video_info",
+                        lambda p: {"width": ANCHO, "height": ALTO, "has_letterbox": True, "bar_height": 420})
+    monkeypatch.setattr(a4, "_prepare_font", lambda: ("", "default"))
+    monkeypatch.setattr(encuadre, "persona_del_canal", lambda canal, d=None: "Tío Fritz" if canal == "FRITZ SPORT" else None)
+    (tmp_path / "v.mp4").write_bytes(b"\x00")
+    (tmp_path / "metadata.json").write_text(json.dumps({"uploader": "FRITZ SPORT"}), encoding="utf-8")
+    item = {"publicar": True, "rango_original": {"inicio": "00:00:10", "fin": "00:00:40"}, "texto_linea1": "a"}
+    (tmp_path / "contenido.json").write_text(json.dumps({"contenido": [
+        item, {**item, "fuente": {"tipo": "medios", "sobre": "Otra Persona"}}]}), encoding="utf-8")
+    a4.run_agent(str(tmp_path / "contenido.json"), video_path_override=tmp_path / "v.mp4")
+    assert personas == ["Tío Fritz", "Otra Persona"]
