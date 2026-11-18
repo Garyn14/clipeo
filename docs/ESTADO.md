@@ -1,12 +1,15 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-18 (S10 integrado: PR #24)
+> Última actualización: 2026-11-18 (S11 implementado)
 
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
+- **Sprint:** **S11 · Control visual automático** (`docs/sprints/S11.md`, rama `sprint/S11`, **falta el PR**):
+  CLIP-51 (defectos técnicos con FFmpeg), CLIP-52 (avisos en la revisión + acercamiento > 2×), CLIP-53 (correcciones
+  sin duplicados). 438 tests.
 - **Sprint:** S10 · Aprender de la audiencia **cerrado** (`docs/sprints/S10.md`, PR #24 integrado):
   CLIP-48 (medir publicados TikTok+YouTube), CLIP-49 (rendimiento por tipo), CLIP-50 (crédito al final) + arreglos
   posteriores al S9. 431 tests. S1–S10 cerrados.
