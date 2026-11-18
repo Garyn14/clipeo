@@ -1,5 +1,5 @@
 """
-test_encuadre.py — CLIP-38: plan del encuadre 9:16 y su expresión de FFmpeg (sin OpenCV ni video).
+test_encuadre.py — CLIP-38: encuadre 4:5 que sigue caras, zoom solo por tramos y su filtro de FFmpeg (sin OpenCV ni video).
 """
 
 import pytest
@@ -7,7 +7,7 @@ import pytest
 from edicion_video import encuadre
 
 ANCHO, ALTO = 1920, 1080
-CW = encuadre.ancho_recorte(ALTO)          # 606
+CW = encuadre.ancho_recorte(ALTO)          # 864 (4:5)
 
 
 def cara(cx, w=120):
@@ -27,8 +27,8 @@ def x_en(keyframes, t):
     return keyframes[-1][1]
 
 
-def test_ancho_de_recorte_9_16_par():
-    assert CW == 606 and CW % 2 == 0
+def test_ancho_de_recorte_4_5_par():
+    assert CW == 864 and CW % 2 == 0
 
 
 def test_sujeto_quieto_da_un_recorte_fijo_centrado_en_la_cara():
@@ -44,9 +44,9 @@ def test_temblor_pequeno_no_mueve_la_camara():
 
 
 def test_cambio_de_sujeto_se_sigue_con_velocidad_limitada():
-    plan = encuadre.planificar(muestras([500] * 10 + [1500] * 20), ANCHO, ALTO)
+    plan = encuadre.planificar(muestras([500] * 10 + [1400] * 20), ANCHO, ALTO)
     xs = [x for _, x in plan]
-    assert xs[0] == 500 - CW // 2 and xs[-1] == 1500 - CW // 2
+    assert xs[0] == 500 - CW // 2 and xs[-1] == 1400 - CW // 2
     vmax = encuadre.VELOCIDAD_MAX * ANCHO
     for (t0, x0), (t1, x1) in zip(plan, plan[1:]):
         assert abs(x1 - x0) <= vmax * (t1 - t0) + 1
@@ -90,9 +90,41 @@ def test_expresion_reproduce_la_trayectoria():
     assert expr.count("if(") == 3
 
 
-def test_filtro_crop_completo():
-    f = encuadre.filtro_crop([(0.0, 657)], ALTO)
-    assert f == f"crop=w={CW}:h={ALTO}:x='657':y=0,scale=1080:1920"
+def test_filtro_sin_zoom_caja_4_5_sobre_blur():
+    f = encuadre.filtro([(0.0, 657)], [], ALTO)
+    assert f"crop=w={CW}:h={ALTO}:x='657':y=0,scale=1080:1350" in f
+    assert "gblur" in f and "overlay=(W-w)/2:(H-h)/2" in f and "eval=frame" not in f
+    assert encuadre.BARRA == 285
+
+
+def test_filtro_con_zoom_por_tramos():
+    f = encuadre.filtro([(0.0, 657)], [(4.0, 9.0)], ALTO)
+    assert "eval=frame" in f and "crop=1080:1350" in f and f"{encuadre.ZOOM}" in f
+
+
+def test_zoom_solo_en_primeros_planos_largos():
+    grande = (700, 300, 260, 260)                  # 260 px ≥ 22% de 1080
+    datos = [(round(i * 0.5, 2), [grande] if 4 <= i < 14 else [cara(800)]) for i in range(40)]
+    assert encuadre.secciones_zoom(datos, ALTO) == [(2.0, 7.0)]
+    corto = [(round(i * 0.5, 2), [grande] if 4 <= i < 8 else [cara(800)]) for i in range(40)]
+    assert encuadre.secciones_zoom(corto, ALTO) == []                       # 2 s < 3 s
+    dos = [(round(i * 0.5, 2), [grande, cara(300)]) for i in range(40)]
+    assert encuadre.secciones_zoom(dos, ALTO) == []                         # dos personas: sin zoom
+
+
+def test_zoom_como_maximo_40_por_ciento_del_clip():
+    grande = (700, 300, 260, 260)
+    datos = [(round(i * 0.5, 2), [grande]) for i in range(40)]              # 20 s de primer plano
+    assert encuadre.secciones_zoom(datos, ALTO) == []                       # un tramo de 20 s supera el 40%
+    datos = [(round(i * 0.5, 2), [grande] if (i // 10) % 2 == 0 else [cara(800)]) for i in range(40)]
+    secciones = encuadre.secciones_zoom(datos, ALTO)
+    assert sum(b - a for a, b in secciones) <= 0.4 * 20 and secciones
+
+
+def test_expresion_zoom_con_rampas():
+    assert encuadre.expresion_zoom([]) == "1"
+    z = encuadre.expresion_zoom([(4.0, 9.0)])
+    assert z.count("if(") == 4 and "4.50" in z and "8.50" in z and "," not in z.replace("\\,", "")
 
 
 def test_encuadrar_apagado_vertical_o_sin_opencv(monkeypatch):
@@ -109,18 +141,18 @@ def test_encuadrar_apagado_vertical_o_sin_opencv(monkeypatch):
 
 def test_encuadrar_con_caras(monkeypatch):
     monkeypatch.setattr(encuadre, "detectar_caras", lambda *a: muestras([1400] * 20))
-    assert encuadre.encuadrar("v.mp4", 0, 10, ANCHO, ALTO) == encuadre.filtro_crop([(0.0, 1400 - CW // 2)], ALTO)
+    assert encuadre.encuadrar("v.mp4", 0, 10, ANCHO, ALTO) == encuadre.filtro([(0.0, 1400 - CW // 2)], [], ALTO)
 
 
 # ── Integración con el render (agent4) ──────────────────────
 
-def test_build_vf_usa_el_encuadre_y_texto_como_caso_b():
+def test_build_vf_usa_el_encuadre_y_titulo_en_la_franja_de_arriba():
     from edicion_video import agent4_video_cutter as a4
-    filtro = encuadre.filtro_crop([(0.0, 657)], ALTO)
+    filtro = encuadre.filtro([(0.0, 657)], [], ALTO)
     vf, params = a4._build_vf("Atacan a balazos", "tienda del tío Fritz", "", True, 420, "fijo",
                               layout="blur", source_width=ANCHO, source_height=ALTO, encuadre_filtro=filtro)
-    assert vf.startswith(filtro) and "gblur" not in vf
-    assert params["caso"] == "B" and params.get("encuadre_activo")
+    assert vf.startswith(filtro) and vf.count("gblur") == 1
+    assert params["caso"] == "A" and params["bar_height"] == encuadre.BARRA and params.get("encuadre_activo")
 
 
 def test_build_vf_sin_encuadre_mantiene_el_blur():
@@ -134,7 +166,7 @@ def test_cut_clip_pide_el_encuadre_solo_con_fuente_horizontal(monkeypatch, tmp_p
     from edicion_video import agent4_video_cutter as a4
     pedidos, comandos = [], []
     monkeypatch.setattr(encuadre, "encuadrar",
-                        lambda *a, **k: pedidos.append(a) or encuadre.filtro_crop([(0.0, 657)], ALTO))
+                        lambda *a, **k: pedidos.append(a) or encuadre.filtro([(0.0, 657)], [], ALTO))
 
     class Ok:
         returncode, stderr = 0, ""
@@ -181,7 +213,7 @@ def test_franja_inferior_de_medios_achica_el_recorte_e_ignora_caras_del_zocalo(m
                         lambda *a: [(round(i * 0.5, 2), [cara(700), zocalo]) for i in range(20)])
     f = encuadre.encuadrar("v.mp4", 0, 10, ANCHO, ALTO, franja_inferior=encuadre.FRANJA_MEDIOS)
     cw = encuadre.ancho_recorte(util)
-    assert f == f"crop=w={cw}:h={util}:x='{700 - cw // 2}':y=0,scale=1080:1920"
+    assert f == encuadre.filtro([(0.0, 700 - cw // 2)], [], util)
 
 
 def test_run_agent_aplica_la_franja_solo_en_medios(monkeypatch, tmp_path):

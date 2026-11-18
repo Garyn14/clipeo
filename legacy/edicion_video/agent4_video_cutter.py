@@ -418,7 +418,9 @@ def _build_vf(
 
     usa_encuadre = bool(encuadre_filtro) and not usa_splitscreen and has_letterbox
     if usa_encuadre:
-        has_letterbox = False   # el recorte que sigue a las caras ya llena el 9:16, texto como Caso B
+        # Caja 4:5 de 1080×1350 sobre blur: el texto va en la franja de arriba (Caso A) con su alto real
+        from edicion_video.encuadre import BARRA
+        bar_height = BARRA
 
     usa_imagen = (
         not usa_splitscreen and has_letterbox and layout == "imagen"
@@ -635,8 +637,6 @@ def _build_vf(
         params = {"caso": "B"}
         if usa_crop:
             params["crop_activo"] = True
-        if usa_encuadre:
-            params["encuadre_activo"] = True
 
         if safe1:
             filters.append(
@@ -669,7 +669,9 @@ def _build_vf(
         params["cta_desde_seg"] = cta_desde
 
     if has_letterbox:
-        params["layout"] = layout
+        params["layout"] = "encuadre 4:5" if usa_encuadre else layout
+    if usa_encuadre:
+        params["encuadre_activo"] = True
     if usa_splitscreen:
         params["splitscreen"] = True
 
@@ -937,7 +939,7 @@ def _cut_clip(
     elif params.get("caso") == "A0":
         print(f"         Layout  : Caso A0 — letterbox sin texto  |  barra {params['bar_height']}px")
     elif params.get("encuadre_activo"):
-        print(f"         Layout  : Caso ENCUADRE — recorte 9:16 que sigue a las caras (sin relleno)")
+        print(f"         Layout  : Caso ENCUADRE — caja 4:5 que sigue a las caras, sin título")
     elif params.get("crop_activo"):
         print(f"         Layout  : Caso CROP — recorte centrado 9:16 (sin relleno)")
     elif params.get("caso") == "B" and "duracion_texto_seg" in params:

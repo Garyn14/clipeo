@@ -1,14 +1,17 @@
 """
-encuadre.py — CLIP-38: encuadre 9:16 inteligente para fuentes horizontales.
+encuadre.py — CLIP-38: encuadre inteligente para fuentes horizontales.
 
-En vez de dejar el video al medio con relleno (blur/barras), recorta una ventana 9:16 que sigue a las caras, con
-movimiento suave. Tres piezas:
+En vez de dejar el video 16:9 al medio con mucho relleno, recorta una ventana **4:5** que sigue a las caras y la
+muestra en una caja de 1080×1350 (70% de la pantalla) sobre fondo blur. Solo en algunos tramos — un primer plano
+claro y estable — se acerca un poco más (zoom suave, ver `secciones_zoom`). Decisión del operador (demo S6): el
+recorte 9:16 completo exageraba el acercamiento; el zoom va solo donde suma.
 
   detectar_caras(video, inicio_s, duracion_s)  → muestras [(t, [(x, y, w, h), ...])]   (OpenCV, opcional)
   planificar(muestras, ancho, alto)            → keyframes [(t, x_izquierda)] o None (= usar el layout anterior)
-  expresion_x(keyframes)                       → expresión de FFmpeg para crop=x='...'
+  secciones_zoom(muestras, alto)               → tramos [(t_ini, t_fin)] con acercamiento
+  filtro(keyframes, secciones, alto)           → filtro de FFmpeg (fondo blur + caja con la ventana que sigue)
 
-`planificar` y `expresion_x` son puras (testeables sin OpenCV ni video). `encuadrar` junta las tres y nunca lanza:
+Todo salvo `detectar_caras` es puro (testeable sin OpenCV ni video). `encuadrar` junta las piezas y nunca lanza:
 ante cualquier problema devuelve None y el render sigue con el layout de siempre.
 `ENCUADRE_INTELIGENTE=0` lo apaga.
 """
@@ -39,8 +42,19 @@ def activado() -> bool:
     return os.environ.get("ENCUADRE_INTELIGENTE", "1").strip() not in ("0", "false", "no")
 
 
+PROPORCION = 4 / 5        # ventana base: 4:5 (ancho/alto)
+CAJA_ANCHO, CAJA_ALTO = 1080, 1350          # caja de video en el cuadro 1080×1920
+BARRA = (1920 - CAJA_ALTO) // 2             # 285 px de fondo blur arriba y abajo (el título va arriba)
+
+ZOOM = 1.35               # acercamiento de los tramos de primer plano
+ZOOM_RAMPA_S = 0.5        # entrada y salida suaves
+ZOOM_CARA_MIN = 0.22      # primer plano: alto de la cara ≥ 22% del alto útil
+ZOOM_MIN_S = 3.0          # el primer plano debe durar al menos 3 s
+ZOOM_MAX_FRACCION = 0.4   # como máximo 40% del clip acercado ("solo en algunas secciones")
+
+
 def ancho_recorte(alto: int) -> int:
-    cw = int(alto * 9 / 16)
+    cw = int(alto * PROPORCION)
     return cw - (cw % 2)
 
 
@@ -199,9 +213,62 @@ def expresion_x(keyframes: list[tuple[float, int]]) -> str:
     return expr
 
 
-def filtro_crop(keyframes: list[tuple[float, int]], alto: int) -> str:
-    """`alto` es el alto útil del recorte (desde y=0): con franja inferior excluida, es menor que el de la fuente."""
-    return f"crop=w={ancho_recorte(alto)}:h={alto}:x='{expresion_x(keyframes)}':y=0,scale=1080:1920"
+def secciones_zoom(muestras: list[tuple[float, list[tuple]]], alto: int) -> list[tuple[float, float]]:
+    """Tramos de primer plano claro (una sola cara, grande, ≥ ZOOM_MIN_S) donde conviene acercarse. Como máximo
+    ZOOM_MAX_FRACCION del clip, eligiendo los tramos más largos. `alto` = alto útil."""
+    if not muestras:
+        return []
+    tramos, inicio = [], None
+    for i, (t, caras) in enumerate(muestras):
+        primer_plano = len(caras) == 1 and caras[0][3] >= ZOOM_CARA_MIN * alto
+        if primer_plano and inicio is None:
+            inicio = t
+        fin_tramo = (not primer_plano or i == len(muestras) - 1) and inicio is not None
+        if fin_tramo:
+            fin = t if not primer_plano else t + PASO_S
+            if fin - inicio >= ZOOM_MIN_S:
+                tramos.append((inicio, fin))
+            inicio = None
+    duracion = muestras[-1][0] + PASO_S
+    elegidos, total = [], 0.0
+    for a, b in sorted(tramos, key=lambda tr: tr[0] - tr[1]):     # más largos primero
+        if total + (b - a) <= ZOOM_MAX_FRACCION * duracion:
+            elegidos.append((a, b))
+            total += b - a
+    return sorted(elegidos)
+
+
+def expresion_zoom(secciones: list[tuple[float, float]]) -> str:
+    """z(t): 1 fuera de los tramos, ZOOM dentro, con rampas de ZOOM_RAMPA_S (comas escapadas)."""
+    if not secciones:
+        return "1"
+    d, r = ZOOM - 1, ZOOM_RAMPA_S
+    expr = "1"
+    for a, b in reversed(secciones):
+        expr = (f"if(lt(t\\,{a})\\,{expr}\\,"
+                f"if(lt(t\\,{a + r:.2f})\\,1+{d:.2f}*(t-{a})/{r}\\,"
+                f"if(lt(t\\,{b - r:.2f})\\,{ZOOM}\\,"
+                f"if(lt(t\\,{b})\\,{ZOOM}-{d:.2f}*(t-{b - r:.2f})/{r}\\,{expr}))))")
+    return expr
+
+
+def filtro(keyframes: list[tuple[float, int]], secciones: list[tuple[float, float]], alto: int) -> str:
+    """Fondo blur de todo el cuadro + caja 1080×1350 con la ventana 4:5 que sigue al sujeto (y se acerca en los
+    tramos de `secciones`). `alto` es el alto útil desde y=0 (menor que el de la fuente si se excluye el zócalo)."""
+    cw = ancho_recorte(alto)
+    z = expresion_zoom(secciones)
+    caja = f"crop=w={cw}:h={alto}:x='{expresion_x(keyframes)}':y=0,scale={CAJA_ANCHO}:{CAJA_ALTO}"
+    if secciones:
+        caja += (f",scale=w='trunc({CAJA_ANCHO}*({z})/2)*2':h='trunc({CAJA_ALTO}*({z})/2)*2':eval=frame,"
+                 f"crop={CAJA_ANCHO}:{CAJA_ALTO}")
+    return (
+        "split=2[_encbg][_encfg];"
+        # El fondo también sale del alto útil: sin la franja excluida no se ve el zócalo difuminado
+        f"[_encbg]crop=iw:{alto}:0:0,scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,"
+        "gblur=sigma=20[_encbg2];"
+        f"[_encfg]{caja}[_encfg2];"
+        "[_encbg2][_encfg2]overlay=(W-w)/2:(H-h)/2"
+    )
 
 
 # Medios (TV/prensa): la franja de abajo es del noticiero (zócalo con el titular, reloj, intérprete de señas). En
@@ -238,5 +305,8 @@ def encuadrar(video_path, inicio_s: float, duracion_s: float, ancho: int, alto: 
     if plan is None:
         print(f"         Encuadre: caras en {con_cara}/{len(muestras)} muestras, no hay un recorte claro → layout anterior")
         return None
-    print(f"         Encuadre: siguiendo caras ({con_cara}/{len(muestras)} muestras, {len(plan)} puntos de cámara)")
-    return filtro_crop(plan, alto)
+    secciones = secciones_zoom(quitar_superpuestas(muestras, ancho, alto)[0], alto)
+    acercado = sum(b - a for a, b in secciones)
+    print(f"         Encuadre: 4:5 siguiendo caras ({con_cara}/{len(muestras)} muestras, {len(plan)} puntos de cámara)"
+          f" · acercamiento en {len(secciones)} tramo(s), {acercado:.0f}s")
+    return filtro(plan, secciones, alto)
