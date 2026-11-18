@@ -169,3 +169,16 @@ def test_la_sesion_guarda_la_fuente_y_retomar_no_la_cambia(tmp_path, monkeypatch
     assert correr(fuente.nueva("medios", "fritz", str(video)))["sobre"] == "Tío Fritz"
     assert correr(None)["sobre"] == "Tío Fritz"                                   # retomar sin --medios
     assert correr(fuente.nueva("medios", "Yolu", str(video)))["sobre"] == "Tío Fritz"  # no se pisa
+
+
+def test_crear_el_plan_no_borra_la_fuente(tmp_path):
+    """Demo S5: crear_plan rehacía el estado y la sesión perdía `fuente` antes del juez."""
+    from core.chunk_manager import ChunkManager
+    mgr = ChunkManager(tmp_path, chunk_minutos=30)
+    mgr.iniciar(url="https://youtu.be/x", config="zapatillas_peru")
+    mgr.actualizar_sesion(fuente=MEDIOS, video={"canal": "Panorama"})
+    mgr.duracion_total = 130
+    mgr.crear_plan(url="https://youtu.be/x", config="zapatillas_peru")
+    estado = json.loads((tmp_path / "pipeline_estado.json").read_text(encoding="utf-8"))
+    assert estado["fuente"] == MEDIOS and estado["video"] == {"canal": "Panorama"}
+    assert fuente.leer(tmp_path / "chunks" / "chunk_001") == MEDIOS
