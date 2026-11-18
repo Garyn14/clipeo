@@ -49,7 +49,8 @@ from core.clip_ids import prefijo_chunk
 from core import fuente as fuente_mod
 from core.pasos import ErrorPaso, PasoFallido, Subpasos, ejecutar_paso
 
-STREAM_DATA = Path("stream_data")
+from core.config_local import ruta as _ruta_config
+STREAM_DATA = _ruta_config("CLIPEO_STREAM_DATA", Path("stream_data"))   # CLIP-54: del .env; si no, relativo al cwd
 
 _BASE_DIR = Path(__file__).parent
 

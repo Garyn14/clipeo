@@ -24,13 +24,14 @@ import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-# CLIPEO_STREAM_DATA: carpeta de sesiones fuera de legacy/ (p. ej. D:/clipeo/stream_data en la laptop del operador)
-STREAM_DATA  = Path(os.environ["CLIPEO_STREAM_DATA"]).resolve() if os.environ.get("CLIPEO_STREAM_DATA") \
-    else PROJECT_ROOT / "stream_data"
-CONFIG_DIR   = PROJECT_ROOT / "config"
-CONTEXTO_DIR = PROJECT_ROOT / "contexto"
-
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+
+from core.config_local import ruta  # noqa: E402 — CLIP-54: rutas desde el .env (sin variables a mano)
+
+# CLIPEO_STREAM_DATA: carpeta de sesiones (en la laptop del operador, stream_data/ en la raíz del repo)
+STREAM_DATA  = ruta("CLIPEO_STREAM_DATA", PROJECT_ROOT / "stream_data")
+CONFIG_DIR   = PROJECT_ROOT / "config"
+CONTEXTO_DIR = PROJECT_ROOT / "contexto"
 
 os.chdir(PROJECT_ROOT)
