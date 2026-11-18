@@ -1,15 +1,14 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-17 (traspaso entre cuentas: todo lo necesario está aquí)
+> Última actualización: 2026-11-18 (S5 cerrado e integrado)
 
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Sprint:** **S5 · Medios como fuente en producción** (opción A aprobada el 2026-11-17), rama `sprint/S5`,
-  diseño en `docs/sprints/S5.md`. Tickets: CLIP-35 (memoria) → CLIP-27 (fuente de medios) → CLIP-36 (R-01).
-  S1–S4 cerrados.
+- **Sprint:** S5 · Medios como fuente en producción **cerrado el 2026-11-18** (Garyn14/clipeo#17 integrado, demo
+  aprobada). S1–S5 cerrados. Próximo: planificar el **S6 · edición profesional**.
 - **Demo del sprint:** mismos momentos antes y después de la dirección editorial (video), juez medido con la misma
   información que en producción, memoria actualizada con los datos de @nandoclips93.
 
@@ -48,21 +47,23 @@ En backlog: CLIP-27 (medios como fuente), CLIP-28 (transcripción/hablantes), CL
 
 ## Siguiente paso
 
-S5 implementado en `sprint/S5` (CLIP-35, CLIP-27, CLIP-36 + fix del umbral del juez), 378 tests en verde.
-Falta:
-1. CLIP-35 medido (`docs/sprints/S5.md` §6): sin mejora medible y recall con umbral 3 de 0,81 a 0,76 (posible
-   ruido). **El operador decidió mantener el cambio** (2026-11-18).
-2. [Operador] Demo (`docs/sprints/S5.md` §7) con un video de TV/prensa no clipeado.
-3. [Operador] Decidir la cuenta de destino de los clips de medios (§4: misma cuenta o cuenta de captación).
-4. [Operador] Cargar CLIP-35 y CLIP-36 en Jira (la cuenta de Atlassian de la sesión no ve `personal-clipeo`).
-5. [Líder técnico] PR `sprint/S5` → `main` cuando 1 y 2 estén OK.
+[Analista] Planificar el S6 (abajo). Pendientes del operador que quedaron del S5:
+1. Decidir la cuenta de destino de los clips de medios (`docs/sprints/S5.md` §4: misma cuenta o captación).
+   Mientras no decida: misma cuenta del nicho.
+2. Cargar CLIP-35 y CLIP-36 en Jira y cerrar el sprint S5 ahí (la cuenta de Atlassian de la sesión no ve
+   `personal-clipeo`).
 
-**Demo S5 (2026-11-18):** Latina Noticias, 2 clips; el operador los revisó y aprobó ambos.
+**S5 cerrado (2026-11-18):** CLIP-35, CLIP-27, CLIP-36 + fixes (umbral del juez, `fuente` en el plan, Secret del
+notebook). 379 tests, CI en verde, PR Garyn14/clipeo#17 integrado. Demo con Latina Noticias: 2 clips aprobados.
+
+**Transcripción: solo Colab** (decisión del operador; WhisperX local no se usa). Claude levanta el notebook en el
+navegador integrado: celdas 1 y 2 → reiniciar sesión → celda 3 (reintentar si falla) → URL a `COLAB_TRANSCRIBE_URL`
+de `D:\clipeo\.env`. Cuentas de Colab con los Secrets `HF_TOKEN` y `COLAB_AUTH_TOKEN`.
 
 **S6 (aprobado por el operador el 2026-11-18): edición profesional (Q2 visual + Q4)**, empezando por un diagnóstico:
 5 clips propios vs 5 top de otras cuentas (encuadre, subtítulos, ritmo, audio), base
-`legacy/modulo_edicion_patrones_clipeo.md`. Pendiente aparte: transcripción más rápida que WhisperX local (opciones:
-subtítulos de YouTube para medios, API de Whisper gratuita, Colab automatizado).
+`legacy/modulo_edicion_patrones_clipeo.md`. Candidatos además: el corte (FFmpeg local, 2 min 36 s para 2 clips) es
+ahora el paso más lento; el transcriptor relee `legacy/.env` pero el `.env` real está en la raíz (arreglo de 1 línea).
 
 **Hallazgo S5:** el umbral `juez.umbral_fuerza: 3` no se aplicaba en producción desde el S4 (bug del loader,
 corregido). Desde el S5 llegan a la revisión más clips (todo lo de fuerza ≥ 3).
