@@ -362,8 +362,12 @@ def _build_vf(
     layout_streaming: dict | None = None,
     source_width: int = 0, source_height: int = 0,
     imagen_relleno_path: Path | None = None,
+    encuadre_filtro: str | None = None,
 ) -> tuple[str, dict]:
     """
+    encuadre_filtro (CLIP-38, ver edicion_video/encuadre.py): crop 9:16 dinámico que sigue a las caras. Si viene
+    (solo con fuente horizontal y sin split-screen), reemplaza el relleno y el texto va como en el Caso B.
+
     has_letterbox decide la geometría (barra negra arriba/abajo vs. centrado
     en pantalla) — nunca si hay texto o cuánto dura, eso lo decide
     estilo_texto (editorial, viene de Agent 3): "sin_texto" | "fijo" |
@@ -412,6 +416,10 @@ def _build_vf(
     if usa_splitscreen:
         has_letterbox = False   # el split-screen ya resuelve el encuadre
 
+    usa_encuadre = bool(encuadre_filtro) and not usa_splitscreen and has_letterbox
+    if usa_encuadre:
+        has_letterbox = False   # el recorte que sigue a las caras ya llena el 9:16, texto como Caso B
+
     usa_imagen = (
         not usa_splitscreen and has_letterbox and layout == "imagen"
         and imagen_relleno_path is not None and source_width and source_height
@@ -439,6 +447,8 @@ def _build_vf(
         base = _build_vf_splitscreen(
             facecam_rect, contenido_rect, (layout_streaming or {}).get("overlays_ocultar"),
         )
+    elif usa_encuadre:
+        base = encuadre_filtro
     elif usa_imagen:
         base, imagen_params = _build_vf_imagen(source_width, source_height)
     elif usa_crop:
@@ -625,6 +635,8 @@ def _build_vf(
         params = {"caso": "B"}
         if usa_crop:
             params["crop_activo"] = True
+        if usa_encuadre:
+            params["encuadre_activo"] = True
 
         if safe1:
             filters.append(
@@ -879,12 +891,19 @@ def _cut_clip(
     else:
         estilo_estatico = estilo_texto
     imagen_relleno_path = _pick_imagen_relleno(mood) if layout == "imagen" else None
+    encuadre_filtro = None
+    if has_letterbox and not layout_streaming and layout in ("blur", "pillarbox", "crop"):   # CLIP-38
+        from edicion_video import encuadre
+        encuadre_filtro = encuadre.encuadrar(
+            video_path, _timestamp_to_seconds(inicio), duracion, source_width, source_height,
+        )
     vf, params = _build_vf(
         linea1, linea2, font_rel, has_letterbox, bar_height, estilo_estatico,
         cta_texto=cta_texto, duracion_clip=duracion, layout=layout,
         layout_streaming=layout_streaming,
         source_width=source_width, source_height=source_height,
         imagen_relleno_path=imagen_relleno_path,
+        encuadre_filtro=encuadre_filtro,
     )
     imagen_extra_inputs = [imagen_relleno_path] if params.get("imagen_activa") else []
 
@@ -915,6 +934,8 @@ def _cut_clip(
         print(f"         y_text  : {params['y_text']}px  (centro barra: {bh//2}px)")
     elif params.get("caso") == "A0":
         print(f"         Layout  : Caso A0 — letterbox sin texto  |  barra {params['bar_height']}px")
+    elif params.get("encuadre_activo"):
+        print(f"         Layout  : Caso ENCUADRE — recorte 9:16 que sigue a las caras (sin relleno)")
     elif params.get("crop_activo"):
         print(f"         Layout  : Caso CROP — recorte centrado 9:16 (sin relleno)")
     elif params.get("caso") == "B" and "duracion_texto_seg" in params:

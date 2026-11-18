@@ -8,3 +8,6 @@ pyyaml
 requests
 pytest
 requests-mock
+
+# CLIP-38: encuadre 9:16 que sigue a las caras (edicion_video/encuadre.py). Opcional: sin OpenCV, el corte usa el layout anterior.
+opencv-python-headless>=4.10
