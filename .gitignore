@@ -19,3 +19,4 @@ legacy/backend/runs_logs/
 legacy/backend/publicacion.db*
 # Videos/audio/fotogramas descargados para fichas de referencia (pesados, regenerables)
 legacy/investigacion/*/muestra/
+demo_encuadre/

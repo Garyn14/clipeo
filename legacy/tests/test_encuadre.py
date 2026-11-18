@@ -149,3 +149,23 @@ def test_cut_clip_pide_el_encuadre_solo_con_fuente_horizontal(monkeypatch, tmp_p
     a4._cut_clip(tmp_path / "v.mp4", "00:00:20", "00:01:00", "a", "b", tmp_path / "c.mp4", "", False, 0,
                  layout="blur", source_width=1080, source_height=1920)
     assert not pedidos                                                   # vertical: no hace falta
+
+
+def test_cara_fija_y_chica_de_un_grafico_de_tv_se_ignora():
+    """Demo S6: la intérprete de señas de Latina (recuadro fijo abajo a la derecha) separaba el grupo."""
+    interprete = (1701, 792, 60, 72)
+    datos = [(round(i * 0.5, 2), [cara(700), interprete]) for i in range(20)]
+    limpias, n = encuadre.quitar_superpuestas(datos, ANCHO, ALTO)
+    assert n == 1 and all(c == [cara(700)] for _, c in limpias)
+    assert encuadre.planificar(datos, ANCHO, ALTO)[0][1] == 700 - CW // 2
+
+
+def test_persona_quieta_pero_grande_no_es_grafico():
+    datos = [(round(i * 0.5, 2), [cara(700, w=300)]) for i in range(20)]
+    _, n = encuadre.quitar_superpuestas(datos, ANCHO, ALTO)
+    assert n == 0
+
+
+def test_primer_plano_mas_ancho_que_el_recorte_se_centra():
+    datos = [(round(i * 0.5, 2), [(1035, 0, 700, 456)]) for i in range(20)]
+    assert encuadre.planificar(datos, ANCHO, ALTO)[0][1] == min(ANCHO - CW, 1385 - CW // 2)

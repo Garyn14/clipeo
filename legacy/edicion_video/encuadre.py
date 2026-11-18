@@ -16,7 +16,12 @@ ante cualquier problema devuelve None y el render sigue con el layout de siempre
 from __future__ import annotations
 
 import os
+from pathlib import Path
 from statistics import median
+
+# Modelo YuNet (OpenCV Zoo, licencia MIT): OpenCV 5 ya no trae el detector Haar. Si el archivo no está, se usa Haar
+# (OpenCV 4.x); si tampoco hay Haar, el encuadre se desactiva solo.
+MODELO_YUNET = Path(__file__).resolve().parent / "assets" / "modelos" / "face_detection_yunet_2023mar.onnx"
 
 PASO_S = 0.5              # una muestra cada medio segundo
 ANCHO_DETECCION = 640     # los cuadros se reducen a este ancho para detectar (rápido)
@@ -25,6 +30,9 @@ MAX_SEPARADAS = 0.3       # más muestras con caras que no caben en un recorte �
 VENTANA_MEDIANA = 5       # suavizado
 ZONA_MUERTA = 0.06        # no moverse por cambios menores al 6% del ancho de la fuente
 VELOCIDAD_MAX = 0.35      # como máximo 35% del ancho de la fuente por segundo
+SUPERPUESTA_ALTO = 0.10   # cara fija y chica (alto < 10% del cuadro) en ≥ 60% de las muestras = gráfico de TV
+SUPERPUESTA_FRECUENCIA = 0.6
+SUPERPUESTA_TOLERANCIA = 0.02   # "misma posición": centro a menos de 2% del ancho
 
 
 def activado() -> bool:
@@ -38,11 +46,32 @@ def ancho_recorte(alto: int) -> int:
 
 # ── Detección (OpenCV) ──────────────────────────────────────
 
+def _detector(cv2):
+    """Función imagen → [(x, y, w, h)]: YuNet si está el modelo, si no Haar (OpenCV 4.x). ImportError si ninguno."""
+    if MODELO_YUNET.exists() and hasattr(cv2, "FaceDetectorYN"):
+        yunet = cv2.FaceDetectorYN.create(str(MODELO_YUNET), "", (320, 320), 0.7)
+
+        def detectar(img):
+            yunet.setInputSize((img.shape[1], img.shape[0]))
+            _, caras = yunet.detect(img)
+            return [] if caras is None else [tuple(int(v) for v in c[:4]) for c in caras]
+        return detectar
+    if hasattr(cv2, "CascadeClassifier"):
+        haar = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+
+        def detectar(img):
+            gris = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            return [tuple(c) for c in haar.detectMultiScale(gris, scaleFactor=1.1, minNeighbors=5,
+                                                             minSize=(int(img.shape[0] * 0.08),) * 2)]
+        return detectar
+    raise ImportError(f"OpenCV {cv2.__version__} sin detector de caras: falta el modelo YuNet en {MODELO_YUNET}")
+
+
 def detectar_caras(video_path, inicio_s: float, duracion_s: float) -> list[tuple[float, list[tuple]]]:
     """Caras por muestra, en píxeles de la fuente y con t relativo al inicio del clip. Requiere OpenCV."""
     import cv2   # opcional: sin OpenCV, encuadrar() devuelve None y se usa el layout anterior
 
-    detector = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+    detector = _detector(cv2)
     cap = cv2.VideoCapture(str(video_path))
     try:
         muestras = []
@@ -55,9 +84,7 @@ def detectar_caras(video_path, inicio_s: float, duracion_s: float) -> list[tuple
             alto, ancho = frame.shape[:2]
             escala = ANCHO_DETECCION / ancho if ancho > ANCHO_DETECCION else 1.0
             chico = cv2.resize(frame, (int(ancho * escala), int(alto * escala))) if escala < 1 else frame
-            gris = cv2.cvtColor(chico, cv2.COLOR_BGR2GRAY)
-            caras = detector.detectMultiScale(gris, scaleFactor=1.1, minNeighbors=5,
-                                              minSize=(int(chico.shape[0] * 0.08),) * 2)
+            caras = detector(chico)
             muestras.append((round(t, 2), [tuple(int(v / escala) for v in c) for c in caras]))
             t += PASO_S
         return muestras
@@ -71,6 +98,9 @@ def _centro_sujeto(caras: list[tuple], cw: int) -> tuple[float | None, bool]:
     """(centro x del sujeto, caben_todas). Sujeto = grupo de caras si caben en el recorte; si no, la más grande."""
     if not caras:
         return None, True
+    if len(caras) == 1:   # un primer plano, aunque sea más ancho que el recorte, se centra igual
+        x, _, w, _ = caras[0]
+        return x + w / 2, True
     izq = min(x for x, _, _, _ in caras)
     der = max(x + w for x, _, w, _ in caras)
     if der - izq <= cw * 0.9:
@@ -79,11 +109,36 @@ def _centro_sujeto(caras: list[tuple], cw: int) -> tuple[float | None, bool]:
     return x + w / 2, False
 
 
+def quitar_superpuestas(muestras: list[tuple[float, list[tuple]]], ancho: int, alto: int):
+    """Quita caras de gráficos fijos de TV (intérprete de señas, recuadro del conductor): chicas y en la misma
+    posición en casi todo el clip. Una persona real, aunque esté quieta, se mueve algo o es más grande."""
+    chicas = [(x + w / 2, y + h / 2) for _, caras in muestras for x, y, w, h in caras if h < SUPERPUESTA_ALTO * alto]
+    tol = SUPERPUESTA_TOLERANCIA * ancho
+    fijas = []
+    for cx, cy in chicas:
+        if any(abs(cx - fx) < tol and abs(cy - fy) < tol for fx, fy in fijas):
+            continue
+        presentes = sum(
+            1 for _, caras in muestras
+            if any(abs(x + w / 2 - cx) < tol and abs(y + h / 2 - cy) < tol and h < SUPERPUESTA_ALTO * alto
+                   for x, y, w, h in caras)
+        )
+        if presentes >= SUPERPUESTA_FRECUENCIA * len(muestras):
+            fijas.append((cx, cy))
+
+    def es_fija(c):
+        x, y, w, h = c
+        return h < SUPERPUESTA_ALTO * alto and any(abs(x + w / 2 - fx) < tol and abs(y + h / 2 - fy) < tol
+                                                   for fx, fy in fijas)
+    return [(t, [c for c in caras if not es_fija(c)]) for t, caras in muestras], len(fijas)
+
+
 def planificar(muestras: list[tuple[float, list[tuple]]], ancho: int, alto: int) -> list[tuple[float, int]] | None:
     """Keyframes [(t, x_izquierda)] del recorte, o None si conviene el layout anterior."""
     cw = ancho_recorte(alto)
     if not muestras or ancho <= cw:
         return None
+    muestras, _ = quitar_superpuestas(muestras, ancho, alto)
     centros, separadas = [], 0
     for t, caras in muestras:
         c, caben = _centro_sujeto(caras, cw)
@@ -156,8 +211,8 @@ def encuadrar(video_path, inicio_s: float, duracion_s: float, ancho: int, alto: 
         return None
     try:
         muestras = detectar_caras(video_path, inicio_s, duracion_s)
-    except ImportError:
-        print("         Encuadre: OpenCV no está instalado → layout anterior")
+    except ImportError as e:
+        print(f"         Encuadre: sin detector de caras ({e}) → layout anterior")
         return None
     except Exception as e:   # noqa: BLE001 — el encuadre nunca rompe un clip
         print(f"         Encuadre: falló la detección ({type(e).__name__}: {e}) → layout anterior")
