@@ -1,15 +1,16 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-18 (S11 implementado)
+> Última actualización: 2026-11-18 (S12 implementado)
 
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Sprint:** **S11 · Control visual automático** (`docs/sprints/S11.md`, rama `sprint/S11`, **falta el PR**):
-  CLIP-51 (defectos técnicos con FFmpeg), CLIP-52 (avisos en la revisión + acercamiento > 2×), CLIP-53 (correcciones
-  sin duplicados). 438 tests.
+- **Sprint:** **S12 · Operación estable** (`docs/sprints/S12.md`, rama `sprint/S12`, **falta el PR** y la decisión de
+  CLIP-57 sobre las carpetas de la raíz). Levantar: `python -m herramientas.levantar`. Guía: `docs/OPERACION.md`.
+  La base de publicación está en `data/publicacion.db` (rutas en el `.env`). Roadmap v0.5: la Fase 1 cierra en S13.
+- S11 · Control visual automático: integrado (PR #26).
 - **Sprint:** S10 · Aprender de la audiencia **cerrado** (`docs/sprints/S10.md`, PR #24 integrado):
   CLIP-48 (medir publicados TikTok+YouTube), CLIP-49 (rendimiento por tipo), CLIP-50 (crédito al final) + arreglos
   posteriores al S9. 431 tests. S1–S10 cerrados.
