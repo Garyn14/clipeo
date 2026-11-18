@@ -1,15 +1,19 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-18 (S12 implementado)
+> Última actualización: 2026-11-18 (S13 implementado; desarrollo de la Fase 1 terminado)
 
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.5: Fase 1 hasta S13). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Sprint:** **S12 · Operación estable** (`docs/sprints/S12.md`, rama `sprint/S12`, **falta el PR**). Carpetas viejas de la
-  raíz archivadas en `D:\clipeo_archivo\` (CLIP-57). Levantar: `python -m herramientas.levantar`. Guía: `docs/OPERACION.md`.
-  La base de publicación está en `data/publicacion.db` (rutas en el `.env`). Roadmap v0.5: la Fase 1 cierra en S13.
+- **Sprint:** **S13 · Hablantes de TV y cierre de la Fase 1** (`docs/sprints/S13.md`, rama `sprint/S13`):
+  CLIP-28 (hablantes por rol en medios), CLIP-59 (`python -m investigacion.cierre_fase1 zapatillas_peru`).
+  **Fase 1:** calidad 67% (6 de 9, falta llegar a 10 clips), aprendizaje 7 de 30 medidos; publicación y operación ✅.
+  **Siguiente: 2 semanas de uso real** (generar, revisar, publicar con link) y volver a correr `cierre_fase1`.
+- S12 · Operación estable: integrado (PR #27). Carpetas viejas de la raíz archivadas en `D:\clipeo_archivo\`
+  (CLIP-57). Levantar: `python -m herramientas.levantar`. Guía: `docs/OPERACION.md`. La base de publicación está en
+  `data/publicacion.db` (rutas en el `.env`).
 - S11 · Control visual automático: integrado (PR #26).
 - **Sprint:** S10 · Aprender de la audiencia **cerrado** (`docs/sprints/S10.md`, PR #24 integrado):
   CLIP-48 (medir publicados TikTok+YouTube), CLIP-49 (rendimiento por tipo), CLIP-50 (crédito al final) + arreglos

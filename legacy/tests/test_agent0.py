@@ -81,3 +81,45 @@ def test_confianza_alta_sigue_igual(tmp_path, monkeypatch):
         "confianza": {"SPEAKER_00": 0.9, "SPEAKER_01": 0.0},
     })
     assert mapa["SPEAKER_00"]["estado"] == "confirmado"
+
+
+# ── CLIP-28: segmentos de TV/prensa ─────────────────────────
+
+def _correr_medios(tmp_path, monkeypatch, respuesta: dict):
+    (tmp_path / "pipeline_estado.json").write_text(json.dumps({"fuente": {
+        "tipo": "medios", "sobre": "Tío Fritz", "canal_origen": "Latina Noticias"}}), encoding="utf-8")
+    raw = tmp_path / "transcripcion_raw.txt"
+    raw.write_text(_transcripcion(), encoding="utf-8")
+    meta = tmp_path / "metadata.json"
+    meta.write_text(json.dumps({"title": "nota", "uploader": "Latina Noticias"}), encoding="utf-8")
+    recibido = {}
+
+    def crear(**k):
+        recibido.update(k)
+        return SimpleNamespace(content=[SimpleNamespace(text=json.dumps(respuesta))])
+    monkeypatch.setattr(a0, "get_client", lambda: SimpleNamespace(messages=SimpleNamespace(create=crear)))
+    a0.identify_speakers(raw, meta, tmp_path, CONFIG)
+    mapa = json.loads((tmp_path / "speaker_map.json").read_text(encoding="utf-8"))
+    return mapa, recibido["messages"][0]["content"]
+
+
+def test_medios_pide_roles_y_no_usa_el_canal_como_persona(tmp_path, monkeypatch):
+    mapa, prompt = _correr_medios(tmp_path, monkeypatch, {
+        "mapa": {"SPEAKER_00": "Conductor", "SPEAKER_01": "Tío Fritz"},
+        "confianza": {"SPEAKER_00": 0.9, "SPEAKER_01": 0.85}})
+    assert "FUENTE: segmento de TV/prensa del canal «Latina Noticias» sobre Tío Fritz" in prompt
+    assert "CANAL/UPLOADER DEL VIDEO" not in prompt
+    assert mapa["SPEAKER_00"]["nombre"] == "Conductor" and mapa["SPEAKER_01"]["nombre"] == "Tío Fritz"
+
+
+def test_medios_sin_regla_del_duenio_ni_fallback(tmp_path, monkeypatch):
+    mapa, _ = _correr_medios(tmp_path, monkeypatch, {
+        "mapa": {"SPEAKER_00": "Tío Fritz", "SPEAKER_01": "SPEAKER_01"},
+        "confianza": {"SPEAKER_00": 0.5, "SPEAKER_01": 0.0}})
+    assert mapa["SPEAKER_00"]["estado"] == "posible"           # en un stream sería confirmado_por_canal
+    mapa, _ = _correr_medios(tmp_path, monkeypatch, {"mapa": {}, "confianza": {}})
+    assert all(v["estado"] == "desconocido" for v in mapa.values())   # sin fallback al "dueño" del canal
+
+
+def test_bloque_medios_vacio_fuera_de_medios():
+    assert a0.bloque_medios(None) == "" and a0.bloque_medios({"tipo": "stream"}) == ""

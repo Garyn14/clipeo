@@ -882,7 +882,10 @@ def _run_video_chunks(
 
     # CLIP-56: con --colab, comprobar el túnel ANTES de descargar (antes fallaba recién en la transcripción)
     chunks_estado = mgr._estado.get("chunks", {})
-    falta_transcribir = not chunks_estado or any(c["estado"] != "completado" for c in chunks_estado.values())
+    falta_transcribir = not chunks_estado or any(
+        (c.get("pasos", {}).get("transcripcion") or {}).get("estado") not in ("ok", "omitido")
+        for c in chunks_estado.values()
+    )   # solo importa la transcripción: re-correr desde el juez o el corte no necesita Colab
     if usar_colab and falta_transcribir:
         from transcripcion.video_transcriber import colab_vivo
         vivo, motivo = colab_vivo()
