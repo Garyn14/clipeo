@@ -28,7 +28,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from core.utils import _timestamp_to_seconds, setup_ffmpeg_path
+from core.utils import _seconds_to_timestamp, _timestamp_to_seconds, setup_ffmpeg_path
 setup_ffmpeg_path()
 
 
@@ -854,6 +854,7 @@ def _cut_clip(
     efecto_sonido: str | None = None,
     franja_inferior: float = 0.0,
     persona: str | None = None,
+    ajustar_inicio: bool = True,
 ) -> bool:
     """
     Corta [inicio, fin] del video y ejecuta el estilo_texto pedido (decidido
@@ -875,6 +876,12 @@ def _cut_clip(
     """
     inicio   = _normalize_timestamp(inicio)
     fin      = _normalize_timestamp(fin)
+    if ajustar_inicio and video_path.exists():   # CLIP-41: no arrancar en un cuadro movido (es la miniatura)
+        from edicion_video.nitidez import desfase_inicio
+        desfase = desfase_inicio(video_path, _timestamp_to_seconds(inicio))
+        if desfase and _timestamp_to_seconds(fin) - _timestamp_to_seconds(inicio) > desfase + 5:
+            inicio = _normalize_timestamp(_seconds_to_timestamp(_timestamp_to_seconds(inicio) + desfase))
+            print(f"         Inicio  : primer cuadro movido → arranca {desfase}s después ({inicio})")
     duracion = _timestamp_to_seconds(fin) - _timestamp_to_seconds(inicio)
 
     attempts    = []
@@ -1132,7 +1139,7 @@ def _cut_compilation(
                 cta_texto=(cta_texto if es_ultimo else ""),
                 palabras_clave=(palabras_clave if es_primero else None),
                 layout=layout, layout_streaming=layout_streaming,
-                franja_inferior=franja_inferior, persona=persona,
+                franja_inferior=franja_inferior, persona=persona, ajustar_inicio=es_primero,
             )
             if not ok:
                 print(f"  ❌ Falló el segmento {i + 1}/{len(segmentos)} de la compilación")
