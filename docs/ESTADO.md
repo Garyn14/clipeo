@@ -50,8 +50,8 @@ En backlog: CLIP-27 (medios como fuente), CLIP-28 (transcripción/hablantes), CL
 
 S5 implementado en `sprint/S5` (CLIP-35, CLIP-27, CLIP-36 + fix del umbral del juez), 378 tests en verde.
 Falta:
-1. [Desarrollador] Terminar de medir CLIP-35 en el nicho (`evaluacion.evaluar --direccion --repeticiones 3`) y
-   comparar con C2.
+1. [Operador] CLIP-35 medido (`docs/sprints/S5.md` §6): sin mejora medible y recall con umbral 3 de 0,81 a 0,76
+   (posible ruido). Decidir si se mantiene o se revierte el cambio de memoria.
 2. [Operador] Demo (`docs/sprints/S5.md` §7) con un video de TV/prensa no clipeado.
 3. [Operador] Decidir la cuenta de destino de los clips de medios (§4: misma cuenta o cuenta de captación).
 4. [Operador] Cargar CLIP-35 y CLIP-36 en Jira (la cuenta de Atlassian de la sesión no ve `personal-clipeo`).
