@@ -109,6 +109,7 @@ def test_build_vf_animated_una_palabra_por_drawtext():
 
 
 def test_pick_music_track_elige_de_la_carpeta_del_mood(tmp_path, monkeypatch):
+    monkeypatch.setenv("MUSICA_FONDO", "1")
     monkeypatch.setattr(avc, "_MUSICA_DIR", tmp_path)
     (tmp_path / "tension").mkdir()
     pista = tmp_path / "tension" / "track.mp3"
@@ -118,6 +119,7 @@ def test_pick_music_track_elige_de_la_carpeta_del_mood(tmp_path, monkeypatch):
 
 
 def test_pick_music_track_cae_a_neutral_si_mood_vacio(tmp_path, monkeypatch):
+    monkeypatch.setenv("MUSICA_FONDO", "1")
     monkeypatch.setattr(avc, "_MUSICA_DIR", tmp_path)
     (tmp_path / "comedia").mkdir()  # existe pero vacía
     (tmp_path / "neutral").mkdir()
@@ -420,3 +422,24 @@ def test_preset_x264_veryfast_por_defecto_y_configurable(monkeypatch):
     assert a4._preset_x264() == "veryfast"
     monkeypatch.setenv("CORTE_PRESET", "medium")
     assert a4._preset_x264() == "medium"
+
+
+
+def test_musica_de_fondo_apagada_por_defecto(tmp_path, monkeypatch):
+    """Operador, 2026-11-18: la música de prueba de la v1 no suma; solo con MUSICA_FONDO=1."""
+    from edicion_video import agent4_video_cutter as a4
+    monkeypatch.delenv("MUSICA_FONDO", raising=False)
+    assert a4._pick_music_track("tension") is None
+
+
+def test_con_encuadre_no_se_suma_el_punch_in(monkeypatch, tmp_path):
+    from edicion_video import agent4_video_cutter as a4, encuadre
+    comandos = []
+    monkeypatch.setattr(encuadre, "encuadrar", lambda *a, **k: encuadre.filtro([(0.0, 600)], [], 1080))
+
+    class Ok:
+        returncode, stderr = 0, ""
+    monkeypatch.setattr(a4.subprocess, "run", lambda cmd, **k: comandos.append(" ".join(map(str, cmd))) or Ok())
+    a4._cut_clip(tmp_path / "v.mp4", "00:00:20", "00:01:00", "a", "b", tmp_path / "c.mp4", "", True, 420,
+                 layout="blur", source_width=1920, source_height=1080, momento_enfasis_seg=5.0)
+    assert comandos and "1.0+" not in comandos[0]                         # sin la rampa del punch-in de la v1

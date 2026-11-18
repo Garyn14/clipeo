@@ -113,7 +113,12 @@ def _pick_music_track(mood: str) -> Path | None:
     mezclar de fondo. Cae a la carpeta "neutral" si el mood pedido no tiene
     pistas propias, y retorna None si no hay ninguna disponible — el clip
     sale sin música de fondo en vez de fallar el corte por esto.
+
+    Apagado por defecto (operador, 2026-11-18): las pistas de la v1 son de prueba y "no suman nada".
+    MUSICA_FONDO=1 lo vuelve a encender cuando haya música elegida a propósito.
     """
+    if os.environ.get("MUSICA_FONDO", "0").strip() not in ("1", "true", "si", "sí"):
+        return None
     for candidate in (mood, "neutral"):
         carpeta = _MUSICA_DIR / candidate
         if carpeta.is_dir():
@@ -991,7 +996,9 @@ def _cut_clip(
     if params.get("splitscreen"):
         print(f"         Layout  : Caso C — split-screen (facecam {_FACECAM_ALTO_PCT:.0%} / contenido {1 - _FACECAM_ALTO_PCT:.0%})")
 
-    zoom_filter = _build_vf_zoom(momento_enfasis_seg, source_width, source_height)
+    # Con el encuadre (CLIP-38) el acercamiento lo decide el encuadre: el punch-in de la v1 se sumaba encima y
+    # exageraba el zoom (demo S9: clip del guardia, tres acercamientos superpuestos en el segundo 5)
+    zoom_filter = None if encuadre_filtro else _build_vf_zoom(momento_enfasis_seg, source_width, source_height)
     if zoom_filter:
         print(f"         Zoom    : punch-in en t={momento_enfasis_seg:.1f}s (±{_ZOOM_VENTANA_SEG:.0f}s)")
 
