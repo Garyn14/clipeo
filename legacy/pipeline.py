@@ -880,6 +880,17 @@ def _run_video_chunks(
         elif video_path.exists():
             mgr.actualizar_paso(None, "descarga", estado="ok", nota="video ya descargado")
 
+    # CLIP-56: con --colab, comprobar el túnel ANTES de descargar (antes fallaba recién en la transcripción)
+    chunks_estado = mgr._estado.get("chunks", {})
+    falta_transcribir = not chunks_estado or any(c["estado"] != "completado" for c in chunks_estado.values())
+    if usar_colab and falta_transcribir:
+        from transcripcion.video_transcriber import colab_vivo
+        vivo, motivo = colab_vivo()
+        if not vivo:
+            print(f"\n[PIPELINE] ❌ Colab: {motivo}. Levanta el notebook (celdas 1–2, reiniciar sesión, celda 3), "
+                  f"pega la URL en COLAB_TRANSCRIBE_URL del .env y vuelve a correr.")
+            sys.exit(1)
+
     try:
         ejecutar_paso(mgr, None, "descarga", _descargar)
         ejecutar_paso(mgr, None, "plan", _planificar, reintentar_auto=False)

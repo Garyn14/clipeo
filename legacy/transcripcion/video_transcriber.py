@@ -104,6 +104,23 @@ def _colab_config() -> tuple[str, str]:
     return _normalizar_url_colab(_valor("COLAB_TRANSCRIBE_URL")), _valor("COLAB_AUTH_TOKEN")
 
 
+def colab_vivo(timeout: float = 10.0) -> tuple[bool, str]:
+    """CLIP-56: ¿responde el servidor de Colab? (ok, motivo). Un 401/404 también es "vivo": el túnel y el servidor
+    contestan (solo falta un job o la clave). Sin respuesta, 5xx o 530 de Cloudflare = túnel caído."""
+    url, token = _colab_config()
+    if not url:
+        return False, "sin COLAB_TRANSCRIBE_URL en .env"
+    base = url[: -len("/transcribe")] if url.endswith("/transcribe") else url
+    try:
+        r = requests.get(f"{base}/status/_comprobar", timeout=timeout,
+                         headers={"Authorization": f"Bearer {token}"} if token else {})
+    except requests.RequestException:
+        return False, f"el túnel de Colab no responde ({base})"
+    if r.status_code in (200, 401, 404):
+        return True, ""
+    return False, f"el túnel de Colab responde HTTP {r.status_code} (¿notebook apagado?)"
+
+
 def _transcribe_via_colab(
     audio_path: Path, timeout: int = 1800, poll_interval: int = 10, language: str = "es",
 ) -> dict:
