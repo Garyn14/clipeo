@@ -1,23 +1,29 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-18 (S8 y S9 implementados, validación del operador al final)
+> Última actualización: 2026-11-18 (S10 implementado; S8 y S9 integrados)
 
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Sprint:** **S8 · Medios a escala** (`docs/sprints/S8.md`, rama `sprint/S8`): CLIP-43 (búsqueda de fuentes de
-  medios para aprobar: 13 candidatos en `investigacion/zapatillas_peru/fuentes_medios.jsonl`), CLIP-44 (experimento
-  de título caja vs contorno, medido con la audiencia), CLIP-45 (720p: no es bug). 423 tests. S1–S7 cerrados.
-- **S9** (`docs/sprints/S9.md`, rama `sprint/S9` sobre `sprint/S8`): CLIP-46 (en streams el encuadre sigue al dueño
-  del canal). CLIP-47 (picos de audio para el detector) **descartado con datos**: 15% de aciertos vs 19% del azar.
-  PR #22 (S8) abierto sin integrar: **el operador valida S8 y S9 al final**.
-- **Siguiente para el operador:** aprobar fuentes (`python -m investigacion.fuentes_medios listar zapatillas_peru`),
-  publicar con link y, con ≥ 10 clips por variante, `python -m evaluacion.experimento_titulo zapatillas_peru`.
+- **Sprint:** **S10 · Aprender de la audiencia** (`docs/sprints/S10.md`, rama `sprint/S10`, **falta el PR**):
+  CLIP-48 (medir publicados TikTok+YouTube), CLIP-49 (rendimiento por tipo), CLIP-50 (crédito al final) + arreglos
+  posteriores al S9. 431 tests. S1–S9 cerrados (#22 y #23 integrados).
+- **Hallazgo:** YouTube Shorts casi sin alcance (0–38 vistas en 38 días) vs TikTok (116.900 el mismo clip).
+- **Rutina semanal:** `python -m investigacion.medir_publicados zapatillas_peru` y `python -m investigacion.aprendizaje
+  zapatillas_peru` (en `legacy/`).
 - Modelo SFace y caras de referencia **fuera del repo**: en otra máquina, descargar SFace (`legacy/edicion_video/assets/
   modelos/README.md`) y correr `python -m edicion_video.referencia_cara fritz <videos de su canal>`.
-- Backlog de publicación (secundario): TikTok entrega el borrador sin descripción ni hashtags; el operador los pega.
+- Backlog de publicación (secundario, CLIP-12):
+  - **TikTok automático de punta a punta:** los borradores enviados por la API (bandeja/"Actividad") **no se pueden
+    terminar desde la web** (TikTok Studio muestra 0 borradores; verificado 2026-11-18), solo desde la app. La única
+    vía oficial es la **auditoría de la Content Posting API (Direct Post)**; mientras tanto el operador publica desde la
+    app con el texto que genera Clipeo.
+  - **SEO por plataforma:** título, descripción y hashtags adaptados a TikTok vs YouTube Shorts (hoy son casi iguales);
+    el crédito "Fuente: …" a veces queda antes de un hashtag.
+  - **Publicación conectada (hecho 2026-11-18):** el panel usa `PUBLICACION_DB=D:\clipeoackend\publicacion.db` (ahí
+    están las cuentas) y las credenciales del `.env` de la raíz. Nada se publicó solo entre el 12-10 y el 18-11.
 
 ## Tickets del sprint
 
@@ -89,6 +95,13 @@ Hábito: publicar cada clip con su link pegado en la revisión; luego `etiquetar
 `demo_direccion` sobre la sesión `20261003_231807`: clip_c001_02 (Sorprende a Rafo) mejor (inicio y transición más
 limpios; la música era de prueba y no se evalúa), clip_c001_03 (billetera) mejor, clip_c001_04 (pilla a Rafael)
 "mucho mejor".
+
+## Reglas del operador (no negociables)
+
+- **TikTok: la cuenta tiene videos PRIVADOS propios del operador. NUNCA publicarlos, cambiarles la visibilidad,
+  editarlos ni borrarlos** (2026-11-18). Al publicar, actuar solo sobre los borradores que envió Clipeo y que
+  coinciden con un clip aprobado en la revisión; ante la duda, preguntar.
+- Transcripción solo en Colab (`--colab`); WhisperX local no se usa.
 
 ## Pendientes del operador
 

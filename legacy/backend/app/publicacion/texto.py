@@ -20,13 +20,16 @@ def _ya_esta(tag: str, texto: str) -> bool:
 
 
 def _con_hashtags(descripcion: str | None, hashtags: list | None) -> str:
-    """La descripción + los hashtags de la lista que no estén ya escritos en ella."""
-    texto = (descripcion or "").strip()
+    """La descripción + los hashtags de la lista que no estén ya escritos en ella. El crédito "Fuente: …" (medios,
+    R-01) va siempre al final, después de los hashtags (antes quedaba en medio: "… Fuente: X #parati")."""
+    lineas = (descripcion or "").strip().splitlines()
+    creditos = [l.strip() for l in lineas if l.strip().startswith("Fuente:")]
+    texto = "\n".join(l for l in lineas if not l.strip().startswith("Fuente:")).strip()
     for tag in hashtags or []:
         tag = (tag or "").strip()
         if tag and not _ya_esta(tag, texto):
             texto = f"{texto} {tag}".strip()
-    return texto
+    return "\n\n".join(x for x in [texto, *creditos] if x)
 
 
 def texto_tiktok(clip: dict) -> str | None:

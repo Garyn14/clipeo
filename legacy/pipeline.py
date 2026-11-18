@@ -632,6 +632,10 @@ def _procesar_chunk(
         for c in contenido:
             if c.get("publicar"):
                 c["clip_id"] = next(ids)
+            else:
+                # Sin video: al re-cortar una sesión ya revisada, un descartado conservaba su clip_id viejo y chocaba
+                # con el aprobado renumerado (demo S9, sesión del guardia: dos clip_c001_01)
+                c.pop("clip_id", None)
         for destino in (contenido_chunk_p, contenido_p):
             destino.write_text(
                 json.dumps({"contenido": contenido}, ensure_ascii=False, indent=2), encoding="utf-8",
