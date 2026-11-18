@@ -189,14 +189,14 @@ def test_cara_fija_y_chica_de_un_grafico_de_tv_se_ignora():
     interprete = (1701, 792, 60, 72)
     datos = [(round(i * 0.5, 2), [cara(700), interprete]) for i in range(20)]
     limpias, n = encuadre.quitar_superpuestas(datos, ANCHO, ALTO)
-    assert n == 1 and all(c == [cara(700)] for _, c in limpias)
+    assert len(n) == 1 and all(c == [cara(700)] for _, c in limpias)
     assert encuadre.planificar(datos, ANCHO, ALTO)[0][1] == 700 - CW // 2
 
 
 def test_persona_quieta_pero_grande_no_es_grafico():
     datos = [(round(i * 0.5, 2), [cara(700, w=300)]) for i in range(20)]
-    _, n = encuadre.quitar_superpuestas(datos, ANCHO, ALTO)
-    assert n == 0
+    _, fijas = encuadre.quitar_superpuestas(datos, ANCHO, ALTO)
+    assert fijas == []
 
 
 def test_primer_plano_mas_ancho_que_el_recorte_se_centra():
@@ -235,3 +235,55 @@ def test_run_agent_aplica_la_franja_solo_en_medios(monkeypatch, tmp_path):
         item, {**item, "fuente": {"tipo": "medios", "sobre": "Tío Fritz"}}]}), encoding="utf-8")
     a4.run_agent(str(tmp_path / "contenido.json"), video_path_override=tmp_path / "v.mp4")
     assert franjas == [0.0, encuadre.FRANJA_MEDIOS]
+
+
+
+# ── S7: reconocer a la persona del clip (CLIP-40) y recuadros de TV (CLIP-42) ──
+
+def test_la_cara_reconocida_manda_aunque_otra_sea_mas_grande():
+    """Demo S6: en la joyería encuadraba al joyero (cara más visible) y no a Fritz."""
+    fritz = (300, 400, 90, 90, True)
+    joyero = (1400, 380, 200, 200, False)
+    plan = encuadre.planificar([(round(i * 0.5, 2), [fritz, joyero]) for i in range(20)], ANCHO, ALTO)
+    assert plan[0][1] == max(0, 345 - CW // 2)
+    sin_reconocer = [(round(i * 0.5, 2), [fritz[:4], joyero[:4]]) for i in range(20)]
+    assert encuadre.planificar(sin_reconocer, ANCHO, ALTO) is None or         encuadre.planificar(sin_reconocer, ANCHO, ALTO)[0][1] != max(0, 345 - CW // 2)
+
+
+def test_zoom_solo_en_primeros_planos_del_sujeto_reconocido():
+    otro = (700, 300, 260, 260, False)
+    datos = [(round(i * 0.5, 2), [otro] if 4 <= i < 14 else [cara(800) + (False,)]) for i in range(40)]
+    assert encuadre.secciones_zoom(datos, ALTO) == []
+    fritz = otro[:4] + (True,)
+    datos = [(round(i * 0.5, 2), [fritz] if 4 <= i < 14 else [cara(800) + (False,)]) for i in range(40)]
+    assert encuadre.secciones_zoom(datos, ALTO) == [(2.0, 7.0)]
+
+
+def test_la_ventana_deja_fuera_el_recuadro_de_la_interprete():
+    interprete = (1701, 792, 60, 72)
+    datos = [(round(i * 0.5, 2), [cara(1300), interprete]) for i in range(20)]
+    plan = encuadre.planificar(datos, ANCHO, ALTO)
+    limite = 1731 - encuadre.MARGEN_RECUADRO * 60
+    assert all(x + CW <= limite for _, x in plan)
+    assert all(x <= 1300 <= x + CW for _, x in plan)                     # el sujeto sigue dentro
+
+
+def test_si_el_sujeto_esta_pegado_al_recuadro_manda_el_sujeto():
+    interprete = (1701, 792, 60, 72)
+    datos = [(round(i * 0.5, 2), [cara(1700, w=150), interprete]) for i in range(20)]
+    plan = encuadre.planificar(datos, ANCHO, ALTO)
+    assert all(x <= 1700 <= x + CW for _, x in plan)
+
+
+def test_slug_y_referencias(tmp_path, monkeypatch):
+    np = pytest.importorskip("numpy")   # el CI no instala numpy (dependencias livianas)
+    assert encuadre.slug("Tío Fritz") == "tio_fritz"
+    monkeypatch.setattr(encuadre, "DIR_CARAS", tmp_path)
+    modelo = tmp_path / "sface.onnx"
+    monkeypatch.setattr(encuadre, "MODELO_SFACE", modelo)
+    assert encuadre.cargar_referencias("Tío Fritz") is None                # sin modelo
+    modelo.write_bytes(b"x")
+    assert encuadre.cargar_referencias("Tío Fritz") is None                # sin referencias
+    np.save(tmp_path / "tio_fritz.npy", np.eye(2, 128))
+    assert encuadre.cargar_referencias("Tío Fritz").shape == (2, 128)
+    assert encuadre.cargar_referencias(None) is None
