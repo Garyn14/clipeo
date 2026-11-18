@@ -1,20 +1,18 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-18 (S8 y S9 implementados, validación del operador al final)
+> Última actualización: 2026-11-18 (S10 implementado; S8 y S9 integrados)
 
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Sprint:** **S8 · Medios a escala** (`docs/sprints/S8.md`, rama `sprint/S8`): CLIP-43 (búsqueda de fuentes de
-  medios para aprobar: 13 candidatos en `investigacion/zapatillas_peru/fuentes_medios.jsonl`), CLIP-44 (experimento
-  de título caja vs contorno, medido con la audiencia), CLIP-45 (720p: no es bug). 423 tests. S1–S7 cerrados.
-- **S9** (`docs/sprints/S9.md`, rama `sprint/S9` sobre `sprint/S8`): CLIP-46 (en streams el encuadre sigue al dueño
-  del canal). CLIP-47 (picos de audio para el detector) **descartado con datos**: 15% de aciertos vs 19% del azar.
-  PR #22 (S8) abierto sin integrar: **el operador valida S8 y S9 al final**.
-- **Siguiente para el operador:** aprobar fuentes (`python -m investigacion.fuentes_medios listar zapatillas_peru`),
-  publicar con link y, con ≥ 10 clips por variante, `python -m evaluacion.experimento_titulo zapatillas_peru`.
+- **Sprint:** **S10 · Aprender de la audiencia** (`docs/sprints/S10.md`, rama `sprint/S10`, **falta el PR**):
+  CLIP-48 (medir publicados TikTok+YouTube), CLIP-49 (rendimiento por tipo), CLIP-50 (crédito al final) + arreglos
+  posteriores al S9. 431 tests. S1–S9 cerrados (#22 y #23 integrados).
+- **Hallazgo:** YouTube Shorts casi sin alcance (0–38 vistas en 38 días) vs TikTok (116.900 el mismo clip).
+- **Rutina semanal:** `python -m investigacion.medir_publicados zapatillas_peru` y `python -m investigacion.aprendizaje
+  zapatillas_peru` (en `legacy/`).
 - Modelo SFace y caras de referencia **fuera del repo**: en otra máquina, descargar SFace (`legacy/edicion_video/assets/
   modelos/README.md`) y correr `python -m edicion_video.referencia_cara fritz <videos de su canal>`.
 - Backlog de publicación (secundario, CLIP-12):
