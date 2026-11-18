@@ -8,8 +8,8 @@
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
 - **Sprint:** **S6 · Edición profesional**, rama `sprint/S6`, diseño y demo en `docs/sprints/S6.md`. Implementado:
-  CLIP-39 (corte 2x más rápido, `.env` de la raíz), CLIP-38 (encuadre 9:16 que sigue caras, sin zócalo en medios),
-  CLIP-37 (`docs/calidad/DIAGNOSTICO_EDICION.md`). 403 tests. **Falta:** revisión de la demo por el operador y PR.
+  CLIP-39 (corte 2x más rápido, `.env` de la raíz), CLIP-38 (encuadre 4:5 que sigue caras, zoom solo por tramos, sin zócalo en medios),
+  CLIP-37 (`docs/calidad/DIAGNOSTICO_EDICION.md`). 407 tests. **Falta:** revisión de la demo por el operador y PR.
 - **S7 propuesto (diagnóstico):** 1) encuadre que siga a Fritz (reconocimiento con fotos de referencia), 2) primer
   cuadro nítido, 3) experimento de título sin caja medido con la audiencia, 4) clips en 720p.
 - Backlog de publicación (secundario): TikTok entrega el borrador sin descripción ni hashtags; el operador los pega.
