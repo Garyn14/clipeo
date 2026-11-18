@@ -313,3 +313,15 @@ def test_write_word_timings_sin_segmentos_escribe_lista_vacia(tmp_path):
 
     assert n == 0
     assert json.loads(dest.read_text(encoding="utf-8")) == []
+
+
+def test_colab_vivo(requests_mock, monkeypatch, tmp_path):
+    """CLIP-56: 401/404 = el túnel responde; sin respuesta o 530 = caído; sin URL = no configurado."""
+    base = "https://fake-colab.trycloudflare.com"
+    requests_mock.get(f"{base}/status/_comprobar", status_code=404)
+    assert video_transcriber.colab_vivo() == (True, "")
+    requests_mock.get(f"{base}/status/_comprobar", status_code=530)
+    ok, motivo = video_transcriber.colab_vivo()
+    assert not ok and "530" in motivo
+    monkeypatch.setenv("COLAB_TRANSCRIBE_URL", "")
+    assert video_transcriber.colab_vivo() == (False, "sin COLAB_TRANSCRIBE_URL en .env")

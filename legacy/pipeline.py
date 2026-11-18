@@ -49,7 +49,8 @@ from core.clip_ids import prefijo_chunk
 from core import fuente as fuente_mod
 from core.pasos import ErrorPaso, PasoFallido, Subpasos, ejecutar_paso
 
-STREAM_DATA = Path("stream_data")
+from core.config_local import ruta as _ruta_config
+STREAM_DATA = _ruta_config("CLIPEO_STREAM_DATA", Path("stream_data"))   # CLIP-54: del .env; si no, relativo al cwd
 
 _BASE_DIR = Path(__file__).parent
 
@@ -878,6 +879,17 @@ def _run_video_chunks(
             mgr.actualizar_paso(None, "descarga", estado="omitido", nota=f"video local: {video_local}")
         elif video_path.exists():
             mgr.actualizar_paso(None, "descarga", estado="ok", nota="video ya descargado")
+
+    # CLIP-56: con --colab, comprobar el túnel ANTES de descargar (antes fallaba recién en la transcripción)
+    chunks_estado = mgr._estado.get("chunks", {})
+    falta_transcribir = not chunks_estado or any(c["estado"] != "completado" for c in chunks_estado.values())
+    if usar_colab and falta_transcribir:
+        from transcripcion.video_transcriber import colab_vivo
+        vivo, motivo = colab_vivo()
+        if not vivo:
+            print(f"\n[PIPELINE] ❌ Colab: {motivo}. Levanta el notebook (celdas 1–2, reiniciar sesión, celda 3), "
+                  f"pega la URL en COLAB_TRANSCRIBE_URL del .env y vuelve a correr.")
+            sys.exit(1)
 
     try:
         ejecutar_paso(mgr, None, "descarga", _descargar)

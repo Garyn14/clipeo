@@ -1,0 +1,40 @@
+evento:
+  aprendizaje: Score 7 pero editor descartó — Exceso de zoom
+  clip_descartado:
+    linea1: Muere Randy, seguridad del tío Fritz
+    linea2: tras más de un mes hospitalizado 🚨
+    score: 7
+  fecha: '2026-11-18'
+  nicho: zapatillas_peru
+  rango:
+    conservar: true
+    duracion_segundos: 33
+    fin: 00:00:56
+    gancho: Yo no sabía que el salir adelante tenía que pagar la vida de las personas.
+    inicio: 00:00:28
+    momento_enfasis_seg: 5
+    pico_original:
+      confianza: 0.93
+      en_juego: La culpa y el dolor de Fritz por la muerte de su agente de seguridad,
+        y el precio humano de su éxito
+      razon: Fritz, quebrado, dice que nunca imaginó que 'salir adelante' costaría
+        la vida de alguien. Es vulnerabilidad real tras la muerte de su agente de
+        seguridad, con el contraste entre su éxito y el costo humano.
+      timestamp: 00:00:28
+      tipo: relaciones_y_emocion
+    plan_edicion:
+      estructura: lineal
+      por_que: Arranca en la frase emocional «Yo nunca me imaginé que esto iba a pasar»,
+        sin las condolencias de protocolo, y sigue con el relato del ataque a balazos
+        y la muerte de Randy Pulido, vinculado al tío Fritz.
+      segmentos:
+      - fin: 00:00:56
+        inicio: 00:00:28
+    razon: 'Fusiona los picos 1 y 2. El inicio va 5 s antes de la declaración de Fritz,
+      con las oraciones por la familia Pulido Rupay como único setup. Cubre las tres
+      frases de culpa (''nunca me imaginé'', ''salir adelante'', ''pagar la vida de
+      las personas''). El fin queda tras el dato del narrador: Randy Pulido, 44 años,
+      luchó más de un mes hasta fallecer. Con eso el clip se entiende solo, y el corte
+      llega antes de que empiece la descripción del ataque (00:57).'
+  razon_descarte: Exceso de zoom
+  tipo: descarte_manual

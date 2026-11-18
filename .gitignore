@@ -23,3 +23,6 @@ demo_encuadre/
 diagnostico_edicion/
 legacy/edicion_video/assets/modelos/face_recognition_sface_2021dec.onnx
 legacy/edicion_video/assets/caras/
+
+# CLIP-54: datos locales de la máquina (base de publicación con tokens): nunca al repo
+data/

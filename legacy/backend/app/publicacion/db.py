@@ -17,7 +17,10 @@ from pathlib import Path
 from app.paths import PROJECT_ROOT
 
 # PUBLICACION_DB permite apuntar a otra base (pruebas sin tocar la cola real)
-DB_PATH: Path = Path(os.environ.get("PUBLICACION_DB") or PROJECT_ROOT / "backend" / "publicacion.db")
+from core.config_local import ruta  # noqa: E402
+
+# CLIP-54: PUBLICACION_DB del .env (p. ej. data/publicacion.db, relativo a la raíz del repo)
+DB_PATH: Path = ruta("PUBLICACION_DB", PROJECT_ROOT / "backend" / "publicacion.db")
 
 PLATAFORMAS = ("tiktok", "youtube")
 
