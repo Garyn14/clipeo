@@ -74,6 +74,12 @@ _MUSICA_DIR        = Path(__file__).parent / "assets" / "musica"
 _MUSICA_VOLUMEN    = 0.15  # bajo, para no tapar el diálogo original
 
 
+def _preset_x264() -> str:
+    """CLIP-39: 'veryfast' corta en la mitad de tiempo que 'medium' (12 s vs 23 s para 40 s de clip en la laptop
+    del operador) con calidad equivalente (SSIM 0,9964 vs 0,9973). CORTE_PRESET lo cambia."""
+    return os.environ.get("CORTE_PRESET", "").strip() or "veryfast"
+
+
 def _pick_music_track(mood: str) -> Path | None:
     """
     Elige (al azar) una pista de edicion_video/assets/musica/<mood>/ para
@@ -990,7 +996,7 @@ def _cut_clip(
             "-t", str(duracion), "-v", "error",
             "-filter_complex", fc,
             *map_args,
-            "-c:v", "libx264", "-c:a", "aac", "-y",
+            "-c:v", "libx264", "-preset", _preset_x264(), "-c:a", "aac", "-y",
             str(output_path),
         ]
 

@@ -22,7 +22,8 @@ import requests
 
 load_dotenv()
 
-_ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
+_ENV_PATH = Path(__file__).resolve().parents[1] / ".env"          # legacy/.env
+_ENV_PATH_RAIZ = Path(__file__).resolve().parents[2] / ".env"     # .env de la raíz del repo (CLIP-39)
 
 from core.utils import setup_ffmpeg_path
 setup_ffmpeg_path()
@@ -89,11 +90,16 @@ def _colab_config() -> tuple[str, str]:
     reinicio del notebook, y así el siguiente reintento de una corrida en curso
     toma la URL nueva sin relanzar. El archivo gana sobre os.environ (que quedó
     con el valor del arranque); sin valor en el archivo, cae a os.environ.
+    Se leen legacy/.env y el .env de la raíz del repo, en ese orden (CLIP-39: en la
+    laptop del operador el .env vive en la raíz).
     """
-    archivo = dotenv_values(_ENV_PATH) if _ENV_PATH.exists() else {}
+    archivos = [dotenv_values(p) for p in (_ENV_PATH, _ENV_PATH_RAIZ) if p.exists()]
 
     def _valor(clave: str) -> str:
-        return (archivo.get(clave) or os.environ.get(clave, "")).strip()
+        for archivo in archivos:
+            if archivo.get(clave):
+                return archivo[clave].strip()
+        return os.environ.get(clave, "").strip()
 
     return _normalizar_url_colab(_valor("COLAB_TRANSCRIBE_URL")), _valor("COLAB_AUTH_TOKEN")
 
