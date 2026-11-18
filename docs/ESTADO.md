@@ -1,16 +1,19 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-18 (S10 implementado; S8 y S9 integrados)
+> Última actualización: 2026-11-18 (S10 integrado: PR #24)
 
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Sprint:** **S10 · Aprender de la audiencia** (`docs/sprints/S10.md`, rama `sprint/S10`, **falta el PR**):
+- **Sprint:** S10 · Aprender de la audiencia **cerrado** (`docs/sprints/S10.md`, PR #24 integrado):
   CLIP-48 (medir publicados TikTok+YouTube), CLIP-49 (rendimiento por tipo), CLIP-50 (crédito al final) + arreglos
-  posteriores al S9. 431 tests. S1–S9 cerrados (#22 y #23 integrados).
+  posteriores al S9. 431 tests. S1–S10 cerrados.
 - **Hallazgo:** YouTube Shorts casi sin alcance (0–38 vistas en 38 días) vs TikTok (116.900 el mismo clip).
+  **Decisión del operador (2026-11-18): YouTube queda como espejo automático**; se reevalúa en un análisis futuro.
+- **Pendiente del operador:** publicar desde la app los 4 borradores de TikTok del 18-11 (textos en el chat/panel);
+  después Claude busca los links en el perfil y los enlaza en la revisión.
 - **Rutina semanal:** `python -m investigacion.medir_publicados zapatillas_peru` y `python -m investigacion.aprendizaje
   zapatillas_peru` (en `legacy/`).
 - Modelo SFace y caras de referencia **fuera del repo**: en otra máquina, descargar SFace (`legacy/edicion_video/assets/
