@@ -17,7 +17,15 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-test.txt
       - name: FFmpeg
-        run: sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
+        # apt-get a veces se cuelga esperando un mirror (S7 y S12: el job se canceló a los 15 min sin correr tests):
+        # cada intento tiene su propio límite y se reintenta hasta 3 veces
+        timeout-minutes: 8
+        run: |
+          for i in 1 2 3; do
+            timeout 120 sudo apt-get update -q && timeout 180 sudo apt-get install -y -q --no-install-recommends ffmpeg && break
+            echo "FFmpeg: intento $i falló, reintentando..."; sleep 10
+          done
+          ffmpeg -version | head -1
       - name: Dependencias de test
         run: pip install -r requirements-test.txt
       - name: Tests (evaluación + piloto)
