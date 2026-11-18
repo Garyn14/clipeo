@@ -258,6 +258,8 @@ export interface ClipView {
   publicado?: Record<string, { url: string; video_id: string }>;
   /** CLIP-27: de dónde viene el video (null en streams del cliente) */
   fuente?: FuenteClip | null;
+  /** CLIP-51/52: avisos del control de calidad (vacío si está todo bien) */
+  control_calidad?: { codigo: string; detalle: string }[];
 }
 
 export interface FuenteClip {

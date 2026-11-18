@@ -425,3 +425,16 @@ def canal_de_sesion(dir_: Path) -> str | None:
         except (OSError, ValueError):
             continue
     return None
+
+
+def escala(filtro_encuadre: str | None) -> float | None:
+    """CLIP-52: cuántas veces amplía el encuadre la fuente (ancho de la caja ÷ ancho del recorte × zoom de los tramos).
+    None si no hay encuadre. Sirve al control de calidad para avisar de un acercamiento excesivo."""
+    if not filtro_encuadre:
+        return None
+    import re
+    m = re.search(r"crop=w=(\d+):h=", filtro_encuadre)
+    if not m:
+        return None
+    base = CAJA_ANCHO / int(m.group(1))
+    return round(base * (ZOOM if "eval=frame" in filtro_encuadre else 1.0), 2)

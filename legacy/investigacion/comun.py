@@ -54,7 +54,15 @@ def cargar_correcciones(nicho: str, n: int = 30) -> str:
     archivo = carpeta_nicho(nicho) / "correcciones.jsonl"
     if not archivo.exists():
         return ""
-    registros = [json.loads(l) for l in archivo.read_text(encoding="utf-8").splitlines() if l.strip()][-n:]
+    todos = [json.loads(l) for l in archivo.read_text(encoding="utf-8").splitlines() if l.strip()]
+    # CLIP-53: un mismo momento revisado dos veces (p. ej. re-aprobado tras re-cortar, con otro clip_id) cuenta una
+    # sola vez: vale la última decisión por (sesión, título propuesto)
+    ultimos: dict[tuple, dict] = {}
+    for r in todos:
+        j = r.get("juez") or {}
+        ultimos.pop((r.get("session_id"), j.get("linea1"), j.get("linea2")), None)
+        ultimos[(r.get("session_id"), j.get("linea1"), j.get("linea2"))] = r
+    registros = list(ultimos.values())[-n:]
     lineas = []
     for r in registros:
         j = r.get("juez") or {}

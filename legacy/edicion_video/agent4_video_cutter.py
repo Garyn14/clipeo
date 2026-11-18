@@ -892,6 +892,7 @@ def _cut_clip(
     persona: str | None = None,
     ajustar_inicio: bool = True,
     estilo_titulo: str = "caja",
+    info: dict | None = None,
 ) -> bool:
     """
     Corta [inicio, fin] del video y ejecuta el estilo_texto pedido (decidido
@@ -946,6 +947,9 @@ def _cut_clip(
             video_path, _timestamp_to_seconds(inicio), duracion, source_width, source_height,
             franja_inferior=franja_inferior, persona=persona,
         )
+    if info is not None:   # CLIP-52: el control de calidad necesita cuánto amplió el encuadre
+        from edicion_video.encuadre import escala as _escala
+        info["escala_encuadre"] = max(info.get("escala_encuadre") or 0, _escala(encuadre_filtro) or 0) or None
     vf, params = _build_vf(
         linea1, linea2, font_rel, has_letterbox, bar_height, estilo_estatico,
         cta_texto=cta_texto, duracion_clip=duracion, layout=layout,
@@ -1133,6 +1137,7 @@ def _cut_compilation(
     franja_inferior: float = 0.0,
     persona: str | None = None,
     estilo_titulo: str = "caja",
+    info: dict | None = None,
 ) -> bool:
     """
     MOTOR de compilación multi-segmento (Fase 11, solo el lado de Agente 4
@@ -1180,7 +1185,7 @@ def _cut_compilation(
                 palabras_clave=(palabras_clave if es_primero else None),
                 layout=layout, layout_streaming=layout_streaming,
                 franja_inferior=franja_inferior, persona=persona, ajustar_inicio=es_primero,
-                estilo_titulo=estilo_titulo,
+                estilo_titulo=estilo_titulo, info=info,
             )
             if not ok:
                 print(f"  ❌ Falló el segmento {i + 1}/{len(segmentos)} de la compilación")
@@ -1295,6 +1300,7 @@ def run_agent(
         clip_path = clips_dir / clip_name
         meta_path = clips_dir / meta_name
         estilo_titulo = estilo_titulo_para(f"{session_dir.name}/{clip_id}")   # CLIP-44
+        info_corte: dict = {}
 
         print(f"[AGENT4] Clip {i + 1}/{len(a_publicar)}  →  {clip_name}")
         if segmentos:
@@ -1315,7 +1321,7 @@ def run_agent(
                 source_width=vid_info["width"], source_height=vid_info["height"],
                 cta_texto=cta_texto, palabras_clave=palabras_clave,
                 layout=layout, layout_streaming=layout_streaming, franja_inferior=franja, persona=persona,
-                estilo_titulo=estilo_titulo,
+                estilo_titulo=estilo_titulo, info=info_corte,
             )
         else:
             ok = _cut_clip(
@@ -1326,7 +1332,7 @@ def run_agent(
                 cta_texto=cta_texto, palabras_clave=palabras_clave,
                 layout=layout, layout_streaming=layout_streaming,
                 efecto_sonido=efecto_sonido, franja_inferior=franja, persona=persona,
-                estilo_titulo=estilo_titulo,
+                estilo_titulo=estilo_titulo, info=info_corte,
             )
 
         if ok:
@@ -1347,6 +1353,12 @@ def run_agent(
         if item.get("fuente"):   # CLIP-27: medios de terceros (R-01)
             meta["fuente"] = item["fuente"]
         meta["estilo_titulo"] = estilo_titulo   # CLIP-44: variante del experimento de título
+        if ok:   # CLIP-51/52: control de calidad antes de la revisión (avisos, no descarta)
+            from edicion_video import control_calidad
+            meta["control_calidad"] = control_calidad.revisar(
+                clip_path, duracion_esperada=duracion or None, escala_encuadre=info_corte.get("escala_encuadre"))
+            for h in meta["control_calidad"]:
+                print(f"         ⚠ Calidad: {h['detalle']}")
         meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
         resultados.append({"ok": ok, "meta": meta, "path": str(clip_path), "clip_id": clip_id})
 

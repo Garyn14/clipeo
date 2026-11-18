@@ -81,6 +81,7 @@ def load_clip_view(session_dir: Path, entrada: dict) -> dict:
         "tiene_video":         clip_mp4_path.exists(),
         "listo_para_publicar": tecnico.get("listo_para_publicar", False),
         "publicado":           item.get("publicado", {}),   # CLIP-33: {plataforma: {url, video_id}}
+        "control_calidad":     tecnico.get("control_calidad") or [],   # CLIP-51/52: avisos técnicos del clip
     }
 
 

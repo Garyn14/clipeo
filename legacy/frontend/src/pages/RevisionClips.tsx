@@ -167,6 +167,14 @@ function ClipCard({
         )}
       </h3>
 
+      {(clip.control_calidad?.length ?? 0) > 0 && (
+        <div className="hint" style={{ color: "#b45309" }} title="Control de calidad automático: revisar antes de aprobar">
+          {clip.control_calidad!.map((h) => (
+            <div key={h.codigo}>⚠ {h.detalle}</div>
+          ))}
+        </div>
+      )}
+
       {clip.tiene_video && (
         <video controls preload="metadata" src={api.clipVideoUrl(sessionId, clip.clip_id)} />
       )}
