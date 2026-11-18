@@ -276,7 +276,7 @@ def test_si_el_sujeto_esta_pegado_al_recuadro_manda_el_sujeto():
 
 
 def test_slug_y_referencias(tmp_path, monkeypatch):
-    import numpy as np
+    np = pytest.importorskip("numpy")   # el CI no instala numpy (dependencias livianas)
     assert encuadre.slug("Tío Fritz") == "tio_fritz"
     monkeypatch.setattr(encuadre, "DIR_CARAS", tmp_path)
     modelo = tmp_path / "sface.onnx"
