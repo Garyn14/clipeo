@@ -7,7 +7,9 @@
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Sprint:** S4 cerrado el 2026-11-17 (Garyn14/clipeo#12, demo hecha). S1–S4 cerrados. Próximo: planificar S5.
+- **Sprint:** **S5 · Medios como fuente en producción** (opción A aprobada el 2026-11-17), rama `sprint/S5`,
+  diseño en `docs/sprints/S5.md`. Tickets: CLIP-35 (memoria) → CLIP-27 (fuente de medios) → CLIP-36 (R-01).
+  S1–S4 cerrados.
 - **Demo del sprint:** mismos momentos antes y después de la dirección editorial (video), juez medido con la misma
   información que en producción, memoria actualizada con los datos de @nandoclips93.
 
@@ -46,12 +48,26 @@ En backlog: CLIP-27 (medios como fuente), CLIP-28 (transcripción/hablantes), CL
 
 ## Siguiente paso
 
-[Analista] Planificar el S5 con el operador. Propuesta:
-1. **CLIP-27 · Medios como fuente en producción** (probado en CLIP-34: Panorama 6/6 encontrados; alcance en
-   `docs/calidad/MEDIOS_POC.md` §3): descarga en la laptop, contexto "sobre quién trata", aprobación por video.
-2. **Memoria:** en medios, defender la originalidad u origen de lo que vende es `medios_y_polemica`, no pitch
-   ("LV y Gucci originales" 58x fue rechazado). Requiere aprobación del operador.
-3. **Publicar con link:** cada clip publicado con su link pegado en la revisión; luego `etiquetar_audiencia --escribir`.
+S5 implementado en `sprint/S5` (CLIP-35, CLIP-27, CLIP-36 + fix del umbral del juez), 378 tests en verde.
+Falta:
+1. CLIP-35 medido (`docs/sprints/S5.md` §6): sin mejora medible y recall con umbral 3 de 0,81 a 0,76 (posible
+   ruido). **El operador decidió mantener el cambio** (2026-11-18).
+2. [Operador] Demo (`docs/sprints/S5.md` §7) con un video de TV/prensa no clipeado.
+3. [Operador] Decidir la cuenta de destino de los clips de medios (§4: misma cuenta o cuenta de captación).
+4. [Operador] Cargar CLIP-35 y CLIP-36 en Jira (la cuenta de Atlassian de la sesión no ve `personal-clipeo`).
+5. [Líder técnico] PR `sprint/S5` → `main` cuando 1 y 2 estén OK.
+
+**Demo S5 (2026-11-18):** Latina Noticias, 2 clips; el operador los revisó y aprobó ambos.
+
+**S6 (aprobado por el operador el 2026-11-18): edición profesional (Q2 visual + Q4)**, empezando por un diagnóstico:
+5 clips propios vs 5 top de otras cuentas (encuadre, subtítulos, ritmo, audio), base
+`legacy/modulo_edicion_patrones_clipeo.md`. Pendiente aparte: transcripción más rápida que WhisperX local (opciones:
+subtítulos de YouTube para medios, API de Whisper gratuita, Colab automatizado).
+
+**Hallazgo S5:** el umbral `juez.umbral_fuerza: 3` no se aplicaba en producción desde el S4 (bug del loader,
+corregido). Desde el S5 llegan a la revisión más clips (todo lo de fuerza ≥ 3).
+
+Hábito: publicar cada clip con su link pegado en la revisión; luego `etiquetar_audiencia --escribir`.
 
 ### Notas para operar en la laptop
 

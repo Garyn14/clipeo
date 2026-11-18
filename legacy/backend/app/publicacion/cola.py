@@ -17,6 +17,7 @@ import json
 import os
 import sqlite3
 from datetime import datetime
+from pathlib import Path
 
 from app.publicacion import db
 from app.publicacion.horarios import ahora, iso
@@ -73,6 +74,28 @@ def listar(conn: sqlite3.Connection, nicho: str | None = None, estado: str | Non
     sql += " ORDER BY CASE estado WHEN 'en_cola' THEN 0 ELSE 1 END, " \
            "CASE estado WHEN 'en_cola' THEN orden END, COALESCE(enviada_en, actualizada_en) DESC"
     return [dict(f) for f in conn.execute(sql, args).fetchall()]
+
+
+def fuente_de(pub: dict) -> dict | None:
+    """CLIP-36: la fuente del clip (medios de terceros), leída del .json técnico junto al .mp4."""
+    try:
+        meta = json.loads(Path(pub["ruta_video"]).with_suffix(".json").read_text(encoding="utf-8"))
+    except (OSError, ValueError, TypeError, KeyError):
+        return None
+    return meta.get("fuente") if isinstance(meta, dict) else None
+
+
+def primero_enviable(conn: sqlite3.Connection, nicho: str, plataforma: str = PLATAFORMA) -> dict | None:
+    """El primero de la cola que no esté excluido (R-01); los excluidos se cancelan en el camino
+    (alguien pudo pedir el retiro después de que se aprobó el clip)."""
+    from core import exclusion
+    while True:
+        pub = primero_en_cola(conn, nicho, plataforma)
+        motivo = exclusion.motivo_fuente(fuente_de(pub)) if pub else None
+        if not motivo:
+            return pub
+        with db.transaccion(conn):
+            _cambiar(conn, pub, "cancelado", f"excluido (R-01): {motivo}")
 
 
 def primero_en_cola(conn: sqlite3.Connection, nicho: str, plataforma: str = PLATAFORMA) -> dict | None:

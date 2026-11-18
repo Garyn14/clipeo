@@ -256,6 +256,15 @@ export interface ClipView {
   listo_para_publicar: boolean;
   /** CLIP-33: link del video ya publicado, por plataforma */
   publicado?: Record<string, { url: string; video_id: string }>;
+  /** CLIP-27: de dónde viene el video (null en streams del cliente) */
+  fuente?: FuenteClip | null;
+}
+
+export interface FuenteClip {
+  tipo: string;
+  sobre?: string | null;
+  canal_origen?: string | null;
+  url?: string | null;
 }
 
 export interface EditClipBody {

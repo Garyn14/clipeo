@@ -1251,6 +1251,8 @@ def run_agent(
             "duracion_segundos":   duracion,
             "listo_para_publicar": False,
         }
+        if item.get("fuente"):   # CLIP-27: medios de terceros (R-01)
+            meta["fuente"] = item["fuente"]
         meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
         resultados.append({"ok": ok, "meta": meta, "path": str(clip_path), "clip_id": clip_id})
 

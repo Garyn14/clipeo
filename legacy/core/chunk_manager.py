@@ -158,8 +158,10 @@ class ChunkManager:
             "pasos":                   previo.get("pasos") or {p: paso_vacio() for p in PASOS_SESION},
             "chunks":                  chunks,
         }
-        if previo.get("video"):
-            self._estado["video"] = previo["video"]  # leído en la descarga, antes del plan
+        # Campos de sesión anteriores al plan: `video` (leído en la descarga) y `fuente` (CLIP-27, medios)
+        for clave in ("video", "fuente"):
+            if previo.get(clave):
+                self._estado[clave] = previo[clave]
         self._guardar()
         return self._estado
 

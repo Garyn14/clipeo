@@ -202,7 +202,7 @@ def _revisar_cuenta(conn, cuenta: dict, momento: datetime) -> None:
         anotar(f"cuenta sin enviar ({cuenta['estado']}): {cuenta['motivo'] or ''}".strip())
         return
 
-    primero = cola.primero_en_cola(conn, nicho, plataforma)
+    primero = cola.primero_enviable(conn, nicho, plataforma)   # CLIP-36: salta y cancela excluidos
     d = horarios.decidir(momento, cuenta["horarios"], cola.slots_ocupados(conn, nicho, plataforma),
                          cola.ultimo_envio(conn, nicho, plataforma), primero is not None)
     if not d.enviar:
@@ -252,7 +252,7 @@ def enviar_ahora(nicho: str, plataforma: str = "tiktok") -> dict:
                 raise EnvioNoPosible(f"El nicho {nicho} no tiene cuenta de {_nombre(plataforma)} conectada")
             if cuenta["estado"] != "conectada":
                 raise EnvioNoPosible(f"La cuenta está {cuenta['estado']}: {cuenta['motivo'] or ''}".strip())
-            primero = cola.primero_en_cola(conn, nicho, plataforma)
+            primero = cola.primero_enviable(conn, nicho, plataforma)   # CLIP-36: salta y cancela excluidos
             if not primero:
                 raise EnvioNoPosible("La cola está vacía")
             if not cola.reclamar(conn, primero["id"], None, _inicio_naive()):

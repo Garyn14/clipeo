@@ -42,6 +42,24 @@ Detector: 15 picos → 11 momentos; juez: 8 aprobados (7 con ⭐ prioridad), 3 r
   (`medios_y_polemica`), no `producto_y_precio` ni pitch. Propuesta para el S5, con aprobación del operador.
 - La emoción sin polémica (llanto) se sobrevalora: la audiencia sigue siendo la verdad.
 
+## 2c. Panorama con la memoria corregida (CLIP-35, S5)
+
+Misma entrevista, corrida 2026-11-18 con la memoria nueva ("defender en TV lo que vende es polémica"):
+
+| Momento | Antes (S4) | Después (S5) |
+|---|---|---|
+| LV y Gucci 100% originales (58x) | ❌ 3/10 `ninguno` | 4/10 `producto_y_precio`: el juez **sigue sin verlo como polémica**; con el umbral 3 (ahora sí aplicado, ver abajo) **llega a la revisión** |
+| "Vende originales y paga impuestos" (no publicado) | — | 5/10 `medios_y_polemica`: con umbral 3 llega a la revisión |
+| Chaleco antibala, pichangas 200K, Corvette, puro show | ✅ | ✅ (7–9/10) |
+| Llanto por empezar con 70 soles (1,6x) | ✅ 7/10 | ✅ 6/10 (baja un punto, bien: la audiencia no lo premió) |
+| Máquina contadora de billetes (64x) | ✅ 6/10 en 06:57 | El detector no propuso ese rango en esta corrida; el conteo de billetes aparece dentro de 03:15 (8/10) |
+
+- **Hallazgo del S5:** el umbral `juez.umbral_fuerza: 3` (CLIP-32) **no se aplicaba en producción**: el cargador de
+  contexto buscaba `juez:` dentro de `nicho:`. Corregido en el S5. Por decisión propia del juez pasan 8 de 12; con
+  el umbral 3 pasan los 12 (el más bajo tiene fuerza 3), así que en medios la revisión del operador es el filtro real.
+- El cambio de memoria **no basta** para que el juez clasifique el caso LV/Gucci como polémica (sube de 3 a 4 y cambia
+  de tipo a producto). En el segmento, Fritz **muestra** las carteras mientras habla; el juez lo lee como pitch.
+
 ## 3. Qué falta para usarlo en producción (alcance propuesto para CLIP-27)
 
 1. **Fuente:** subtítulos automáticos sirven para detectar (gratis, rápido); el corte necesita el video, que se

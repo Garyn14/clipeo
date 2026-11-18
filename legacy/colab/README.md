@@ -11,7 +11,7 @@ El notebook **no lleva claves escritas**. Se leen de los Secrets de Colab (icono
 | Secret | Qué es |
 |---|---|
 | `HF_TOKEN` | Token de Hugging Face con acceso a `pyannote/speaker-diarization-community-1` |
-| `AUTH_TOKEN` | Clave que protege el servidor; debe ser igual a `COLAB_AUTH_TOKEN` en `legacy/.env` |
+| `AUTH_TOKEN` (o `COLAB_AUTH_TOKEN`) | Clave que protege el servidor; debe ser igual a `COLAB_AUTH_TOKEN` del `.env`. Si falta, la celda 3 se detiene (no levanta un servidor abierto) |
 
 Activar "Acceso del notebook" para ambos.
 
