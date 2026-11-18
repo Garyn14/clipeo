@@ -1,16 +1,19 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-18 (S5 cerrado e integrado)
+> Última actualización: 2026-11-18 (S6 implementado, en demo)
 
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Sprint:** S5 · Medios como fuente en producción **cerrado el 2026-11-18** (Garyn14/clipeo#17 integrado, demo
-  aprobada). S1–S5 cerrados. Próximo: planificar el **S6 · edición profesional**.
-- **Demo del sprint:** mismos momentos antes y después de la dirección editorial (video), juez medido con la misma
-  información que en producción, memoria actualizada con los datos de @nandoclips93.
+- **Sprint:** **S6 · Edición profesional**, rama `sprint/S6`, diseño y demo en `docs/sprints/S6.md`. Implementado:
+  CLIP-39 (corte 2x más rápido, `.env` de la raíz), CLIP-38 (encuadre 9:16 que sigue caras, sin zócalo en medios),
+  CLIP-37 (`docs/calidad/DIAGNOSTICO_EDICION.md`). 403 tests. **Falta:** revisión de la demo por el operador y PR.
+- **S7 propuesto (diagnóstico):** 1) encuadre que siga a Fritz (reconocimiento con fotos de referencia), 2) primer
+  cuadro nítido, 3) experimento de título sin caja medido con la audiencia, 4) clips en 720p.
+- Backlog de publicación (secundario): TikTok entrega el borrador sin descripción ni hashtags; el operador los pega.
+- S1–S5 cerrados.
 
 ## Tickets del sprint
 
