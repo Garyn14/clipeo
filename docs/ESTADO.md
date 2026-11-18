@@ -1,20 +1,19 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-18 (S7 implementado, en demo)
+> Última actualización: 2026-11-18 (S7 cerrado e integrado)
 
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Sprint:** **S7 · El encuadre sigue a Fritz**, rama `sprint/S7`, diseño y demo en `docs/sprints/S7.md`.
-  Implementado: CLIP-40 (reconoce a la persona del clip con SFace), CLIP-41 (primer cuadro nítido), CLIP-42 (sin
-  recuadros de TV). 415 tests. **Falta:** revisión de la demo por el operador y PR.
+- **Sprint:** S7 · El encuadre sigue a Fritz **cerrado el 2026-11-18** (Garyn14/clipeo#21, demo aprobada por el
+  operador): CLIP-40 (reconoce a la persona del clip con SFace), CLIP-41 (primer cuadro nítido), CLIP-42 (sin
+  recuadros de TV). 415 tests. S1–S7 cerrados. Próximo: planificar el **S8**.
 - Modelo SFace y caras de referencia **fuera del repo**: en otra máquina, descargar SFace (`legacy/edicion_video/assets/
   modelos/README.md`) y correr `python -m edicion_video.referencia_cara fritz <videos de su canal>`.
 - Pendientes del diagnóstico: experimento de título sin caja (con publicaciones reales), clips en 720p.
 - Backlog de publicación (secundario): TikTok entrega el borrador sin descripción ni hashtags; el operador los pega.
-- S1–S6 cerrados.
 
 ## Tickets del sprint
 
