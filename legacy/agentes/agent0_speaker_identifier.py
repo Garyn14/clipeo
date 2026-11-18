@@ -174,6 +174,22 @@ def _build_roster_context(config: dict, metadata: dict) -> str:
     return "\n".join(lines)
 
 
+def bloque_medios(fuente_sesion: dict | None) -> str:
+    """CLIP-28: en un segmento de TV/prensa el canal es un medio, no una persona; las voces se etiquetan por rol."""
+    if not fuente_sesion or fuente_sesion.get("tipo") != "medios":
+        return ""
+    sobre = fuente_sesion.get("sobre") or "el personaje"
+    canal = fuente_sesion.get("canal_origen") or "un medio"
+    return (
+        f"FUENTE: segmento de TV/prensa del canal «{canal}» sobre {sobre}.\n"
+        f"El canal es un MEDIO, no una persona: nunca asignes su nombre a un hablante.\n"
+        f"Voces típicas: conductor/a o presentador/a, reportero/a, entrevistados y, si aparece, {sobre}.\n"
+        f"Etiqueta cada voz por rol cuando no tenga nombre claro: «Conductor», «Reportero», «Entrevistado». "
+        f"Usa «{sobre}» solo si la transcripción lo deja claro (lo presentan, le hablan por su nombre o habla "
+        f"en primera persona de su negocio)."
+    )
+
+
 def _call_claude(
     client: anthropic.Anthropic, preview: str, metadata: dict, roster: str = "",
 ) -> dict:
@@ -272,6 +288,12 @@ def identify_speakers(
     client  = get_client()
     preview = _extract_preview(raw_text)
     roster  = _build_roster_context(config or {}, metadata)
+    from core import fuente as _fuente
+    fuente_sesion = _fuente.leer(Path(session_dir))
+    medios = bloque_medios(fuente_sesion)
+    if medios:   # CLIP-28: en medios el uploader es el noticiero, no un hablante
+        roster = (roster.split("\nCANAL/UPLOADER DEL VIDEO:")[0] + "\n\n" if roster else "") + medios
+        print("[AGENT0] Medios: hablantes por rol (conductor, reportero, entrevistado, persona del clip)")
     if roster:
         n_personajes = len((config or {}).get("personajes", []))
         print(f"[AGENT0] Roster cargado: {n_personajes} personaje(s) del nicho")
@@ -297,7 +319,7 @@ def identify_speakers(
 
     # Fallback: si todos quedaron sin confianza, usar metadata del video
     todos_sin_confianza = all(v == 0.0 for v in confianza.values())
-    if todos_sin_confianza and config:
+    if todos_sin_confianza and config and not medios:   # en medios el "dueño del canal" es el noticiero
         fallback = _fallback_single_speaker(raw_text, metadata, config)
         if fallback:
             mapa.update(fallback)
@@ -305,7 +327,7 @@ def identify_speakers(
             print("[AGENT0] ✅ Fallback aplicado")
 
     # Clasificar cada speaker según umbrales
-    dueno = _personaje_del_uploader(metadata, config or {})
+    dueno = None if medios else _personaje_del_uploader(metadata, config or {})
     speaker_map_detallado: dict[str, dict] = {}
     for spk in speakers:
         nombre_raw = mapa.get(spk, spk)
