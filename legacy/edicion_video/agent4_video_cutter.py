@@ -74,6 +74,12 @@ _MUSICA_DIR        = Path(__file__).parent / "assets" / "musica"
 _MUSICA_VOLUMEN    = 0.15  # bajo, para no tapar el diálogo original
 
 
+def _preset_x264() -> str:
+    """CLIP-39: 'veryfast' corta en la mitad de tiempo que 'medium' (12 s vs 23 s para 40 s de clip en la laptop
+    del operador) con calidad equivalente (SSIM 0,9964 vs 0,9973). CORTE_PRESET lo cambia."""
+    return os.environ.get("CORTE_PRESET", "").strip() or "veryfast"
+
+
 def _pick_music_track(mood: str) -> Path | None:
     """
     Elige (al azar) una pista de edicion_video/assets/musica/<mood>/ para
@@ -356,8 +362,12 @@ def _build_vf(
     layout_streaming: dict | None = None,
     source_width: int = 0, source_height: int = 0,
     imagen_relleno_path: Path | None = None,
+    encuadre_filtro: str | None = None,
 ) -> tuple[str, dict]:
     """
+    encuadre_filtro (CLIP-38, ver edicion_video/encuadre.py): crop 9:16 dinámico que sigue a las caras. Si viene
+    (solo con fuente horizontal y sin split-screen), reemplaza el relleno y el texto va como en el Caso B.
+
     has_letterbox decide la geometría (barra negra arriba/abajo vs. centrado
     en pantalla) — nunca si hay texto o cuánto dura, eso lo decide
     estilo_texto (editorial, viene de Agent 3): "sin_texto" | "fijo" |
@@ -406,6 +416,12 @@ def _build_vf(
     if usa_splitscreen:
         has_letterbox = False   # el split-screen ya resuelve el encuadre
 
+    usa_encuadre = bool(encuadre_filtro) and not usa_splitscreen and has_letterbox
+    if usa_encuadre:
+        # Caja 4:5 de 1080×1350 sobre blur: el texto va en la franja de arriba (Caso A) con su alto real
+        from edicion_video.encuadre import BARRA
+        bar_height = BARRA
+
     usa_imagen = (
         not usa_splitscreen and has_letterbox and layout == "imagen"
         and imagen_relleno_path is not None and source_width and source_height
@@ -433,6 +449,8 @@ def _build_vf(
         base = _build_vf_splitscreen(
             facecam_rect, contenido_rect, (layout_streaming or {}).get("overlays_ocultar"),
         )
+    elif usa_encuadre:
+        base = encuadre_filtro
     elif usa_imagen:
         base, imagen_params = _build_vf_imagen(source_width, source_height)
     elif usa_crop:
@@ -651,7 +669,9 @@ def _build_vf(
         params["cta_desde_seg"] = cta_desde
 
     if has_letterbox:
-        params["layout"] = layout
+        params["layout"] = "encuadre 4:5" if usa_encuadre else layout
+    if usa_encuadre:
+        params["encuadre_activo"] = True
     if usa_splitscreen:
         params["splitscreen"] = True
 
@@ -832,6 +852,7 @@ def _cut_clip(
     layout: str = "pillarbox",
     layout_streaming: dict | None = None,
     efecto_sonido: str | None = None,
+    franja_inferior: float = 0.0,
 ) -> bool:
     """
     Corta [inicio, fin] del video y ejecuta el estilo_texto pedido (decidido
@@ -873,12 +894,20 @@ def _cut_clip(
     else:
         estilo_estatico = estilo_texto
     imagen_relleno_path = _pick_imagen_relleno(mood) if layout == "imagen" else None
+    encuadre_filtro = None
+    if has_letterbox and not layout_streaming and layout in ("blur", "pillarbox", "crop"):   # CLIP-38
+        from edicion_video import encuadre
+        encuadre_filtro = encuadre.encuadrar(
+            video_path, _timestamp_to_seconds(inicio), duracion, source_width, source_height,
+            franja_inferior=franja_inferior,
+        )
     vf, params = _build_vf(
         linea1, linea2, font_rel, has_letterbox, bar_height, estilo_estatico,
         cta_texto=cta_texto, duracion_clip=duracion, layout=layout,
         layout_streaming=layout_streaming,
         source_width=source_width, source_height=source_height,
         imagen_relleno_path=imagen_relleno_path,
+        encuadre_filtro=encuadre_filtro,
     )
     imagen_extra_inputs = [imagen_relleno_path] if params.get("imagen_activa") else []
 
@@ -909,6 +938,8 @@ def _cut_clip(
         print(f"         y_text  : {params['y_text']}px  (centro barra: {bh//2}px)")
     elif params.get("caso") == "A0":
         print(f"         Layout  : Caso A0 — letterbox sin texto  |  barra {params['bar_height']}px")
+    elif params.get("encuadre_activo"):
+        print(f"         Layout  : Caso ENCUADRE — caja 4:5 que sigue a las caras, sin título")
     elif params.get("crop_activo"):
         print(f"         Layout  : Caso CROP — recorte centrado 9:16 (sin relleno)")
     elif params.get("caso") == "B" and "duracion_texto_seg" in params:
@@ -990,7 +1021,7 @@ def _cut_clip(
             "-t", str(duracion), "-v", "error",
             "-filter_complex", fc,
             *map_args,
-            "-c:v", "libx264", "-c:a", "aac", "-y",
+            "-c:v", "libx264", "-preset", _preset_x264(), "-c:a", "aac", "-y",
             str(output_path),
         ]
 
@@ -1052,6 +1083,7 @@ def _cut_compilation(
     palabras_clave: list[str] | None = None,
     layout: str = "pillarbox",
     layout_streaming: dict | None = None,
+    franja_inferior: float = 0.0,
 ) -> bool:
     """
     MOTOR de compilación multi-segmento (Fase 11, solo el lado de Agente 4
@@ -1098,6 +1130,7 @@ def _cut_compilation(
                 cta_texto=(cta_texto if es_ultimo else ""),
                 palabras_clave=(palabras_clave if es_primero else None),
                 layout=layout, layout_streaming=layout_streaming,
+                franja_inferior=franja_inferior,
             )
             if not ok:
                 print(f"  ❌ Falló el segmento {i + 1}/{len(segmentos)} de la compilación")
@@ -1198,6 +1231,9 @@ def run_agent(
         layout_streaming = item.get("layout_streaming")
         efecto_sonido  = item.get("efecto_sonido")
         segmentos      = item.get("segmentos")
+        # CLIP-38: en medios (TV/prensa) el encuadre deja fuera el zócalo del noticiero
+        from edicion_video.encuadre import FRANJA_MEDIOS
+        franja         = FRANJA_MEDIOS if (item.get("fuente") or {}).get("tipo") == "medios" else 0.0
 
         clip_id   = f"{clip_prefix}_{i + 1:02d}" if clip_prefix else f"clip_{i + 1 + clip_offset:03d}"
         clip_name = f"{clip_id}.mp4"
@@ -1223,7 +1259,7 @@ def run_agent(
                 session_dir=session_dir, mood=mood, estilo_texto=estilo_texto,
                 source_width=vid_info["width"], source_height=vid_info["height"],
                 cta_texto=cta_texto, palabras_clave=palabras_clave,
-                layout=layout, layout_streaming=layout_streaming,
+                layout=layout, layout_streaming=layout_streaming, franja_inferior=franja,
             )
         else:
             ok = _cut_clip(
@@ -1233,7 +1269,7 @@ def run_agent(
                 source_width=vid_info["width"], source_height=vid_info["height"],
                 cta_texto=cta_texto, palabras_clave=palabras_clave,
                 layout=layout, layout_streaming=layout_streaming,
-                efecto_sonido=efecto_sonido,
+                efecto_sonido=efecto_sonido, franja_inferior=franja,
             )
 
         if ok:

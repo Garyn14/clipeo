@@ -31,6 +31,7 @@ def colab_env(monkeypatch, tmp_path):
     monkeypatch.delenv("COLAB_AUTH_TOKEN", raising=False)
     # Sin esto, el .env real del proyecto pisaría la URL falsa (se relee en cada llamada).
     monkeypatch.setattr(video_transcriber, "_ENV_PATH", tmp_path / "no_existe.env")
+    monkeypatch.setattr(video_transcriber, "_ENV_PATH_RAIZ", tmp_path / "no_existe_raiz.env")
 
 
 @pytest.fixture
@@ -38,6 +39,20 @@ def env_file(monkeypatch, tmp_path):
     path = tmp_path / ".env"
     monkeypatch.setattr(video_transcriber, "_ENV_PATH", path)
     return path
+
+
+def test_lee_la_url_del_env_de_la_raiz(monkeypatch, tmp_path):
+    """CLIP-39: en la laptop del operador el .env vive en la raíz del repo, no en legacy/."""
+    raiz = tmp_path / "raiz.env"
+    raiz.write_text("COLAB_TRANSCRIBE_URL=https://raiz.trycloudflare.com\nCOLAB_AUTH_TOKEN=abc\n", encoding="utf-8")
+    monkeypatch.setattr(video_transcriber, "_ENV_PATH_RAIZ", raiz)
+    assert video_transcriber._colab_config() == ("https://raiz.trycloudflare.com/transcribe", "abc")
+
+    legacy = tmp_path / "legacy.env"
+    legacy.write_text("COLAB_TRANSCRIBE_URL=https://legacy.trycloudflare.com\n", encoding="utf-8")
+    monkeypatch.setattr(video_transcriber, "_ENV_PATH", legacy)
+    url, token = video_transcriber._colab_config()
+    assert url == "https://legacy.trycloudflare.com/transcribe" and token == "abc"   # legacy gana, token de la raíz
 
 
 def _mock_job_ok(requests_mock, base: str, job_id: str):

@@ -411,3 +411,12 @@ def test_build_vf_animated_resalta_palabras_clave_en_rojo():
     vendio_filter = [f for f in vf.split(",") if "text='vendio'" in f][0]
     assert "fontcolor=red" in fritz_filter
     assert "fontcolor=black" in vendio_filter
+
+
+def test_preset_x264_veryfast_por_defecto_y_configurable(monkeypatch):
+    """CLIP-39: el corte usa 'veryfast' (mitad de tiempo, misma calidad); CORTE_PRESET lo cambia."""
+    from edicion_video import agent4_video_cutter as a4
+    monkeypatch.delenv("CORTE_PRESET", raising=False)
+    assert a4._preset_x264() == "veryfast"
+    monkeypatch.setenv("CORTE_PRESET", "medium")
+    assert a4._preset_x264() == "medium"
