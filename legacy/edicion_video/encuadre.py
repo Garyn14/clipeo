@@ -25,6 +25,11 @@ from statistics import median
 # Modelo YuNet (OpenCV Zoo, licencia MIT): OpenCV 5 ya no trae el detector Haar. Si el archivo no está, se usa Haar
 # (OpenCV 4.x); si tampoco hay Haar, el encuadre se desactiva solo.
 MODELO_YUNET = Path(__file__).resolve().parent / "assets" / "modelos" / "face_detection_yunet_2023mar.onnx"
+# CLIP-40: SFace reconoce a la persona del clip (37 MB, fuera del repo: ver assets/modelos/README.md). Las caras de
+# referencia (datos biométricos) viven en assets/caras/<slug>.npy, también fuera del repo.
+MODELO_SFACE = MODELO_YUNET.parent / "face_recognition_sface_2021dec.onnx"
+DIR_CARAS = MODELO_YUNET.parent.parent / "caras"
+UMBRAL_SFACE = 0.363      # similitud coseno de "misma persona" recomendada por OpenCV para SFace
 
 PASO_S = 0.5              # una muestra cada medio segundo
 ANCHO_DETECCION = 640     # los cuadros se reducen a este ancho para detectar (rápido)
@@ -36,6 +41,7 @@ VELOCIDAD_MAX = 0.35      # como máximo 35% del ancho de la fuente por segundo
 SUPERPUESTA_ALTO = 0.10   # cara fija y chica (alto < 10% del cuadro) en ≥ 60% de las muestras = gráfico de TV
 SUPERPUESTA_FRECUENCIA = 0.6
 SUPERPUESTA_TOLERANCIA = 0.02   # "misma posición": centro a menos de 2% del ancho
+MARGEN_RECUADRO = 2.5     # CLIP-42: el recuadro de TV mide ~2,5 veces el ancho de la cara a cada lado
 
 
 def activado() -> bool:
@@ -61,31 +67,66 @@ def ancho_recorte(alto: int) -> int:
 # ── Detección (OpenCV) ──────────────────────────────────────
 
 def _detector(cv2):
-    """Función imagen → [(x, y, w, h)]: YuNet si está el modelo, si no Haar (OpenCV 4.x). ImportError si ninguno."""
+    """Función imagen → [((x, y, w, h), fila_yunet | None)]: YuNet si está el modelo, si no Haar (OpenCV 4.x)."""
     if MODELO_YUNET.exists() and hasattr(cv2, "FaceDetectorYN"):
         yunet = cv2.FaceDetectorYN.create(str(MODELO_YUNET), "", (320, 320), 0.7)
 
         def detectar(img):
             yunet.setInputSize((img.shape[1], img.shape[0]))
             _, caras = yunet.detect(img)
-            return [] if caras is None else [tuple(int(v) for v in c[:4]) for c in caras]
+            return [] if caras is None else [(tuple(int(v) for v in c[:4]), c) for c in caras]
         return detectar
     if hasattr(cv2, "CascadeClassifier"):
         haar = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 
         def detectar(img):
             gris = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            return [tuple(c) for c in haar.detectMultiScale(gris, scaleFactor=1.1, minNeighbors=5,
-                                                             minSize=(int(img.shape[0] * 0.08),) * 2)]
+            return [(tuple(c), None) for c in haar.detectMultiScale(gris, scaleFactor=1.1, minNeighbors=5,
+                                                                     minSize=(int(img.shape[0] * 0.08),) * 2)]
         return detectar
     raise ImportError(f"OpenCV {cv2.__version__} sin detector de caras: falta el modelo YuNet en {MODELO_YUNET}")
 
 
-def detectar_caras(video_path, inicio_s: float, duracion_s: float) -> list[tuple[float, list[tuple]]]:
-    """Caras por muestra, en píxeles de la fuente y con t relativo al inicio del clip. Requiere OpenCV."""
+def slug(nombre: str) -> str:
+    import unicodedata
+    plano = unicodedata.normalize("NFKD", nombre or "").encode("ascii", "ignore").decode().lower()
+    return "_".join("".join(ch if ch.isalnum() else " " for ch in plano).split())
+
+
+def cargar_referencias(persona: str | None):
+    """Embeddings SFace normalizados de la persona (matriz N×128), o None si no hay referencia o modelo."""
+    if not persona or not MODELO_SFACE.exists():
+        return None
+    ruta = DIR_CARAS / f"{slug(persona)}.npy"
+    if not ruta.exists():
+        return None
+    import numpy as np
+    return np.load(ruta)
+
+
+def _reconocedor(cv2, referencias):
+    """Función (imagen, fila_yunet) → es_sujeto, o None si no se puede reconocer."""
+    if referencias is None or not hasattr(cv2, "FaceRecognizerSF"):
+        return None
+    import numpy as np
+    sface = cv2.FaceRecognizerSF.create(str(MODELO_SFACE), "")
+
+    def es_sujeto(img, fila) -> bool:
+        if fila is None:
+            return False
+        f = sface.feature(sface.alignCrop(img, fila)).flatten()
+        f = f / (np.linalg.norm(f) or 1)
+        return bool(float((referencias @ f).max()) >= UMBRAL_SFACE)
+    return es_sujeto
+
+
+def detectar_caras(video_path, inicio_s: float, duracion_s: float, referencias=None) -> list[tuple[float, list[tuple]]]:
+    """Caras por muestra, en píxeles de la fuente y con t relativo al inicio del clip: (x, y, w, h) o, con
+    `referencias` (CLIP-40), (x, y, w, h, es_sujeto). Requiere OpenCV."""
     import cv2   # opcional: sin OpenCV, encuadrar() devuelve None y se usa el layout anterior
 
     detector = _detector(cv2)
+    reconocer = _reconocedor(cv2, referencias)
     cap = cv2.VideoCapture(str(video_path))
     try:
         muestras = []
@@ -98,8 +139,11 @@ def detectar_caras(video_path, inicio_s: float, duracion_s: float) -> list[tuple
             alto, ancho = frame.shape[:2]
             escala = ANCHO_DETECCION / ancho if ancho > ANCHO_DETECCION else 1.0
             chico = cv2.resize(frame, (int(ancho * escala), int(alto * escala))) if escala < 1 else frame
-            caras = detector(chico)
-            muestras.append((round(t, 2), [tuple(int(v / escala) for v in c) for c in caras]))
+            caras = []
+            for caja, fila in detector(chico):
+                c = tuple(int(v / escala) for v in caja)
+                caras.append(c + (reconocer(chico, fila),) if reconocer else c)
+            muestras.append((round(t, 2), caras))
             t += PASO_S
         return muestras
     finally:
@@ -109,9 +153,17 @@ def detectar_caras(video_path, inicio_s: float, duracion_s: float) -> list[tuple
 # ── Plan (puro) ─────────────────────────────────────────────
 
 def _centro_sujeto(caras: list[tuple], cw: int) -> tuple[float | None, bool]:
-    """(centro x del sujeto, caben_todas). Sujeto = grupo de caras si caben en el recorte; si no, la más grande."""
+    """(centro x del sujeto, caben_todas). Sujeto = grupo de caras si caben en el recorte; si no, la más grande.
+    CLIP-40: si alguna cara está reconocida como la persona del clip, manda ella (con las demás solo si caben)."""
     if not caras:
         return None, True
+    reconocidas = [c for c in caras if len(c) > 4 and c[4]]
+    if reconocidas:
+        x, _, w, _ = max(reconocidas, key=lambda c: c[2] * c[3])[:4]
+        izq = min(c[0] for c in caras)
+        der = max(c[0] + c[2] for c in caras)
+        return ((izq + der) / 2 if der - izq <= cw * 0.9 else x + w / 2), True
+    caras = [c[:4] for c in caras]
     if len(caras) == 1:   # un primer plano, aunque sea más ancho que el recorte, se centra igual
         x, _, w, _ = caras[0]
         return x + w / 2, True
@@ -126,25 +178,29 @@ def _centro_sujeto(caras: list[tuple], cw: int) -> tuple[float | None, bool]:
 def quitar_superpuestas(muestras: list[tuple[float, list[tuple]]], ancho: int, alto: int):
     """Quita caras de gráficos fijos de TV (intérprete de señas, recuadro del conductor): chicas y en la misma
     posición en casi todo el clip. Una persona real, aunque esté quieta, se mueve algo o es más grande."""
-    chicas = [(x + w / 2, y + h / 2) for _, caras in muestras for x, y, w, h in caras if h < SUPERPUESTA_ALTO * alto]
+    def reconocida(c):   # la persona del clip (CLIP-40) nunca es un gráfico, aunque esté quieta y chica
+        return len(c) > 4 and c[4]
+
+    chicas = [(c[0] + c[2] / 2, c[1] + c[3] / 2, c[2]) for _, caras in muestras for c in caras
+              if c[3] < SUPERPUESTA_ALTO * alto and not reconocida(c)]
     tol = SUPERPUESTA_TOLERANCIA * ancho
     fijas = []
-    for cx, cy in chicas:
-        if any(abs(cx - fx) < tol and abs(cy - fy) < tol for fx, fy in fijas):
+    for cx, cy, ancho_cara in chicas:
+        if any(abs(cx - fx) < tol and abs(cy - fy) < tol for fx, fy, _ in fijas):
             continue
         presentes = sum(
             1 for _, caras in muestras
-            if any(abs(x + w / 2 - cx) < tol and abs(y + h / 2 - cy) < tol and h < SUPERPUESTA_ALTO * alto
-                   for x, y, w, h in caras)
+            if any(abs(c[0] + c[2] / 2 - cx) < tol and abs(c[1] + c[3] / 2 - cy) < tol
+                   and c[3] < SUPERPUESTA_ALTO * alto for c in caras)
         )
         if presentes >= SUPERPUESTA_FRECUENCIA * len(muestras):
-            fijas.append((cx, cy))
+            fijas.append((cx, cy, ancho_cara))
 
     def es_fija(c):
-        x, y, w, h = c
-        return h < SUPERPUESTA_ALTO * alto and any(abs(x + w / 2 - fx) < tol and abs(y + h / 2 - fy) < tol
-                                                   for fx, fy in fijas)
-    return [(t, [c for c in caras if not es_fija(c)]) for t, caras in muestras], len(fijas)
+        x, y, w, h = c[:4]
+        return not reconocida(c) and h < SUPERPUESTA_ALTO * alto and any(abs(x + w / 2 - fx) < tol and abs(y + h / 2 - fy) < tol
+                                                   for fx, fy, _ in fijas)
+    return [(t, [c for c in caras if not es_fija(c)]) for t, caras in muestras], fijas
 
 
 def planificar(muestras: list[tuple[float, list[tuple]]], ancho: int, alto: int) -> list[tuple[float, int]] | None:
@@ -152,7 +208,7 @@ def planificar(muestras: list[tuple[float, list[tuple]]], ancho: int, alto: int)
     cw = ancho_recorte(alto)
     if not muestras or ancho <= cw:
         return None
-    muestras, _ = quitar_superpuestas(muestras, ancho, alto)
+    muestras, fijas = quitar_superpuestas(muestras, ancho, alto)
     centros, separadas = [], 0
     for t, caras in muestras:
         c, caben = _centro_sujeto(caras, cw)
@@ -187,7 +243,23 @@ def planificar(muestras: list[tuple[float, list[tuple]]], ancho: int, alto: int)
             actual += max(-paso, min(paso, objetivo - actual))
         keyframes.append((t, actual))
 
-    salida = [(t, int(min(max_x, max(0, c - cw / 2)))) for t, c in keyframes]
+    # CLIP-42: la ventana deja fuera los recuadros fijos de TV (margen MARGEN_RECUADRO × ancho de la cara), salvo
+    # que eso saque al sujeto del recorte
+    min_x, max_xr = 0, max_x
+    for fx, fy, fw in fijas:
+        if fy >= alto:
+            continue
+        if fx > ancho / 2:
+            max_xr = min(max_xr, max(0, int(fx - MARGEN_RECUADRO * fw - cw)))
+        else:
+            min_x = max(min_x, min(max_x, int(fx + MARGEN_RECUADRO * fw)))
+
+    def ubicar(c):
+        x = min(max_x, max(0, c - cw / 2))
+        x_limpio = min(max_xr, max(min_x, x))
+        return int(x_limpio if x_limpio <= c <= x_limpio + cw else x)
+
+    salida = [(t, ubicar(c)) for t, c in keyframes]
     # Comprimir sin cambiar la trayectoria: tramos quietos quedan como 2 puntos (inicio y fin)
     compacto = [salida[0]]
     for anterior, punto in zip(salida, salida[1:]):
@@ -220,7 +292,8 @@ def secciones_zoom(muestras: list[tuple[float, list[tuple]]], alto: int) -> list
         return []
     tramos, inicio = [], None
     for i, (t, caras) in enumerate(muestras):
-        primer_plano = len(caras) == 1 and caras[0][3] >= ZOOM_CARA_MIN * alto
+        primer_plano = (len(caras) == 1 and caras[0][3] >= ZOOM_CARA_MIN * alto
+                        and (len(caras[0]) < 5 or caras[0][4]))   # CLIP-40: con referencia, solo del sujeto
         if primer_plano and inicio is None:
             inicio = t
         fin_tramo = (not primer_plano or i == len(muestras) - 1) and inicio is not None
@@ -284,14 +357,17 @@ def alto_util(alto: int, franja_inferior: float = 0.0) -> int:
 # ── Todo junto ──────────────────────────────────────────────
 
 def encuadrar(video_path, inicio_s: float, duracion_s: float, ancho: int, alto: int,
-              franja_inferior: float = 0.0) -> str | None:
+              franja_inferior: float = 0.0, persona: str | None = None) -> str | None:
     """Filtro de crop dinámico para el clip, o None (apagado, fuente vertical, sin OpenCV o sin caras claras).
-    `franja_inferior` (0–1): parte de abajo del cuadro que queda fuera del recorte (zócalo de TV en medios)."""
+    `franja_inferior` (0–1): parte de abajo del cuadro que queda fuera del recorte (zócalo de TV en medios).
+    `persona` (CLIP-40): de quién trata el clip; si tiene caras de referencia, el encuadre la sigue a ella."""
     if not activado() or not ancho or not alto or ancho <= alto:
         return None
     alto_total, alto = alto, alto_util(alto, franja_inferior)
     try:
-        muestras = detectar_caras(video_path, inicio_s, duracion_s)
+        referencias = cargar_referencias(persona)
+        muestras = (detectar_caras(video_path, inicio_s, duracion_s, referencias) if referencias is not None
+                    else detectar_caras(video_path, inicio_s, duracion_s))
     except ImportError as e:
         print(f"         Encuadre: sin detector de caras ({e}) → layout anterior")
         return None
@@ -307,6 +383,9 @@ def encuadrar(video_path, inicio_s: float, duracion_s: float, ancho: int, alto: 
         return None
     secciones = secciones_zoom(quitar_superpuestas(muestras, ancho, alto)[0], alto)
     acercado = sum(b - a for a, b in secciones)
+    reconocida = sum(1 for _, caras in muestras if any(len(c) > 4 and c[4] for c in caras))
+    if referencias is not None:
+        print(f"         Encuadre: {persona} reconocido en {reconocida}/{len(muestras)} muestras")
     print(f"         Encuadre: 4:5 siguiendo caras ({con_cara}/{len(muestras)} muestras, {len(plan)} puntos de cámara)"
           f" · acercamiento en {len(secciones)} tramo(s), {acercado:.0f}s")
     return filtro(plan, secciones, alto)

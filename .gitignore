@@ -21,3 +21,5 @@ legacy/backend/publicacion.db*
 legacy/investigacion/*/muestra/
 demo_encuadre/
 diagnostico_edicion/
+legacy/edicion_video/assets/modelos/face_recognition_sface_2021dec.onnx
+legacy/edicion_video/assets/caras/
