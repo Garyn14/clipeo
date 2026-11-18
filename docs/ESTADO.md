@@ -1,18 +1,19 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-18 (S7 cerrado e integrado)
+> Última actualización: 2026-11-18 (S8 implementado)
 
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.3). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Sprint:** S7 · El encuadre sigue a Fritz **cerrado el 2026-11-18** (Garyn14/clipeo#21, demo aprobada por el
-  operador): CLIP-40 (reconoce a la persona del clip con SFace), CLIP-41 (primer cuadro nítido), CLIP-42 (sin
-  recuadros de TV). 415 tests. S1–S7 cerrados. Próximo: planificar el **S8**.
+- **Sprint:** **S8 · Medios a escala** (`docs/sprints/S8.md`, rama `sprint/S8`): CLIP-43 (búsqueda de fuentes de
+  medios para aprobar: 13 candidatos en `investigacion/zapatillas_peru/fuentes_medios.jsonl`), CLIP-44 (experimento
+  de título caja vs contorno, medido con la audiencia), CLIP-45 (720p: no es bug). 423 tests. S1–S7 cerrados.
+- **Siguiente para el operador:** aprobar fuentes (`python -m investigacion.fuentes_medios listar zapatillas_peru`),
+  publicar con link y, con ≥ 10 clips por variante, `python -m evaluacion.experimento_titulo zapatillas_peru`.
 - Modelo SFace y caras de referencia **fuera del repo**: en otra máquina, descargar SFace (`legacy/edicion_video/assets/
   modelos/README.md`) y correr `python -m edicion_video.referencia_cara fritz <videos de su canal>`.
-- Pendientes del diagnóstico: experimento de título sin caja (con publicaciones reales), clips en 720p.
 - Backlog de publicación (secundario): TikTok entrega el borrador sin descripción ni hashtags; el operador los pega.
 
 ## Tickets del sprint
