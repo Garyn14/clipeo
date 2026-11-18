@@ -850,6 +850,7 @@ def _cut_clip(
     layout: str = "pillarbox",
     layout_streaming: dict | None = None,
     efecto_sonido: str | None = None,
+    franja_inferior: float = 0.0,
 ) -> bool:
     """
     Corta [inicio, fin] del video y ejecuta el estilo_texto pedido (decidido
@@ -896,6 +897,7 @@ def _cut_clip(
         from edicion_video import encuadre
         encuadre_filtro = encuadre.encuadrar(
             video_path, _timestamp_to_seconds(inicio), duracion, source_width, source_height,
+            franja_inferior=franja_inferior,
         )
     vf, params = _build_vf(
         linea1, linea2, font_rel, has_letterbox, bar_height, estilo_estatico,
@@ -1079,6 +1081,7 @@ def _cut_compilation(
     palabras_clave: list[str] | None = None,
     layout: str = "pillarbox",
     layout_streaming: dict | None = None,
+    franja_inferior: float = 0.0,
 ) -> bool:
     """
     MOTOR de compilación multi-segmento (Fase 11, solo el lado de Agente 4
@@ -1125,6 +1128,7 @@ def _cut_compilation(
                 cta_texto=(cta_texto if es_ultimo else ""),
                 palabras_clave=(palabras_clave if es_primero else None),
                 layout=layout, layout_streaming=layout_streaming,
+                franja_inferior=franja_inferior,
             )
             if not ok:
                 print(f"  ❌ Falló el segmento {i + 1}/{len(segmentos)} de la compilación")
@@ -1225,6 +1229,9 @@ def run_agent(
         layout_streaming = item.get("layout_streaming")
         efecto_sonido  = item.get("efecto_sonido")
         segmentos      = item.get("segmentos")
+        # CLIP-38: en medios (TV/prensa) el encuadre deja fuera el zócalo del noticiero
+        from edicion_video.encuadre import FRANJA_MEDIOS
+        franja         = FRANJA_MEDIOS if (item.get("fuente") or {}).get("tipo") == "medios" else 0.0
 
         clip_id   = f"{clip_prefix}_{i + 1:02d}" if clip_prefix else f"clip_{i + 1 + clip_offset:03d}"
         clip_name = f"{clip_id}.mp4"
@@ -1250,7 +1257,7 @@ def run_agent(
                 session_dir=session_dir, mood=mood, estilo_texto=estilo_texto,
                 source_width=vid_info["width"], source_height=vid_info["height"],
                 cta_texto=cta_texto, palabras_clave=palabras_clave,
-                layout=layout, layout_streaming=layout_streaming,
+                layout=layout, layout_streaming=layout_streaming, franja_inferior=franja,
             )
         else:
             ok = _cut_clip(
@@ -1260,7 +1267,7 @@ def run_agent(
                 source_width=vid_info["width"], source_height=vid_info["height"],
                 cta_texto=cta_texto, palabras_clave=palabras_clave,
                 layout=layout, layout_streaming=layout_streaming,
-                efecto_sonido=efecto_sonido,
+                efecto_sonido=efecto_sonido, franja_inferior=franja,
             )
 
         if ok:

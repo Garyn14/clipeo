@@ -200,15 +200,29 @@ def expresion_x(keyframes: list[tuple[float, int]]) -> str:
 
 
 def filtro_crop(keyframes: list[tuple[float, int]], alto: int) -> str:
+    """`alto` es el alto útil del recorte (desde y=0): con franja inferior excluida, es menor que el de la fuente."""
     return f"crop=w={ancho_recorte(alto)}:h={alto}:x='{expresion_x(keyframes)}':y=0,scale=1080:1920"
+
+
+# Medios (TV/prensa): la franja de abajo es del noticiero (zócalo con el titular, reloj, intérprete de señas). En
+# la demo del S6 el zócalo de Latina empezaba en ~83% del alto; se excluye el 20% inferior (algo más de zoom).
+FRANJA_MEDIOS = 0.20
+
+
+def alto_util(alto: int, franja_inferior: float = 0.0) -> int:
+    util = int(alto * (1 - franja_inferior))
+    return util - (util % 2)
 
 
 # ── Todo junto ──────────────────────────────────────────────
 
-def encuadrar(video_path, inicio_s: float, duracion_s: float, ancho: int, alto: int) -> str | None:
-    """Filtro de crop dinámico para el clip, o None (apagado, fuente vertical, sin OpenCV o sin caras claras)."""
+def encuadrar(video_path, inicio_s: float, duracion_s: float, ancho: int, alto: int,
+              franja_inferior: float = 0.0) -> str | None:
+    """Filtro de crop dinámico para el clip, o None (apagado, fuente vertical, sin OpenCV o sin caras claras).
+    `franja_inferior` (0–1): parte de abajo del cuadro que queda fuera del recorte (zócalo de TV en medios)."""
     if not activado() or not ancho or not alto or ancho <= alto:
         return None
+    alto_total, alto = alto, alto_util(alto, franja_inferior)
     try:
         muestras = detectar_caras(video_path, inicio_s, duracion_s)
     except ImportError as e:
@@ -217,6 +231,8 @@ def encuadrar(video_path, inicio_s: float, duracion_s: float, ancho: int, alto: 
     except Exception as e:   # noqa: BLE001 — el encuadre nunca rompe un clip
         print(f"         Encuadre: falló la detección ({type(e).__name__}: {e}) → layout anterior")
         return None
+    if alto < alto_total:   # caras dentro de la franja excluida (intérprete, recuadros del zócalo) no cuentan
+        muestras = [(t, [c for c in caras if c[1] + c[3] / 2 < alto]) for t, caras in muestras]
     plan = planificar(muestras, ancho, alto)
     con_cara = sum(1 for _, c in muestras if c)
     if plan is None:

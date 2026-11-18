@@ -133,7 +133,8 @@ def test_build_vf_sin_encuadre_mantiene_el_blur():
 def test_cut_clip_pide_el_encuadre_solo_con_fuente_horizontal(monkeypatch, tmp_path):
     from edicion_video import agent4_video_cutter as a4
     pedidos, comandos = [], []
-    monkeypatch.setattr(encuadre, "encuadrar", lambda *a: pedidos.append(a) or encuadre.filtro_crop([(0.0, 657)], ALTO))
+    monkeypatch.setattr(encuadre, "encuadrar",
+                        lambda *a, **k: pedidos.append(a) or encuadre.filtro_crop([(0.0, 657)], ALTO))
 
     class Ok:
         returncode, stderr = 0, ""
@@ -169,3 +170,36 @@ def test_persona_quieta_pero_grande_no_es_grafico():
 def test_primer_plano_mas_ancho_que_el_recorte_se_centra():
     datos = [(round(i * 0.5, 2), [(1035, 0, 700, 456)]) for i in range(20)]
     assert encuadre.planificar(datos, ANCHO, ALTO)[0][1] == min(ANCHO - CW, 1385 - CW // 2)
+
+
+def test_franja_inferior_de_medios_achica_el_recorte_e_ignora_caras_del_zocalo(monkeypatch):
+    """Demo S6: en medios el zócalo del noticiero quedaba cortado; se excluye el 20% inferior."""
+    util = encuadre.alto_util(ALTO, encuadre.FRANJA_MEDIOS)
+    assert util == 864
+    zocalo = (1701, 900, 60, 72)                                   # cara dentro de la franja excluida
+    monkeypatch.setattr(encuadre, "detectar_caras",
+                        lambda *a: [(round(i * 0.5, 2), [cara(700), zocalo]) for i in range(20)])
+    f = encuadre.encuadrar("v.mp4", 0, 10, ANCHO, ALTO, franja_inferior=encuadre.FRANJA_MEDIOS)
+    cw = encuadre.ancho_recorte(util)
+    assert f == f"crop=w={cw}:h={util}:x='{700 - cw // 2}':y=0,scale=1080:1920"
+
+
+def test_run_agent_aplica_la_franja_solo_en_medios(monkeypatch, tmp_path):
+    import json
+    from pathlib import Path
+    from edicion_video import agent4_video_cutter as a4
+    franjas = []
+    def cortar(video, inicio, fin, l1, l2, salida, *a, **k):
+        franjas.append(k.get("franja_inferior"))
+        Path(salida).write_bytes(b"\x00")
+        return True
+    monkeypatch.setattr(a4, "_cut_clip", cortar)
+    monkeypatch.setattr(a4, "_detect_video_info",
+                        lambda p: {"width": ANCHO, "height": ALTO, "has_letterbox": True, "bar_height": 420})
+    monkeypatch.setattr(a4, "_prepare_font", lambda: ("", "default"))
+    (tmp_path / "v.mp4").write_bytes(b"\x00")
+    item = {"publicar": True, "rango_original": {"inicio": "00:00:10", "fin": "00:00:40"}, "texto_linea1": "a"}
+    (tmp_path / "contenido.json").write_text(json.dumps({"contenido": [
+        item, {**item, "fuente": {"tipo": "medios", "sobre": "Tío Fritz"}}]}), encoding="utf-8")
+    a4.run_agent(str(tmp_path / "contenido.json"), video_path_override=tmp_path / "v.mp4")
+    assert franjas == [0.0, encuadre.FRANJA_MEDIOS]
