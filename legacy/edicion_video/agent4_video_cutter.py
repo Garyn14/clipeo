@@ -74,6 +74,33 @@ _MUSICA_DIR        = Path(__file__).parent / "assets" / "musica"
 _MUSICA_VOLUMEN    = 0.15  # bajo, para no tapar el diálogo original
 
 
+ESTILOS_TITULO = ("caja", "contorno")
+
+
+def estilo_titulo_para(clave: str) -> str:
+    """CLIP-44: experimento de título. Mitad de los clips (asignación estable por sesión/clip) con el título sin caja,
+    con contorno; el resto como siempre. EXPERIMENTO_TITULO=0 lo apaga (todo 'caja'); =caja|contorno lo fija."""
+    import hashlib
+    modo = os.environ.get("EXPERIMENTO_TITULO", "1").strip().lower()
+    if modo in ESTILOS_TITULO:
+        return modo
+    if modo in ("0", "false", "no"):
+        return "caja"
+    return ESTILOS_TITULO[int(hashlib.md5(clave.encode("utf-8")).hexdigest(), 16) % 2]
+
+
+def _titulo_con_contorno(filters: list[str]) -> list[str]:
+    """Quita la caja blanca del título y lo dibuja en blanco con contorno negro (el CTA, con su propia caja, no cambia)."""
+    salida = []
+    for f in filters:
+        if f.startswith("drawbox=") and "color=white:t=fill" in f:
+            continue
+        if f.startswith("drawtext=") and "box=1" not in f and "fontcolor=black:" in f:
+            f = f.replace("fontcolor=black:", "fontcolor=white:borderw=5:bordercolor=black:")
+        salida.append(f)
+    return salida
+
+
 def _preset_x264() -> str:
     """CLIP-39: 'veryfast' corta en la mitad de tiempo que 'medium' (12 s vs 23 s para 40 s de clip en la laptop
     del operador) con calidad equivalente (SSIM 0,9964 vs 0,9973). CORTE_PRESET lo cambia."""
@@ -363,6 +390,7 @@ def _build_vf(
     source_width: int = 0, source_height: int = 0,
     imagen_relleno_path: Path | None = None,
     encuadre_filtro: str | None = None,
+    estilo_titulo: str = "caja",
 ) -> tuple[str, dict]:
     """
     encuadre_filtro (CLIP-38, ver edicion_video/encuadre.py): crop 9:16 dinámico que sigue a las caras. Si viene
@@ -674,6 +702,9 @@ def _build_vf(
         params["encuadre_activo"] = True
     if usa_splitscreen:
         params["splitscreen"] = True
+    if estilo_titulo == "contorno":   # CLIP-44
+        filters = _titulo_con_contorno(filters)
+    params["estilo_titulo"] = estilo_titulo
 
     return ",".join(filters), params
 
@@ -855,6 +886,7 @@ def _cut_clip(
     franja_inferior: float = 0.0,
     persona: str | None = None,
     ajustar_inicio: bool = True,
+    estilo_titulo: str = "caja",
 ) -> bool:
     """
     Corta [inicio, fin] del video y ejecuta el estilo_texto pedido (decidido
@@ -915,7 +947,7 @@ def _cut_clip(
         layout_streaming=layout_streaming,
         source_width=source_width, source_height=source_height,
         imagen_relleno_path=imagen_relleno_path,
-        encuadre_filtro=encuadre_filtro,
+        encuadre_filtro=encuadre_filtro, estilo_titulo=estilo_titulo,
     )
     imagen_extra_inputs = [imagen_relleno_path] if params.get("imagen_activa") else []
 
@@ -1093,6 +1125,7 @@ def _cut_compilation(
     layout_streaming: dict | None = None,
     franja_inferior: float = 0.0,
     persona: str | None = None,
+    estilo_titulo: str = "caja",
 ) -> bool:
     """
     MOTOR de compilación multi-segmento (Fase 11, solo el lado de Agente 4
@@ -1140,6 +1173,7 @@ def _cut_compilation(
                 palabras_clave=(palabras_clave if es_primero else None),
                 layout=layout, layout_streaming=layout_streaming,
                 franja_inferior=franja_inferior, persona=persona, ajustar_inicio=es_primero,
+                estilo_titulo=estilo_titulo,
             )
             if not ok:
                 print(f"  ❌ Falló el segmento {i + 1}/{len(segmentos)} de la compilación")
@@ -1250,6 +1284,7 @@ def run_agent(
         meta_name = f"{clip_id}.json"
         clip_path = clips_dir / clip_name
         meta_path = clips_dir / meta_name
+        estilo_titulo = estilo_titulo_para(f"{session_dir.name}/{clip_id}")   # CLIP-44
 
         print(f"[AGENT4] Clip {i + 1}/{len(a_publicar)}  →  {clip_name}")
         if segmentos:
@@ -1270,6 +1305,7 @@ def run_agent(
                 source_width=vid_info["width"], source_height=vid_info["height"],
                 cta_texto=cta_texto, palabras_clave=palabras_clave,
                 layout=layout, layout_streaming=layout_streaming, franja_inferior=franja, persona=persona,
+                estilo_titulo=estilo_titulo,
             )
         else:
             ok = _cut_clip(
@@ -1280,6 +1316,7 @@ def run_agent(
                 cta_texto=cta_texto, palabras_clave=palabras_clave,
                 layout=layout, layout_streaming=layout_streaming,
                 efecto_sonido=efecto_sonido, franja_inferior=franja, persona=persona,
+                estilo_titulo=estilo_titulo,
             )
 
         if ok:
@@ -1299,6 +1336,7 @@ def run_agent(
         }
         if item.get("fuente"):   # CLIP-27: medios de terceros (R-01)
             meta["fuente"] = item["fuente"]
+        meta["estilo_titulo"] = estilo_titulo   # CLIP-44: variante del experimento de título
         meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
         resultados.append({"ok": ok, "meta": meta, "path": str(clip_path), "clip_id": clip_id})
 
