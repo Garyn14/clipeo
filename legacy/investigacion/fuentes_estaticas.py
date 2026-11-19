@@ -17,7 +17,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -185,6 +184,15 @@ def candidatos(nicho: str) -> list[dict]:
 
 # ── Procesar ────────────────────────────────────────────────
 
+def _lanzar_registrado(cmd: list[str], sesion: str) -> tuple[str, int]:
+    """Lanza el pipeline como una corrida del backend (runs.json): el panel la ve en vivo, con su log."""
+    backend = str(LEGACY / "backend")
+    if backend not in sys.path:
+        sys.path.insert(0, backend)
+    from app.services import pipeline_runner
+    return pipeline_runner.lanzar_y_esperar(cmd, sesion, "fuentes")
+
+
 def procesar(nicho: str, ids: list[str]) -> list[dict]:
     """Corre el pipeline (con Colab) para cada candidato elegido y registra el resultado."""
     config = cargar_config(nicho)
@@ -205,8 +213,12 @@ def procesar(nicho: str, ids: list[str]) -> list[dict]:
                           "inicio": datetime.now().isoformat(timespec="seconds")})
         _guardar_historial(nicho, historial)            # el panel lo muestra como "Procesando"
         print(f"[FUENTES] Procesando «{f['titulo'][:60]}» -> {sesion}", flush=True)
-        r = subprocess.run(cmd, cwd=str(_stream_data().parent))
-        estado = "procesado" if r.returncode == 0 else "error"
+        try:
+            run_id, rc = _lanzar_registrado(cmd, sesion)
+        except Exception as e:  # noqa: BLE001 — p. ej. la sesión ya tiene una corrida en curso
+            print(f"[FUENTES] No se pudo lanzar {sesion}: {e}", flush=True)
+            rc = 1
+        estado = "procesado" if rc == 0 else "error"
         historial.append({"id": vid, "estado": estado, "sesion": sesion,
                           "procesado": datetime.now().isoformat(timespec="seconds")})
         resultados.append({"id": vid, "estado": estado, "sesion": sesion})
