@@ -1,0 +1,40 @@
+# Fuentes estáticas del nicho (CLIP-60). Se revisan a mano con "Ejecutar" (panel → Fuentes, o
+# `python -m investigacion.fuentes_estaticas ejecutar zapatillas_peru`). Sin cron (decisión del operador, 2026-11-18).
+#
+# rol: propio  → canal del cliente (sus streams): entra todo lo nuevo
+#      medios  → TV/prensa: solo si el título o la descripción mencionan las palabras clave
+# Plataformas: youtube (implementado). kick queda previsto para el futuro (no se procesa todavía).
+activo: true
+sobre: fritz                     # entidad de contexto/entidades/ (nombre, apodos) para títulos y encuadre
+ventana_inicial_dias: 7          # la primera vez que se revisa un canal (después: desde la última revisión)
+palabras_clave:                  # además del nombre y los apodos de la entidad
+  - fritz sport
+  - fritzsport
+  - tio fritz
+  - fritz durand
+canales:
+  - nombre: FRITZ SPORT
+    plataforma: youtube
+    url: https://www.youtube.com/channel/UCcNnyGHnzZnzkjUvOOkKaRg
+    rol: propio
+    activo: true
+  - nombre: Latina Noticias
+    plataforma: youtube
+    url: https://www.youtube.com/channel/UCpSJ5fGhmAME9Kx2D3ZvN3Q
+    rol: medios
+    activo: true
+  - nombre: Buenos Días Perú
+    plataforma: youtube
+    url: https://www.youtube.com/channel/UCFnOwPrJ-Skrzk_GPNBV5tg
+    rol: medios
+    activo: true
+  - nombre: 24 Horas
+    plataforma: youtube
+    url: https://www.youtube.com/channel/UCsakKsRww3J7pM6DavkrAIQ
+    rol: medios
+    activo: true
+  - nombre: Esto es Perú
+    plataforma: youtube
+    url: https://www.youtube.com/channel/UC1yY9FW6ZA7A7zuULU_NwTQ
+    rol: medios
+    activo: true
