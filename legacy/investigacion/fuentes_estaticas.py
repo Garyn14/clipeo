@@ -201,7 +201,10 @@ def procesar(nicho: str, ids: list[str]) -> list[dict]:
                "--session-id", sesion]
         if f.get("rol") == "medios":
             cmd += ["--medios", "--sobre", str(config.get("sobre") or "")]
-        print(f"[FUENTES] Procesando «{f['titulo'][:60]}» → {sesion}")
+        historial.append({"id": vid, "estado": "procesando", "sesion": sesion,
+                          "inicio": datetime.now().isoformat(timespec="seconds")})
+        _guardar_historial(nicho, historial)            # el panel lo muestra como "Procesando"
+        print(f"[FUENTES] Procesando «{f['titulo'][:60]}» -> {sesion}", flush=True)
         r = subprocess.run(cmd, cwd=str(_stream_data().parent))
         estado = "procesado" if r.returncode == 0 else "error"
         historial.append({"id": vid, "estado": estado, "sesion": sesion,
@@ -230,6 +233,13 @@ def descubrir(nicho: str) -> list[dict]:
 
 
 def main() -> None:
+    # En Windows la salida redirigida a un archivo usa cp1252: sin esto un título con emoji o acentos raros
+    # tumbaba el proceso antes de empezar (2026-11-19)
+    for flujo in (sys.stdout, sys.stderr):
+        try:
+            flujo.reconfigure(encoding="utf-8", errors="replace")
+        except AttributeError:
+            pass
     ap = argparse.ArgumentParser(description="S14: fuentes estáticas por nicho (manual)")
     sub = ap.add_subparsers(dest="accion", required=True)
     e = sub.add_parser("ejecutar"); e.add_argument("nicho")

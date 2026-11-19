@@ -7,10 +7,11 @@ import type { ClienteFuentes, FuentesNicho, ResumenEjecucion, VideoFuente } from
 // Todo manual ("Buscar ahora"), sin cron.
 
 type Ventana = "ultima" | "dias" | "ultimos";
-type FiltroHistorial = "todos" | "nuevo" | "procesado" | "descartado" | "error";
+type FiltroHistorial = "todos" | "nuevo" | "procesando" | "procesado" | "descartado" | "error";
 
 const ESTADOS: Record<string, { texto: string; clase: string }> = {
   nuevo: { texto: "Por procesar", clase: "pill-warn" },
+  procesando: { texto: "Procesando", clase: "pill-corriendo" },
   procesado: { texto: "Procesado", clase: "pill-ok" },
   descartado: { texto: "Descartado", clase: "pill-muted" },
   error: { texto: "Error", clase: "pill-fallido" },
@@ -238,7 +239,7 @@ export function Fuentes() {
           <details className="plegable">
             <summary>Historial ({datos.historial.length})</summary>
             <div className="pub-tabs fu-filtros">
-              {(["todos", "nuevo", "procesado", "descartado", "error"] as FiltroHistorial[]).map((f) => (
+              {(["todos", "nuevo", "procesando", "procesado", "descartado", "error"] as FiltroHistorial[]).map((f) => (
                 <a key={f} className={filtro === f ? "activo" : ""} onClick={() => setFiltro(f)}>
                   {f === "todos" ? "Todos" : ESTADOS[f].texto} ({f === "todos" ? datos.historial.length : conteo[f] ?? 0})
                 </a>

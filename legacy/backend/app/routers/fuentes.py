@@ -19,8 +19,10 @@ POST   /fuentes/{nicho}/manual                 {links, rol} → candidatos
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
+import time
 from datetime import datetime
 
 from fastapi import APIRouter, HTTPException
@@ -147,8 +149,17 @@ def procesar(nicho: str, body: ProcesarBody):
     LOGS.mkdir(parents=True, exist_ok=True)
     log = LOGS / f"fuentes_{nicho}_{datetime.now():%Y%m%d_%H%M%S}.log"
     with log.open("w", encoding="utf-8") as salida:
-        subprocess.Popen([sys.executable, "-u", "-m", "investigacion.fuentes_estaticas", "procesar", nicho, *ids],
-                         cwd=str(PROJECT_ROOT), stdout=salida, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL)
+        proc = subprocess.Popen([sys.executable, "-u", "-m", "investigacion.fuentes_estaticas", "procesar", nicho, *ids],
+                                cwd=str(PROJECT_ROOT), stdout=salida, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
+                                env={**os.environ, "PYTHONIOENCODING": "utf-8"})
+    # Si se cae al arrancar, avisarlo en vez de decir "procesando" (2026-11-19: falló por la codificación)
+    for _ in range(6):
+        time.sleep(0.5)
+        if proc.poll() is not None:
+            break
+    if proc.poll() not in (None, 0):
+        cola = log.read_text(encoding="utf-8", errors="replace")[-600:]
+        raise HTTPException(500, f"El procesamiento falló al arrancar: {cola}")
     return {"iniciado": ids, "log": log.name}
 
 

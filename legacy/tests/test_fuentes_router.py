@@ -28,7 +28,12 @@ def cliente(tmp_path, monkeypatch):
     from app.main import app
     from app.routers import fuentes
     lanzados = []
-    monkeypatch.setattr(fuentes.subprocess, "Popen", lambda cmd, **kw: lanzados.append(cmd))
+    class _Proc:
+        def poll(self):
+            return None                      # sigue corriendo (no falló al arrancar)
+
+    monkeypatch.setattr(fuentes.subprocess, "Popen", lambda cmd, **kw: lanzados.append(cmd) or _Proc())
+    monkeypatch.setattr(fuentes.time, "sleep", lambda s: None)
     monkeypatch.setattr(fuentes, "LOGS", tmp_path / "logs")
     c = TestClient(app)
     c.lanzados = lanzados
