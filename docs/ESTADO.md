@@ -31,8 +31,8 @@
   zapatillas_peru` (en `legacy/`).
 - Modelo SFace y caras de referencia **fuera del repo**: en otra máquina, descargar SFace (`legacy/edicion_video/assets/
   modelos/README.md`) y correr `python -m edicion_video.referencia_cara fritz <videos de su canal>`.
-- **S15 propuesto (aprobado por el operador 2026-11-19; pendiente de registrar en Jira, el conector volvió a perder
-  `personal-clipeo`):**
+- **S15 propuesto (aprobado por el operador 2026-11-19; registrado en Jira como CLIP-66 y CLIP-67).** El conector puede perder
+  el acceso a `personal-clipeo` al recargarse: si pasa, pedir al operador que lo reconecte.
   - **CLIP-66 · Administrar fuentes desde el panel, con tipo de fuente desacoplado** (solo YouTube implementado): ver,
     agregar (link → ID, nombre y últimos 5 videos antes de guardar), editar (activo, rol, nombre), quitar (conserva
     historial), palabras clave y sugerencias de `descubrir` con un clic. Cada tipo de fuente es una pieza que resuelve
