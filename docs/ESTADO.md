@@ -31,6 +31,16 @@
   zapatillas_peru` (en `legacy/`).
 - Modelo SFace y caras de referencia **fuera del repo**: en otra máquina, descargar SFace (`legacy/edicion_video/assets/
   modelos/README.md`) y correr `python -m edicion_video.referencia_cara fritz <videos de su canal>`.
+- **S15 propuesto (aprobado por el operador 2026-11-19; pendiente de registrar en Jira, el conector volvió a perder
+  `personal-clipeo`):**
+  - **CLIP-66 · Administrar fuentes desde el panel, con tipo de fuente desacoplado** (solo YouTube implementado): ver,
+    agregar (link → ID, nombre y últimos 5 videos antes de guardar), editar (activo, rol, nombre), quitar (conserva
+    historial), palabras clave y sugerencias de `descubrir` con un clic. Cada tipo de fuente es una pieza que resuelve
+    el link, lista videos recientes y dice si se pueden procesar; agregar una plataforma = registrar una pieza nueva.
+    `fuentes.yaml` sigue siendo la fuente de verdad. Criterio clave: un tipo simulado recorre todo el flujo sin tocar
+    el código común.
+  - **CLIP-67 · Tipo de fuente "lista manual"**: pegar links de cualquier sitio que `yt-dlp` sepa descargar, sin
+    búsqueda automática; quedan como candidatos y se procesan igual. Cubre plataformas sin forma de listar videos.
 - **CLIP-65 · Colab de un solo paso** (por hacer): un "Ejecutar todas" sin reinicio manual y la URL del túnel en una
   línea. Mientras tanto, Claude espera en segundo plano y revisa una sola vez (`docs/CUENTAS.md`).
 - **Jira resincronizado (2026-11-19):** los tickets CLIP-38…64 de S6–S14 no existían en Jira (el conector apuntaba a
