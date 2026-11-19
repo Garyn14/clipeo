@@ -26,6 +26,8 @@ export function AdministrarFuentes({ datos, alCambiar }: { datos: FuentesNicho; 
   const [palabras, setPalabras] = useState<string[]>(datos.palabras_clave);
   const [nuevaPalabra, setNuevaPalabra] = useState("");
   const [ocupado, setOcupado] = useState(false);
+  // Confirmación en la página (los diálogos nativos como window.confirm se bloquean en algunos navegadores)
+  const [aQuitar, setAQuitar] = useState<string | null>(null);
   const [aviso, setAviso] = useState<{ tipo: "ok" | "error"; texto: string } | null>(null);
 
   useEffect(() => { api.getTiposFuente().then(setTipos).catch(() => setTipos([])); }, []);
@@ -103,11 +105,19 @@ export function AdministrarFuentes({ datos, alCambiar }: { datos: FuentesNicho; 
                     onChange={(e) => accion(() => api.editarCanal(nicho, { url: c.url, rol: e.target.value }).then(() => undefined))}>
               {ROLES.map((r) => <option key={r.valor} value={r.valor}>{r.texto}</option>)}
             </select>
-            <button className="btn-link fu-quitar" disabled={ocupado}
-                    onClick={() => window.confirm(`¿Quitar «${c.nombre}»? Su historial se conserva.`) &&
-                      accion(() => api.quitarCanal(nicho, c.url).then(() => undefined), `«${c.nombre}» quitado.`)}>
-              Quitar
-            </button>
+            {aQuitar === c.url ? (
+              <span className="fu-confirmar">
+                ¿Quitar? El historial se conserva.
+                <button className="btn btn-danger" disabled={ocupado}
+                        onClick={() => accion(() => api.quitarCanal(nicho, c.url).then(() => setAQuitar(null)),
+                          `«${c.nombre}» quitado.`)}>
+                  Sí, quitar
+                </button>
+                <button className="btn-link" onClick={() => setAQuitar(null)}>Cancelar</button>
+              </span>
+            ) : (
+              <button className="btn-link fu-quitar" disabled={ocupado} onClick={() => setAQuitar(c.url)}>Quitar</button>
+            )}
           </li>
         ))}
       </ul>
