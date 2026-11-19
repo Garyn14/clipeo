@@ -45,7 +45,7 @@ los ve ni los escribe.
 
 **Ahorro de tokens:** no vigilar Colab con esperas, capturas o consultas repetidas. Las esperas se hacen con un
 temporizador en segundo plano (p. ej. `sleep 420` lanzado en background: avisa al terminar y no consume nada mientras
-corre) y después se revisa **una sola vez**. Objetivo: ~8–10 llamadas por levantamiento (antes ~30). El ticket "Colab de un solo paso" (backlog en `docs/ESTADO.md`) simplifica
+corre) y después se revisa **una sola vez**. Objetivo: ~8–10 llamadas por levantamiento (antes ~30). CLIP-65 simplifica
 el notebook a un solo "Ejecutar todas" sin reinicio.
 
 Ver también `docs/OPERACION.md` §2.
