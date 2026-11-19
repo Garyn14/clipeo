@@ -30,12 +30,21 @@ los ve ni los escribe.
 
 ## Levantar Colab (lo hace Claude, sin el operador)
 
-1. Leer `colab.defecto` de `cuentas.local.yaml`. Abrir en el navegador integrado
-   `https://colab.research.google.com/github/Garyn14/clipeo/blob/main/legacy/colab/transcripcion_colab.ipynb`
-   y comprobar que la cuenta activa (avatar arriba a la derecha) es esa. Si es otra o no hay sesión: **parar y avisar**
-   al operador (no iniciar sesión ni cambiar de cuenta por su cuenta).
+**Regla del operador (2026-11-19):** buscar siempre el notebook **`CLIPEO.ipynb`** (en la cuenta principal se llama
+`CLIPEO_COLAB.ipynb`: buscar "CLIPEO"). Si en una cuenta no se puede (sin GPU, cupo agotado, sin el notebook),
+**cambiar a la otra cuenta**: las dos tienen la sesión de Google ya iniciada en el navegador integrado, así que el
+cambio es solo de `?authuser=N` en la URL, sin iniciar sesión.
+
+| Cuenta | `authuser` | Notebook |
+|---|---|---|
+| Principal (`colab.defecto` en `cuentas.local.yaml`) | 0 | `CLIPEO_COLAB.ipynb` |
+| Respaldo (`colab.respaldo`) | 1 | `CLIPEO.ipynb` |
+
+1. Abrir `https://colab.research.google.com/?authuser=N` y buscar "CLIPEO" en *Abrir cuaderno* (o Drive). Comprobar
+   que la cuenta activa (avatar) sea la esperada. Si no hay sesión iniciada en esa cuenta: **parar y avisar** al
+   operador (Claude nunca inicia sesión).
 2. Entorno de ejecución → GPU T4 (si queda en "Asignando…" varios minutos o conecta sin GPU, el cupo diario de esa
-   cuenta probablemente se agotó: avisar al operador para usar la de respaldo).
+   cuenta probablemente se agotó: cambiar a la otra cuenta con `?authuser=N`, sin preguntar).
 3. Ejecutar la **única celda** del notebook (CLIP-65) y **esperar en segundo plano ~3 min** (`sleep 180` en
    background); luego **una sola** revisión de la salida. La barra muestra la etapa; al final está la línea
    `URL_TUNEL=…`. Si una etapa falla, la salida dice cuál y muestra el log.
