@@ -31,6 +31,11 @@
   zapatillas_peru` (en `legacy/`).
 - Modelo SFace y caras de referencia **fuera del repo**: en otra máquina, descargar SFace (`legacy/edicion_video/assets/
   modelos/README.md`) y correr `python -m edicion_video.referencia_cara fritz <videos de su canal>`.
+- **Ticket por crear en Jira (el conector no tiene acceso a `personal-clipeo` desde el 19-11):** *Colab de un solo paso*:
+  la celda 3 levanta el servidor en un proceso nuevo, así basta un "Ejecutar todas" sin reinicio manual; la URL del túnel
+  se imprime en una línea (`URL_TUNEL=…`). Criterios: túnel arriba sin reiniciar, Secrets y diarización intactos,
+  `docs/CUENTAS.md` y OPERACION §2 al día, prueba real de punta a punta. Motivo: levantar Colab costó ~30 llamadas.
+  Mientras tanto, Claude espera en segundo plano y revisa una sola vez (`docs/CUENTAS.md`).
 - Backlog de publicación (secundario, CLIP-12):
   - **TikTok automático de punta a punta:** los borradores enviados por la API (bandeja/"Actividad") **no se pueden
     terminar desde la web** (TikTok Studio muestra 0 borradores; verificado 2026-11-18), solo desde la app. La única

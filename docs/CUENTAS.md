@@ -35,11 +35,18 @@ los ve ni los escribe.
    y comprobar que la cuenta activa (avatar arriba a la derecha) es esa. Si es otra o no hay sesión: **parar y avisar**
    al operador (no iniciar sesión ni cambiar de cuenta por su cuenta).
 2. Entorno de ejecución → GPU T4.
-3. Ejecutar **celdas 1 y 2** → **Entorno de ejecución → Reiniciar sesión** → ejecutar **celda 3**. Si falla,
-   reintentar. Si Colab pide dar acceso a un Secret, avisar al operador (es su decisión).
+3. Ejecutar **celdas 1 y 2** (encolar la 2 detrás de la 1) → **esperar en segundo plano ~7 min** → una sola
+   revisión → **Reiniciar sesión** (paleta *Comandos* → "Reiniciar sesión"; el atajo Ctrl+M . no siempre responde)
+   → ejecutar **celda 3** → **esperar en segundo plano ~2 min** → leer la URL. Si falla, reintentar. Si Colab pide
+   dar acceso a un Secret, avisar al operador (es su decisión).
 4. Copiar la URL `https://….trycloudflare.com` que imprime la celda 3 a `COLAB_TRANSCRIBE_URL` en el `.env`.
 5. Comprobar el túnel (`colab_vivo` o la página Fuentes del panel, que muestra el estado).
 6. Si se acabó el cupo de GPU, avisar al operador para pasar a la cuenta de respaldo.
+
+**Ahorro de tokens:** no vigilar Colab con esperas, capturas o consultas repetidas. Las esperas se hacen con un
+temporizador en segundo plano (p. ej. `sleep 420` lanzado en background: avisa al terminar y no consume nada mientras
+corre) y después se revisa **una sola vez**. Objetivo: ~8–10 llamadas por levantamiento (antes ~30). El ticket "Colab de un solo paso" (backlog en `docs/ESTADO.md`) simplifica
+el notebook a un solo "Ejecutar todas" sin reinicio.
 
 Ver también `docs/OPERACION.md` §2.
 
