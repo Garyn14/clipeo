@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.publicacion import motor
-from app.routers import clips, config, errores, publicaciones, runs, sessions
+from app.routers import clips, config, errores, publicaciones, runs, sessions, fuentes
 from app.services import review_actions
 
 
@@ -33,6 +33,7 @@ app.include_router(runs.router)
 app.include_router(clips.router)
 app.include_router(errores.router)
 app.include_router(publicaciones.router)
+app.include_router(fuentes.router)   # S14: fuentes estáticas por nicho
 
 
 @app.get("/health")

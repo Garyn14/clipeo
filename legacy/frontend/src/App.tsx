@@ -3,6 +3,7 @@ import "./App.css";
 import { Configuracion } from "./pages/Configuracion";
 import { DetalleSesion } from "./pages/DetalleSesion";
 import { Errores } from "./pages/Errores";
+import { Fuentes } from "./pages/Fuentes";
 import { EstadoCorrida } from "./pages/EstadoCorrida";
 import { NuevaCorrida } from "./pages/NuevaCorrida";
 import { Publicaciones } from "./pages/Publicaciones";
@@ -17,6 +18,7 @@ function App() {
         <NavLink to="/" end>
           Nueva corrida
         </NavLink>
+        <NavLink to="/fuentes">Fuentes</NavLink>
         <NavLink to="/sesiones">Sesiones</NavLink>
         <NavLink to="/errores">Errores</NavLink>
         <NavLink to="/publicaciones">Publicaciones</NavLink>
@@ -27,6 +29,7 @@ function App() {
         <Routes>
           <Route path="/" element={<NuevaCorrida />} />
           <Route path="/runs/:runId" element={<EstadoCorrida />} />
+          <Route path="/fuentes" element={<Fuentes />} />
           <Route path="/sesiones" element={<Sesiones />} />
           <Route path="/sesiones/:sessionId" element={<DetalleSesion />} />
           <Route path="/sesiones/:sessionId/revision" element={<RevisionClips />} />

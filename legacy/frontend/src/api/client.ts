@@ -1,4 +1,4 @@
-import type {
+import type { FuentesNicho, ResumenEjecucion,
   Canal,
   ClipView,
   CuentaPublicacion,
@@ -51,6 +51,17 @@ function query(params: Record<string, string | boolean | undefined>): string {
 }
 
 export const api = {
+  // S14: fuentes estáticas
+  getNichosFuentes: () => request<string[]>("/fuentes"),
+  getFuentes: (nicho: string) => request<FuentesNicho>(`/fuentes/${nicho}`),
+  ejecutarFuentes: (nicho: string, body: { dias?: number; ultimos?: number }) =>
+    request<ResumenEjecucion>(`/fuentes/${nicho}/ejecutar`, { method: "POST", body: JSON.stringify(body) }),
+  procesarFuentes: (nicho: string, ids: string[]) =>
+    request<{ iniciado: string[]; log: string }>(`/fuentes/${nicho}/procesar`, {
+      method: "POST",
+      body: JSON.stringify({ ids }),
+    }),
+
   getCanales: () => request<Canal[]>("/config/canales"),
 
   getEnvStatus: () => request<EnvField[]>("/config/env"),

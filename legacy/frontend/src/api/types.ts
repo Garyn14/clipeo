@@ -406,3 +406,41 @@ export interface EnvField {
   value: string;
   masked_value: string;
 }
+
+// ── S14: fuentes estáticas por nicho ──
+export interface CanalFuente {
+  nombre: string;
+  plataforma: string;
+  url: string;
+  rol: "propio" | "medios";
+  activo?: boolean;
+  ultima_revision?: string | null;
+}
+
+export interface VideoFuente {
+  id: string;
+  url?: string;
+  titulo?: string;
+  canal?: string;
+  rol?: string;
+  publicado?: string | null;
+  detectado?: string;
+  estado: string;
+  motivo?: string;
+  sesion?: string;
+}
+
+export interface FuentesNicho {
+  nicho: string;
+  activo: boolean;
+  ventana_inicial_dias: number;
+  canales: CanalFuente[];
+  candidatos: VideoFuente[];
+  historial: VideoFuente[];
+  colab: { vivo: boolean; motivo: string };
+}
+
+export interface ResumenEjecucion {
+  activo: boolean;
+  canales: { canal: string; nuevos: number; descartados: number; error?: string }[];
+}
