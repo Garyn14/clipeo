@@ -36,7 +36,7 @@ def cliente(tmp_path, monkeypatch):
 
 
 def test_nichos_detalle_y_404(cliente):
-    assert cliente.get("/fuentes").json() == ["n"]
+    assert cliente.get("/fuentes").json() == [{"nicho": "n", "cliente": "N", "canales": 1, "candidatos": 0}]
     d = cliente.get("/fuentes/n").json()
     assert d["activo"] and d["canales"][0]["ultima_revision"] is None and d["colab"] == {"vivo": False, "motivo": "caído"}
     assert cliente.get("/fuentes/otro").status_code == 404

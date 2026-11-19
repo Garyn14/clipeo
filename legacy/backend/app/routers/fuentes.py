@@ -38,10 +38,20 @@ def _existe(nicho: str) -> None:
         raise HTTPException(404, f"El nicho {nicho} no tiene fuentes.yaml")
 
 
+def _cliente(nicho: str, config: dict) -> str:
+    return config.get("cliente") or (config.get("sobre") or nicho).replace("_", " ").title()
+
+
 @router.get("")
 def nichos():
+    """Clientes con fuentes: para el selector (nombre visible, canales y candidatos pendientes)."""
     base = comun.RAIZ / "investigacion"
-    return sorted(p.parent.name for p in base.glob("*/fuentes.yaml"))
+    salida = []
+    for nicho in sorted(p.parent.name for p in base.glob("*/fuentes.yaml")):
+        config = fe.cargar_config(nicho)
+        salida.append({"nicho": nicho, "cliente": _cliente(nicho, config),
+                       "canales": len(config.get("canales") or []), "candidatos": len(fe.candidatos(nicho))})
+    return salida
 
 
 @router.get("/{nicho}")
@@ -61,6 +71,7 @@ def detalle(nicho: str):
         vivo, motivo = False, str(e)
     return {
         "nicho": nicho,
+        "cliente": _cliente(nicho, config),
         "activo": config.get("activo", True),
         "ventana_inicial_dias": config.get("ventana_inicial_dias", 7),
         "canales": [{**c, "ultima_revision": estado.get(c.get("url"))} for c in config.get("canales") or []],
