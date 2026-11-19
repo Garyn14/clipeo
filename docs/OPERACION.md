@@ -19,12 +19,11 @@ La transcripción se hace **solo en Colab** (WhisperX local no se usa).
 
 > Claude puede levantarlo solo en el navegador integrado con la cuenta por defecto: ver `docs/CUENTAS.md`.
 
-1. Abrir `legacy/colab/transcripcion_colab.ipynb` en Colab (desde GitHub) con una cuenta que tenga los Secrets
-   `HF_TOKEN` y `COLAB_AUTH_TOKEN` (o `AUTH_TOKEN`), con "Acceso del notebook".
-2. GPU T4 → ejecutar **celdas 1 y 2** → **Entorno de ejecución → Reiniciar sesión** → ejecutar **celda 3** (si falla,
-   reintentar; la primera vez Colab pide dar acceso a cada Secret).
-3. Copiar la URL `https://….trycloudflare.com` a `COLAB_TRANSCRIBE_URL` en `.env`.
-4. Si se acaba el cupo de GPU de una cuenta, cambiar de cuenta.
+1. Abrir el notebook de la cuenta (una sola celda; ver `legacy/colab/README.md`) con los Secrets `HF_TOKEN` y
+   `COLAB_AUTH_TOKEN` (o `AUTH_TOKEN`) con "Acceso del notebook".
+2. GPU T4 → ejecutar la celda. Barra de progreso; listo en ~3 min, sin reiniciar la sesión.
+3. Copiar la línea `URL_TUNEL=https://….trycloudflare.com` a `COLAB_TRANSCRIBE_URL` en `.env`.
+4. Al terminar, **finalizar la sesión** (ahorra el cupo de GPU). Si se acaba el cupo, usar la cuenta de respaldo.
 
 El pipeline comprueba el túnel antes de descargar y para con un mensaje si está caído (CLIP-56).
 

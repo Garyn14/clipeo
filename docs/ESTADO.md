@@ -41,8 +41,9 @@
     el código común.
   - **CLIP-67 · Tipo de fuente "lista manual"**: pegar links de cualquier sitio que `yt-dlp` sepa descargar, sin
     búsqueda automática; quedan como candidatos y se procesan igual. Cubre plataformas sin forma de listar videos.
-- **CLIP-65 · Colab de un solo paso** (por hacer): un "Ejecutar todas" sin reinicio manual y la URL del túnel en una
-  línea. Mientras tanto, Claude espera en segundo plano y revisa una sola vez (`docs/CUENTAS.md`).
+- **CLIP-65 · Colab de un solo paso: hecho** (`docs/sprints/S15.md`, rama `sprint/S15`). Una celda, barra de progreso,
+  sin reinicio, listo en 2:30. Regla nueva: finalizar la sesión de Colab al terminar (una olvidada agota el cupo).
+  Cuenta principal sin GPU el 19-11 por cupo; se usó la de respaldo (`cuentas.local.yaml`).
 - **Jira resincronizado (2026-11-19):** los tickets CLIP-38…64 de S6–S14 no existían en Jira (el conector apuntaba a
   otro sitio). Se crearon con las mismas claves que el repo: S5–S13 en Finalizada, S14 (CLIP-60…64) en revisión.
   CLIP-35/36/37 de Jira se renombraron a su significado en el repo.
