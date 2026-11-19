@@ -17,6 +17,8 @@ publicación espera.
 
 La transcripción se hace **solo en Colab** (WhisperX local no se usa).
 
+> Claude puede levantarlo solo en el navegador integrado con la cuenta por defecto: ver `docs/CUENTAS.md`.
+
 1. Abrir `legacy/colab/transcripcion_colab.ipynb` en Colab (desde GitHub) con una cuenta que tenga los Secrets
    `HF_TOKEN` y `COLAB_AUTH_TOKEN` (o `AUTH_TOKEN`), con "Acceso del notebook".
 2. GPU T4 → ejecutar **celdas 1 y 2** → **Entorno de ejecución → Reiniciar sesión** → ejecutar **celda 3** (si falla,
