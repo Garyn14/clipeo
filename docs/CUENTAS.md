@@ -30,17 +30,17 @@ los ve ni los escribe.
 
 ## Levantar Colab (lo hace Claude, sin el operador)
 
-**Regla del operador (2026-11-19):** buscar siempre el notebook **`CLIPEO.ipynb`** (en la cuenta principal se llama
-`CLIPEO_COLAB.ipynb`: buscar "CLIPEO"). Si en una cuenta no se puede (sin GPU, cupo agotado, sin el notebook),
+**Regla del operador (2026-11-19):** buscar siempre el notebook **`CLIPEO_COLAB.ipynb`** (mismo nombre en ambas
+cuentas). Si en una cuenta no se puede (sin GPU, cupo agotado, sin el notebook),
 **cambiar a la otra cuenta**: las dos tienen la sesión de Google ya iniciada en el navegador integrado, así que el
 cambio es solo de `?authuser=N` en la URL, sin iniciar sesión.
 
 | Cuenta | `authuser` | Notebook |
 |---|---|---|
 | Principal (`colab.defecto` en `cuentas.local.yaml`) | 0 | `CLIPEO_COLAB.ipynb` |
-| Respaldo (`colab.respaldo`) | 1 | `CLIPEO.ipynb` |
+| Respaldo (`colab.respaldo`) | 1 | `CLIPEO_COLAB.ipynb` |
 
-1. Abrir `https://colab.research.google.com/?authuser=N` y buscar "CLIPEO" en *Abrir cuaderno* (o Drive). Comprobar
+1. Abrir `https://colab.research.google.com/?authuser=N` y buscar `CLIPEO_COLAB.ipynb` en *Abrir cuaderno* (o Drive). Comprobar
    que la cuenta activa (avatar) sea la esperada. Si no hay sesión iniciada en esa cuenta: **parar y avisar** al
    operador (Claude nunca inicia sesión).
 2. Entorno de ejecución → GPU T4 (si queda en "Asignando…" varios minutos o conecta sin GPU, el cupo diario de esa
