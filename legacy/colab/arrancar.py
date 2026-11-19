@@ -150,8 +150,7 @@ def main(rama: str = "main"):
         _fallar(barra, 0, "falta el Secret AUTH_TOKEN o COLAB_AUTH_TOKEN (🔑, con 'Acceso del notebook')")
     if not hf:
         print("⚠ Falta el Secret HF_TOKEN: no habrá diarización (pyannote).")
-    gpu = subprocess.run(["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"], capture_output=True, text=True)
-    if gpu.returncode != 0:
+    if not shutil.which("nvidia-smi") or subprocess.run(["nvidia-smi"], capture_output=True).returncode != 0:
         _fallar(barra, 0, "no hay GPU: Entorno de ejecución → Cambiar tipo → GPU T4")
     torch_antes = {p: _version(p) for p in ("torch", "torchaudio", "torchvision")}
 
