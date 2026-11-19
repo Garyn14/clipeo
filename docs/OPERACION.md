@@ -17,6 +17,8 @@ publicación espera.
 
 La transcripción se hace **solo en Colab** (WhisperX local no se usa).
 
+> Claude puede levantarlo solo en el navegador integrado con la cuenta por defecto: ver `docs/CUENTAS.md`.
+
 1. Abrir `legacy/colab/transcripcion_colab.ipynb` en Colab (desde GitHub) con una cuenta que tenga los Secrets
    `HF_TOKEN` y `COLAB_AUTH_TOKEN` (o `AUTH_TOKEN`), con "Acceso del notebook".
 2. GPU T4 → ejecutar **celdas 1 y 2** → **Entorno de ejecución → Reiniciar sesión** → ejecutar **celda 3** (si falla,
@@ -66,7 +68,8 @@ python -m evaluacion.experimento_titulo zapatillas_peru
 
 1. Python 3.10+, Node.js, FFmpeg, `yt-dlp`; `pip install -r legacy/requirements.txt`; `npm install` en
    `legacy/frontend`.
-2. Copiar el `.env` (secretos: **nunca** por chat ni al repo) y la carpeta `data/` (base de publicación con las cuentas).
+2. Copiar el `.env` (secretos: **nunca** por chat ni al repo) y la carpeta `data/` (base de publicación con las cuentas). Copiar también `cuentas.local.yaml`
+   (mapa de cuentas, ignorado por git; ver `docs/CUENTAS.md`).
    Si no se copia `data/`, hay que reconectar TikTok y YouTube en el panel.
 3. `.env` con rutas relativas a la raíz: `CLIPEO_STREAM_DATA=stream_data`, `PUBLICACION_DB=data/publicacion.db`.
 4. Modelo SFace (37 MB, fuera del repo): ver `legacy/edicion_video/assets/modelos/README.md`.

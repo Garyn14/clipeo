@@ -20,6 +20,7 @@ estamos, qué ticket sigue y cómo trabajar.
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | Foco, épicas Q1–Q5 y sprints. |
 | [`docs/ARQUITECTURA_OBJETIVO.md`](docs/ARQUITECTURA_OBJETIVO.md) | Arquitectura v2 y decisiones (ADR-001…015). |
 | [`docs/TO_BE.md`](docs/TO_BE.md) | Visión, procesos, requisitos, riesgos (incl. R-01 contenido de terceros). |
+| [`docs/CUENTAS.md`](docs/CUENTAS.md) | **Mapa de cuentas** y cómo Claude levanta Colab solo (sin iniciar sesión). |
 | [`docs/DIAGNOSTICO_V1_FULL.md`](docs/DIAGNOSTICO_V1_FULL.md) | **Diagnóstico del piloto real (`v1_full`)** y brechas de calidad. |
 | [`docs/DIAGNOSTICO_ACTUAL.md`](docs/DIAGNOSTICO_ACTUAL.md) | Diagnóstico inicial (sobre la base, incompleto; ver el anexo). |
 | `docs/sprints/S<n>.md` | Cierre de cada sprint: qué se hizo y cómo probar la demo. |

@@ -1,0 +1,14 @@
+# Plantilla del mapa de cuentas (docs/CUENTAS.md). Copiar a `cuentas.local.yaml` (ignorado por git) y completar.
+# Solo cuentas e identificadores: NUNCA contraseñas, tokens ni códigos (esos van en `.env` o en los Secrets de Colab).
+colab:
+  defecto: ""          # correo de Google con el que Claude levanta Colab (sesión iniciada por el operador)
+  respaldo: ""         # otra cuenta si se acaba el cupo de GPU (la cambia el operador)
+github:
+  usuario: ""
+jira:
+  sitio: ""
+  proyecto: ""
+tiktok:
+  cuenta_publicacion: ""   # conectada por OAuth en el panel → Publicaciones
+youtube:
+  canal: ""                # conectado por OAuth en el panel
