@@ -9,19 +9,16 @@ fuentes_estaticas.py — S14: fuentes estáticas por nicho (canales fijos), revi
 Configuración: `investigacion/<nicho>/fuentes.yaml` (CLIP-60). Estado y registro (CLIP-61/62):
   - `fuentes_estado.json`: última revisión por canal;
   - `fuentes_historial.jsonl`: cada video detectado con su estado (nuevo, descartado y por qué, procesado, error).
-Canales de YouTube vía su feed RSS público (sin cuenta, sin API, sin costo). Kick queda previsto en el formato pero no
-se revisa todavía; el módulo "Live" (vivo) va aparte. Sin cron: decisión del operador (2026-11-18).
+Cada canal se lee con su tipo de fuente (`tipos_fuente.py`, CLIP-66): YouTube vía su feed RSS público (sin cuenta,
+sin API, sin costo); "lista manual" (CLIP-67) no se revisa, se le pegan links. El módulo "Live" (vivo) va aparte. Sin cron: decisión del operador (2026-11-18).
 """
 
 from __future__ import annotations
 
 import argparse
 import json
-import re
 import subprocess
 import sys
-import urllib.request
-import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -30,10 +27,9 @@ import yaml
 from core import exclusion
 from core.fuente import nombre_sobre
 from investigacion import comun
+from investigacion import tipos_fuente as tf
 
 LEGACY = Path(__file__).resolve().parent.parent
-_NS = {"a": "http://www.w3.org/2005/Atom", "yt": "http://www.youtube.com/xml/schemas/2015",
-       "media": "http://search.yahoo.com/mrss/"}
 
 
 # ── Configuración y estado ──────────────────────────────────
@@ -70,39 +66,29 @@ def estado_actual(historial: list[dict]) -> dict[str, dict]:
     return actual
 
 
-# ── Lectura de canales ──────────────────────────────────────
+# ── Lectura de canales (vía el registro de tipos de fuente, CLIP-66) ──
 
 def channel_id(url: str) -> str | None:
-    m = re.search(r"/channel/(UC[\w-]{20,})", url or "")
-    return m.group(1) if m else None
+    return tf.channel_id(url)
 
 
 def parsear_feed(xml: str) -> list[dict]:
-    """Feed RSS de un canal de YouTube → [{id, titulo, descripcion, publicado (datetime UTC)}]. Puro."""
-    raiz = ET.fromstring(xml)
-    videos = []
-    for e in raiz.findall("a:entry", _NS):
-        vid = e.findtext("yt:videoId", default="", namespaces=_NS)
-        publicado = e.findtext("a:published", default="", namespaces=_NS)
-        videos.append({
-            "id": vid,
-            "titulo": e.findtext("a:title", default="", namespaces=_NS),
-            "descripcion": e.findtext("media:group/media:description", default="", namespaces=_NS) or "",
-            "publicado": datetime.fromisoformat(publicado.replace("Z", "+00:00")) if publicado else None,
-        })
-    return videos
+    """Feed RSS de un canal de YouTube → videos. Puro (se conserva por compatibilidad)."""
+    return tf.parsear_feed(xml)[1]
+
+
+def se_revisa(canal: dict) -> bool:
+    """El canal entra en "Buscar ahora": activo y de un tipo implementado y automático."""
+    try:
+        tipo = tf.obtener(canal.get("plataforma"))
+    except tf.FuenteError:
+        return False
+    return canal.get("activo", True) and tipo.implementado and tipo.automatico
 
 
 def leer_canal(canal: dict) -> list[dict]:
-    """Últimos videos de un canal (el feed de YouTube trae los 15 más recientes)."""
-    if canal.get("plataforma", "youtube") != "youtube":
-        return []                                    # kick: previsto, todavía no
-    cid = channel_id(canal.get("url", ""))
-    if not cid:
-        raise ValueError(f"URL sin /channel/UC…: {canal.get('url')} (usa la URL con el id del canal)")
-    url = f"https://www.youtube.com/feeds/videos.xml?channel_id={cid}"
-    with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "clipeo"}), timeout=30) as r:
-        return parsear_feed(r.read().decode("utf-8"))
+    """Videos recientes del canal, pidiéndoselos a su tipo de fuente."""
+    return tf.obtener(canal.get("plataforma")).listar(canal)
 
 
 # ── Filtro y deduplicación ──────────────────────────────────
@@ -159,7 +145,7 @@ def ejecutar(nicho: str, dias: int | None = None, ultimos: int | None = None,
     palabras = palabras_relevancia(config)
     resumen = []
     for canal in config.get("canales") or []:
-        if not canal.get("activo", True):
+        if not se_revisa(canal):
             continue
         clave = canal.get("url")
         try:
@@ -180,7 +166,7 @@ def ejecutar(nicho: str, dias: int | None = None, ultimos: int | None = None,
                 continue
             vistos.add(v["id"])
             est, motivo = decidir(v, canal, palabras)
-            historial.append({"id": v["id"], "url": f"https://www.youtube.com/watch?v={v['id']}",
+            historial.append({"id": v["id"], "url": v.get("url") or f"https://www.youtube.com/watch?v={v['id']}",
                               "titulo": v["titulo"], "canal": canal.get("nombre"), "rol": canal.get("rol"),
                               "publicado": v["publicado"].isoformat() if v["publicado"] else None,
                               "detectado": ahora.isoformat(timespec="seconds"), "estado": est, "motivo": motivo})
@@ -209,7 +195,8 @@ def procesar(nicho: str, ids: list[str]) -> list[dict]:
         f = actual.get(vid)
         if not f or f.get("estado") not in ("nuevo", "error"):
             continue
-        sesion = f"{datetime.now():%Y%m%d}_{'medios' if f.get('rol') == 'medios' else 'propio'}_{vid}"
+        seguro = "".join(ch if ch.isalnum() or ch in "-_" else "_" for ch in vid)[:60]
+        sesion = f"{datetime.now():%Y%m%d}_{'medios' if f.get('rol') == 'medios' else 'propio'}_{seguro}"
         cmd = [sys.executable, str(LEGACY / "pipeline.py"), "--video", f["url"], "--config", nicho, "--colab",
                "--session-id", sesion]
         if f.get("rol") == "medios":
@@ -232,11 +219,14 @@ def descubrir(nicho: str) -> list[dict]:
     ya = {exclusion.normalizar(c.get("nombre")) for c in config.get("canales") or []}
     from investigacion.fuentes_medios import leer_lista
     conteo: dict[str, int] = {}
+    ejemplo: dict[str, str] = {}
     for f in leer_lista(nicho):
         canal = f.get("canal") or ""
         if canal and exclusion.normalizar(canal) not in ya:
             conteo[canal] = conteo.get(canal, 0) + 1
-    return [{"canal": c, "apariciones": n} for c, n in sorted(conteo.items(), key=lambda x: -x[1])]
+            ejemplo.setdefault(canal, f.get("url") or "")
+    # "url": un video del canal; el tipo YouTube resuelve el canal a partir de él (agregar con un clic, CLIP-66)
+    return [{"canal": c, "apariciones": n, "url": ejemplo[c]} for c, n in sorted(conteo.items(), key=lambda x: -x[1])]
 
 
 def main() -> None:
