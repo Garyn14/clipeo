@@ -1509,3 +1509,25 @@ a.btn {
 .fu-historial li { display: flex; align-items: flex-start; gap: 0.7rem; padding: 0.35rem 0; border-bottom: 1px solid var(--border-subtle); }
 .fu-historial .pill { flex: none; min-width: 6.5rem; justify-content: center; }
 .fu-filtros a { cursor: pointer; }
+
+/* ── CLIP-66/67 · administrar fuentes ── */
+.fu-administrar > .fu-paso { border: none; padding: 0.5rem 0 0; background: none; }
+.fu-subtitulo { margin: 1.2rem 0 0.4rem; font-size: 0.95rem; color: var(--text); }
+.fu-canal { display: flex; align-items: center; gap: 0.75rem; padding: 0.55rem 0.8rem;
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); background: var(--bg-elevated-2); flex-wrap: wrap; }
+.fu-canal.pausado { opacity: 0.6; }
+.fu-canal select, .fu-entrada, .fu-chip-entrada {
+  background: var(--bg-input); color: var(--text); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; }
+.fu-switch { display: flex; align-items: center; gap: 0.35rem; color: var(--text-muted); font-size: 0.85rem; min-width: 6rem; cursor: pointer; }
+.fu-quitar { color: var(--danger); }
+.fu-entrada { flex: 1; min-width: 240px; margin: 0.5rem 0; }
+.fu-links { width: 100%; box-sizing: border-box; font-family: inherit; }
+.fu-previa { margin: 0.5rem 0; padding: 0.7rem 0.9rem; border: 1px solid var(--accent-border); border-radius: var(--radius-sm); background: var(--accent-bg); }
+.fu-previa ul { margin: 0.4rem 0 0.7rem; padding-left: 1.1rem; }
+.fu-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+.fu-chip { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.25rem 0.4rem 0.25rem 0.7rem;
+  border-radius: 999px; background: var(--bg-elevated-2); border: 1px solid var(--border); font-size: 0.85rem; }
+.fu-chip button { background: none; border: none; color: var(--text-faint); cursor: pointer; font-size: 1rem; line-height: 1; }
+.fu-chip button:hover { color: var(--danger); }
+.fu-chip-entrada { min-width: 160px; }

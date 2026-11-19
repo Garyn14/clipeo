@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { api } from "../api/client";
+import { AdministrarFuentes } from "../components/AdministrarFuentes";
 import type { ClienteFuentes, FuentesNicho, ResumenEjecucion, VideoFuente } from "../api/types";
 
 // S14 · CLIP-63: fuentes estáticas por cliente. Flujo guiado: elegir cliente → buscar → elegir y procesar.
@@ -259,23 +260,9 @@ export function Fuentes() {
             </ul>
           </details>
 
-          <details className="plegable">
-            <summary>Canales de {datos.cliente} ({datos.canales.length})</summary>
-            <ul className="fu-historial">
-              {datos.canales.map((c) => (
-                <li key={c.url}>
-                  <span className={`pill ${c.rol === "propio" ? "pill-ok" : "pill-muted"}`}>{c.rol === "propio" ? "Propio" : "TV"}</span>
-                  <div className="fu-video-cuerpo">
-                    <a href={c.url} target="_blank" rel="noreferrer">{c.nombre}</a>
-                    <span className="fu-video-meta">
-                      {c.rol === "propio" ? "entra todo lo nuevo" : `solo si menciona a ${datos.cliente}`} · revisado{" "}
-                      {haceCuanto(c.ultima_revision)}{c.activo === false ? " · desactivado" : ""}
-                    </span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <p className="hint">Para sumar o quitar canales: editar <code>investigacion/{datos.nicho}/fuentes.yaml</code>.</p>
+          <details className="plegable fu-administrar">
+            <summary>Administrar fuentes de {datos.cliente} ({datos.canales.length} canales)</summary>
+            <AdministrarFuentes datos={datos} alCambiar={() => { recargar(); cargarClientes(); }} />
           </details>
         </>
       )}
