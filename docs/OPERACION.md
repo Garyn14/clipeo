@@ -66,6 +66,8 @@ python -m evaluacion.experimento_titulo zapatillas_peru
 
 ## 6. Montar en otra máquina
 
+- Copiar también `cuentas.local.yaml` (mapa de cuentas, ignorado por git; ver `docs/CUENTAS.md`).
+
 1. Python 3.10+, Node.js, FFmpeg, `yt-dlp`; `pip install -r legacy/requirements.txt`; `npm install` en
    `legacy/frontend`.
 2. Copiar el `.env` (secretos: **nunca** por chat ni al repo) y la carpeta `data/` (base de publicación con las cuentas).

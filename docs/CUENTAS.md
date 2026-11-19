@@ -1,7 +1,8 @@
 # Mapa de cuentas y levantamiento de Colab
 
 > Decisión del operador (2026-11-19). Este repositorio es **público**: aquí no van correos, contraseñas ni tokens.
-> Los datos concretos de cada cuenta están en el `.env` local (no versionado).
+> Los datos concretos de cada cuenta están en **`cuentas.local.yaml`** (raíz, ignorado por git; plantilla
+> `cuentas.example.yaml`). Ahí van solo cuentas e identificadores: los secretos siguen en `.env`.
 
 ## Reglas
 
@@ -17,8 +18,8 @@
 
 | Servicio | Cuenta | Dónde está el dato | Quién la usa |
 |---|---|---|---|
-| Google / **Colab** (transcripción) | Cuenta por defecto del operador | `.env` → `COLAB_CUENTA_GOOGLE` | Claude levanta Colab solo, en el navegador integrado |
-| Colab, cuenta de respaldo | Otra cuenta del operador, si se acaba el cupo de GPU | La elige el operador | Operador |
+| Google / **Colab** (transcripción) | Cuenta por defecto del operador | `cuentas.local.yaml` → `colab.defecto` | Claude levanta Colab solo, en el navegador integrado |
+| Colab, cuenta de respaldo | Otra cuenta del operador, si se acaba el cupo de GPU | `cuentas.local.yaml` → `colab.respaldo` (la cambia el operador) | Operador |
 | GitHub | `Garyn14` | `gh` CLI ya autenticado | Claude (PRs, comentarios) |
 | Jira | `personal-clipeo.atlassian.net`, proyecto `CLIP` | Conector de Atlassian | Claude |
 | TikTok (publicación) | Cuenta del nicho, conectada por OAuth en el panel → Publicaciones | `data/publicacion.db` (local) | Motor de publicación (borradores) |
@@ -29,7 +30,7 @@ los ve ni los escribe.
 
 ## Levantar Colab (lo hace Claude, sin el operador)
 
-1. Leer `COLAB_CUENTA_GOOGLE` del `.env`. Abrir en el navegador integrado
+1. Leer `colab.defecto` de `cuentas.local.yaml`. Abrir en el navegador integrado
    `https://colab.research.google.com/github/Garyn14/clipeo/blob/main/legacy/colab/transcripcion_colab.ipynb`
    y comprobar que la cuenta activa (avatar arriba a la derecha) es esa. Si es otra o no hay sesión: **parar y avisar**
    al operador (no iniciar sesión ni cambiar de cuenta por su cuenta).
@@ -41,3 +42,7 @@ los ve ni los escribe.
 6. Si se acabó el cupo de GPU, avisar al operador para pasar a la cuenta de respaldo.
 
 Ver también `docs/OPERACION.md` §2.
+
+## Otra máquina
+
+Copiar `cuentas.local.yaml` a mano (igual que `.env`), o crearlo desde `cuentas.example.yaml`.

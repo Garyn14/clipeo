@@ -26,3 +26,6 @@ legacy/edicion_video/assets/caras/
 
 # CLIP-54: datos locales de la máquina (base de publicación con tokens): nunca al repo
 data/
+
+# Mapa de cuentas real (docs/CUENTAS.md)
+cuentas.local.yaml
