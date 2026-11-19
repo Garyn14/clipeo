@@ -1,13 +1,18 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-18 (S13 implementado; desarrollo de la Fase 1 terminado)
+> Última actualización: 2026-11-18 (S14 implementado: fuentes estáticas por nicho)
 
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.5: Fase 1 hasta S13). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Sprint:** **S13 · Hablantes de TV y cierre de la Fase 1** (`docs/sprints/S13.md`, rama `sprint/S13`):
+- **Sprint:** **S14 · Fuentes estáticas por nicho** (`docs/sprints/S14.md`, rama `sprint/S14`): CLIP-60…64.
+  Panel → **Fuentes** → *Ejecutar* (manual, sin cron) revisa FRITZ SPORT y 4 noticieros, descarta lo repetido y lo que
+  no menciona a Fritz, y deja candidatos para *Procesar*. Hoy hay 3 streams de FRITZ SPORT esperando (con Colab).
+  Live/Kick: módulo futuro. 455 tests.
+- S13 · Hablantes de TV y cierre de la Fase 1: integrado (PR #28).
+- **S13 (detalle) · Hablantes de TV y cierre de la Fase 1** (`docs/sprints/S13.md`, rama `sprint/S13`):
   CLIP-28 (hablantes por rol en medios), CLIP-59 (`python -m investigacion.cierre_fase1 zapatillas_peru`).
   **Fase 1:** calidad 67% (6 de 9, falta llegar a 10 clips), aprendizaje 7 de 30 medidos; publicación y operación ✅.
   **Siguiente: 2 semanas de uso real** (generar, revisar, publicar con link) y volver a correr `cierre_fase1`.

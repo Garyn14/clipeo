@@ -28,6 +28,10 @@ El pipeline comprueba el túnel antes de descargar y para con un mensaje si est�
 
 ## 3. Producir clips
 
+- **Fuentes fijas del cliente (recomendado):** panel → **Fuentes** → *Ejecutar* (lo nuevo de sus canales y de los
+  noticieros desde la última revisión) → marcar candidatos → *Procesar*. Sin cron: se corre a mano cuando quieras.
+  Por terminal, desde `legacy/`: `python -m investigacion.fuentes_estaticas ejecutar zapatillas_peru` y luego
+  `procesar zapatillas_peru --todos`. Los canales se editan en `legacy/investigacion/zapatillas_peru/fuentes.yaml`.
 - **Medios (TV/prensa):** desde `legacy/`
   ```bash
   python -m investigacion.fuentes_medios buscar zapatillas_peru --sobre fritz
