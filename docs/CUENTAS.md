@@ -34,19 +34,18 @@ los ve ni los escribe.
    `https://colab.research.google.com/github/Garyn14/clipeo/blob/main/legacy/colab/transcripcion_colab.ipynb`
    y comprobar que la cuenta activa (avatar arriba a la derecha) es esa. Si es otra o no hay sesión: **parar y avisar**
    al operador (no iniciar sesión ni cambiar de cuenta por su cuenta).
-2. Entorno de ejecución → GPU T4.
-3. Ejecutar **celdas 1 y 2** (encolar la 2 detrás de la 1) → **esperar en segundo plano ~7 min** → una sola
-   revisión → **Reiniciar sesión** (paleta *Comandos* → "Reiniciar sesión"; el atajo Ctrl+M . no siempre responde)
-   → ejecutar **celda 3** → **esperar en segundo plano ~2 min** → leer la URL. Si falla, reintentar. Si Colab pide
-   dar acceso a un Secret, avisar al operador (es su decisión).
-4. Copiar la URL `https://….trycloudflare.com` que imprime la celda 3 a `COLAB_TRANSCRIBE_URL` en el `.env`.
-5. Comprobar el túnel (`colab_vivo` o la página Fuentes del panel, que muestra el estado).
-6. Si se acabó el cupo de GPU, avisar al operador para pasar a la cuenta de respaldo.
+2. Entorno de ejecución → GPU T4 (si queda en "Asignando…" varios minutos o conecta sin GPU, el cupo diario de esa
+   cuenta probablemente se agotó: avisar al operador para usar la de respaldo).
+3. Ejecutar la **única celda** del notebook (CLIP-65) y **esperar en segundo plano ~3 min** (`sleep 180` en
+   background); luego **una sola** revisión de la salida. La barra muestra la etapa; al final está la línea
+   `URL_TUNEL=…`. Si una etapa falla, la salida dice cuál y muestra el log.
+4. Copiar esa URL a `COLAB_TRANSCRIBE_URL` en el `.env` y comprobar con `colab_vivo` (o la página Fuentes).
+5. **Al terminar de procesar, finalizar la sesión** de Colab: una sesión olvidada se come el cupo diario de GPU
+   (2026-11-19: una sesión de 6 h dejó la cuenta principal sin GPU).
+6. Si Colab pide dar acceso a un Secret, avisar al operador (es su decisión).
 
-**Ahorro de tokens:** no vigilar Colab con esperas, capturas o consultas repetidas. Las esperas se hacen con un
-temporizador en segundo plano (p. ej. `sleep 420` lanzado en background: avisa al terminar y no consume nada mientras
-corre) y después se revisa **una sola vez**. Objetivo: ~8–10 llamadas por levantamiento (antes ~30). CLIP-65 simplifica
-el notebook a un solo "Ejecutar todas" sin reinicio.
+**Ahorro de tokens:** no vigilar Colab con esperas o capturas repetidas: temporizador en segundo plano y una sola
+revisión. Con CLIP-65 son ~5 llamadas por levantamiento (antes ~30).
 
 Ver también `docs/OPERACION.md` §2.
 
