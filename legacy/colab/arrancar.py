@@ -8,8 +8,7 @@ Uso en la celda única del notebook (ver README):
 
 Qué hace, con una barra por etapas (tiempo transcurrido y estimación de lo que falta):
   1. Revisa la GPU y anota la versión de torch que trae Colab.
-  2. Instala whisperx con `uv`, CONGELANDO torch/torchaudio/torchvision en la versión de Colab (no reinstala 2–3 GB
-     de PyTorch ni deja que pip pruebe versiones). Si no es compatible, reintenta sin congelar y lo avisa.
+  2. Instala con `uv` y versiones EXACTAS (whisperx, torch, pyannote vía whisperx): sin pruebas de versiones.
   3. Descarga cloudflared.
   4. Lanza `servidor.py` en un proceso NUEVO (toma las librerías recién instaladas: no hace falta reiniciar la sesión).
   5. Abre el túnel e imprime `URL_TUNEL=https://….trycloudflare.com`.
@@ -29,8 +28,11 @@ import urllib.request
 
 REPO = "Garyn14/clipeo"
 BASE = "/content"
-WHISPERX = "whisperx"               # se fija tras la primera medición en Colab (ver README)
-EXTRAS = ["numpy==2.2.6", "flask"]   # numpy compatible con whisperx, pyannote y numba
+# Versiones EXACTAS probadas en Colab (2026-11-19): uv no tiene que probar combinaciones.
+# whisperx 3.8.6 trae pyannote 4 (modelo community-1) y exige torch 2.8; whisperx 3.7.x exige pyannote < 4.
+# Al actualizar: cambiar el bloque completo y probar en Colab (ver legacy/colab/README.md).
+PAQUETES = ["whisperx==3.8.6", "torch==2.8.0", "torchaudio==2.8.0", "torchvision==0.23.0",
+            "numpy==2.2.6", "flask"]
 
 # (clave, texto, segundos típicos): el porcentaje avanza por etapas según estos tiempos
 ETAPAS = [
@@ -154,26 +156,17 @@ def main(rama: str = "main"):
         _fallar(barra, 0, "no hay GPU: Entorno de ejecución → Cambiar tipo → GPU T4")
     torch_antes = {p: _version(p) for p in ("torch", "torchaudio", "torchvision")}
 
-    # 2. Dependencias con uv, congelando el torch de Colab
+    # 2. Dependencias con uv y versiones exactas (rápido y sin pruebas de versiones)
     log_inst = f"{BASE}/instalacion.log"
-    with open(f"{BASE}/restricciones.txt", "w") as f:
-        f.writelines(f"{p}=={v}\n" for p, v in torch_antes.items() if v != "?")
     uv = shutil.which("uv") or ""
     if not uv:
         subprocess.run([sys.executable, "-m", "pip", "install", "-q", "uv"], check=False)
         uv = shutil.which("uv") or "uv"
-    base_cmd = [uv, "pip", "install", "--system", WHISPERX, *EXTRAS]
-
-    def instalar(cmd):
-        with open(log_inst, "a") as salida:
-            p = subprocess.Popen(cmd, stdout=salida, stderr=subprocess.STDOUT)
-        _esperar(barra, 1, lambda: p.poll() is not None, timeout=1500)
-        return p.returncode
-
-    if instalar([*base_cmd, "-c", f"{BASE}/restricciones.txt"]) != 0:
-        print("⚠ whisperx no es compatible con el torch de Colab: se instala sin congelarlo (tarda más).")
-        if instalar(base_cmd) != 0:
-            _fallar(barra, 1, "no se pudieron instalar las dependencias", log_inst)
+    with open(log_inst, "w") as salida:
+        inst = subprocess.Popen([uv, "pip", "install", "--system", *PAQUETES], stdout=salida, stderr=subprocess.STDOUT)
+    _esperar(barra, 1, lambda: inst.poll() is not None, timeout=1500)
+    if inst.returncode != 0:
+        _fallar(barra, 1, "no se pudieron instalar las dependencias", log_inst)
 
     # 3. cloudflared y servidor.py
     barra.mostrar(texto_barra(2, 0, time.time() - barra.inicio))
