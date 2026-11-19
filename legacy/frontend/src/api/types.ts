@@ -430,8 +430,16 @@ export interface VideoFuente {
   sesion?: string;
 }
 
+export interface ClienteFuentes {
+  nicho: string;
+  cliente: string;
+  canales: number;
+  candidatos: number;
+}
+
 export interface FuentesNicho {
   nicho: string;
+  cliente: string;
   activo: boolean;
   ventana_inicial_dias: number;
   canales: CanalFuente[];

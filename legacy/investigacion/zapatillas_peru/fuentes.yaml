@@ -5,6 +5,7 @@
 #      medios  → TV/prensa: solo si el título o la descripción mencionan las palabras clave
 # Plataformas: youtube (implementado). kick queda previsto para el futuro (no se procesa todavía).
 activo: true
+cliente: Tío Fritz               # nombre visible en el panel
 sobre: fritz                     # entidad de contexto/entidades/ (nombre, apodos) para títulos y encuadre
 ventana_inicial_dias: 7          # la primera vez que se revisa un canal (después: desde la última revisión)
 palabras_clave:                  # además del nombre y los apodos de la entidad

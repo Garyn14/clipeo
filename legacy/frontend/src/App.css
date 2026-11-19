@@ -1463,3 +1463,49 @@ a.btn {
   font-size: 0.8rem;
   overflow-wrap: anywhere;
 }
+
+/* ── S14 · Fuentes: flujo guiado por cliente ── */
+.fu h2 { margin: 0 0 0.2rem; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; }
+.fu-clientes { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 0.5rem 0 1rem; }
+.fu-cliente {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 0.3rem; min-width: 200px;
+  padding: 0.8rem 1rem; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg-elevated); color: var(--text); cursor: pointer; text-align: left;
+}
+.fu-cliente:hover { border-color: var(--accent-border); }
+.fu-cliente.activo { border-color: var(--accent); background: var(--accent-bg); }
+.fu-cliente-nombre { font-weight: 600; font-size: 1.05rem; }
+.fu-cliente-meta { color: var(--text-muted); font-size: 0.85rem; }
+.fu-paso {
+  margin: 1rem 0; padding: 1rem 1.2rem; border: 1px solid var(--border-subtle);
+  border-radius: var(--radius); background: var(--bg-elevated);
+}
+.fu-paso-cabecera { display: flex; gap: 0.8rem; align-items: flex-start; margin-bottom: 0.8rem; }
+.fu-paso-cabecera .hint { margin: 0; }
+.fu-num {
+  flex: none; width: 1.8rem; height: 1.8rem; border-radius: 999px; display: grid; place-items: center;
+  background: var(--accent-bg); color: var(--accent-strong); font-weight: 700;
+}
+.fu-buscar { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+.fu-buscar select, .fu-valor input {
+  background: var(--bg-input); color: var(--text); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 0.45rem 0.6rem;
+}
+.fu-valor { display: flex; align-items: center; gap: 0.4rem; color: var(--text-muted); }
+.fu-valor input { width: 4.5rem; }
+.fu-resumen { margin-top: 0.8rem; }
+.fu-vacio { color: var(--text-muted); margin: 0.8rem 0 0; }
+.fu-todos { display: flex; align-items: center; gap: 0.5rem; margin: 0.8rem 0 0.4rem; color: var(--text-muted); cursor: pointer; }
+.fu-lista, .fu-historial { list-style: none; margin: 0 0 0.9rem; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.fu-video {
+  display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.8rem; cursor: pointer;
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); background: var(--bg-elevated-2);
+}
+.fu-video:hover { border-color: var(--border); }
+.fu-video.elegido { border-color: var(--accent); background: var(--accent-bg); }
+.fu-video-cuerpo { display: flex; flex-direction: column; gap: 0.15rem; flex: 1; min-width: 0; }
+.fu-video-titulo { overflow-wrap: anywhere; }
+.fu-video-meta { color: var(--text-faint); font-size: 0.82rem; }
+.fu-historial li { display: flex; align-items: flex-start; gap: 0.7rem; padding: 0.35rem 0; border-bottom: 1px solid var(--border-subtle); }
+.fu-historial .pill { flex: none; min-width: 6.5rem; justify-content: center; }
+.fu-filtros a { cursor: pointer; }
