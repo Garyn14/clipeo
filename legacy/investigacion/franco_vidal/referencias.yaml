@@ -56,7 +56,21 @@ tipos_que_funcionan:
     ejemplos:
       - {titulo: "Franco manda saludos para el señor 5 %", vistas: 387900, outlier: 34.5, cuenta: dibuclips}
       - {titulo: "La prensa está aquí, porque soy un demócrata", vistas: 242400, outlier: 21.6, cuenta: dibuclips}
+      - {titulo: "La prensa interrumpe la inauguración de Franco Vidal en Ate", vistas: 172200, outlier: 15.3, cuenta: dibuclips}
       - {titulo: "¡El alcalde más votado del Perú! Franco Vidal se hace viral", vistas: 617700, outlier: 22.6, cuenta: elvidalismo}
+  - tipo: defensa_de_gestion
+    # S18 (2026-11-21, aprobado por el operador): en la primera tanda el juez marcó "ninguno" a 9 de 22 clips y el
+    # operador aprobó 8; casi todos eran Franco rindiendo cuentas de su gestión.
+    descripcion: >
+      Franco rinde cuentas o defiende su gestión: la deuda que heredó, compara sus obras con la gestión anterior,
+      responde a una denuncia con cifras o documentos (Contraloría), habla del resultado electoral. Rinde moderado
+      (1–2x) cuando es solo la cifra o el balance; rinde mucho más cuando hay un adversario concreto en escena (la
+      prensa que lo interrumpe, un rival que lo acusa): ese caso es rivalidad_y_burla_politica.
+    ejemplos:
+      - {titulo: "Alcalde Franco Vidal en radio la Karibeña: «Yo hice obras que decían…»", vistas: 5899, outlier: 1.9, cuenta: francokickvidal}
+      - {titulo: "¡Desmintiendo a la prensa! Franco mandará una cartita a la prensa", vistas: 13600, outlier: 1.2, cuenta: dibuclips}
+      - {titulo: "Franco Vidal recibió Ate con 80 millones de deuda (aprobado por el operador, S18)", cuenta: nandoclips76, propia: true}
+      - {titulo: "Franco Vidal compara sus obras con las de la antigua política (aprobado por el operador, S18)", cuenta: nandoclips76, propia: true}
   - tipo: alcalde_personaje
     descripcion: >
       El lado personal y llamativo del alcalde streamer: boxea en el ring, marcha, reparte, celebra con su
