@@ -4,6 +4,7 @@ import { Configuracion } from "./pages/Configuracion";
 import { DetalleSesion } from "./pages/DetalleSesion";
 import { Errores } from "./pages/Errores";
 import { Fuentes } from "./pages/Fuentes";
+import { Negocio } from "./pages/Negocio";
 import { EstadoCorrida } from "./pages/EstadoCorrida";
 import { NuevaCorrida } from "./pages/NuevaCorrida";
 import { Publicaciones } from "./pages/Publicaciones";
@@ -19,6 +20,7 @@ function App() {
           Nueva corrida
         </NavLink>
         <NavLink to="/fuentes">Fuentes</NavLink>
+        <NavLink to="/negocio">Negocio</NavLink>
         <NavLink to="/sesiones">Sesiones</NavLink>
         <NavLink to="/errores">Errores</NavLink>
         <NavLink to="/publicaciones">Publicaciones</NavLink>
@@ -30,6 +32,8 @@ function App() {
           <Route path="/" element={<NuevaCorrida />} />
           <Route path="/runs/:runId" element={<EstadoCorrida />} />
           <Route path="/fuentes" element={<Fuentes />} />
+          <Route path="/negocio" element={<Negocio />} />
+          <Route path="/negocio/:nicho" element={<Negocio />} />
           <Route path="/sesiones" element={<Sesiones />} />
           <Route path="/sesiones/:sessionId" element={<DetalleSesion />} />
           <Route path="/sesiones/:sessionId/revision" element={<RevisionClips />} />

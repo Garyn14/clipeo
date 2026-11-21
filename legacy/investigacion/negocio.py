@@ -233,10 +233,19 @@ def marcar_clipeo(videos: list[dict], publicados: dict[tuple[str, str], dict]) -
 
 # ── Foto (CLIP-73) ──────────────────────────────────────────
 
-def actualizar(nicho: str, lector=leer_cuenta, base: Path | None = None, ahora: datetime | None = None) -> dict:
+def actualizar(nicho: str, lector=leer_cuenta, base: Path | None = None, ahora: datetime | None = None,
+               enlazar: bool = True) -> dict:
     """Lee todas las cuentas del cliente y guarda la foto. Una cuenta caída no frena a las demás."""
     ahora = ahora or datetime.now(timezone.utc)
     lista, avisos = cuentas(nicho, base)
+    if enlazar:   # como medir_publicados: enlazar antes los videos de TikTok publicados desde la app (CLIP-69)
+        try:
+            from investigacion.enlazar_tiktok import enlazar as enlazar_tiktok
+            r = enlazar_tiktok(nicho, base=base)
+            if r.get("error"):
+                avisos.append(f"enlace automático de TikTok: {r['error']}")
+        except Exception as e:  # noqa: BLE001
+            avisos.append(f"enlace automático de TikTok falló ({str(e)[:120]})")
     try:
         publicados = _contexto_publicados(nicho, base)
     except Exception as e:  # noqa: BLE001 — sin marca de Clipeo el reporte sigue sirviendo

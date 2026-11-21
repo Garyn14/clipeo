@@ -492,3 +492,64 @@ export interface ResumenEjecucion {
   dias?: number;
   ultimos?: number;
 }
+
+// S17 · Negocio (CLIP-73/74)
+export interface ResumenNegocio {
+  videos: number;
+  vistas: number;
+  interacciones: number;
+  tasa_interaccion: number | null;
+  mediana_vistas: number | null;
+}
+
+export interface ResumenConVariacion extends ResumenNegocio {
+  anterior: ResumenNegocio;
+  variacion: Partial<Record<"videos" | "vistas" | "interacciones" | "mediana_vistas", number | null>>;
+}
+
+export interface VideoNegocio {
+  plataforma: string;
+  url: string;
+  titulo: string;
+  publicado: string | null;
+  vistas: number;
+  likes: number | null;
+  comentarios: number | null;
+  compartidos: number | null;
+  clipeo: boolean;
+  origen?: string;
+  tipo?: string;
+}
+
+export interface GrupoNegocio extends ResumenNegocio {
+  grupo: string;
+}
+
+export interface ReporteNegocio {
+  nicho: string;
+  cliente: string;
+  foto: string | null;
+  mes?: string;
+  mes_anterior?: string;
+  meses?: string[];
+  avisos?: string[];
+  resumen?: ResumenConVariacion;
+  por_cuenta?: (ResumenConVariacion & { plataforma: string; cuenta: string; url: string; error?: string | null; total_videos: number })[];
+  top?: VideoNegocio[];
+  bottom?: VideoNegocio[];
+  por_origen?: GrupoNegocio[];
+  por_tipo?: GrupoNegocio[];
+  clipeo_vs_resto?: GrupoNegocio[];
+  produccion?: { revisados: number; aprobados: number; enviados: Record<string, number> } | null;
+  evolucion?: (ResumenNegocio & { mes: string })[];
+  seguidores?: null;
+}
+
+export interface FilaNegocioGlobal {
+  nicho: string;
+  cliente: string;
+  foto: string | null;
+  mes?: string;
+  cuentas?: number;
+  resumen?: ResumenConVariacion;
+}

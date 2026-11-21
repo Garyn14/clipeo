@@ -85,7 +85,7 @@ def test_fila_video_normaliza_fechas_y_links():
 
 
 def test_actualizar_marca_clipeo_guarda_foto_y_sigue_si_una_cuenta_falla(entorno, tmp_path):
-    foto = ng.actualizar("n", lector=_lector, base=entorno, ahora=AHORA)
+    foto = ng.actualizar("n", lector=_lector, base=entorno, ahora=AHORA, enlazar=False)
     tt = foto["cuentas"][0]["videos"]
     clip = next(v for v in tt if v["id"] == "111")
     assert clip["clipeo"] and clip["tipo"] == "precio_y_oferta" and clip["origen"] == "Kick"
@@ -99,12 +99,12 @@ def test_actualizar_marca_clipeo_guarda_foto_y_sigue_si_una_cuenta_falla(entorno
         if cuenta["plataforma"] == "youtube":
             raise RuntimeError("sin red")
         return _lector(cuenta)
-    foto = ng.actualizar("n", lector=lector_caido, base=entorno, ahora=AHORA)
+    foto = ng.actualizar("n", lector=lector_caido, base=entorno, ahora=AHORA, enlazar=False)
     assert foto["cuentas"][1]["error"] == "sin red" and len(foto["cuentas"][0]["videos"]) == 3
 
 
 def test_reporte_del_mes_con_comparacion_y_desgloses(entorno):
-    ng.actualizar("n", lector=_lector, base=entorno, ahora=AHORA)
+    ng.actualizar("n", lector=_lector, base=entorno, ahora=AHORA, enlazar=False)
     r = ng.reporte("n", "2026-11", base=entorno)
     s = r["resumen"]
     assert (s["videos"], s["vistas"], s["interacciones"]) == (3, 1310, 60 + 10 + 1)
@@ -122,7 +122,7 @@ def test_reporte_del_mes_con_comparacion_y_desgloses(entorno):
 def test_sin_foto_y_vista_global(entorno):
     assert ng.reporte("n", base=entorno)["foto"] is None
     assert ng.global_(base=entorno)[0]["foto"] is None
-    ng.actualizar("n", lector=_lector, base=entorno, ahora=AHORA)
+    ng.actualizar("n", lector=_lector, base=entorno, ahora=AHORA, enlazar=False)
     fila = ng.global_("2026-11", base=entorno)[0]
     assert fila["cliente"] == "Tío Prueba" and fila["resumen"]["vistas"] == 1310 and fila["cuentas"] == 2
 
@@ -130,3 +130,22 @@ def test_sin_foto_y_vista_global(entorno):
 def test_mes_anterior_y_variacion():
     assert ng.mes_anterior("2026-01") == "2025-12" and ng.mes_anterior("2026-11") == "2026-10"
     assert ng.variacion(150, 100) == 0.5 and ng.variacion(10, 0) is None
+
+
+def test_router_negocio(entorno, monkeypatch):
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "backend"))
+    from fastapi.testclient import TestClient
+    from app.main import app
+    monkeypatch.setattr(ng, "_base_publicacion", lambda: entorno)
+    real = ng.actualizar
+    monkeypatch.setattr(ng, "actualizar", lambda nicho: real(nicho, lector=_lector, base=entorno, ahora=AHORA, enlazar=False))
+    c = TestClient(app)
+    assert c.get("/negocio").json()[0]["foto"] is None
+    assert c.get("/negocio/otro").status_code == 404
+    assert c.get("/negocio/n?mes=2026-13").status_code == 400
+    r = c.post("/negocio/n/actualizar").json()
+    assert r["mes"] == "2026-11" and r["resumen"]["vistas"] == 1310
+    assert c.get("/negocio/n?mes=2026-10").json()["resumen"]["videos"] == 1
+    assert c.get("/negocio?mes=2026-11").json()[0]["resumen"]["videos"] == 3
