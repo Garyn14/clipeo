@@ -235,7 +235,8 @@ contenido_restricciones:
 
 publicacion:
   tiktok_perfil: "@nandoclips76"   # cuenta de clips del cliente 2 (enlace automático y Negocio)
-  plataformas: []                  # solo TikTok al inicio (sin YouTube Shorts)
+  youtube_canal: "UCbTDUjkA8kMk-VNeIgmeBBA"   # NandoClips Vidal (@nandoclips76 en YouTube), configurado el 2026-11-21
+  plataformas: []                  # la publicación se conecta después de validar la calidad (S18)
   horario: manual
   descripcion_base: |
     Lo más fuerte del alcalde streamer de Ate.
