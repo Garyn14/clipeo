@@ -1,7 +1,7 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-21 (S16 cerrado; CLIP-70 integrado; CLIP-71 esperando OK)
+> Última actualización: 2026-11-21 (S16 cerrado; CLIP-70 integrado; CLIP-71 esperando OK; Jira al día)
 
 ## Ahora
 
@@ -23,11 +23,18 @@
   cierre de la Fase 1 hacia el 3-12 (`python -m investigacion.cierre_fase1 zapatillas_peru`). Si el operador
   reporta algo, se abre ticket.
 - Pendiente del operador: pegar a mano el link ambiguo `…/video/7709979536863235329` (probable `clip_c001_02` del 19-11).
+- **Jira al día (2026-11-21):** CLIP-60…69 en Finalizada; épicas cumplidas cerradas: CLIP-5 (F0), CLIP-6 (Q1),
+  CLIP-7 (Q2), CLIP-8 (Q3, con CLIP-27 hecho en el S5 y CLIP-28 en el S13) y CLIP-9 (Q4). Siguen abiertas CLIP-10
+  (Q5: falta volumen medido y el primer ajuste de memoria), CLIP-26 (Q6) y las secundarias CLIP-11/12 (con CLIP-16,
+  17 y 22). El conector de esta sesión ve `personal-clipeo` con lectura y escritura.
+- **Datos locales sin subir (2026-11-21):** en `legacy/investigacion/zapatillas_peru/` hay cambios de uso real
+  (`publicados.jsonl`, `metricas_publicados.jsonl`, `correcciones.jsonl`, `fuentes*.{yaml,json,jsonl}`). Propuesta:
+  subirlos en un PR de datos. Pendiente del operador: confirmar que quitar los 4 noticieros de `fuentes.yaml` (quedan
+  FRITZ SPORT en YouTube y el Kick) fue intencional.
 - **S14 y S15 cerrados** (OK del operador 2026-11-20; PRs #29, #33, #34, #37, #38): fuentes por cliente con página
   guiada, administración de fuentes con tipo desacoplado (YouTube, lista manual) y rol obligatorio, Colab de un solo
   paso (2:30, barra de progreso). Primera tanda real: video 1 → 15 clips (revisados y en cola); video 2 reintentado
-  tras un reinicio de Colab; video 3 a cargo del operador. **Siguiente: elegir el S16** (propuesta del analista).
-  Jira: falta pasar CLIP-60…67 a Finalizada (el conector perdió el acceso a `personal-clipeo` el 20-11).
+  tras un reinicio de Colab; video 3 a cargo del operador.
 - (histórico) **Sprint:** **S14 · Fuentes estáticas por nicho** (`docs/sprints/S14.md`, rama `sprint/S14`): CLIP-60…64.
   Panel → **Fuentes** → *Ejecutar* (manual, sin cron) revisa FRITZ SPORT y 4 noticieros, descarta lo repetido y lo que
   no menciona a Fritz, y deja candidatos para *Procesar*. Hoy hay 3 streams de FRITZ SPORT esperando (con Colab).
@@ -78,7 +85,9 @@
   - **Publicación conectada (hecho 2026-11-18):** el panel usa `PUBLICACION_DB=D:\clipeoackend\publicacion.db` (ahí
     están las cuentas) y las credenciales del `.env` de la raíz. Nada se publicó solo entre el 12-10 y el 18-11.
 
-## Tickets del sprint
+## Histórico (S3–S6, se conserva como referencia; lo vigente está en «Ahora»)
+
+### Tickets del S3
 
 | Ticket | Tema | Estado |
 |---|---|---|
@@ -103,7 +112,7 @@ En backlog: CLIP-27 (medios como fuente), CLIP-28 (transcripción/hablantes), CL
 - Hallazgo: 40 de 50 planes de dirección descartados en B eran más cortos que el mínimo (20 s). Decisión del
   operador: mínimo propio de la dirección = 15 s (el máximo no cambia).
 
-## Tickets del S4
+### Tickets del S4
 
 | Ticket | Tema | Estado |
 |---|---|---|
@@ -111,13 +120,10 @@ En backlog: CLIP-27 (medios como fuente), CLIP-28 (transcripción/hablantes), CL
 | CLIP-33 | Clips publicados → evaluación | **Hecho**: `evaluacion/etiquetar_audiencia.py` (link pegado > duración+fecha+título) y campo "Link del video ya publicado" en la revisión web (commit c72363e) |
 | CLIP-34 | Medios como fuente (PoC) | **Hecho** con Magaly (`docs/calidad/MEDIOS_POC.md`): encuentra el momento que más rindió (fuerza 7, `medios_y_polemica`). Panorama: correr en la laptop (YouTube bloquea la nube) |
 
-## Siguiente paso
+### Cierre del S5 y plan del S6 (histórico)
 
-[Analista] Planificar el S6 (abajo). Pendientes del operador que quedaron del S5:
-1. Decidir la cuenta de destino de los clips de medios (`docs/sprints/S5.md` §4: misma cuenta o captación).
-   Mientras no decida: misma cuenta del nicho.
-2. Cargar CLIP-35 y CLIP-36 en Jira y cerrar el sprint S5 ahí (la cuenta de Atlassian de la sesión no ve
-   `personal-clipeo`).
+Abierto desde el S5: la cuenta de destino de los clips de medios (`docs/sprints/S5.md` §4: misma cuenta o
+captación); mientras no se decida, misma cuenta del nicho. CLIP-35 y CLIP-36 ya están en Jira (Finalizada).
 
 **S5 cerrado (2026-11-18):** CLIP-35, CLIP-27, CLIP-36 + fixes (umbral del juez, `fuente` en el plan, Secret del
 notebook). 379 tests, CI en verde, PR Garyn14/clipeo#17 integrado. Demo con Latina Noticias: 2 clips aprobados.
