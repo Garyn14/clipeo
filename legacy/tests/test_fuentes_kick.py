@@ -61,7 +61,7 @@ def test_agregar_kick_propio_y_buscar(nicho):
         fc.editar_canal("n", canal["url"], rol="medios")
 
     ahora = tf.parsear_vods("fritzsport", VODS)[0]["publicado"] + timedelta(days=1)
-    r = fe.ejecutar("n", ahora=ahora)                      # ventana inicial de 7 días: entran los 2 grabados
+    r = fe.ejecutar("n", dias=7, ahora=ahora)              # últimos 7 días: entran los 2 grabados
     assert r["canales"] == [{"canal": "FritzSport", "nuevos": 2, "descartados": 0}]
     urls = {c["url"] for c in fe.candidatos("n")}
     assert "https://kick.com/fritzsport/videos/a1159d5f-7b6d-45a4-adf1-763c1807f7fc" in urls

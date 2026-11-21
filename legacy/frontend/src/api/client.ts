@@ -70,6 +70,8 @@ export const api = {
   getFuentes: (nicho: string) => request<FuentesNicho>(`/fuentes/${nicho}`),
   ejecutarFuentes: (nicho: string, body: { dias?: number; ultimos?: number }) =>
     request<ResumenEjecucion>(`/fuentes/${nicho}/ejecutar`, { method: "POST", body: JSON.stringify(body) }),
+  descartarFuentes: (nicho: string, ids: string[]) =>
+    request<{ descartados: string[] }>(`/fuentes/${nicho}/descartar`, { method: "POST", body: JSON.stringify({ ids }) }),
   procesarFuentes: (nicho: string, ids: string[]) =>
     request<{ iniciado: string[]; log: string }>(`/fuentes/${nicho}/procesar`, {
       method: "POST",

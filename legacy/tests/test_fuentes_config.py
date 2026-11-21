@@ -71,7 +71,7 @@ def test_tipo_simulado_recorre_agregar_buscar_y_candidatos(nicho):
     assert texto.startswith("# encabezado que se conserva")
     assert yaml.safe_load(texto)["canales"][0]["plataforma"] == "simulado"
 
-    r = fe.ejecutar("n")                                   # sin lector inyectado: usa el registro
+    r = fe.ejecutar("n", dias=7)                           # sin lector inyectado: usa el registro
     assert r["canales"] == [{"canal": "Fritzlandia", "nuevos": 3, "descartados": 0}]
     cands = fe.candidatos("n")
     assert {c["url"] for c in cands} == {"sim://fritzlandia/v1", "sim://fritzlandia/v2", "sim://fritzlandia/v3"}
@@ -101,9 +101,9 @@ def test_pausar_editar_y_quitar_conserva_historial(nicho):
     fc.editar_canal("n", "sim://uno", activo=False, nombre="Uno TV", rol="medios")
     canal = fe.cargar_config("n")["canales"][0]
     assert canal == {"nombre": "Uno TV", "plataforma": "simulado", "url": "sim://uno", "rol": "medios", "activo": False}
-    assert fe.ejecutar("n")["canales"] == []               # pausado: no se revisa
+    assert fe.ejecutar("n", dias=7)["canales"] == []       # pausado: no se revisa
     fc.editar_canal("n", "sim://uno", activo=True)
-    fe.ejecutar("n")
+    fe.ejecutar("n", dias=7)
     fc.quitar_canal("n", "sim://uno")
     assert fe.cargar_config("n")["canales"] == []
     assert len(fe.leer_historial("n")) == 3                # el historial queda

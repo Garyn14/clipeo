@@ -128,7 +128,9 @@ def agregar_links(nicho: str, links: list[str], rol: str, tipo_clave: str = "man
     _validar_rol(rol)
     tipo = tf.obtener(tipo_clave)
     historial = fe.leer_historial(nicho)
-    vistos = set(fe.estado_actual(historial)) | fe.ids_ya_procesados(fe._stream_data())
+    # CLIP-71: "ya visto" no bloquea; solo lo procesado (o descartado por el operador) y lo que ya es candidato
+    vistos = ({i for i, f in fe.estado_actual(historial).items() if fe._cerrado(f)}
+              | {f["id"] for f in fe.candidatos(nicho)} | fe.ids_ya_procesados(fe._stream_data()))
     ahora = datetime.now(timezone.utc).isoformat(timespec="seconds")
     resultados = []
     for link in [l.strip() for l in links if l and l.strip()]:

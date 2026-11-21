@@ -5,6 +5,10 @@ GET  /fuentes                    nichos con fuentes.yaml
 GET  /fuentes/{nicho}            canales, candidatos, historial reciente, última revisión y estado de Colab
 POST /fuentes/{nicho}/ejecutar   {dias? | ultimos?} → revisa los canales y registra lo nuevo
 POST /fuentes/{nicho}/procesar   {ids} → corre el pipeline en segundo plano (log en runs_logs/)
+POST /fuentes/{nicho}/descartar  {ids} → el operador descarta videos por procesar (CLIP-71)
+
+CLIP-71: `candidatos` es el resultado de la última búsqueda (+ links a mano); `anteriores`, lo pendiente de búsquedas
+previas o de canales quitados (el panel lo muestra plegado).
 
 CLIP-66/67 (administrar fuentes):
 GET    /fuentes/tipos                          tipos de fuente (implementados y "próximamente")
@@ -111,6 +115,7 @@ def detalle(nicho: str):
     except Exception:  # noqa: BLE001 — sin búsqueda de medios previa no hay sugerencias
         sugerencias = []
     actual = fe.estado_actual(fe.leer_historial(nicho))
+    cands, previos = fe._pendientes(nicho)
     historial = sorted(actual.values(), key=lambda f: f.get("detectado") or "", reverse=True)[:60]
     try:
         from transcripcion.video_transcriber import colab_vivo
@@ -126,7 +131,9 @@ def detalle(nicho: str):
                      "aportes": aportes.get(c.get("nombre"), {})} for c in config.get("canales") or []],
         "palabras_clave": config.get("palabras_clave") or [],
         "sugerencias": sugerencias,
-        "candidatos": sorted(fe.candidatos(nicho), key=lambda f: f.get("publicado") or "", reverse=True),
+        "candidatos": sorted(cands, key=lambda f: f.get("publicado") or "", reverse=True),
+        "anteriores": sorted(previos, key=lambda f: f.get("publicado") or "", reverse=True),
+        "ultima_busqueda": {k: v for k, v in fe.ultima_busqueda(nicho).items() if k != "ids"} or None,
         "historial": historial,
         "colab": {"vivo": vivo, "motivo": motivo},
     }
@@ -141,8 +148,8 @@ def ejecutar(nicho: str, body: EjecutarBody):
 @router.post("/{nicho}/procesar")
 def procesar(nicho: str, body: ProcesarBody):
     _existe(nicho)
-    validos = {f["id"] for f in fe.candidatos(nicho)} | {
-        i for i, f in fe.estado_actual(fe.leer_historial(nicho)).items() if f.get("estado") == "error"}
+    # Por procesar (de la última búsqueda o anteriores) o con error (reintento)
+    validos = {i for i, f in fe.estado_actual(fe.leer_historial(nicho)).items() if f.get("estado") in ("nuevo", "error")}
     ids = [i for i in body.ids if i in validos]
     if not ids:
         raise HTTPException(400, "Ningún candidato válido para procesar")
@@ -161,6 +168,15 @@ def procesar(nicho: str, body: ProcesarBody):
         cola = log.read_text(encoding="utf-8", errors="replace")[-600:]
         raise HTTPException(500, f"El procesamiento falló al arrancar: {cola}")
     return {"iniciado": ids, "log": log.name}
+
+
+@router.post("/{nicho}/descartar")
+def descartar(nicho: str, body: ProcesarBody):
+    _existe(nicho)
+    descartados = fe.descartar(nicho, body.ids)
+    if not descartados:
+        raise HTTPException(400, "Ningún video por procesar para descartar")
+    return {"descartados": descartados}
 
 
 # ── CLIP-66/67: administrar fuentes ─────────────────────────
