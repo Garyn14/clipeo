@@ -43,7 +43,7 @@ Se **evoluciona**, no se reescribe.
 | F0 · Fundación | CLIP-5 | Piloto en `legacy/`, continuidad entre sesiones, portabilidad, CI | ✅ |
 | Q1 · Medición de calidad | CLIP-6 | Conjunto de evaluación y línea base | ✅ (base; se mantiene) |
 | Q2 · Dirección editorial | CLIP-7 | Plan de edición, encuadre 4:5 que sigue a la persona, zoom por tramos | ✅ S3, S6, S7, S9 |
-| Q3 · Detección con más señales | CLIP-8 | Más momentos buenos; medios como fuente | ◐ medios ✅ (S5, S8); audio ❌ descartado con datos (S9); hablantes de TV pendiente (CLIP-28) |
+| Q3 · Detección con más señales | CLIP-8 | Más momentos buenos; medios como fuente | ✅ medios (S5, S8); audio ❌ descartado con datos (S9); hablantes de TV (CLIP-28, S13) |
 | Q4 · Control visual | CLIP-9 | Ningún clip con defectos llega sin aviso a la revisión | ✅ S11 |
 | Q5 · Aprendizaje continuo | CLIP-10 | Medir lo publicado y ajustar la memoria con evidencia | ◐ medición ✅ (S10); falta volumen y el primer ajuste |
 | Q6 · Onboarding de cliente nuevo | CLIP-26 | Cold start de un cliente nuevo | Fase 2 |
@@ -64,8 +64,11 @@ Se **evoluciona**, no se reescribe.
 | S9 | Encuadre en streams; señales de audio descartadas | ✅ |
 | S10 | Medir lo publicado; publicación conectada | ✅ |
 | S11 | Control visual automático | ✅ |
-| **S12** | **Operación estable** (criterio 4 de la Fase 1) | Propuesto |
-| S13 | Hablantes de TV (CLIP-28) + medición de la Fase 1 (criterios 1 y 3) y cierre | Por planificar |
+| S12 | Operación estable (criterio 4 de la Fase 1) | ✅ |
+| S13 | Hablantes de TV (CLIP-28) + medición de la Fase 1 (criterios 1 y 3) | ✅ (cierre de la Fase 1 pendiente de uso real) |
+| S14 | Fuentes por cliente (página Fuentes) | ✅ |
+| S15 | Colab de un solo paso; administrar fuentes con tipo desacoplado | ✅ |
+| S16 | Objetivo del cliente en el juez (dos notas); links automáticos de TikTok | ✅ |
 
 **Principio (2026-11-17):** no sabemos qué quiere la gente hasta salir a la cancha. La evaluación offline protege
 contra regresiones; la verdad es la audiencia. **Principio (2026-11-18):** decidir con datos también para descartar
@@ -79,7 +82,7 @@ contra regresiones; la verdad es la audiencia. **Principio (2026-11-18):** decid
 
 ## 5. Gestión
 
-- Jira: proyecto `CLIP` en `personal-clipeo.atlassian.net` (lo carga el operador; la cuenta de Atlassian de las
-  sesiones no ve ese sitio). Tickets detallados solo para el sprint siguiente.
+- Jira: proyecto `CLIP` en `personal-clipeo.atlassian.net`, operado por el agente con el conector de Atlassian (ver
+  `CLAUDE.md` → *Operar Jira*). Tickets detallados solo para el sprint siguiente.
 - Roles separados (ver `CLAUDE.md`): **analista** define y prioriza; **líder técnico** diseña y revisa;
   **desarrollador** implementa tickets aprobados.
