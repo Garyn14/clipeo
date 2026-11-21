@@ -157,8 +157,8 @@ function ClipCard({
         <span>{clip.clip_id}</span>
         <span className={`score-badge ${scoreClase}`}>{clip.score}/10</span>
         {clip.listo_para_publicar && <span className="pill pill-ok">aprobado</span>}
-        {(clip.juez?.fuerza ?? 0) >= 7 && (
-          <span className="pill pill-ok" title="Fuerza 7 o más: revisar primero">⭐ prioridad</span>
+        {((clip.juez?.fuerza ?? 0) >= 7 || (clip.juez?.comercial ?? 0) >= 8) && (
+          <span className="pill pill-ok" title="Viralidad 7+ o valor comercial 8+: revisar primero">⭐ prioridad</span>
         )}
         {clip.fuente?.tipo === "medios" && (
           <span className="pill" title={`Contenido de terceros (R-01) · sobre ${clip.fuente.sobre ?? "?"}`}>
@@ -197,7 +197,8 @@ function ClipCard({
               <summary>Por qué lo eligió el juez</summary>
               <p>
                 <span className="pill">{TIPO_MOMENTO_LABEL[clip.juez.tipo ?? ""] ?? clip.juez.tipo}</span>
-                {clip.juez.fuerza !== null && <span className="hint"> · fuerza {clip.juez.fuerza}/10</span>}
+                {clip.juez.fuerza !== null && <span className="hint"> · viral {clip.juez.fuerza}/10</span>}
+                {clip.juez.comercial != null && <span className="hint"> · comercial {clip.juez.comercial}/10</span>}
               </p>
               {clip.juez.en_juego && (
                 <p>

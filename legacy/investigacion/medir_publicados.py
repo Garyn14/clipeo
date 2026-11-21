@@ -82,7 +82,7 @@ def _contexto_clip(clave: str, stream_data: Path) -> dict:
         for c in json.loads((stream_data / sesion / "contenido_final.json").read_text(encoding="utf-8"))["contenido"]:
             if c.get("clip_id") == clip:
                 juez = c.get("juez") or {}
-                salida.update(tipo=juez.get("tipo"), fuerza=juez.get("fuerza"),
+                salida.update(tipo=juez.get("tipo"), fuerza=juez.get("fuerza"), comercial=juez.get("comercial"),
                               titulo=" / ".join(x for x in (c.get("texto_linea1"), c.get("texto_linea2")) if x))
     except (OSError, json.JSONDecodeError, KeyError):
         pass

@@ -519,6 +519,17 @@ contenido_base:
 # buenos de malos (AUC 0,59), así que el umbral bajo deja pasar a revisión el 80% de lo bueno; fuerza >= 7 = prioridad.
 juez:
   umbral_fuerza: 3
+  umbral_comercial: 6      # CLIP-68: también se recomienda si la nota comercial llega a 6 (prioridad desde 8)
+
+# Objetivo del cliente (CLIP-68, decisión del operador 2026-11-20): viralidad + venta de producto. En la primera
+# tanda real el operador aprobó clips de precio/producto que la memoria (viralidad) puntuaba bajo: para el cliente
+# esos clips venden. El juez da una nota de viralidad (fuerza) y otra de valor comercial.
+objetivo:
+  viralidad: true
+  venta: >-
+    Fritz Sport vende zapatillas y chimpunes a bajo precio. Suma valor comercial un clip que muestra el producto,
+    un precio claro (de X a Y), una oferta o un remate, o que da confianza en la tienda (calidad, legalidad,
+    stock, envíos), siempre que se entienda solo y no sea una lectura plana de códigos.
 
 refinamiento_base:
   contexto_antes_segundos: 45
