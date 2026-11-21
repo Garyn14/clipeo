@@ -29,6 +29,9 @@ El pipeline comprueba el túnel antes de descargar y para con un mensaje si est�
 
 ## 3. Producir clips
 
+- **Kick (CLIP-70):** en *Fuentes → Administrar fuentes → Agregar fuente* elegir tipo **Kick**, rol **Propio** (es el
+  único que admite) y pegar `kick.com/usuario`. "Buscar ahora" trae sus **directos grabados** (no el vivo). Kick guarda
+  pocos: conviene buscar seguido. Un directo de 1 h son ~2 tramos de transcripción y ~1 GB de descarga en 1080p.
 - **Fuentes fijas del cliente (recomendado):** panel → **Fuentes** → *Ejecutar* (lo nuevo de sus canales y de los
   noticieros desde la última revisión) → marcar candidatos → *Procesar*. Sin cron: se corre a mano cuando quieras.
   Por terminal, desde `legacy/`: `python -m investigacion.fuentes_estaticas ejecutar zapatillas_peru` y luego

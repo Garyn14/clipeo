@@ -426,6 +426,7 @@ export interface TipoFuente {
   implementado: boolean;
   automatico: boolean;
   pide: string;
+  roles?: string[];   // CLIP-70: roles que admite (Kick: solo "propio")
 }
 
 export interface VistaPreviaCanal {

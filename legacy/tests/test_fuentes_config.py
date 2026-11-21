@@ -57,7 +57,8 @@ def test_registro_trae_youtube_manual_y_proximamente():
     claves = {t["clave"]: t for t in tf.tipos()}
     assert claves["youtube"]["implementado"] and claves["youtube"]["automatico"]
     assert claves["manual"]["implementado"] and not claves["manual"]["automatico"]
-    assert not claves["kick"]["implementado"]
+    assert not claves["twitch"]["implementado"]
+    assert claves["kick"]["implementado"] and claves["kick"]["roles"] == ["propio"]
     with pytest.raises(tf.FuenteError):
         tf.obtener("inexistente")
 
@@ -90,6 +91,8 @@ def test_validaciones_al_agregar(nicho):
     with pytest.raises(tf.FuenteError, match="elige el rol"):     # sin rol preseleccionado: hay que elegirlo
         fc.agregar_canal("n", "simulado", "sim://dos", "")
     with pytest.raises(tf.FuenteError, match="no disponible|no se agrega"):
+        fc.agregar_canal("n", "twitch", "twitch.tv/x", "medios")
+    with pytest.raises(tf.FuenteError, match="solo admite el rol Propio"):   # CLIP-70: Kick solo propio
         fc.agregar_canal("n", "kick", "kick.com/x", "medios")
 
 

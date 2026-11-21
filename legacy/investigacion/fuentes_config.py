@@ -62,9 +62,16 @@ def previsualizar(plataforma: str, entrada: str, n: int = 5) -> dict:
                         "publicado": v["publicado"].isoformat() if v.get("publicado") else None} for v in videos]}
 
 
+def _rol_del_tipo(tipo: tf.TipoFuente, rol: str) -> None:
+    if rol not in tipo.roles:
+        admitidos = " o ".join("Propio" if r == "propio" else "TV / prensa" for r in tipo.roles)
+        raise tf.FuenteError(f"{tipo.nombre} solo admite el rol {admitidos}")
+
+
 def agregar_canal(nicho: str, plataforma: str, entrada: str, rol: str, nombre: str | None = None) -> dict:
     _validar_rol(rol)
     tipo = tf.obtener(plataforma)
+    _rol_del_tipo(tipo, rol)
     if not tipo.implementado or not tipo.automatico:
         raise tf.FuenteError(f"{tipo.nombre}: no se agrega como canal")
     canal = tipo.resolver(entrada)
@@ -90,6 +97,7 @@ def editar_canal(nicho: str, url: str, activo: bool | None = None, rol: str | No
         canal["activo"] = bool(activo)
     if rol is not None:
         canal["rol"] = _validar_rol(rol)
+        _rol_del_tipo(tf.obtener(canal.get("plataforma")), canal["rol"])
     if nombre is not None and nombre.strip():
         canal["nombre"] = nombre.strip()
     guardar_config(nicho, config)
