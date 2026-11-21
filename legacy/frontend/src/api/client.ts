@@ -1,4 +1,4 @@
-import type { ClienteFuentes, FuentesNicho, ResultadoLink, ResumenEjecucion, TipoFuente, VistaPreviaCanal,
+import type { ClienteFuentes, FilaNegocioGlobal, FuentesNicho, ReporteNegocio, ResultadoLink, ResumenEjecucion, TipoFuente, VistaPreviaCanal,
   Canal,
   ClipView,
   CuentaPublicacion,
@@ -68,6 +68,11 @@ export const api = {
   agregarLinks: (nicho: string, links: string[], rol: string) =>
     request<{ resultados: ResultadoLink[] }>(`/fuentes/${nicho}/manual`, { method: "POST", body: JSON.stringify({ links, rol }) }),
   getFuentes: (nicho: string) => request<FuentesNicho>(`/fuentes/${nicho}`),
+  // S17: Negocio
+  getNegocioGlobal: (mes?: string) => request<FilaNegocioGlobal[]>(`/negocio${mes ? `?mes=${mes}` : ""}`),
+  getNegocio: (nicho: string, mes?: string) => request<ReporteNegocio>(`/negocio/${nicho}${mes ? `?mes=${mes}` : ""}`),
+  actualizarNegocio: (nicho: string, mes?: string) =>
+    request<ReporteNegocio>(`/negocio/${nicho}/actualizar${mes ? `?mes=${mes}` : ""}`, { method: "POST" }),
   ejecutarFuentes: (nicho: string, body: { dias?: number; ultimos?: number }) =>
     request<ResumenEjecucion>(`/fuentes/${nicho}/ejecutar`, { method: "POST", body: JSON.stringify(body) }),
   descartarFuentes: (nicho: string, ids: string[]) =>

@@ -1539,3 +1539,39 @@ a.btn {
 .fu-chip-entrada { min-width: 160px; }
 .fu-confirmar { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--danger); font-size: 0.85rem; flex-wrap: wrap; }
 .fu-falta { border-color: var(--warning) !important; }
+
+/* S17 · Negocio (CLIP-74) */
+.ng-cabecera { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; }
+.ng-cabecera h2 { margin: 0; }
+.ng-controles { display: flex; gap: 0.6rem; align-items: center; }
+.ng-controles select { background: var(--bg-input); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 0.45rem 0.6rem; }
+.ng-bloque { background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius); padding: 1rem 1.2rem; margin-bottom: 1rem; }
+.ng-bloque h3 { margin: 0 0 0.8rem; font-size: 1rem; }
+.ng-tarjetas { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.8rem; }
+.ng-tarjeta { display: flex; flex-direction: column; gap: 0.2rem; padding: 0.8rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-input); }
+.ng-tarjeta-titulo { color: var(--text-muted); font-size: 0.8rem; }
+.ng-tarjeta-valor { font-size: 1.5rem; }
+.ng-tarjeta-meta { color: var(--text-faint); font-size: 0.78rem; }
+.ng-var { font-weight: 600; margin-right: 0.3rem; }
+.ng-var-sube { color: var(--success); }
+.ng-var-baja { color: var(--danger); }
+.ng-var-neutra { color: var(--text-faint); font-weight: 400; }
+.ng-tabla { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.ng-tabla th { text-align: left; color: var(--text-muted); font-weight: 500; padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border); }
+.ng-tabla td { padding: 0.45rem 0.5rem; border-bottom: 1px solid var(--border-subtle); }
+.ng-global { background: var(--bg-elevated); border-radius: var(--radius); }
+.ng-columnas { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; }
+.ng-columnas > .ng-bloque { margin-bottom: 1rem; }
+.ng-videos { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.ng-videos li { display: flex; gap: 0.8rem; align-items: flex-start; }
+.ng-video-vistas { min-width: 4.5rem; text-align: right; font-weight: 600; }
+.ng-video-cuerpo { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+.ng-video-cuerpo a { color: var(--text); overflow-wrap: anywhere; }
+.ng-barras { display: flex; gap: 0.8rem; align-items: flex-end; height: 180px; }
+.ng-barra { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 0.2rem; }
+.ng-barra-relleno { width: 100%; max-width: 56px; background: var(--accent-bg); border: 1px solid var(--accent-border); border-radius: 6px 6px 0 0; }
+.ng-barra.activa .ng-barra-relleno { background: var(--accent); }
+.ng-barra-valor { font-size: 0.78rem; color: var(--text-muted); }
+.ng-barra-mes { font-size: 0.8rem; }
+.ng-barra-meta { font-size: 0.72rem; color: var(--text-faint); }
+.ng-proximamente { border-style: dashed; }
