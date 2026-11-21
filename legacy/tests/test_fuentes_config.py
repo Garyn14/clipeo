@@ -143,3 +143,15 @@ def test_router_administrar(nicho, monkeypatch):
     assert d["canales"][0]["plataforma"] == "simulado" and d["palabras_clave"] == ["fritz sport"]
     assert c.put("/fuentes/n/palabras", json={"palabras": ["a b c d"]}).json() == {"palabras": ["a b c d"]}
     assert c.delete("/fuentes/n/canales", params={"url": "sim://tres"}).status_code == 200
+
+
+def test_plataforma_de_un_link():
+    """CLIP-72: la plataforma sale del link (también para el historial ya guardado)."""
+    assert tf.plataforma_de("https://www.youtube.com/watch?v=abc") == "YouTube"
+    assert tf.plataforma_de("https://youtu.be/abc") == "YouTube"
+    assert tf.plataforma_de("https://m.youtube.com/watch?v=abc") == "YouTube"
+    assert tf.plataforma_de("https://kick.com/fritzsport/videos/a1") == "Kick"
+    assert tf.plataforma_de("https://www.tiktok.com/@x/video/1") == "TikTok"
+    assert tf.plataforma_de("https://www.dailymotion.com/video/x8") == "dailymotion.com"   # desconocido: el dominio
+    assert tf.plataforma_de("https://notkick.com/x") == "notkick.com"
+    assert tf.plataforma_de(None) == "" and tf.plataforma_de("") == ""

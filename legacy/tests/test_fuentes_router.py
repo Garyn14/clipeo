@@ -87,3 +87,15 @@ def test_clip71_anteriores_y_descartar(cliente, monkeypatch):
     assert cliente.post("/fuentes/n/descartar", json={"ids": ["AAA", "PROC"]}).json() == {"descartados": ["AAA", "PROC"]}
     assert cliente.post("/fuentes/n/descartar", json={"ids": ["AAA"]}).status_code == 400
     assert cliente.get("/fuentes/n").json()["candidatos"] == []
+
+
+def test_clip72_plataforma_en_candidatos_anteriores_e_historial(cliente, monkeypatch):
+    real = fe.ejecutar
+    monkeypatch.setattr(fe, "ejecutar", lambda nicho, **kw: real(nicho, lector=_lector, ahora=AHORA, **kw))
+    fe._guardar_historial("n", [{"id": "K1", "url": "https://kick.com/fritzsport/videos/k1", "titulo": "Directo",
+                                 "canal": "FritzSport", "rol": "propio", "estado": "nuevo"}])
+    cliente.post("/fuentes/n/ejecutar", json={})
+    d = cliente.get("/fuentes/n").json()
+    assert {c["plataforma"] for c in d["candidatos"]} == {"YouTube"}
+    assert [c["plataforma"] for c in d["anteriores"]] == ["Kick"]
+    assert {h["id"]: h["plataforma"] for h in d["historial"]}["K1"] == "Kick"

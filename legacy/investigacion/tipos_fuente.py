@@ -71,6 +71,25 @@ def tipos() -> list[dict]:
 
 # ── YouTube ─────────────────────────────────────────────────
 
+# CLIP-72: plataforma de un video a partir de su link (sirve también para el historial ya guardado)
+_PLATAFORMAS = {"youtube.com": "YouTube", "youtu.be": "YouTube", "kick.com": "Kick", "tiktok.com": "TikTok",
+                "twitch.tv": "Twitch", "facebook.com": "Facebook", "fb.watch": "Facebook",
+                "instagram.com": "Instagram", "x.com": "X", "twitter.com": "X"}
+
+
+def plataforma_de(url: str | None) -> str:
+    """'YouTube', 'Kick'…; sitio sin nombre conocido → su dominio; sin link → ''. Puro."""
+    m = re.match(r"^(?:[a-z][a-z0-9+.-]*://)?([^/?#:]+)", (url or "").strip().lower())
+    if not m:
+        return ""
+    host = m.group(1)
+    host = host[4:] if host.startswith("www.") else host
+    for dominio, nombre in _PLATAFORMAS.items():
+        if host == dominio or host.endswith("." + dominio):
+            return nombre
+    return host
+
+
 def channel_id(url: str) -> str | None:
     m = re.search(r"/channel/(UC[\w-]{20,})", url or "")
     return m.group(1) if m else None

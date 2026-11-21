@@ -145,6 +145,7 @@ export function Fuentes() {
       <div className="fu-video-cuerpo">
         <span className="fu-video-titulo">{c.titulo}</span>
         <span className="fu-video-meta">
+          {c.plataforma && <span className="fu-plataforma">{c.plataforma}</span>}
           {c.canal} · {c.rol === "propio" ? "canal propio" : "TV / prensa"} · {fechaCorta(c.publicado)}
           {c.motivo === "agregado a mano" ? " · agregado a mano" : ""}
         </span>
@@ -308,6 +309,7 @@ export function Fuentes() {
                   <div className="fu-video-cuerpo">
                     <span>{h.titulo}</span>
                     <span className="fu-video-meta">
+                      {h.plataforma && <span className="fu-plataforma">{h.plataforma}</span>}
                       {h.canal} · {fechaCorta(h.detectado)}{h.motivo ? ` · ${h.motivo}` : ""}{h.sesion ? ` · sesión ${h.sesion}` : ""}
                     </span>
                   </div>

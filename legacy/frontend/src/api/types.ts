@@ -461,6 +461,7 @@ export interface VideoFuente {
   estado: string;
   motivo?: string;
   sesion?: string;
+  plataforma?: string;                // CLIP-72: YouTube, Kick… o el dominio del sitio (deducida del link)
 }
 
 export interface ClienteFuentes {
