@@ -58,6 +58,7 @@ def _registrar_correccion(session_dir: Path, clip_id: str, clip: dict, accion: s
             "accion": accion,
             # el título propuesto es el que estaba al momento de decidir (antes de editarlo)
             "juez": {"tipo": juez.get("tipo"), "fuerza": juez.get("fuerza", clip.get("score")),
+                     "comercial": juez.get("comercial"),   # CLIP-68
                      "linea1": clip.get("texto_linea1"), "linea2": clip.get("texto_linea2")},
             "titulo_final": titulo_final,
             "razon": razon,

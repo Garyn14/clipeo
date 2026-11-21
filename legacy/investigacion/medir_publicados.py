@@ -28,19 +28,16 @@ LEGACY = Path(__file__).resolve().parent.parent
 
 
 def _stream_data() -> Path:
-    env = os.environ.get("CLIPEO_STREAM_DATA")
-    if env:
-        return Path(env).resolve()
+    # CLIP-69: la configuración central (CLIP-54) lee el .env de la raíz; antes este comando ignoraba el .env
+    from core.config_local import ruta
     raiz = LEGACY.parent / "stream_data"
-    return raiz if raiz.exists() else LEGACY / "stream_data"
+    return ruta("CLIPEO_STREAM_DATA", raiz if raiz.exists() else LEGACY / "stream_data")
 
 
 def _base_publicacion() -> Path:
-    env = os.environ.get("PUBLICACION_DB")
-    if env:
-        return Path(env)
-    raiz = LEGACY.parent / "backend" / "publicacion.db"      # donde viven las cuentas en la laptop del operador
-    return raiz if raiz.exists() else LEGACY / "backend" / "publicacion.db"
+    # Antes miraba legacy/backend/publicacion.db (una base vieja) si no había PUBLICACION_DB en el entorno
+    from core.config_local import ruta
+    return ruta("PUBLICACION_DB", LEGACY.parent / "data" / "publicacion.db")
 
 
 def publicados(nicho: str, base: Path | None = None) -> list[dict]:
@@ -82,7 +79,7 @@ def _contexto_clip(clave: str, stream_data: Path) -> dict:
         for c in json.loads((stream_data / sesion / "contenido_final.json").read_text(encoding="utf-8"))["contenido"]:
             if c.get("clip_id") == clip:
                 juez = c.get("juez") or {}
-                salida.update(tipo=juez.get("tipo"), fuerza=juez.get("fuerza"),
+                salida.update(tipo=juez.get("tipo"), fuerza=juez.get("fuerza"), comercial=juez.get("comercial"),
                               titulo=" / ".join(x for x in (c.get("texto_linea1"), c.get("texto_linea2")) if x))
     except (OSError, json.JSONDecodeError, KeyError):
         pass
@@ -104,6 +101,17 @@ def metricas(url: str) -> dict | None:
 
 def medir(nicho: str, stream_data: Path | None = None, base: Path | None = None) -> list[dict]:
     stream_data = stream_data or _stream_data()
+    try:   # CLIP-69: antes de medir, enlazar solos los videos que el operador publicó desde la app
+        from investigacion.enlazar_tiktok import enlazar
+        r = enlazar(nicho, base=base)
+        for e in r["enlazados"]:
+            print(f"[MEDIR] enlazado solo: {e['session_id']}/{e['clip_id']} → {e['url']}")
+        for a in r["ambiguos"]:
+            print(f"[MEDIR] ? {a['video']['url']} coincide con varios clips: pégalo a mano en la revisión")
+        if r["error"]:
+            print(f"[MEDIR] ⚠ enlace automático: {r['error']}")
+    except Exception as e:  # noqa: BLE001
+        print(f"[MEDIR] ⚠ enlace automático falló: {e}")
     filas = []
     ahora = datetime.now().isoformat(timespec="seconds")
     for p in publicados(nicho, base):

@@ -237,6 +237,7 @@ export interface JuezClip {
   en_juego: string | null;
   parecidos: string[] | null;
   fuerza: number | null;
+  comercial?: number | null;   // CLIP-68: valor comercial según el objetivo del cliente
   por_que: string | null;
 }
 

@@ -112,17 +112,39 @@ def _parsear(raw: str, n_esperados: int) -> list[dict]:
     return [por_n[n] for n in range(1, n_esperados + 1)]
 
 
-def system_prompt(canal_id: str) -> str | None:
-    """Prompt del juez con la memoria y las correcciones del nicho, o None sin memoria."""
+_BLOQUE_OBJETIVO = """
+OBJETIVO DEL CLIENTE (además de la viralidad): VENDER. {venta}
+Para CADA candidato da también "comercial": 1-10, cuánto ayuda a vender según lo anterior. Es INDEPENDIENTE de la
+memoria y de la fuerza: un momento "ninguno" (pitch, precio, oferta) puede tener comercial alto si se entiende solo.
+Una lectura plana de códigos o una instrucción interna no suma. Incluye "comercial" en cada objeto del JSON.
+"""
+
+
+def system_prompt(canal_id: str, objetivo: dict | None = None) -> str | None:
+    """Prompt del juez con la memoria, las correcciones y (CLIP-68) el objetivo del cliente, o None sin memoria."""
     memoria = comun.cargar_memoria(canal_id)
     if memoria is None:
         return None
     correcciones = comun.cargar_correcciones(canal_id)
     bloque = _BLOQUE_CORRECCIONES.format(lineas=correcciones) if correcciones else ""
-    return JUEZ_PROMPT.format(memoria=memoria, correcciones=bloque)
+    prompt = JUEZ_PROMPT.format(memoria=memoria, correcciones=bloque)
+    venta = (objetivo or {}).get("venta")
+    return prompt + _BLOQUE_OBJETIVO.format(venta=str(venta).strip()) if venta else prompt
+
+
+def decidir(fuerza: int, comercial: int | None, publicar_juez: bool, juez_cfg: dict) -> tuple[bool, bool]:
+    """(publicar, prioridad). Pura. CLIP-32: con umbral decide la fuerza; CLIP-68: o la nota comercial."""
+    umbral = juez_cfg.get("umbral_fuerza")
+    umbral_com = juez_cfg.get("umbral_comercial", UMBRAL_COMERCIAL)
+    por_viral = fuerza >= umbral if umbral is not None else publicar_juez
+    por_venta = comercial is not None and comercial >= umbral_com
+    prioridad = fuerza >= FUERZA_PRIORIDAD or (comercial is not None and comercial >= COMERCIAL_PRIORIDAD)
+    return por_viral or por_venta, prioridad
 
 
 FUERZA_PRIORIDAD = 7   # CLIP-32: fuerza >= 7 fue buena 16 de 16 veces en la evaluación del S3
+UMBRAL_COMERCIAL = 6   # CLIP-68: por defecto, recomendado por valor comercial desde 6
+COMERCIAL_PRIORIDAD = 8
 
 
 def _fuerza(valor) -> int:
@@ -150,7 +172,8 @@ def run_juez(
     if fuente_sesion is None:
         fuente_sesion = fuente.leer(session_dir)
     canal_id = (config.get("meta") or {}).get("id", "default")
-    system = system_prompt(canal_id)
+    objetivo = config.get("objetivo") or {}
+    system = system_prompt(canal_id, objetivo)
     if system is None:
         ruta = comun.ruta_memoria(canal_id).relative_to(comun.RAIZ).as_posix()
         return {"omitido": True, "nota": f"nicho sin memoria ({ruta})"}
@@ -189,16 +212,16 @@ def run_juez(
     )
     veredictos = _parsear(resp.content[0].text, len(candidatos))
 
-    umbral = (config.get("juez") or {}).get("umbral_fuerza")
+    juez_cfg = config.get("juez") or {}
     decisiones = []
     for n, (r, v) in enumerate(zip(candidatos, veredictos), 1):
         publicar_juez = bool(v.get("publicar"))
         fuerza = _fuerza(v.get("fuerza"))
-        # CLIP-32: con umbral, decide la fuerza (la decisión propia del juez queda en publicar_juez)
-        publicar = fuerza >= umbral if umbral is not None else publicar_juez
-        prioridad = fuerza >= FUERZA_PRIORIDAD
+        comercial = _fuerza(v.get("comercial")) if objetivo.get("venta") and v.get("comercial") is not None else None
+        publicar, prioridad = decidir(fuerza, comercial, publicar_juez, juez_cfg)
         marca = ("⭐" if prioridad and publicar else "✅") if publicar else "❌"
-        print(f"  {marca} {v.get('fuerza')}/10 [{v.get('tipo')}] {v.get('linea1', '')} — {v.get('por_que', '')}")
+        com = f" · comercial {comercial}/10" if comercial is not None else ""
+        print(f"  {marca} {v.get('fuerza')}/10{com} [{v.get('tipo')}] {v.get('linea1', '')} — {v.get('por_que', '')}")
         decisiones.append({
             "n": n,
             "inicio": r.get("inicio"),
@@ -209,6 +232,7 @@ def run_juez(
             "linea1": v.get("linea1"),
             "linea2": v.get("linea2"),
             **{k: v.get(k) for k in ("tipo", "en_juego", "parecidos", "fuerza", "por_que")},
+            "comercial": comercial,
             "rango": r,
         })
 
@@ -224,4 +248,10 @@ def run_juez(
 
 def bloque_juez(decision: dict) -> dict:
     """El veredicto resumido que viaja en cada item de contenido.json."""
-    return {k: decision.get(k) for k in ("tipo", "en_juego", "parecidos", "fuerza", "por_que", "linea1", "linea2")}
+    return {k: decision.get(k) for k in ("tipo", "en_juego", "parecidos", "fuerza", "comercial", "por_que",
+                                         "linea1", "linea2")}
+
+
+def nota_clip(decision: dict) -> int:
+    """Score del clip para ordenar la revisión: la mayor entre viralidad y valor comercial (CLIP-68)."""
+    return max(_fuerza(decision.get("fuerza")), _fuerza(decision.get("comercial")))

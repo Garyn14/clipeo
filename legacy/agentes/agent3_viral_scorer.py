@@ -495,7 +495,7 @@ def run_copy(juez_path: str, config: dict) -> tuple[list[dict], list[str]]:
     seo_base      = config.get("seo_base", {})
     seo_context   = _format_seo_context(seo_base)
 
-    from agentes.juez import bloque_juez
+    from agentes.juez import bloque_juez, nota_clip
     from core import fuente as _fuente
 
     fuente_sesion = _fuente.leer(chunk_dir)   # CLIP-27: viaja en cada clip (revisión web, R-01)
@@ -510,7 +510,7 @@ def run_copy(juez_path: str, config: dict) -> tuple[list[dict], list[str]]:
         rango = d.get("rango") or {"inicio": d.get("inicio"), "fin": d.get("fin")}
         if not d.get("publicar"):
             contenido.append({
-                "score": d.get("fuerza") or 0, "publicar": False,
+                "score": nota_clip(d), "publicar": False,
                 "texto_linea1": d.get("linea1") or "", "texto_linea2": d.get("linea2") or "",
                 "hashtags": [], "juez": bloque_juez(d), "rango_original": rango,
                 **({"fuente": fuente_sesion} if fuente_sesion else {}),
@@ -534,7 +534,7 @@ def run_copy(juez_path: str, config: dict) -> tuple[list[dict], list[str]]:
                                  _NOTA_COPY.format(l1=l1, l2=l2))
         _completar_item(resultado, config, seo_base, hashtags_base)
         # El título y la decisión son del juez, no del copy
-        resultado.update(texto_linea1=l1, texto_linea2=l2, score=d.get("fuerza") or 0, publicar=True)
+        resultado.update(texto_linea1=l1, texto_linea2=l2, score=nota_clip(d), publicar=True)
         resultado.pop("razon_score", None)
         resultado["juez"] = bloque_juez(d)
         resultado["rango_original"] = rango

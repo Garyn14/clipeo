@@ -154,6 +154,8 @@ class ContextLoader:
             # `juez:` va en el primer nivel del YAML (CLIP-32); antes se buscaba solo dentro de `nicho:` y el
             # umbral nunca llegaba al juez. Se aceptan las dos ubicaciones.
             "juez":           copy.deepcopy(nicho.get("juez") or nicho_data.get("juez") or {}),
+            # CLIP-68: objetivo del cliente (viralidad, venta...) para que el juez puntúe también el valor comercial
+            "objetivo":       copy.deepcopy(nicho.get("objetivo") or nicho_data.get("objetivo") or {}),
             "deteccion": {
                 "confianza_minima": det_base.get("confianza_minima", 0.75),
                 "prompt":           det_prompt,
