@@ -70,3 +70,20 @@ def test_lanzar_y_esperar_registra_la_corrida(tmp_path, monkeypatch):
     run = json.loads((tmp_path / "runs.json").read_text(encoding="utf-8"))[run_id]
     assert rc == 0 and run["session_id"] == "sesion_x" and run["accion"] == "fuentes" and run["returncode"] == 0
     assert "hola" in (tmp_path / f"{run_id}.log").read_text(encoding="utf-8")
+
+
+def test_clip71_anteriores_y_descartar(cliente, monkeypatch):
+    real = fe.ejecutar
+    monkeypatch.setattr(fe, "ejecutar", lambda nicho, **kw: real(nicho, lector=_lector, ahora=AHORA, **kw))
+    fe._guardar_historial("n", [{"id": "VIEJO1", "titulo": "De otra búsqueda", "canal": "Latina", "rol": "medios",
+                                 "estado": "nuevo"}])
+    r = cliente.post("/fuentes/n/ejecutar", json={}).json()
+    assert r["dias"] == 1                                         # rango por defecto: último día
+    d = cliente.get("/fuentes/n").json()
+    assert {c["id"] for c in d["candidatos"]} == {"AAA", "PROC"} and [c["id"] for c in d["anteriores"]] == ["VIEJO1"]
+    assert d["ultima_busqueda"]["dias"] == 1 and "ids" not in d["ultima_busqueda"]
+    r = cliente.post("/fuentes/n/procesar", json={"ids": ["VIEJO1"]}).json()   # lo anterior también se procesa
+    assert r["iniciado"] == ["VIEJO1"]
+    assert cliente.post("/fuentes/n/descartar", json={"ids": ["AAA", "PROC"]}).json() == {"descartados": ["AAA", "PROC"]}
+    assert cliente.post("/fuentes/n/descartar", json={"ids": ["AAA"]}).status_code == 400
+    assert cliente.get("/fuentes/n").json()["candidatos"] == []

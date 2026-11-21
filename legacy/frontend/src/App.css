@@ -1487,6 +1487,8 @@ a.btn {
   background: var(--accent-bg); color: var(--accent-strong); font-weight: 700;
 }
 .fu-buscar { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+.fu-acciones { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin-top: 0.8rem; }
+.fu-anteriores { margin-top: 0.8rem; }
 .fu-buscar select, .fu-valor input {
   background: var(--bg-input); color: var(--text); border: 1px solid var(--border);
   border-radius: var(--radius-sm); padding: 0.45rem 0.6rem;

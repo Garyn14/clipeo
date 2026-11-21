@@ -479,6 +479,8 @@ export interface FuentesNicho {
   palabras_clave: string[];
   sugerencias: SugerenciaCanal[];
   candidatos: VideoFuente[];
+  anteriores: VideoFuente[];          // CLIP-71: pendientes de búsquedas anteriores o de canales quitados
+  ultima_busqueda: { fecha: string; dias?: number; ultimos?: number } | null;
   historial: VideoFuente[];
   colab: { vivo: boolean; motivo: string };
 }
@@ -486,4 +488,6 @@ export interface FuentesNicho {
 export interface ResumenEjecucion {
   activo: boolean;
   canales: { canal: string; nuevos: number; descartados: number; error?: string }[];
+  dias?: number;
+  ultimos?: number;
 }

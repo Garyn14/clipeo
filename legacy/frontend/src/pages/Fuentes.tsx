@@ -4,9 +4,10 @@ import { AdministrarFuentes } from "../components/AdministrarFuentes";
 import type { ClienteFuentes, FuentesNicho, ResumenEjecucion, VideoFuente } from "../api/types";
 
 // S14 · CLIP-63: fuentes estáticas por cliente. Flujo guiado: elegir cliente → buscar → elegir y procesar.
-// Todo manual ("Buscar ahora"), sin cron.
+// Todo manual ("Buscar ahora"), sin cron. CLIP-71: la lista es el resultado de la última búsqueda; lo pendiente de
+// búsquedas anteriores queda en un aviso plegado (no se pierde).
 
-type Ventana = "ultima" | "dias" | "ultimos";
+type Ventana = "dias" | "ultimos";
 type FiltroHistorial = "todos" | "nuevo" | "procesando" | "procesado" | "descartado" | "error";
 
 const ESTADOS: Record<string, { texto: string; clase: string }> = {
@@ -38,8 +39,9 @@ export function Fuentes() {
   const [clientes, setClientes] = useState<ClienteFuentes[]>([]);
   const [nicho, setNicho] = useState("");
   const [datos, setDatos] = useState<FuentesNicho | null>(null);
-  const [ventana, setVentana] = useState<Ventana>("ultima");
-  const [valor, setValor] = useState(7);
+  const [ventana, setVentana] = useState<Ventana>("dias");
+  const [valor, setValor] = useState(1);
+  const [confirmarDescarte, setConfirmarDescarte] = useState(false);
   const [resumen, setResumen] = useState<ResumenEjecucion | null>(null);
   const [elegidos, setElegidos] = useState<Set<string>>(new Set());
   const [buscando, setBuscando] = useState(false);
@@ -70,8 +72,9 @@ export function Fuentes() {
     setBuscando(true);
     setAviso(null);
     try {
-      const body = ventana === "dias" ? { dias: valor } : ventana === "ultimos" ? { ultimos: valor } : {};
+      const body = ventana === "dias" ? { dias: valor } : { ultimos: valor };
       setResumen(await api.ejecutarFuentes(nicho, body));
+      setElegidos(new Set());
       recargar();
       cargarClientes();
     } catch (e) {
@@ -94,7 +97,27 @@ export function Fuentes() {
     }
   };
 
+  const descartar = async () => {
+    const ids = [...elegidos];
+    if (!ids.length) return;
+    if (!confirmarDescarte) {               // el navegador integrado bloquea window.confirm: se confirma en la página
+      setConfirmarDescarte(true);
+      return;
+    }
+    setConfirmarDescarte(false);
+    try {
+      const r = await api.descartarFuentes(nicho, ids);
+      setAviso({ tipo: "ok", texto: `${r.descartados.length} video(s) descartado(s). Quedan en el historial.` });
+      setElegidos(new Set());
+      recargar();
+      cargarClientes();
+    } catch (e) {
+      setAviso({ tipo: "error", texto: String(e) });
+    }
+  };
+
   const alternar = (id: string) => {
+    setConfirmarDescarte(false);
     const s = new Set(elegidos);
     if (s.has(id)) s.delete(id);
     else s.add(id);
@@ -102,11 +125,37 @@ export function Fuentes() {
   };
 
   const candidatos = datos?.candidatos ?? [];
+  const anteriores = datos?.anteriores ?? [];
   const todosElegidos = candidatos.length > 0 && candidatos.every((c) => elegidos.has(c.id));
+  const busqueda = datos?.ultima_busqueda ?? null;
   const ultimaRevision = useMemo(() => {
+    if (busqueda?.fecha) return busqueda.fecha;
     const fechas = (datos?.canales ?? []).map((c) => c.ultima_revision).filter(Boolean) as string[];
     return fechas.sort().pop() ?? null;
-  }, [datos]);
+  }, [datos, busqueda]);
+  const rangoBusqueda = busqueda?.ultimos
+    ? `últimos ${busqueda.ultimos} video${busqueda.ultimos === 1 ? "" : "s"} por canal`
+    : busqueda?.dias
+      ? `últimos ${busqueda.dias} día${busqueda.dias === 1 ? "" : "s"}`
+      : "";
+
+  const filaVideo = (c: VideoFuente) => (
+    <li key={c.id} className={`fu-video ${elegidos.has(c.id) ? "elegido" : ""}`} onClick={() => alternar(c.id)}>
+      <input type="checkbox" checked={elegidos.has(c.id)} onChange={() => alternar(c.id)} onClick={(e) => e.stopPropagation()} />
+      <div className="fu-video-cuerpo">
+        <span className="fu-video-titulo">{c.titulo}</span>
+        <span className="fu-video-meta">
+          {c.canal} · {c.rol === "propio" ? "canal propio" : "TV / prensa"} · {fechaCorta(c.publicado)}
+          {c.motivo === "agregado a mano" ? " · agregado a mano" : ""}
+        </span>
+      </div>
+      {c.url && (
+        <a href={c.url} target="_blank" rel="noreferrer" className="btn-link" onClick={(e) => e.stopPropagation()}>
+          Ver ↗
+        </a>
+      )}
+    </li>
+  );
   const conteo = useMemo(() => {
     const c: Record<string, number> = {};
     (datos?.historial ?? []).forEach((h) => { c[h.estado] = (c[h.estado] ?? 0) + 1; });
@@ -150,31 +199,28 @@ export function Fuentes() {
                 <h2>Buscar videos nuevos</h2>
                 <p className="hint">
                   Revisa {datos.canales.length} canales de {datos.cliente} ({propios} propio{propios === 1 ? "" : "s"}, {medios} de
-                  TV). Última búsqueda: <strong>{haceCuanto(ultimaRevision)}</strong>.
+                  TV). Última búsqueda: <strong>{haceCuanto(ultimaRevision)}</strong>{rangoBusqueda ? ` (${rangoBusqueda})` : ""}.
                 </p>
               </div>
             </div>
             <div className="fu-buscar">
               <select value={ventana} onChange={(e) => setVentana(e.target.value as Ventana)}>
-                <option value="ultima">Desde la última búsqueda</option>
-                <option value="dias">De los últimos días…</option>
-                <option value="ultimos">Los últimos videos de cada canal…</option>
+                <option value="dias">Últimos días…</option>
+                <option value="ultimos">Últimos videos por canal…</option>
               </select>
-              {ventana !== "ultima" && (
-                <label className="fu-valor">
-                  <input type="number" min={1} max={60} value={valor} onChange={(e) => setValor(Number(e.target.value))} />
-                  {ventana === "dias" ? "días" : "videos"}
-                </label>
-              )}
+              <label className="fu-valor">
+                <input type="number" min={1} max={60} value={valor} onChange={(e) => setValor(Number(e.target.value))} />
+                {ventana === "dias" ? (valor === 1 ? "día" : "días") : "videos"}
+              </label>
               <button className="btn btn-primary" onClick={buscar} disabled={buscando || !datos.activo}>
                 {buscando ? "Buscando…" : "Buscar ahora"}
               </button>
             </div>
             {resumen && (
               <div className="fu-resumen">
-                <strong>{totalNuevos === 0 ? "No hay videos nuevos." : `${totalNuevos} video(s) nuevo(s) para procesar.`}</strong>{" "}
+                <strong>{totalNuevos === 0 ? "No hay videos por procesar en este rango." : `${totalNuevos} video(s) por procesar en este rango.`}</strong>{" "}
                 <span className="hint">
-                  {totalDescartados} descartado(s) por repetidos o porque no hablan de {datos.cliente}.
+                  {totalDescartados} de TV descartado(s) porque no hablan de {datos.cliente}. Lo ya procesado no se muestra.
                 </span>
                 {conError.length > 0 && (
                   <div className="pub-alerta pub-alerta-warn">
@@ -202,36 +248,46 @@ export function Fuentes() {
             </div>
 
             {candidatos.length === 0 ? (
-              <p className="fu-vacio">No hay videos pendientes. Pulsa <strong>Buscar ahora</strong> en el paso 1.</p>
+              <p className="fu-vacio">
+                {busqueda
+                  ? <>La última búsqueda{rangoBusqueda ? ` (${rangoBusqueda})` : ""} no trajo videos por procesar.</>
+                  : <>No hay videos pendientes. Pulsa <strong>Buscar ahora</strong> en el paso 1.</>}
+              </p>
             ) : (
               <>
                 <label className="fu-todos">
                   <input type="checkbox" checked={todosElegidos}
-                         onChange={() => setElegidos(todosElegidos ? new Set() : new Set(candidatos.map((c) => c.id)))} />
+                         onChange={() => {
+                           const s = new Set(elegidos);
+                           candidatos.forEach((c) => (todosElegidos ? s.delete(c.id) : s.add(c.id)));
+                           setElegidos(s);
+                           setConfirmarDescarte(false);
+                         }} />
                   Seleccionar todos
                 </label>
-                <ul className="fu-lista">
-                  {candidatos.map((c: VideoFuente) => (
-                    <li key={c.id} className={`fu-video ${elegidos.has(c.id) ? "elegido" : ""}`} onClick={() => alternar(c.id)}>
-                      <input type="checkbox" checked={elegidos.has(c.id)} onChange={() => alternar(c.id)} onClick={(e) => e.stopPropagation()} />
-                      <div className="fu-video-cuerpo">
-                        <span className="fu-video-titulo">{c.titulo}</span>
-                        <span className="fu-video-meta">
-                          {c.canal} · {c.rol === "propio" ? "canal propio" : "TV / prensa"} · {fechaCorta(c.publicado)}
-                        </span>
-                      </div>
-                      {c.url && (
-                        <a href={c.url} target="_blank" rel="noreferrer" className="btn-link" onClick={(e) => e.stopPropagation()}>
-                          Ver ↗
-                        </a>
-                      )}
-                    </li>
-                  ))}
-                </ul>
+                <ul className="fu-lista">{candidatos.map(filaVideo)}</ul>
+              </>
+            )}
+
+            {anteriores.length > 0 && (
+              <details className="plegable fu-anteriores">
+                <summary>
+                  Hay {anteriores.length} candidato{anteriores.length === 1 ? "" : "s"} de búsquedas anteriores sin procesar · ver
+                </summary>
+                <p className="hint">No entran en el rango de la última búsqueda (o su canal ya no está activo). Puedes procesarlos o descartarlos.</p>
+                <ul className="fu-lista">{anteriores.map(filaVideo)}</ul>
+              </details>
+            )}
+
+            {(candidatos.length > 0 || anteriores.length > 0) && (
+              <div className="fu-acciones">
                 <button className="btn btn-primary" onClick={procesar} disabled={!elegidos.size || !datos.colab.vivo}>
                   Procesar {elegidos.size || ""} video{elegidos.size === 1 ? "" : "s"}
                 </button>
-              </>
+                <button className="btn" onClick={descartar} disabled={!elegidos.size}>
+                  {confirmarDescarte ? `¿Descartar ${elegidos.size}? Confirmar` : `Descartar ${elegidos.size || ""}`}
+                </button>
+              </div>
             )}
           </div>
 

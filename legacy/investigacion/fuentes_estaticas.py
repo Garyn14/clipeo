@@ -1,14 +1,16 @@
 """
 fuentes_estaticas.py — S14: fuentes estáticas por nicho (canales fijos), revisadas a mano con "Ejecutar".
 
-    python -m investigacion.fuentes_estaticas ejecutar zapatillas_peru [--dias 7 | --ultimos 10]
-    python -m investigacion.fuentes_estaticas listar zapatillas_peru            # candidatos pendientes
+    python -m investigacion.fuentes_estaticas ejecutar zapatillas_peru [--dias 1 | --ultimos 10]   # defecto: 1 día
+    python -m investigacion.fuentes_estaticas listar zapatillas_peru            # candidatos de la última búsqueda
     python -m investigacion.fuentes_estaticas procesar zapatillas_peru <id> [...] | --todos
     python -m investigacion.fuentes_estaticas descubrir zapatillas_peru         # canales nuevos para agregar
 
 Configuración: `investigacion/<nicho>/fuentes.yaml` (CLIP-60). Estado y registro (CLIP-61/62):
   - `fuentes_estado.json`: última revisión por canal;
-  - `fuentes_historial.jsonl`: cada video detectado con su estado (nuevo, descartado y por qué, procesado, error).
+  - `fuentes_historial.jsonl`: cada video detectado con su estado (nuevo, descartado y por qué, procesado, error);
+  - `fuentes_busqueda.json` (CLIP-71): rango e ids de la última búsqueda. Los candidatos son el resultado de esa
+    búsqueda (más los links pegados a mano); lo pendiente de búsquedas anteriores se muestra aparte.
 Cada canal se lee con su tipo de fuente (`tipos_fuente.py`, CLIP-66): YouTube vía su feed RSS público (sin cuenta,
 sin API, sin costo); "lista manual" (CLIP-67) no se revisa, se le pegan links. El módulo "Live" (vivo) va aparte. Sin cron: decisión del operador (2026-11-18).
 """
@@ -128,20 +130,49 @@ def _stream_data() -> Path:
     return ruta("CLIPEO_STREAM_DATA", LEGACY / "stream_data")
 
 
-# ── Ejecutar (CLIP-61) ──────────────────────────────────────
+# ── Ejecutar (CLIP-61; CLIP-71: la lista = resultado de la búsqueda actual) ──
+
+DIAS_POR_DEFECTO = 1
+# Lo que ya pasó por el pipeline (o lo descartó el operador) nunca vuelve como candidato; lo demás ("nuevo" o
+# descartado por el filtro de TV en una búsqueda anterior) se vuelve a evaluar si cae en el rango (CLIP-71).
+ESTADOS_CERRADOS = ("procesado", "procesando", "error")
+
+
+def _cerrado(f: dict) -> bool:
+    return f.get("estado") in ESTADOS_CERRADOS or (f.get("estado") == "descartado" and f.get("por") == "operador")
+
+
+def es_manual(f: dict) -> bool:
+    """Link pegado a mano (CLIP-67): no depende de un canal ni de un rango."""
+    return f.get("motivo") == "agregado a mano"
+
+
+def _ruta_busqueda(nicho: str) -> Path:
+    return comun.carpeta_nicho(nicho) / "fuentes_busqueda.json"
+
+
+def ultima_busqueda(nicho: str) -> dict:
+    """{fecha, dias | ultimos, ids}: los candidatos que trajo la última búsqueda ("Buscar ahora")."""
+    return _leer_json(_ruta_busqueda(nicho), {})
+
 
 def ejecutar(nicho: str, dias: int | None = None, ultimos: int | None = None,
              lector=leer_canal, ahora: datetime | None = None) -> dict:
-    """Revisa los canales activos del nicho y registra lo nuevo. Devuelve un resumen por canal."""
+    """Revisa los canales activos del nicho en el rango elegido (por defecto, el último día) y deja como candidatos
+    lo publicado en ese rango que no esté procesado. Devuelve un resumen por canal."""
     config = cargar_config(nicho)
     if not config.get("activo", True):
         return {"activo": False, "canales": []}
+    if not ultimos:
+        dias = dias or DIAS_POR_DEFECTO
     ahora = ahora or datetime.now(timezone.utc)
     carpeta = comun.carpeta_nicho(nicho)
     estado = _leer_json(carpeta / "fuentes_estado.json", {})
     historial = leer_historial(nicho)
-    vistos = set(estado_actual(historial)) | ids_ya_procesados(_stream_data())
+    actual = estado_actual(historial)
+    cerrados = {i for i, f in actual.items() if _cerrado(f)} | ids_ya_procesados(_stream_data())
     palabras = palabras_relevancia(config)
+    encontrados: list[str] = []
     resumen = []
     for canal in config.get("canales") or []:
         if not se_revisa(canal):
@@ -155,31 +186,72 @@ def ejecutar(nicho: str, dias: int | None = None, ultimos: int | None = None,
         if ultimos:
             videos = sorted(videos, key=lambda v: v["publicado"] or ahora, reverse=True)[:ultimos]
         else:
-            desde = (ahora - timedelta(days=dias)) if dias else (
-                datetime.fromisoformat(estado[clave]) if clave in estado
-                else ahora - timedelta(days=config.get("ventana_inicial_dias", 7)))
+            desde = ahora - timedelta(days=dias)
             videos = [v for v in videos if v["publicado"] and v["publicado"] >= desde]
         nuevos = descartados = 0
         for v in videos:
-            if not v["id"] or v["id"] in vistos:
+            if not v["id"] or v["id"] in cerrados or v["id"] in encontrados:
                 continue
-            vistos.add(v["id"])
             est, motivo = decidir(v, canal, palabras)
-            historial.append({"id": v["id"], "url": v.get("url") or f"https://www.youtube.com/watch?v={v['id']}",
-                              "titulo": v["titulo"], "canal": canal.get("nombre"), "rol": canal.get("rol"),
-                              "publicado": v["publicado"].isoformat() if v["publicado"] else None,
-                              "detectado": ahora.isoformat(timespec="seconds"), "estado": est, "motivo": motivo})
+            previo = actual.get(v["id"])
+            if not previo or (previo.get("estado"), previo.get("motivo")) != (est, motivo):
+                fila = {"id": v["id"], "url": v.get("url") or f"https://www.youtube.com/watch?v={v['id']}",
+                        "titulo": v["titulo"], "canal": canal.get("nombre"), "rol": canal.get("rol"),
+                        "publicado": v["publicado"].isoformat() if v["publicado"] else None,
+                        "detectado": ahora.isoformat(timespec="seconds"), "estado": est, "motivo": motivo}
+                historial.append(fila)
+                actual[v["id"]] = {**(previo or {}), **fila}
+            if est == "nuevo":
+                encontrados.append(v["id"])
             nuevos += est == "nuevo"
             descartados += est == "descartado"
         estado[clave] = ahora.isoformat(timespec="seconds")
         resumen.append({"canal": canal.get("nombre"), "nuevos": nuevos, "descartados": descartados})
     _guardar_historial(nicho, historial)
     (carpeta / "fuentes_estado.json").write_text(json.dumps(estado, ensure_ascii=False, indent=2), encoding="utf-8")
-    return {"activo": True, "canales": resumen}
+    rango = {"ultimos": ultimos} if ultimos else {"dias": dias}
+    _ruta_busqueda(nicho).write_text(json.dumps({"fecha": ahora.isoformat(timespec="seconds"), **rango,
+                                                 "ids": encontrados}, ensure_ascii=False, indent=2), encoding="utf-8")
+    return {"activo": True, "canales": resumen, **rango}
+
+
+def _pendientes(nicho: str) -> tuple[list[dict], list[dict]]:
+    """(candidatos, anteriores) entre los videos por procesar ("nuevo"). Candidatos: lo que trajo la última búsqueda
+    de canales que siguen configurados y activos, más los links pegados a mano. Anteriores: el resto (búsquedas
+    previas o canales quitados), que no se pierde: el panel lo muestra plegado."""
+    config = cargar_config(nicho)
+    activos = {c.get("nombre") for c in config.get("canales") or [] if c.get("activo", True)}
+    ids = set(ultima_busqueda(nicho).get("ids") or [])
+    candidatos_, anteriores_ = [], []
+    for f in estado_actual(leer_historial(nicho)).values():
+        if f.get("estado") != "nuevo":
+            continue
+        if es_manual(f) or (f["id"] in ids and f.get("canal") in activos):
+            candidatos_.append(f)
+        else:
+            anteriores_.append(f)
+    return candidatos_, anteriores_
 
 
 def candidatos(nicho: str) -> list[dict]:
-    return [f for f in estado_actual(leer_historial(nicho)).values() if f.get("estado") == "nuevo"]
+    return _pendientes(nicho)[0]
+
+
+def anteriores(nicho: str) -> list[dict]:
+    return _pendientes(nicho)[1]
+
+
+def descartar(nicho: str, ids: list[str]) -> list[str]:
+    """El operador descarta videos por procesar: quedan en el historial y no vuelven como candidatos."""
+    actual = estado_actual(leer_historial(nicho))
+    elegidos = [i for i in dict.fromkeys(ids) if (actual.get(i) or {}).get("estado") == "nuevo"]
+    if elegidos:
+        ahora = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        historial = leer_historial(nicho) + [{"id": i, "estado": "descartado", "por": "operador",
+                                              "motivo": "descartado por el operador", "detectado": ahora}
+                                             for i in elegidos]
+        _guardar_historial(nicho, historial)
+    return elegidos
 
 
 # ── Procesar ────────────────────────────────────────────────
@@ -272,10 +344,12 @@ def main() -> None:
                                             f"{c['nuevos']} nuevo(s) · {c['descartados']} descartado(s)"))
         args.accion = "listar"
     if args.accion == "listar":
-        cands = candidatos(args.nicho)
+        cands, previos = _pendientes(args.nicho)
         print(f"\n[FUENTES] {len(cands)} candidato(s) para procesar:")
         for f in sorted(cands, key=lambda x: x.get("publicado") or "", reverse=True):
             print(f"  {f['id']}  [{f['rol']:6s}] {f['canal']}: {f['titulo'][:70]}  ({(f.get('publicado') or '')[:10]})")
+        if previos:
+            print(f"[FUENTES] + {len(previos)} de búsquedas anteriores sin procesar (no se muestran)")
     elif args.accion == "procesar":
         ids = [f["id"] for f in candidatos(args.nicho)] if args.todos else args.ids
         for r in procesar(args.nicho, ids):
