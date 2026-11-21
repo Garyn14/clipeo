@@ -1,15 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { api } from "../api/client";
+import { AdministrarFuentes } from "../components/AdministrarFuentes";
 import type { ClienteFuentes, FuentesNicho, ResumenEjecucion, VideoFuente } from "../api/types";
 
 // S14 · CLIP-63: fuentes estáticas por cliente. Flujo guiado: elegir cliente → buscar → elegir y procesar.
 // Todo manual ("Buscar ahora"), sin cron.
 
 type Ventana = "ultima" | "dias" | "ultimos";
-type FiltroHistorial = "todos" | "nuevo" | "procesado" | "descartado" | "error";
+type FiltroHistorial = "todos" | "nuevo" | "procesando" | "procesado" | "descartado" | "error";
 
 const ESTADOS: Record<string, { texto: string; clase: string }> = {
   nuevo: { texto: "Por procesar", clase: "pill-warn" },
+  procesando: { texto: "Procesando", clase: "pill-corriendo" },
   procesado: { texto: "Procesado", clase: "pill-ok" },
   descartado: { texto: "Descartado", clase: "pill-muted" },
   error: { texto: "Error", clase: "pill-fallido" },
@@ -237,7 +239,7 @@ export function Fuentes() {
           <details className="plegable">
             <summary>Historial ({datos.historial.length})</summary>
             <div className="pub-tabs fu-filtros">
-              {(["todos", "nuevo", "procesado", "descartado", "error"] as FiltroHistorial[]).map((f) => (
+              {(["todos", "nuevo", "procesando", "procesado", "descartado", "error"] as FiltroHistorial[]).map((f) => (
                 <a key={f} className={filtro === f ? "activo" : ""} onClick={() => setFiltro(f)}>
                   {f === "todos" ? "Todos" : ESTADOS[f].texto} ({f === "todos" ? datos.historial.length : conteo[f] ?? 0})
                 </a>
@@ -259,23 +261,9 @@ export function Fuentes() {
             </ul>
           </details>
 
-          <details className="plegable">
-            <summary>Canales de {datos.cliente} ({datos.canales.length})</summary>
-            <ul className="fu-historial">
-              {datos.canales.map((c) => (
-                <li key={c.url}>
-                  <span className={`pill ${c.rol === "propio" ? "pill-ok" : "pill-muted"}`}>{c.rol === "propio" ? "Propio" : "TV"}</span>
-                  <div className="fu-video-cuerpo">
-                    <a href={c.url} target="_blank" rel="noreferrer">{c.nombre}</a>
-                    <span className="fu-video-meta">
-                      {c.rol === "propio" ? "entra todo lo nuevo" : `solo si menciona a ${datos.cliente}`} · revisado{" "}
-                      {haceCuanto(c.ultima_revision)}{c.activo === false ? " · desactivado" : ""}
-                    </span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <p className="hint">Para sumar o quitar canales: editar <code>investigacion/{datos.nicho}/fuentes.yaml</code>.</p>
+          <details className="plegable fu-administrar">
+            <summary>Administrar fuentes de {datos.cliente} ({datos.canales.length} canales)</summary>
+            <AdministrarFuentes datos={datos} alCambiar={() => { recargar(); cargarClientes(); }} />
           </details>
         </>
       )}

@@ -415,6 +415,37 @@ export interface CanalFuente {
   rol: "propio" | "medios";
   activo?: boolean;
   ultima_revision?: string | null;
+  aportes?: { nuevo?: number; procesado?: number; descartado?: number; error?: number };
+}
+
+// CLIP-66/67: tipos de fuente desacoplados
+export interface TipoFuente {
+  clave: string;
+  nombre: string;
+  implementado: boolean;
+  automatico: boolean;
+  pide: string;
+}
+
+export interface VistaPreviaCanal {
+  nombre: string;
+  url: string;
+  plataforma: string;
+  videos: { id: string; titulo: string; url?: string; publicado?: string | null }[];
+}
+
+export interface ResultadoLink {
+  link: string;
+  ok: boolean;
+  motivo?: string;
+  id?: string;
+  titulo?: string;
+}
+
+export interface SugerenciaCanal {
+  canal: string;
+  apariciones: number;
+  url: string;
 }
 
 export interface VideoFuente {
@@ -443,6 +474,8 @@ export interface FuentesNicho {
   activo: boolean;
   ventana_inicial_dias: number;
   canales: CanalFuente[];
+  palabras_clave: string[];
+  sugerencias: SugerenciaCanal[];
   candidatos: VideoFuente[];
   historial: VideoFuente[];
   colab: { vivo: boolean; motivo: string };

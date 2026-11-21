@@ -1,4 +1,4 @@
-import type { ClienteFuentes, FuentesNicho, ResumenEjecucion,
+import type { ClienteFuentes, FuentesNicho, ResultadoLink, ResumenEjecucion, TipoFuente, VistaPreviaCanal,
   Canal,
   ClipView,
   CuentaPublicacion,
@@ -53,6 +53,20 @@ function query(params: Record<string, string | boolean | undefined>): string {
 export const api = {
   // S14: fuentes estáticas
   getNichosFuentes: () => request<ClienteFuentes[]>("/fuentes"),
+  // CLIP-66/67: administrar fuentes
+  getTiposFuente: () => request<TipoFuente[]>("/fuentes/tipos"),
+  previsualizarCanal: (nicho: string, body: { plataforma: string; entrada: string }) =>
+    request<VistaPreviaCanal>(`/fuentes/${nicho}/canales/previsualizar`, { method: "POST", body: JSON.stringify(body) }),
+  agregarCanal: (nicho: string, body: { plataforma: string; entrada: string; rol: string; nombre?: string }) =>
+    request<unknown>(`/fuentes/${nicho}/canales`, { method: "POST", body: JSON.stringify(body) }),
+  editarCanal: (nicho: string, body: { url: string; activo?: boolean; rol?: string; nombre?: string }) =>
+    request<unknown>(`/fuentes/${nicho}/canales`, { method: "PATCH", body: JSON.stringify(body) }),
+  quitarCanal: (nicho: string, url: string) =>
+    request<unknown>(`/fuentes/${nicho}/canales?url=${encodeURIComponent(url)}`, { method: "DELETE" }),
+  guardarPalabras: (nicho: string, palabras: string[]) =>
+    request<{ palabras: string[] }>(`/fuentes/${nicho}/palabras`, { method: "PUT", body: JSON.stringify({ palabras }) }),
+  agregarLinks: (nicho: string, links: string[], rol: string) =>
+    request<{ resultados: ResultadoLink[] }>(`/fuentes/${nicho}/manual`, { method: "POST", body: JSON.stringify({ links, rol }) }),
   getFuentes: (nicho: string) => request<FuentesNicho>(`/fuentes/${nicho}`),
   ejecutarFuentes: (nicho: string, body: { dias?: number; ultimos?: number }) =>
     request<ResumenEjecucion>(`/fuentes/${nicho}/ejecutar`, { method: "POST", body: JSON.stringify(body) }),

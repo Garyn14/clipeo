@@ -28,7 +28,12 @@ def cliente(tmp_path, monkeypatch):
     from app.main import app
     from app.routers import fuentes
     lanzados = []
-    monkeypatch.setattr(fuentes.subprocess, "Popen", lambda cmd, **kw: lanzados.append(cmd))
+    class _Proc:
+        def poll(self):
+            return None                      # sigue corriendo (no falló al arrancar)
+
+    monkeypatch.setattr(fuentes.subprocess, "Popen", lambda cmd, **kw: lanzados.append(cmd) or _Proc())
+    monkeypatch.setattr(fuentes.time, "sleep", lambda s: None)
     monkeypatch.setattr(fuentes, "LOGS", tmp_path / "logs")
     c = TestClient(app)
     c.lanzados = lanzados
@@ -53,3 +58,15 @@ def test_ejecutar_y_procesar(cliente, monkeypatch):
     assert cliente.post("/fuentes/n/procesar", json={"ids": ["NOEXISTE"]}).status_code == 400
     r = cliente.post("/fuentes/n/procesar", json={"ids": ["AAA", "NOEXISTE"]}).json()
     assert r["iniciado"] == ["AAA"] and cliente.lanzados[0][-3:] == ["procesar", "n", "AAA"]
+
+
+def test_lanzar_y_esperar_registra_la_corrida(tmp_path, monkeypatch):
+    """Lo que lanza Fuentes queda en runs.json como una corrida más (el panel la ve activa y con log)."""
+    import json
+    from app.services import pipeline_runner as pr
+    monkeypatch.setattr(pr, "RUNS_FILE", tmp_path / "runs.json")
+    monkeypatch.setattr(pr, "RUNS_LOG_DIR", tmp_path)
+    run_id, rc = pr.lanzar_y_esperar([sys.executable, "-c", "print('hola')"], "sesion_x", "fuentes")
+    run = json.loads((tmp_path / "runs.json").read_text(encoding="utf-8"))[run_id]
+    assert rc == 0 and run["session_id"] == "sesion_x" and run["accion"] == "fuentes" and run["returncode"] == 0
+    assert "hola" in (tmp_path / f"{run_id}.log").read_text(encoding="utf-8")

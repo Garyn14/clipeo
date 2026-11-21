@@ -224,6 +224,21 @@ def relaunch(session_id: str, reintentar: str | None = None, chunks: list[str] |
     return _lanzar(cmd, session_id, accion)
 
 
+def lanzar_y_esperar(cmd: list[str], session_id: str, accion: str) -> tuple[str, int]:
+    """
+    Para procesos fuera del backend (Fuentes, CLIP-63): registra la corrida en runs.json como cualquier otra —
+    el panel ve la sesión "corriendo", la refresca sola y muestra su log — y espera a que termine.
+    """
+    run_id = _lanzar(cmd, session_id, accion)
+    rc = _procs[run_id].wait()
+    with _lock:
+        runs = _cargar_runs()
+        if run_id in runs:
+            runs[run_id]["returncode"] = rc
+            _guardar_runs(runs)
+    return run_id, rc
+
+
 # ── Consultar ────────────────────────────────────────────────
 
 def sesiones_activas() -> dict[str, str]:
