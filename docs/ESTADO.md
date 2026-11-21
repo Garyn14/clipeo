@@ -1,18 +1,21 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-21 (S16 cerrado; CLIP-70 integrado; CLIP-71 esperando OK; Jira al día)
+> Última actualización: 2026-11-21 (S16 cerrado; tickets sueltos CLIP-70, 71 y 72 cerrados; Jira al día)
 
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.5: Fase 1 hasta S13). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Tickets sueltos (2026-11-21):**
-  - **CLIP-70 · Fuente Kick** (directos grabados de canales propios): **integrado (PR #42), En revisión** en Jira;
-    falta el OK del operador tras probarlo (reiniciar `levantar` y agregar `kick.com/fritzsport` como Propio).
-  - **CLIP-71 · Candidatos dinámicos** (la lista = resultado de la búsqueda actual, aviso plegado de anteriores,
-    rango por defecto 1 día): **creado, esperando el OK del operador para desarrollar**. Resuelve también los 19
-    candidatos que siguen visibles del canal quitado "Fritz Sport".
+- **Tickets sueltos cerrados (OK del operador 2026-11-21, todos en Finalizada):**
+  - **CLIP-70 · Fuente Kick** (directos grabados de canales propios, PR #42): primera sesión de Kick procesándose bien.
+  - **CLIP-71 · Candidatos dinámicos** (PR #46): la lista de Fuentes es el resultado de la última búsqueda
+    (`fuentes_busqueda.json`), rango por defecto **último día**; lo pendiente de búsquedas anteriores o canales
+    quitados va a un aviso plegado ("anteriores"); botón **Descartar** (lo descartado por el operador no vuelve).
+    "Ya visto" no bloquea: solo lo procesado / procesando / con error / descartado por el operador.
+  - **CLIP-72 · Plataforma en cada video** (PR #47): etiqueta YouTube / Kick / dominio, deducida del link.
+  - Quedan 19 anteriores del canal quitado "Fritz Sport" en el aviso plegado: el operador decide si los procesa o
+    descarta.
 - **Cómo retomar** (otra conversación o cuenta): leer `CLAUDE.md` (incluye *Acuerdos de trabajo* y *Operar Jira*),
   este archivo, `docs/OPERACION.md` y `docs/CUENTAS.md`. Datos locales (`.env`, `cuentas.local.yaml`, `data/`) viven
   en la PC del operador.
@@ -23,14 +26,12 @@
   cierre de la Fase 1 hacia el 3-12 (`python -m investigacion.cierre_fase1 zapatillas_peru`). Si el operador
   reporta algo, se abre ticket.
 - Pendiente del operador: pegar a mano el link ambiguo `…/video/7709979536863235329` (probable `clip_c001_02` del 19-11).
-- **Jira al día (2026-11-21):** CLIP-60…69 en Finalizada; épicas cumplidas cerradas: CLIP-5 (F0), CLIP-6 (Q1),
+- **Jira al día (2026-11-21):** CLIP-60…72 en Finalizada; épicas cumplidas cerradas: CLIP-5 (F0), CLIP-6 (Q1),
   CLIP-7 (Q2), CLIP-8 (Q3, con CLIP-27 hecho en el S5 y CLIP-28 en el S13) y CLIP-9 (Q4). Siguen abiertas CLIP-10
   (Q5: falta volumen medido y el primer ajuste de memoria), CLIP-26 (Q6) y las secundarias CLIP-11/12 (con CLIP-16,
   17 y 22). El conector de esta sesión ve `personal-clipeo` con lectura y escritura.
-- **Datos locales sin subir (2026-11-21):** en `legacy/investigacion/zapatillas_peru/` hay cambios de uso real
-  (`publicados.jsonl`, `metricas_publicados.jsonl`, `correcciones.jsonl`, `fuentes*.{yaml,json,jsonl}`). Propuesta:
-  subirlos en un PR de datos. Pendiente del operador: confirmar que quitar los 4 noticieros de `fuentes.yaml` (quedan
-  FRITZ SPORT en YouTube y el Kick) fue intencional.
+- **Datos de uso real** (`legacy/investigacion/zapatillas_peru/`): se suben con git en PRs de datos (PR #45 el
+  2026-11-21). Fuentes actuales: FRITZ SPORT (YouTube) y FritzSport (Kick); quitar los 4 noticieros fue intencional.
 - **S14 y S15 cerrados** (OK del operador 2026-11-20; PRs #29, #33, #34, #37, #38): fuentes por cliente con página
   guiada, administración de fuentes con tipo desacoplado (YouTube, lista manual) y rol obligatorio, Colab de un solo
   paso (2:30, barra de progreso). Primera tanda real: video 1 → 15 clips (revisados y en cola); video 2 reintentado
