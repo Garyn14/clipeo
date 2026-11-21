@@ -1,13 +1,18 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-18 (S14 implementado: fuentes estáticas por nicho)
+> Última actualización: 2026-11-20 (S14 y S15 cerrados con OK del operador)
 
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.5: Fase 1 hasta S13). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
-- **Sprint:** **S14 · Fuentes estáticas por nicho** (`docs/sprints/S14.md`, rama `sprint/S14`): CLIP-60…64.
+- **S14 y S15 cerrados** (OK del operador 2026-11-20; PRs #29, #33, #34, #37, #38): fuentes por cliente con página
+  guiada, administración de fuentes con tipo desacoplado (YouTube, lista manual) y rol obligatorio, Colab de un solo
+  paso (2:30, barra de progreso). Primera tanda real: video 1 → 15 clips (revisados y en cola); video 2 reintentado
+  tras un reinicio de Colab; video 3 a cargo del operador. **Siguiente: elegir el S16** (propuesta del analista).
+  Jira: falta pasar CLIP-60…67 a Finalizada (el conector perdió el acceso a `personal-clipeo` el 20-11).
+- (histórico) **Sprint:** **S14 · Fuentes estáticas por nicho** (`docs/sprints/S14.md`, rama `sprint/S14`): CLIP-60…64.
   Panel → **Fuentes** → *Ejecutar* (manual, sin cron) revisa FRITZ SPORT y 4 noticieros, descarta lo repetido y lo que
   no menciona a Fritz, y deja candidatos para *Procesar*. Hoy hay 3 streams de FRITZ SPORT esperando (con Colab).
   Live/Kick: módulo futuro. 455 tests.
