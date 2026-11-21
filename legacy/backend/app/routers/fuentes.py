@@ -84,6 +84,11 @@ def _cliente(nicho: str, config: dict) -> str:
     return config.get("cliente") or (config.get("sobre") or nicho).replace("_", " ").title()
 
 
+def _con_plataforma(filas: list[dict]) -> list[dict]:
+    """CLIP-72: cada video con su plataforma (YouTube, Kick, o el dominio del sitio), deducida del link."""
+    return [{**f, "plataforma": tf.plataforma_de(f.get("url"))} for f in filas]
+
+
 @router.get("")
 def nichos():
     """Clientes con fuentes: para el selector (nombre visible, canales y candidatos pendientes)."""
@@ -131,10 +136,10 @@ def detalle(nicho: str):
                      "aportes": aportes.get(c.get("nombre"), {})} for c in config.get("canales") or []],
         "palabras_clave": config.get("palabras_clave") or [],
         "sugerencias": sugerencias,
-        "candidatos": sorted(cands, key=lambda f: f.get("publicado") or "", reverse=True),
-        "anteriores": sorted(previos, key=lambda f: f.get("publicado") or "", reverse=True),
+        "candidatos": _con_plataforma(sorted(cands, key=lambda f: f.get("publicado") or "", reverse=True)),
+        "anteriores": _con_plataforma(sorted(previos, key=lambda f: f.get("publicado") or "", reverse=True)),
         "ultima_busqueda": {k: v for k, v in fe.ultima_busqueda(nicho).items() if k != "ids"} or None,
-        "historial": historial,
+        "historial": _con_plataforma(historial),
         "colab": {"vivo": vivo, "motivo": motivo},
     }
 
