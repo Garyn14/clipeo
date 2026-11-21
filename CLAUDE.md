@@ -10,7 +10,7 @@ estamos, qué ticket sigue y cómo trabajar.
 2. Produce clips verticales virales adaptados al objetivo de cada cliente, los revisa y los publica en varias plataformas.
 3. Se compone de un **engine agnóstico** de orquestación (`engine/`) y un **sistema de clips** encima (`clips/`).
 4. Restricción clave: **costo ≈ 0** hasta tener ingresos (IA vía Claude Code como "operador IA", transcripción gratuita, todo local en Docker).
-5. **Foco actual: la calidad del clip.** Se evoluciona el piloto real (`v1_full`) según `docs/ROADMAP.md` v0.3; lo demás es secundario.
+5. **Foco actual: la calidad del clip.** Se evoluciona el piloto real (`v1_full`) según `docs/ROADMAP.md` (y lo vigente en `docs/ESTADO.md`); lo demás es secundario.
 
 ## Mapa de documentos
 
@@ -44,7 +44,8 @@ El PR del sprint lo revisa e integra el líder técnico.
 
 - Sitio: `personal-clipeo.atlassian.net` · Proyecto **`CLIP`** · Tablero Scrum (board 1).
 - **Épicas**: CLIP-5 (F0 · Fundación), CLIP-6…10 (Q1–Q5, calidad: el foco), CLIP-26 (Q6 · onboarding de cliente nuevo), CLIP-11 y CLIP-12 (secundarias).
-- **Sprints de 1 semana** (lunes a domingo), S1…S10, cada uno con una **demo concreta**.
+- **Sprints de 1 semana** (lunes a domingo), S1…S16 hasta ahora (`docs/sprints/`), cada uno con una **demo concreta**.
+  Entre sprints puede haber **tickets sueltos** (p. ej. CLIP-70, CLIP-71) con el mismo ciclo: ticket → OK → PR.
 - Los tickets se detallan **solo para el sprint siguiente**, al planificarlo.
 - Etiquetas: `F<n>`/`Q<n>` (épica), `operador` (requiere acción del operador), `externo`, `infra`, `docs`,
   `calidad`, `secundario`.
@@ -64,6 +65,18 @@ El PR del sprint lo revisa e integra el líder técnico.
    y el **operador** la revisa. Con su OK: tickets a **Finalizada**, sprint cerrado en Jira, `docs/ESTADO.md`
    actualizado.
 
+### Operar Jira (para el agente)
+
+- Sitio `personal-clipeo.atlassian.net` · cloudId `3c39c1aa-20fd-48fe-b90e-204f4b8d535c` · proyecto `CLIP`.
+- Tipos de incidencia: **Tarea**, **Historia**, **Epic**, **Subtarea** (en español; "Task" falla).
+- Transiciones: **11** Por hacer · **21** En curso · **31** In Review (→ "En revisión") · **41** Listo (→ "Finalizada").
+- **Las claves deben coincidir con el repo** (commits `CLIP-<n>:`): crear los tickets de a uno y en orden. El
+  2026-11-19 se resincronizaron CLIP-38…64, que faltaban en Jira.
+- Ahorro de tokens: crear y mover con la operación genérica (`executeWrite` con `createJiraIssue` /
+  `transitionJiraIssue`) pidiendo solo `responseFields: ["key"]`; las herramientas directas devuelven ~3k tokens por issue.
+- **El conector a veces pierde el acceso a `personal-clipeo`** (queda solo otro sitio, p. ej. `capsula`) al recargarse
+  la sesión: no crear nada en otro sitio; dejar el ticket escrito en `docs/ESTADO.md` y pedir al operador que reconecte.
+
 ## Estructura del repositorio
 
 Transición en curso (ADR-008, migración *strangler*):
@@ -71,7 +84,7 @@ Transición en curso (ADR-008, migración *strangler*):
 ```
 CLAUDE.md, docs/                 ← documentación (este archivo + análisis + estado)
 legacy/                          ← PILOTO v1_full (el que se usa hoy); ver legacy/README.md y legacy/CLAUDE.md
-legacy/tests/                    ← tests del piloto (293, todos pasan)
+legacy/tests/                    ← tests del piloto (con `tests/`: 479 en total al 2026-11-21, todos pasan)
 evaluacion/                      ← evaluación de calidad (desde CLIP-20)
 ```
 
@@ -88,6 +101,30 @@ Estructura objetivo (se crea en CLIP-16, ver ARQUITECTURA_OBJETIVO §8):
   `cd legacy && python pipeline.py --video <url_o_ruta> --config <canal_id> [--revisar]`.
   Requiere `legacy/.env` (ver `.env.example`) y FFmpeg. IA por defecto: Claude Code de la máquina (`AI_PROVIDER=claude_cli`).
 - **Tests:** `pip install -r requirements-test.txt` y `python -m pytest -q tests legacy/tests` (lo mismo corre el CI en cada PR).
+
+## Acuerdos de trabajo con el operador
+
+- **No iniciar ningún desarrollo sin el OK explícito del operador**, aunque el ticket ya exista. Crear el ticket y
+  esperar "procede" / "dale el OK". Documentación de apoyo y diagnósticos sí se pueden hacer.
+- **`main` está protegido**: todo cambio (código o docs) entra por rama + PR con CI en verde. El operador suele
+  integrar o dar "intégralo"; un PR de **código** no se integra sin ese OK; los PR
+  solo de documentación que él pidió (cierres, ESTADO) se integran tras el CI.
+- **"¿Dónde está la pelota?"**: responder separando *lo del operador* (decisiones, demos, acciones en apps) y *lo del
+  agente* (lo que puede avanzar), con una recomendación concreta.
+- **Como analista, consultar**: ante una propuesta del operador, presentar alternativas con pros y contras y una
+  recomendación; si una afirmación propia resulta equivocada, corregirla explícitamente.
+- **Ahorro de tokens**: no vigilar procesos largos con esperas o capturas repetidas; lanzar, esperar en segundo plano
+  (`sleep` en background) y revisar una sola vez. Leer logs/estado en vez de capturas cuando se pueda.
+- **No detener ni reiniciar el `levantar` del operador** (su terminal); cuando un cambio de backend lo requiera, avisar
+  y pedirle que lo reinicie. Antes de tocar código que usa el pipeline, comprobar que no haya pipelines corriendo.
+- **Seguridad**: nunca iniciar sesión ni escribir contraseñas/tokens; nunca tocar los videos privados de TikTok del
+  operador; R-01 para contenido de terceros. Datos personales (correos) solo en archivos locales ignorados por git.
+- **Windows**: usar `gh` en `C:\Program Files\GitHub CLI\gh.exe` (cuerpos con `--body-file`); los scripts que
+  escriben a archivo o consola deben forzar UTF-8 (`sys.stdout.reconfigure(encoding="utf-8")`): cp1252 tumba un print
+  con "→" o emojis. Los heredocs largos de bash fallan con comillas: escribir el script a un archivo y ejecutarlo.
+- **Navegador integrado**: bloquea `window.confirm`/`alert` (devuelven falso sin mostrar nada): usar confirmaciones
+  dentro de la página. Las cookies se conservan con "Conservar cookies → Compartidas".
+- Responder en español, indicando el rol (`[Analista]`, `[Líder técnico]`, `[Desarrollador]`).
 
 ## Reglas de trabajo
 

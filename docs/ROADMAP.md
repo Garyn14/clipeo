@@ -2,6 +2,11 @@
 
 > Estado: **v0.5 propuesta** · Fecha: 2026-11-18 · Reemplaza la v0.4.
 > Base: [`DIAGNOSTICO_V1_FULL.md`](DIAGNOSTICO_V1_FULL.md), los sprints S1–S11 y el foco acordado con el operador.
+>
+> **Actualización 2026-11-21:** después de esta versión se hicieron S14 (fuentes por cliente), S15 (Colab de un
+> solo paso, administrar fuentes con tipo desacoplado) y S16 (objetivo del cliente en el juez, links automáticos de
+> TikTok), más CLIP-70 (Kick). La Fase 1 sigue abierta (calidad y aprendizaje dependen del uso); cierre previsto
+> hacia el 2026-12-03. Lo vigente está en `docs/ESTADO.md` y `docs/sprints/`.
 
 ---
 
