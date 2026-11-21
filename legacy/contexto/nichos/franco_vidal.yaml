@@ -23,7 +23,7 @@ seo_base:
     hashtags: ["#Shorts", "#FrancoVidal", "#Ate"]
     tags_backend: ["franco vidal", "alcalde de ate", "alcalde streamer", "kick peru"]
     notas: |
-      Sin cuenta de YouTube por ahora (solo TikTok al inicio, decisión del S18).
+      Canal NandoClips Vidal (@nandoclips76), conectado el 2026-11-21 (CLIP-81).
   facebook_reels:
     hashtags: []
     notas: ""
@@ -236,7 +236,8 @@ contenido_restricciones:
 publicacion:
   tiktok_perfil: "@nandoclips76"   # cuenta de clips del cliente 2 (enlace automático y Negocio)
   youtube_canal: "UCbTDUjkA8kMk-VNeIgmeBBA"   # NandoClips Vidal (@nandoclips76 en YouTube), configurado el 2026-11-21
-  plataformas: []                  # la publicación se conecta después de validar la calidad (S18)
+  plataformas:                     # CLIP-81: YouTube conectado el 2026-11-21 (igual que el cliente 1)
+    - youtube_shorts
   horario: manual
   descripcion_base: |
     Lo más fuerte del alcalde streamer de Ate.
