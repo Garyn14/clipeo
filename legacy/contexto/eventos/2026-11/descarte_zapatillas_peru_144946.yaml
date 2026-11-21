@@ -1,0 +1,38 @@
+evento:
+  aprendizaje: Score 3 pero editor descartó — Casi casi aprobado solo que un poco
+    corto
+  clip_descartado:
+    linea1: El tío Fritz presume despacho
+    linea2: de 28.000 unidades en almacén 📦
+    score: 3
+  fecha: '2026-11-19'
+  nicho: zapatillas_peru
+  rango:
+    conservar: true
+    duracion_segundos: 39
+    fin: 00:01:52
+    gancho: El total que nos ha llegado, por ejemplo, en este modelo nos ha llegado
+      719.
+    inicio: 00:01:35
+    momento_enfasis_seg: 15
+    pico_original:
+      confianza: 0.7
+      en_juego: el claim de volumen y stock con números exactos, que la audiencia
+        puede leer como floro
+      razon: Fritz suelta la cifra de un despacho de 28.000 unidades y stock exacto
+        por modelo (719, 1428, 1230, 799 pares)
+      timestamp: 00:01:47
+      tipo: producto_y_precio
+    plan_edicion:
+      estructura: lineal
+      por_que: Arranca en la cifra concreta (719 unidades, despacho de 28.000) y corta
+        la presentación; es anuncio de negocio, poco potencial pero lo más rescatable
+        es la cantidad.
+      segmentos:
+      - fin: 00:01:52
+        inicio: 00:01:35
+    razon: Arranca en 'te voy a decir las cantidades', justo antes del stock exacto
+      (719) y la cifra de 28.000 unidades. Cierra en 02:11 con 'estas son las cantidades
+      que nos ha llegado', que remata el claim de volumen.
+  razon_descarte: Casi casi aprobado solo que un poco corto
+  tipo: descarte_manual
