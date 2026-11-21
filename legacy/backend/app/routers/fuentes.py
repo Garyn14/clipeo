@@ -47,7 +47,7 @@ class ProcesarBody(BaseModel):
 class CanalBody(BaseModel):
     plataforma: str = "youtube"
     entrada: str
-    rol: str = "medios"
+    rol: str = ""                      # obligatorio al agregar (la vista previa no lo necesita)
     nombre: str | None = None
 
 
@@ -64,7 +64,7 @@ class PalabrasBody(BaseModel):
 
 class ManualBody(BaseModel):
     links: list[str]
-    rol: str = "medios"
+    rol: str                           # obligatorio: propio o medios
 
 
 def _error_fuente(e: Exception) -> HTTPException:

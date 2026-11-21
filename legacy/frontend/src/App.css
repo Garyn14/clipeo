@@ -1532,3 +1532,4 @@ a.btn {
 .fu-chip button:hover { color: var(--danger); }
 .fu-chip-entrada { min-width: 160px; }
 .fu-confirmar { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--danger); font-size: 0.85rem; flex-wrap: wrap; }
+.fu-falta { border-color: var(--warning) !important; }
