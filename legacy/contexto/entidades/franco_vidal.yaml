@@ -17,7 +17,11 @@ lore:
     se llama "Los Dibujitos". Renunció a Avanza País en enero 2026
     y no puede postular a la reelección directa (prohibición legal
     de reelección municipal inmediata) — ver polémica de "teniente
-    alcalde" más abajo.
+    alcalde" más abajo. En las elecciones municipales del 4 de
+    octubre de 2026 su padre, Manuel Vidal, ganó la alcaldía de Ate
+    con más del 72 % (conteo preliminar de la ONPE), con Franco como
+    primer regidor de la lista; Franco sigue como alcalde hasta fin
+    de 2026 y su padre asume en 2027.
 
   # Observación de mercado (no se inyecta en prompts): gran parte de
   # la viralidad de este personaje no viene de su cuenta oficial sino
@@ -119,6 +123,15 @@ lore:
         teniente alcalde en vez de alcalde para las elecciones de
         octubre 2026 — la misma jugada de Rafael López Aliaga.
         Genera acusaciones de "reelección encubierta".
+      tipo: "polemica_politica"
+
+    - titulo: "Neutralidad electoral y campaña por su padre (2026)"
+      descripcion: |
+        Medios y expertos cuestionaron que, siendo alcalde, hiciera
+        campaña por la candidatura de su padre; el JNE podría
+        multarlo hasta con S/ 550 mil por romper la neutralidad
+        electoral. Su padre ganó Ate en octubre de 2026 (conteo
+        preliminar) y asume en 2027, con Franco en la lista.
       tipo: "polemica_politica"
 
     - titulo: "Rivalidad con Edde Cuéllar por gasto en maceteros"
