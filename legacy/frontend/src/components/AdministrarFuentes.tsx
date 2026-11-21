@@ -35,6 +35,11 @@ export function AdministrarFuentes({ datos, alCambiar }: { datos: FuentesNicho; 
   useEffect(() => { setPalabras(datos.palabras_clave); }, [datos.palabras_clave]);
 
   const tipoActual = tipos.find((t) => t.clave === tipo);
+  // CLIP-70: cada tipo admite ciertos roles (Kick: solo Propio, sus títulos no sirven para filtrar)
+  const rolesDe = (clave?: string) => {
+    const admitidos = tipos.find((t) => t.clave === clave)?.roles;
+    return admitidos ? ROLES.filter((r) => admitidos.includes(r.valor)) : ROLES;
+  };
 
   const accion = async (fn: () => Promise<void>, ok?: string) => {
     setOcupado(true);
@@ -105,7 +110,7 @@ export function AdministrarFuentes({ datos, alCambiar }: { datos: FuentesNicho; 
             </div>
             <select value={c.rol} disabled={ocupado}
                     onChange={(e) => accion(() => api.editarCanal(nicho, { url: c.url, rol: e.target.value }).then(() => undefined))}>
-              {ROLES.map((r) => <option key={r.valor} value={r.valor}>{r.texto}</option>)}
+              {rolesDe(c.plataforma).map((r) => <option key={r.valor} value={r.valor}>{r.texto}</option>)}
             </select>
             {aQuitar === c.url ? (
               <span className="fu-confirmar">
@@ -127,7 +132,7 @@ export function AdministrarFuentes({ datos, alCambiar }: { datos: FuentesNicho; 
       {/* Agregar */}
       <h3 className="fu-subtitulo">Agregar fuente</h3>
       <div className="fu-buscar">
-        <select value={tipo} onChange={(e) => { setTipo(e.target.value); setVista(null); setResultados(null); }}>
+        <select value={tipo} onChange={(e) => { setTipo(e.target.value); setVista(null); setResultados(null); setRol(""); }}>
           {tipos.map((t) => (
             <option key={t.clave} value={t.clave} disabled={!t.implementado}>
               {t.nombre}{t.implementado ? "" : " (próximamente)"}
@@ -136,7 +141,7 @@ export function AdministrarFuentes({ datos, alCambiar }: { datos: FuentesNicho; 
         </select>
         <select value={rol} onChange={(e) => setRol(e.target.value)} className={rol ? "" : "fu-falta"}>
           <option value="" disabled>Elige el rol…</option>
-          {ROLES.map((r) => <option key={r.valor} value={r.valor}>{r.texto}</option>)}
+          {rolesDe(tipo).map((r) => <option key={r.valor} value={r.valor}>{r.texto}</option>)}
         </select>
         {!rol && <span className="hint">Propio = canal del cliente (entra todo) · TV / prensa = terceros (solo si lo mencionan)</span>}
       </div>

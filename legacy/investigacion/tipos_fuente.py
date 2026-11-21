@@ -4,14 +4,15 @@ tipos_fuente.py — CLIP-66/67: tipos de fuente desacoplados (registro de plataf
 Cada tipo sabe resolver lo que pega el operador (link o usuario) y listar videos recientes. El resto del sistema
 (búsqueda, filtro, historial, panel) solo habla con este registro: agregar una plataforma = una clase + registrar().
 
-Implementados: youtube (feed RSS, sin cuenta ni costo) y manual (links sueltos de cualquier sitio que yt-dlp
-descargue; sin búsqueda automática). Registrados como "próximamente": kick, twitch, tiktok (cada uno necesita su
-análisis de viabilidad: API, costo, términos, R-01).
+Implementados: youtube (feed RSS, sin cuenta ni costo), manual (links sueltos de cualquier sitio que yt-dlp
+descargue; sin búsqueda automática) y kick (CLIP-70: directos grabados de canales propios, API pública v2).
+Registrados como "próximamente": twitch, tiktok (cada uno necesita su análisis de viabilidad: API, costo, términos, R-01).
 """
 
 from __future__ import annotations
 
 import re
+import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
@@ -30,6 +31,7 @@ class TipoFuente:
     implementado = True
     automatico = True                 # se revisa con "Buscar ahora"; si no, se agregan links a mano
     pide = "Link del canal"
+    roles = ("propio", "medios")      # CLIP-70: roles que admite el tipo (Kick: solo propio)
 
     def resolver(self, entrada: str) -> dict:
         """Lo que pegó el operador → {nombre, url} del canal. Lanza FuenteError si no es válido."""
@@ -45,7 +47,7 @@ class TipoFuente:
 
     def describir(self) -> dict:
         return {"clave": self.clave, "nombre": self.nombre, "implementado": self.implementado,
-                "automatico": self.automatico, "pide": self.pide}
+                "automatico": self.automatico, "pide": self.pide, "roles": list(self.roles)}
 
 
 REGISTRO: dict[str, TipoFuente] = {}
@@ -158,6 +160,77 @@ class ListaManual(TipoFuente):
                 "publicado": publicado, "url": info.get("webpage_url") or link}
 
 
+# ── Kick (CLIP-70): directos grabados (VODs) de canales propios ──
+
+KICK_API = "https://kick.com/api/v2/channels"
+
+
+def kick_slug(entrada: str) -> str | None:
+    """`kick.com/usuario`, `https://kick.com/usuario/videos/…`, `@usuario` o `usuario` → usuario. Puro."""
+    entrada = (entrada or "").strip()
+    m = re.search(r"kick\.com/([A-Za-z0-9_-]+)", entrada)
+    if m:
+        return m.group(1).lower()
+    entrada = entrada.lstrip("@")
+    return entrada.lower() if re.fullmatch(r"[A-Za-z0-9_-]{3,}", entrada) else None
+
+
+def parsear_vods(slug: str, items: list[dict]) -> list[dict]:
+    """Respuesta de /channels/<slug>/videos → videos. Puro. Las horas de Kick vienen en UTC."""
+    videos = []
+    for v in items or []:
+        uuid = (v.get("video") or {}).get("uuid")
+        if not uuid or v.get("is_live"):
+            continue                                   # solo directos ya terminados (el vivo es el módulo Live)
+        cuando = v.get("start_time") or v.get("created_at")
+        try:
+            publicado = datetime.fromisoformat(str(cuando)).replace(tzinfo=timezone.utc) if cuando else None
+        except ValueError:
+            publicado = None
+        videos.append({"id": uuid, "titulo": v.get("session_title") or "Directo grabado", "descripcion": "",
+                       "publicado": publicado, "url": f"https://kick.com/{slug}/videos/{uuid}",
+                       "duracion_s": round((v.get("duration") or 0) / 1000)})
+    return videos
+
+
+def _kick_get(ruta: str):
+    import json
+    req = urllib.request.Request(f"{KICK_API}/{ruta}", headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.loads(r.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            raise FuenteError(f"no existe el canal de Kick «{ruta.split('/')[0]}»") from e
+        raise FuenteError(f"Kick no respondió (HTTP {e.code})") from e
+    except Exception as e:  # noqa: BLE001 — la API pública no es oficial: puede cambiar o bloquearse
+        raise FuenteError(f"Kick no respondió ({str(e)[:100]})") from e
+
+
+class Kick(TipoFuente):
+    clave = "kick"
+    nombre = "Kick"
+    pide = "Link del canal de Kick (kick.com/usuario)"
+    roles = ("propio",)               # los títulos de Kick son genéricos: el filtro por palabras no aplica
+
+    def resolver(self, entrada: str) -> dict:
+        slug = kick_slug(entrada)
+        if not slug:
+            raise FuenteError("pega el link del canal de Kick (kick.com/usuario)")
+        datos = _kick_get(slug)
+        if not isinstance(datos, dict) or not datos.get("slug"):
+            raise FuenteError(f"no existe el canal de Kick «{slug}»")
+        return {"nombre": (datos.get("user") or {}).get("username") or datos["slug"],
+                "url": f"https://kick.com/{datos['slug']}"}
+
+    def listar(self, canal: dict) -> list[dict]:
+        slug = kick_slug(canal.get("url", ""))
+        if not slug:
+            raise FuenteError(f"URL de Kick inválida: {canal.get('url')}")
+        datos = _kick_get(f"{slug}/videos")
+        return parsear_vods(slug, datos if isinstance(datos, list) else (datos or {}).get("data", []))
+
+
 class Proximamente(TipoFuente):
     implementado = False
 
@@ -167,5 +240,6 @@ class Proximamente(TipoFuente):
 
 registrar(YouTube())
 registrar(ListaManual())
-for _clave, _nombre in (("kick", "Kick"), ("twitch", "Twitch"), ("tiktok", "TikTok")):
+registrar(Kick())
+for _clave, _nombre in (("twitch", "Twitch"), ("tiktok", "TikTok")):
     registrar(Proximamente(_clave, _nombre))

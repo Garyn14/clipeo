@@ -66,6 +66,8 @@ def ids_procesados(stream_data: Path) -> set[str]:
             continue
         if "v=" in url or "youtu.be/" in url:
             ids.add(url.split("v=")[-1].split("youtu.be/")[-1].split("&")[0])
+        elif "kick.com/" in url and "/videos/" in url:          # CLIP-70: VOD de Kick
+            ids.add(url.rstrip("/").rsplit("/", 1)[-1])
     return ids
 
 
