@@ -1,12 +1,17 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-21 (S16 cerrado; tickets sueltos CLIP-70, 71 y 72 cerrados; Jira al día)
+> Última actualización: 2026-11-21 (S17 cerrado; tickets sueltos CLIP-70, 71 y 72 cerrados; Jira al día)
 
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.5: Fase 1 hasta S13). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
+- **S17 · Negocio cerrado** (OK del operador 2026-11-21, PR #49; `docs/sprints/S17.md`): pestaña **Negocio** con vista
+  global y minidashboard por cliente y mes. **Actualizar** lee todas las cuentas del cliente (yt-dlp, solo lectura) y
+  guarda una foto en `data/negocio/` (fuera del repo); `python -m investigacion.negocio actualizar|reporte <nicho>`.
+  Primera lectura: nov 14 videos / 3.107 vistas vs oct 15 / 206.809. **Siguiente:** CLIP-75 (seguidores) y la idea del
+  operador de una **lectura resumida en un párrafo** por cliente (por definir con el analista).
 - **Tickets sueltos cerrados (OK del operador 2026-11-21, todos en Finalizada):**
   - **CLIP-70 · Fuente Kick** (directos grabados de canales propios, PR #42): primera sesión de Kick procesándose bien.
   - **CLIP-71 · Candidatos dinámicos** (PR #46): la lista de Fuentes es el resultado de la última búsqueda
@@ -26,7 +31,7 @@
   cierre de la Fase 1 hacia el 3-12 (`python -m investigacion.cierre_fase1 zapatillas_peru`). Si el operador
   reporta algo, se abre ticket.
 - Pendiente del operador: pegar a mano el link ambiguo `…/video/7709979536863235329` (probable `clip_c001_02` del 19-11).
-- **Jira al día (2026-11-21):** CLIP-60…72 en Finalizada; épicas cumplidas cerradas: CLIP-5 (F0), CLIP-6 (Q1),
+- **Jira al día (2026-11-21):** CLIP-60…74 en Finalizada (CLIP-75 por hacer); épicas cumplidas cerradas: CLIP-5 (F0), CLIP-6 (Q1),
   CLIP-7 (Q2), CLIP-8 (Q3, con CLIP-27 hecho en el S5 y CLIP-28 en el S13) y CLIP-9 (Q4). Siguen abiertas CLIP-10
   (Q5: falta volumen medido y el primer ajuste de memoria), CLIP-26 (Q6) y las secundarias CLIP-11/12 (con CLIP-16,
   17 y 22). El conector de esta sesión ve `personal-clipeo` con lectura y escritura.

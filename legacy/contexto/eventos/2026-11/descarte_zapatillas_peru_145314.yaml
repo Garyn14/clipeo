@@ -1,0 +1,39 @@
+evento:
+  aprendizaje: Score 3 pero editor descartó — Mal zoom y mal clip
+  clip_descartado:
+    linea1: El tío Fritz asegura decir la verdad
+    linea2: y lee el código de las Advantage
+    score: 3
+  fecha: '2026-11-19'
+  nicho: zapatillas_peru
+  rango:
+    conservar: true
+    duracion_segundos: 31
+    fin: 00:13:56
+    gancho: Hay que decir lo que es, tío Charlie. No hay que vender gato por liebre.
+    inicio: 00:13:25
+    momento_enfasis_seg: 5
+    pico_original:
+      confianza: 0.7
+      en_juego: la imagen de honestidad de Fritz frente a las acusaciones de floro
+        y bambas
+      razon: '''No hay que vender gato por liebre, nosotros nos caracterizamos por
+        decir la verdad'': Fritz corrige un modelo en vivo y se presenta como el honesto.
+        Ironía que la comunidad suele aprovechar'
+      timestamp: 00:13:30
+      tipo: humor_picaro
+    plan_edicion:
+      estructura: lineal
+      por_que: Parte de '¿Es rentable o no?' y salta a 'no hay que vender gato por
+        liebre' con el código; quita logística intermedia y cierra en la verificación
+        del código.
+      segmentos:
+      - fin: 00:13:16
+        inicio: 00:13:12
+      - fin: 00:13:50
+        inicio: 00:13:27
+    razon: Empieza en la comprobación del código de la blanquita y el 'ay, pero espera'.
+      Incluye 'no hay que vender gato por liebre' y la lectura del código IG 9166.
+      Cierra en 13:56 con 'las advantage', que resuelve la corrección.
+  razon_descarte: Mal zoom y mal clip
+  tipo: descarte_manual
