@@ -380,7 +380,7 @@ def reporte(nicho: str, mes: str | None = None, foto: dict | None = None, base: 
     meses = [mes]
     while len(meses) < MESES_EVOLUCION:
         meses.insert(0, mes_anterior(meses[0]))
-    return {
+    r = {
         "nicho": nicho, "cliente": nombre_cliente(nicho), "foto": foto["fecha"], "mes": mes, "mes_anterior": previo,
         "meses": meses_disponibles(foto), "avisos": foto.get("avisos") or [],
         "resumen": _con_variacion(resumen(del_mes), resumen(del_previo)),
@@ -394,6 +394,8 @@ def reporte(nicho: str, mes: str | None = None, foto: dict | None = None, base: 
         "evolucion": [{"mes": m, **resumen([v for v in todos if _mes(v.get("publicado")) == m])} for m in meses],
         "seguidores": None,   # CLIP-75
     }
+    r["lectura"] = lectura(r)
+    return r
 
 
 def global_(mes: str | None = None, base: Path | None = None) -> list[dict]:
@@ -406,8 +408,156 @@ def global_(mes: str | None = None, base: Path | None = None) -> list[dict]:
             continue
         r = reporte(nicho, mes, foto=foto, base=base, con_produccion=False)
         filas.append({"nicho": nicho, "cliente": r["cliente"], "foto": r["foto"], "mes": r["mes"],
-                      "resumen": r["resumen"], "cuentas": len(foto.get("cuentas") or [])})
+                      "resumen": r["resumen"], "cuentas": len(foto.get("cuentas") or []),
+                      "senal": (r["lectura"]["senales"] or [None])[0], "aviso": r["lectura"]["aviso"]})
     return filas
+
+
+# ── Lectura del mes (CLIP-76): señales por reglas → un párrafo ──
+
+# Umbrales en un solo lugar (reglas aprobadas por el operador el 2026-11-21; ajustar aquí)
+UMBRALES = {
+    "cambio": 0.20,             # 1, 2, 5: subida/caída que se considera señal
+    "plataforma_videos": 0.40,  # 3: la plataforma tiene al menos este % de los videos del mes…
+    "plataforma_vistas": 0.10,  # 3: …y menos de este % de las vistas
+    "baja_publicacion": 0.30,   # 4: una plataforma publica al menos este % menos que el mes anterior
+    "interaccion": 0.25,        # 6: cambio relativo de la tasa de interacción
+    "cola": 5,                  # 8: aprobados del mes que superan a los enviados
+}
+NOMBRE_PLATAFORMA = {"tiktok": "TikTok", "youtube": "YouTube Shorts"}
+_MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre",
+          "noviembre", "diciembre"]
+
+
+def _n(x: float | None) -> str:
+    return f"{round(x or 0):,}".replace(",", ".")
+
+
+def _p(x: float) -> str:
+    """Porcentaje sin signo: 0.983 → '98 %'; por debajo de 10 % con un decimal."""
+    v = abs(x) * 100
+    return (f"{v:.1f}".replace(".", ",") if v < 10 else f"{v:.0f}") + " %"
+
+
+def _nombre_mes(mes: str) -> str:
+    return f"{_MESES[int(mes[5:7]) - 1]} {mes[:4]}"
+
+
+def _dias_mes(mes: str) -> int:
+    a, m = int(mes[:4]), int(mes[5:7])
+    return (datetime(a + (m == 12), m % 12 + 1, 1) - datetime(a, m, 1)).days
+
+
+def _plataforma(c: dict) -> str:
+    return NOMBRE_PLATAFORMA.get(c.get("plataforma"), c.get("plataforma") or "")
+
+
+def lectura(r: dict) -> dict:
+    """Señales del mes (reglas con los UMBRALES) y un párrafo que las cuenta, cada frase con su cifra. Puro.
+
+    Devuelve {"parrafo", "senales": [{clave, nivel, texto}] por importancia, "aviso"}. La primera señal es la
+    principal (la que muestra la vista global). Niveles: alerta, positiva, info."""
+    u = UMBRALES
+    s = r.get("resumen") or {}
+    mes, previo = r.get("mes") or "", r.get("mes_anterior") or ""
+    ant = s.get("anterior") or {}
+    var = s.get("variacion") or {}
+    senales: list[tuple[int, str, str, str]] = []           # (prioridad, clave, nivel, texto)
+
+    def senal(prio: int, clave: str, texto: str, nivel: str = "alerta") -> None:
+        senales.append((prio, clave, nivel, texto))
+
+    # 9 · mes en curso
+    aviso = None
+    foto = r.get("foto") or ""
+    if mes and foto[:7] == mes:
+        dia, total = int(foto[8:10]), _dias_mes(mes)
+        if dia < total:
+            aviso = f"Mes en curso (día {dia} de {total}): comparar con cautela."
+    cabecera = f"{r.get('cliente', '')} · {_nombre_mes(mes)}:" if mes else ""
+
+    if not s.get("videos"):
+        texto = f"Sin videos publicados en {_nombre_mes(mes)}." if mes else "Sin datos."
+        return {"parrafo": " ".join(x for x in (cabecera, texto, aviso) if x),
+                "senales": [{"clave": "sin_videos", "nivel": "alerta", "texto": texto}], "aviso": aviso}
+
+    # 1 · vistas totales
+    v_vistas, v_videos = var.get("vistas"), var.get("videos")
+    if v_vistas is not None and abs(v_vistas) >= u["cambio"]:
+        baja = v_vistas < 0
+        senal(2 if baja else 6, "vistas",
+              f"Las vistas {'cayeron' if baja else 'subieron'} {_p(v_vistas)} frente a {_nombre_mes(previo)} "
+              f"({_n(s['vistas'])} vs {_n(ant.get('vistas'))}).", "alerta" if baja else "positiva")
+    elif not ant.get("videos"):
+        senal(8, "sin_comparacion", f"Sin videos en {_nombre_mes(previo)} para comparar.", "info")
+
+    # 2 · volumen vs rendimiento
+    if v_videos is not None and v_videos <= -u["cambio"]:
+        senal(4, "volumen", f"Se publicó menos: {_n(s['videos'])} videos vs {_n(ant.get('videos'))}.")
+    elif v_vistas is not None and v_vistas <= -u["cambio"] and v_videos is not None and abs(v_videos) < u["cambio"]:
+        senal(3, "rendimiento",
+              f"No es por volumen ({_n(s['videos'])} videos vs {_n(ant.get('videos'))}): es rendimiento.")
+
+    cuentas = [c for c in r.get("por_cuenta") or [] if not c.get("error")]
+    total_videos, total_vistas = s.get("videos") or 0, s.get("vistas") or 0
+
+    # 3 · plataforma que no rinde
+    for c in cuentas:
+        if total_videos and total_vistas and c["videos"] / total_videos >= u["plataforma_videos"] \
+                and c["vistas"] / total_vistas < u["plataforma_vistas"]:
+            senal(1, f"no_rinde_{c['plataforma']}",
+                  f"{_plataforma(c)} no rinde: {_n(c['videos'])} de {_n(total_videos)} videos y solo el "
+                  f"{_p(c['vistas'] / total_vistas)} de las vistas ({_n(c['vistas'])}). Revisar {_plataforma(c)}.")
+
+    # 4 · publicación por plataforma
+    for c in cuentas:
+        vv = (c.get("variacion") or {}).get("videos")
+        if vv is not None and vv <= -u["baja_publicacion"]:
+            senal(4, f"baja_publicacion_{c['plataforma']}",
+                  f"{_plataforma(c)} bajó la publicación: {_n(c['videos'])} videos vs "
+                  f"{_n((c.get('anterior') or {}).get('videos'))}.")
+    if len(cuentas) == 2:
+        menor, mayor = sorted(cuentas, key=lambda c: c["videos"])
+        if mayor["videos"] and menor["videos"] <= mayor["videos"] / 2:
+            senal(5, "publica_menos", f"{_plataforma(menor)} publicó la mitad o menos que {_plataforma(mayor)} "
+                                      f"({_n(menor['videos'])} vs {_n(mayor['videos'])} videos).")
+
+        # 5 · divergencia
+        cambios = [(c, (c.get("variacion") or {}).get("vistas")) for c in cuentas]
+        sube = [(c, x) for c, x in cambios if x is not None and x >= u["cambio"]]
+        cae = [(c, x) for c, x in cambios if x is not None and x <= -u["cambio"]]
+        if sube and cae:
+            (cs, xs), (cc, xc) = sube[0], cae[0]
+            senal(2, "divergencia", f"{_plataforma(cs)} crece (+{_p(xs)}) y {_plataforma(cc)} cae (−{_p(xc)}) "
+                                    f"en vistas.")
+
+    # 6 · interacción
+    t, ta = s.get("tasa_interaccion"), ant.get("tasa_interaccion")
+    if t is not None and ta and abs(t - ta) / ta >= u["interaccion"]:
+        sube_t = t > ta
+        senal(6 if sube_t else 5, "interaccion", f"La interacción {'subió' if sube_t else 'bajó'} de {_p(ta)} a {_p(t)}.",
+              "positiva" if sube_t else "alerta")
+
+    # 8 · cola sin enviar
+    prod = r.get("produccion") or {}
+    enviados = max((prod.get("enviados") or {}).values(), default=0)
+    if prod and prod.get("aprobados", 0) - enviados >= u["cola"]:
+        senal(3, "cola", f"{_n(prod['aprobados'] - enviados)} clips aprobados en el mes aún sin enviar "
+                         f"({_n(prod['aprobados'])} aprobados, {_n(enviados)} enviados).")
+
+    # 7 · mejor video
+    top = (r.get("top") or [None])[0]
+    if top:
+        senal(7, "mejor_video", f"Mejor video: «{(top.get('titulo') or '').strip()[:80]}» ({_n(top.get('vistas'))} "
+                                f"vistas, {_plataforma(top)}).", "info")
+
+    senales.sort(key=lambda x: x[0])
+    textos = [t for _, _, _, t in senales]
+    if not any(n in ("alerta", "positiva") for _, _, n, _ in senales):
+        textos.insert(0, "Sin cambios importantes frente al mes anterior.")
+    parrafo = " ".join(x for x in [cabecera, *textos, aviso] if x)
+    return {"parrafo": parrafo, "senales": [{"clave": c, "nivel": n, "texto": t} for _, c, n, t in senales],
+            "aviso": aviso}
 
 
 # ── CLI ─────────────────────────────────────────────────────
@@ -418,6 +568,7 @@ def _imprimir(r: dict) -> None:
         return
     s = r["resumen"]
     print(f"[NEGOCIO] {r['cliente']} · {r['mes']} (datos al {r['foto'][:16]})")
+    print(f"\n  {r['lectura']['parrafo']}\n")
     print(f"  {s['videos']} videos · {s['vistas']:,} vistas · {s['interacciones']:,} interacciones · "
           f"mediana {s['mediana_vistas'] or 0:,.0f}")
     for c in r["por_cuenta"]:

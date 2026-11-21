@@ -149,3 +149,84 @@ def test_router_negocio(entorno, monkeypatch):
     assert r["mes"] == "2026-11" and r["resumen"]["vistas"] == 1310
     assert c.get("/negocio/n?mes=2026-10").json()["resumen"]["videos"] == 1
     assert c.get("/negocio?mes=2026-11").json()[0]["resumen"]["videos"] == 3
+
+
+# ── CLIP-76: lectura del mes (una prueba por regla) ──────────
+
+def _cuenta(plat, videos, vistas, v_ant=None, vis_ant=None):
+    return {"plataforma": plat, "cuenta": plat, "videos": videos, "vistas": vistas,
+            "anterior": {"videos": v_ant, "vistas": vis_ant},
+            "variacion": {"videos": ng.variacion(videos, v_ant), "vistas": ng.variacion(vistas, vis_ant)}}
+
+
+def _r(videos=10, vistas=1000, v_ant=10, vis_ant=1000, cuentas=None, tasa=0.03, tasa_ant=0.03, prod=None,
+       foto="2026-12-05T10:00:00+00:00", top=None):
+    return {"cliente": "Tío Prueba", "mes": "2026-11", "mes_anterior": "2026-10", "foto": foto,
+            "resumen": {"videos": videos, "vistas": vistas, "tasa_interaccion": tasa,
+                        "anterior": {"videos": v_ant, "vistas": vis_ant, "tasa_interaccion": tasa_ant},
+                        "variacion": {"videos": ng.variacion(videos, v_ant), "vistas": ng.variacion(vistas, vis_ant)}},
+            "por_cuenta": cuentas or [], "produccion": prod or {"aprobados": 0, "enviados": {}}, "top": top or []}
+
+
+def _claves(r):
+    return [s["clave"] for s in ng.lectura(r)["senales"]]
+
+
+def test_regla1_vistas_suben_o_caen():
+    assert "Las vistas cayeron 50 %" in ng.lectura(_r(vistas=500))["parrafo"]
+    assert ng.lectura(_r(vistas=1500))["senales"][0]["nivel"] == "positiva"
+    assert "vistas" not in _claves(_r(vistas=900))                     # -10 %: no es señal
+
+
+def test_regla2_volumen_o_rendimiento():
+    assert "rendimiento" in _claves(_r(videos=10, vistas=500))
+    r = ng.lectura(_r(videos=5, vistas=500))
+    assert "volumen" in [s["clave"] for s in r["senales"]] and "Se publicó menos: 5 videos vs 10" in r["parrafo"]
+
+
+def test_regla3_plataforma_que_no_rinde_va_primero():
+    r = ng.lectura(_r(cuentas=[_cuenta("tiktok", 5, 990, 5, 990), _cuenta("youtube", 5, 10, 5, 10)]))
+    assert r["senales"][0]["clave"] == "no_rinde_youtube" and "Revisar YouTube Shorts" in r["senales"][0]["texto"]
+
+
+def test_regla4_baja_la_publicacion_y_publica_menos():
+    claves = _claves(_r(cuentas=[_cuenta("tiktok", 8, 600, 8, 600), _cuenta("youtube", 2, 400, 6, 400)]))
+    assert "baja_publicacion_youtube" in claves and "publica_menos" in claves
+
+
+def test_regla5_divergencia():
+    r = ng.lectura(_r(cuentas=[_cuenta("tiktok", 5, 600, 5, 400), _cuenta("youtube", 5, 400, 5, 600)]))
+    assert any("TikTok crece (+50 %) y YouTube Shorts cae (−33 %)" in s["texto"] for s in r["senales"])
+
+
+def test_regla6_interaccion():
+    assert "La interacción bajó de 4,0 % a 2,0 %" in ng.lectura(_r(tasa=0.02, tasa_ant=0.04))["parrafo"]
+    assert "interaccion" not in _claves(_r(tasa=0.035, tasa_ant=0.03))
+
+
+def test_regla7_mejor_video():
+    r = ng.lectura(_r(top=[{"titulo": "Clip estrella", "vistas": 1200, "plataforma": "tiktok"}]))
+    assert "Mejor video: «Clip estrella» (1.200 vistas, TikTok)." in r["parrafo"]
+
+
+def test_regla8_cola_sin_enviar():
+    assert "6 clips aprobados en el mes aún sin enviar" in ng.lectura(
+        _r(prod={"aprobados": 10, "enviados": {"tiktok": 4, "youtube": 3}}))["parrafo"]
+    assert "cola" not in _claves(_r(prod={"aprobados": 8, "enviados": {"tiktok": 4}}))
+
+
+def test_regla9_mes_en_curso_y_sin_datos():
+    r = ng.lectura(_r(foto="2026-11-21T18:00:00+00:00"))
+    assert r["aviso"] == "Mes en curso (día 21 de 30): comparar con cautela." and r["parrafo"].endswith(r["aviso"])
+    assert ng.lectura(_r())["aviso"] is None                           # foto de diciembre: noviembre ya cerró
+    assert "Sin cambios importantes" in ng.lectura(_r())["parrafo"]
+    vacio = ng.lectura(_r(videos=0, vistas=0))
+    assert vacio["senales"][0]["clave"] == "sin_videos" and "Sin videos publicados en noviembre 2026" in vacio["parrafo"]
+
+
+def test_lectura_en_reporte_y_global(entorno):
+    ng.actualizar("n", lector=_lector, base=entorno, ahora=AHORA, enlazar=False)
+    r = ng.reporte("n", "2026-11", base=entorno)
+    assert r["lectura"]["parrafo"].startswith("Tío Prueba · noviembre 2026:")
+    fila = ng.global_("2026-11", base=entorno)[0]
+    assert fila["senal"] == r["lectura"]["senales"][0] and fila["aviso"] == r["lectura"]["aviso"]

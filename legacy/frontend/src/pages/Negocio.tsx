@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api/client";
-import type { FilaNegocioGlobal, GrupoNegocio, ReporteNegocio, ResumenConVariacion, VideoNegocio } from "../api/types";
+import type { FilaNegocioGlobal, GrupoNegocio, ReporteNegocio, ResumenConVariacion, SenalNegocio, VideoNegocio } from "../api/types";
 
 // S17 · CLIP-74: sección Negocio. Vista global (todos los clientes) y minidashboard por cliente y mes.
 // Los datos salen de la última "foto" de las cuentas (CLIP-73); "Actualizar" vuelve a leerlas. Seguidores: CLIP-75.
@@ -31,6 +31,13 @@ function Variacion({ v }: { v?: number | null }) {
   if (v === null || v === undefined) return <span className="ng-var ng-var-neutra">sin comparación</span>;
   const signo = v > 0 ? "▲" : v < 0 ? "▼" : "■";
   return <span className={`ng-var ${v > 0 ? "ng-var-sube" : v < 0 ? "ng-var-baja" : "ng-var-neutra"}`}>{signo} {pct(Math.abs(v))}</span>;
+}
+
+const ICONO: Record<SenalNegocio["nivel"], string> = { alerta: "▼", positiva: "▲", info: "•" };
+
+function Senal({ s }: { s?: SenalNegocio | null }) {
+  if (!s) return <span className="hint">—</span>;
+  return <span className={`ng-senal ng-senal-${s.nivel}`}>{ICONO[s.nivel]} {s.texto}</span>;
 }
 
 function Tarjetas({ r }: { r: ResumenConVariacion }) {
@@ -138,7 +145,7 @@ function Global() {
       {error && <div className="pub-alerta pub-alerta-error">{error}</div>}
       <table className="ng-tabla ng-global">
         <thead>
-          <tr><th>Cliente</th><th>Mes</th><th>Videos</th><th>Vistas</th><th>vs mes anterior</th><th>Interacción</th><th>Datos al</th></tr>
+          <tr><th>Cliente</th><th>Mes</th><th>Videos</th><th>Vistas</th><th>vs mes anterior</th><th>Interacción</th><th>Lectura</th><th>Datos al</th></tr>
         </thead>
         <tbody>
           {(filas ?? []).map((f) => (
@@ -147,14 +154,16 @@ function Global() {
               {f.resumen ? (
                 <>
                   <td>{nombreMes(f.mes)}</td><td>{num(f.resumen.videos)}</td><td>{num(f.resumen.vistas)}</td>
-                  <td><Variacion v={f.resumen.variacion.vistas} /></td><td>{pct(f.resumen.tasa_interaccion)}</td><td>{fecha(f.foto)}</td>
+                  <td><Variacion v={f.resumen.variacion.vistas} /></td><td>{pct(f.resumen.tasa_interaccion)}</td>
+                  <td className="ng-lectura-celda"><Senal s={f.senal} />{f.aviso && <span className="hint"> · mes en curso</span>}</td>
+                  <td>{fecha(f.foto)}</td>
                 </>
               ) : (
-                <td colSpan={6} className="hint">Sin datos: entra y pulsa Actualizar.</td>
+                <td colSpan={7} className="hint">Sin datos: entra y pulsa Actualizar.</td>
               )}
             </tr>
           ))}
-          {filas?.length === 0 && <tr><td colSpan={7} className="hint">Ningún cliente tiene cuentas configuradas.</td></tr>}
+          {filas?.length === 0 && <tr><td colSpan={8} className="hint">Ningún cliente tiene cuentas configuradas.</td></tr>}
         </tbody>
       </table>
     </>
@@ -217,6 +226,13 @@ function Detalle({ nicho }: { nicho: string }) {
 
       {r?.resumen && (
         <>
+          {r.lectura && (
+            <div className="ng-bloque ng-lectura">
+              <h3>Lectura de {nombreMes(r.mes)}</h3>
+              <p className="ng-parrafo">{r.lectura.parrafo}</p>
+            </div>
+          )}
+
           <div className="ng-bloque">
             <h3>Resumen de {nombreMes(r.mes)} <span className="hint">vs {nombreMes(r.mes_anterior)}</span></h3>
             <Tarjetas r={r.resumen} />

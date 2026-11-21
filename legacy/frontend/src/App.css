@@ -1575,3 +1575,10 @@ a.btn {
 .ng-barra-mes { font-size: 0.8rem; }
 .ng-barra-meta { font-size: 0.72rem; color: var(--text-faint); }
 .ng-proximamente { border-style: dashed; }
+.ng-lectura { border-color: var(--accent-border); background: linear-gradient(0deg, var(--accent-bg), var(--accent-bg)), var(--bg-elevated); }
+.ng-parrafo { margin: 0; line-height: 1.6; font-size: 1rem; }
+.ng-senal { font-size: 0.85rem; }
+.ng-senal-alerta { color: var(--danger); }
+.ng-senal-positiva { color: var(--success); }
+.ng-senal-info { color: var(--text-muted); }
+.ng-lectura-celda { max-width: 420px; }

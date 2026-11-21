@@ -521,6 +521,18 @@ export interface VideoNegocio {
   tipo?: string;
 }
 
+export interface SenalNegocio {
+  clave: string;
+  nivel: "alerta" | "positiva" | "info";
+  texto: string;
+}
+
+export interface LecturaNegocio {
+  parrafo: string;
+  senales: SenalNegocio[];
+  aviso: string | null;
+}
+
 export interface GrupoNegocio extends ResumenNegocio {
   grupo: string;
 }
@@ -543,6 +555,7 @@ export interface ReporteNegocio {
   produccion?: { revisados: number; aprobados: number; enviados: Record<string, number> } | null;
   evolucion?: (ResumenNegocio & { mes: string })[];
   seguidores?: null;
+  lectura?: LecturaNegocio;           // CLIP-76
 }
 
 export interface FilaNegocioGlobal {
@@ -552,4 +565,6 @@ export interface FilaNegocioGlobal {
   mes?: string;
   cuentas?: number;
   resumen?: ResumenConVariacion;
+  senal?: SenalNegocio | null;        // CLIP-76: señal principal del mes
+  aviso?: string | null;
 }
