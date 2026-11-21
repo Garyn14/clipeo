@@ -58,6 +58,15 @@ revisión. Con CLIP-65 son ~5 llamadas por levantamiento (antes ~30).
 
 Ver también `docs/OPERACION.md` §2.
 
+**Trucos para operar Colab desde el navegador integrado** (probados el 19–20-11):
+- Escribir el contenido de una celda: `window.monaco.editor.getModels()[i].setValue("…")` (ver qué modelo es cada
+  celda con `getModels().map(m => m.getValue().slice(0, 30))`).
+- Diagnóstico sin tocar el notebook: **celda temporal** (Ctrl+Alt+N). La salida es angosta: agregar `| fold -w 36`.
+- Paleta de comandos: botón "Comandos" (buscarlo con *find*) o Ctrl+Shift+P; el atajo Ctrl+M . no siempre responde.
+- La URL del túnel también queda en `/content/tunel.log`; el servidor escribe en `/content/servidor.log`.
+- Si la sesión se recicla a mitad de una tanda (error 530 o sin respuesta), los pasos quedan en error: reintentar desde
+  *Errores*, una sesión por tanda.
+
 ## Otra máquina
 
 Copiar `cuentas.local.yaml` a mano (igual que `.env`), o crearlo desde `cuentas.example.yaml`.

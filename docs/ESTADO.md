@@ -1,12 +1,21 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-21 (S16 cerrado: objetivo del cliente y links automáticos)
+> Última actualización: 2026-11-21 (S16 cerrado; CLIP-70 integrado; CLIP-71 esperando OK)
 
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.5: Fase 1 hasta S13). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
+- **Tickets sueltos (2026-11-21):**
+  - **CLIP-70 · Fuente Kick** (directos grabados de canales propios): **integrado (PR #42), En revisión** en Jira;
+    falta el OK del operador tras probarlo (reiniciar `levantar` y agregar `kick.com/fritzsport` como Propio).
+  - **CLIP-71 · Candidatos dinámicos** (la lista = resultado de la búsqueda actual, aviso plegado de anteriores,
+    rango por defecto 1 día): **creado, esperando el OK del operador para desarrollar**. Resuelve también los 19
+    candidatos que siguen visibles del canal quitado "Fritz Sport".
+- **Cómo retomar** (otra conversación o cuenta): leer `CLAUDE.md` (incluye *Acuerdos de trabajo* y *Operar Jira*),
+  este archivo, `docs/OPERACION.md` y `docs/CUENTAS.md`. Datos locales (`.env`, `cuentas.local.yaml`, `data/`) viven
+  en la PC del operador.
 - **S16 cerrado** (OK del operador 2026-11-21, PR #40): el juez conoce el **objetivo del cliente** (viralidad + venta)
   y da dos notas, viral y comercial (prueba a ciegas: aprobados del operador en prioridad 1/13 → 10/13); los
   **links de TikTok se enlazan solos** al medir (`medir_publicados`, perfil público `@nandoclips93`).
