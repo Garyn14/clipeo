@@ -1,12 +1,19 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-20 (S14 y S15 cerrados con OK del operador)
+> Última actualización: 2026-11-21 (S16 cerrado: objetivo del cliente y links automáticos)
 
 ## Ahora
 
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.5: Fase 1 hasta S13). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
+- **S16 cerrado** (OK del operador 2026-11-21, PR #40): el juez conoce el **objetivo del cliente** (viralidad + venta)
+  y da dos notas, viral y comercial (prueba a ciegas: aprobados del operador en prioridad 1/13 → 10/13); los
+  **links de TikTok se enlazan solos** al medir (`medir_publicados`, perfil público `@nandoclips93`).
+  **Siguiente:** uso real y medición semanal; validar con audiencia si los clips de nota comercial alta rinden;
+  cierre de la Fase 1 hacia el 3-12 (`python -m investigacion.cierre_fase1 zapatillas_peru`). Si el operador
+  reporta algo, se abre ticket.
+- Pendiente del operador: pegar a mano el link ambiguo `…/video/7709979536863235329` (probable `clip_c001_02` del 19-11).
 - **S14 y S15 cerrados** (OK del operador 2026-11-20; PRs #29, #33, #34, #37, #38): fuentes por cliente con página
   guiada, administración de fuentes con tipo desacoplado (YouTube, lista manual) y rol obligatorio, Colab de un solo
   paso (2:30, barra de progreso). Primera tanda real: video 1 → 15 clips (revisados y en cola); video 2 reintentado
