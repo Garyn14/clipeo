@@ -572,6 +572,7 @@ refinamiento_base:
     }
 
 publicacion:
+  tiktok_perfil: "@nandoclips93"   # CLIP-69: perfil público donde se publican los borradores (enlace automático)
   plataformas:
     - youtube_shorts
   horario: manual
