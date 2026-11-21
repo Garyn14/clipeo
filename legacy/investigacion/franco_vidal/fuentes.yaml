@@ -9,4 +9,14 @@ palabras_clave:
 - franco vidal
 - alcalde de ate
 - vidalismo
-canales: []
+canales:
+- nombre: Francovidalalcalde
+  plataforma: kick
+  url: https://kick.com/francovidalalcalde
+  rol: propio
+  activo: true
+- nombre: Francovidalclips
+  plataforma: youtube
+  url: https://www.youtube.com/channel/UCpjTfkKPFTZbvyID6GoZ4PA
+  rol: propio
+  activo: true

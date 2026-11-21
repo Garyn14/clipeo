@@ -1,0 +1,44 @@
+evento:
+  aprendizaje: Score 4 pero editor descartó — Clip bueno pero título no 100% correcto,
+    correcto pero la faltó una nada para pasar
+  clip_descartado:
+    linea1: Franco Vidal reparte regalos en plena calle
+    linea2: y la gente se le acerca
+    score: 4
+  fecha: '2026-11-21'
+  nicho: franco_vidal
+  rango:
+    conservar: true
+    duracion_segundos: 30
+    fin: 00:32:05
+    gancho: Toma, toma, toma, toma, toma...
+    inicio: 00:31:36
+    momento_enfasis_seg: 4
+    pico_original:
+      confianza: 0.5
+      en_juego: Qué reparte y la reacción de la gente alrededor; sin conflicto ni
+        emoción explícita en la transcripción
+      personaje_detectado: franco_vidal
+      razon: Franco Vidal reparte algo entre la gente repitiendo 'toma' sin parar;
+        momento visual del personaje, casi sin diálogo, similar a los clips de 'repartiendo'.
+        Hay que verificar en video qué entrega.
+      timestamp: 00:31:39
+      tipo: alcalde_personaje
+    plan_edicion:
+      estructura: lineal
+      por_que: Es un momento visual del alcalde repartiendo ('toma, toma…') con cierre
+        en 'con cuidado'; encaja en alcalde_personaje, con casi nada de diálogo y
+        29 s de duración. Se corta lo anterior ('Una foto' repetido) y se deja en
+        un solo tramo porque el reparto fluye. Como la transcripción es pobre, conviene
+        que el operador confirme en el video qué reparte.
+      segmentos:
+      - fin: 00:32:05
+        inicio: 00:31:36
+    razon: Inicio 4 segundos antes del 'Toma' repetido (31:39), con el 'Ah, muy bien'
+      de 31:38 como margen, para que se vea el arranque del reparto. Fin en 32:05,
+      justo después del 'con cuidado, con cuidado' de 32:02, que cierra la escena
+      de entrega. Se deja fuera el bloque previo de 'Una foto' (31:19-31:22) porque
+      es otro momento distinto, de fotos. Cae dentro del rango de 25 a 45 segundos.
+  razon_descarte: Clip bueno pero título no 100% correcto, correcto pero la faltó
+    una nada para pasar
+  tipo: descarte_manual

@@ -1,0 +1,42 @@
+evento:
+  aprendizaje: Score 4 pero editor descartó — no me convence el contenido pero no
+    requiere cambio de juez
+  clip_descartado:
+    linea1: Franco Vidal dice que lo persiguen
+    linea2: por recuperar la carretera central
+    score: 4
+  fecha: '2026-11-21'
+  nicho: franco_vidal
+  rango:
+    conservar: true
+    duracion_segundos: 49
+    fin: 00:22:19
+    gancho: Por eso está preso Pedro Castillo. Al que hace, lo molesta. Y al que no
+      hace, ¿cuándo lo indultan?
+    inicio: 00:21:40
+    momento_enfasis_seg: 3
+    pico_original:
+      confianza: 0.85
+      en_juego: compararse con un expresidente preso y sugerir que lo persiguen por
+        hacer cosas
+      personaje_detectado: franco_vidal
+      razon: Franco Vidal suelta una frase polémica sobre Pedro Castillo ('al que
+        hace, lo molesta; y al que no hace, ¿cuándo lo indultan?') para decir que
+        lo persiguen por trabajar
+      timestamp: 00:21:38
+      tipo: rivalidad_y_burla_politica
+    plan_edicion:
+      estructura: lineal
+      por_que: '''Al que hace lo molesta y al que no hace lo indulta'' abre el tramo
+        y sigue con lo difícil de recuperar la carretera central y las amenazas de
+        meterlo preso. Se corta el cruce previo de voces.'
+      segmentos:
+      - fin: 00:22:19
+        inicio: 00:21:40
+    razon: 'Se fusiona con el pico 22:01. Es el mismo momento: la frase sobre Pedro
+      Castillo (''al que hace, lo molesta...'') lleva directo a ''me he comprado los
+      problemas'', las amenazas de cárcel por recuperar la carretera central y la
+      risa con la Contraloría (22:21). Arranca 3 s antes de ''Por eso te digo, mis
+      amigos'' y termina después del remate.'
+  razon_descarte: no me convence el contenido pero no requiere cambio de juez
+  tipo: descarte_manual

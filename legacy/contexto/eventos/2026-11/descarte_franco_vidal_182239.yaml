@@ -1,0 +1,40 @@
+evento:
+  aprendizaje: Score 3 pero editor descartó — No se entiende mucho lo que habla pero
+    no reqwuiere cambio de juez
+  clip_descartado:
+    linea1: Franco Vidal habla de las denuncias
+    linea2: contra su padre y sus maquinarias
+    score: 3
+  fecha: '2026-11-21'
+  nicho: franco_vidal
+  rango:
+    conservar: true
+    duracion_segundos: 40
+    fin: 00:25:20
+    gancho: A mi padre ya le pican los pies... me andan a denunciar por las situaciones
+      de producciones
+    inicio: 00:24:46
+    momento_enfasis_seg: 2
+    pico_original:
+      confianza: 0.6
+      en_juego: denuncias que afectan a su padre, Manuel Vidal, y a su entorno político
+      personaje_detectado: franco_vidal
+      razon: Habla de las denuncias contra su padre por la producción y los vehículos
+        de obra (carros, mixers, tractores) y de un rechazo hacia ellos; el audio
+        es confuso, conviene revisar en video
+      timestamp: 00:24:46
+      tipo: rivalidad_y_burla_politica
+    plan_edicion:
+      estructura: lineal
+      por_que: 'Su padre le pide hablar y Franco cuenta que lo quieren denunciar por
+        la producción. Es el material más débil de la tanda: anécdota familiar sin
+        remate claro, y a mitad de frase hay transcripción confusa.'
+      segmentos:
+      - fin: 00:25:20
+        inicio: 00:24:46
+    razon: Arranca 2 s antes de la intervención sobre el saludo a su padre (24:46).
+      Termina justo después de 'con sus carros, con sus mixers, con sus tractores,
+      es un rechazo' (25:16), con margen. El audio es confuso, conviene revisar en
+      video.
+  razon_descarte: No se entiende mucho lo que habla pero no reqwuiere cambio de juez
+  tipo: descarte_manual
