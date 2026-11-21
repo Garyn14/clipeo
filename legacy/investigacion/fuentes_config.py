@@ -42,6 +42,8 @@ def _canal(config: dict, url: str) -> dict:
 
 
 def _validar_rol(rol: str) -> str:
+    if not rol:
+        raise tf.FuenteError("elige el rol: Propio (canal del cliente) o TV / prensa (terceros)")
     if rol not in ROLES:
         raise tf.FuenteError(f"rol inválido: {rol} (propio o medios)")
     return rol

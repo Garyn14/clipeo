@@ -87,6 +87,8 @@ def test_validaciones_al_agregar(nicho):
         fc.agregar_canal("n", "simulado", "http://otra", "medios")
     with pytest.raises(tf.FuenteError, match="rol"):
         fc.agregar_canal("n", "simulado", "sim://dos", "jefe")
+    with pytest.raises(tf.FuenteError, match="elige el rol"):     # sin rol preseleccionado: hay que elegirlo
+        fc.agregar_canal("n", "simulado", "sim://dos", "")
     with pytest.raises(tf.FuenteError, match="no disponible|no se agrega"):
         fc.agregar_canal("n", "kick", "kick.com/x", "medios")
 
@@ -129,6 +131,9 @@ def test_router_administrar(nicho, monkeypatch):
     c = TestClient(app)
     assert any(t["clave"] == "simulado" for t in c.get("/fuentes/tipos").json())
     assert c.post("/fuentes/n/canales/previsualizar", json={"plataforma": "simulado", "entrada": "x"}).status_code == 400
+    sin_rol = c.post("/fuentes/n/canales", json={"plataforma": "simulado", "entrada": "sim://tres"})
+    assert sin_rol.status_code == 400 and "elige el rol" in sin_rol.json()["detail"]
+    assert c.post("/fuentes/n/manual", json={"links": ["https://x.com/a"]}).status_code == 422
     assert c.post("/fuentes/n/canales", json={"plataforma": "simulado", "entrada": "sim://tres", "rol": "propio"}).status_code == 200
     assert c.patch("/fuentes/n/canales", json={"url": "sim://tres", "activo": False}).json()["activo"] is False
     d = c.get("/fuentes/n").json()

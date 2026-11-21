@@ -19,7 +19,8 @@ export function AdministrarFuentes({ datos, alCambiar }: { datos: FuentesNicho; 
   const [tipos, setTipos] = useState<TipoFuente[]>([]);
   const [tipo, setTipo] = useState("youtube");
   const [entrada, setEntrada] = useState("");
-  const [rol, setRol] = useState("medios");
+  // Sin rol preseleccionado: obliga a elegir Propio o TV / prensa (un canal del cliente quedaba como TV por descuido)
+  const [rol, setRol] = useState("");
   const [vista, setVista] = useState<VistaPreviaCanal | null>(null);
   const [links, setLinks] = useState("");
   const [resultados, setResultados] = useState<ResultadoLink[] | null>(null);
@@ -57,6 +58,7 @@ export function AdministrarFuentes({ datos, alCambiar }: { datos: FuentesNicho; 
     await api.agregarCanal(nicho, { plataforma: tipo, entrada, rol });
     setVista(null);
     setEntrada("");
+    setRol("");
   }, "Canal agregado: entra en la próxima búsqueda.");
 
   const agregarSugerencia = (url: string, canal: string) => accion(async () => {
@@ -132,9 +134,11 @@ export function AdministrarFuentes({ datos, alCambiar }: { datos: FuentesNicho; 
             </option>
           ))}
         </select>
-        <select value={rol} onChange={(e) => setRol(e.target.value)}>
+        <select value={rol} onChange={(e) => setRol(e.target.value)} className={rol ? "" : "fu-falta"}>
+          <option value="" disabled>Elige el rol…</option>
           {ROLES.map((r) => <option key={r.valor} value={r.valor}>{r.texto}</option>)}
         </select>
+        {!rol && <span className="hint">Propio = canal del cliente (entra todo) · TV / prensa = terceros (solo si lo mencionan)</span>}
       </div>
 
       {tipoActual?.automatico !== false ? (
@@ -142,7 +146,7 @@ export function AdministrarFuentes({ datos, alCambiar }: { datos: FuentesNicho; 
           <div className="fu-buscar">
             <input className="fu-entrada" value={entrada} placeholder={tipoActual?.pide ?? "Link del canal"}
                    onChange={(e) => { setEntrada(e.target.value); setVista(null); }} />
-            <button className="btn btn-secondary" onClick={verPrevia} disabled={ocupado || !entrada.trim()}>
+            <button className="btn btn-secondary" onClick={verPrevia} disabled={ocupado || !entrada.trim() || !rol}>
               {ocupado && !vista ? "Buscando…" : "Vista previa"}
             </button>
           </div>
@@ -155,7 +159,7 @@ export function AdministrarFuentes({ datos, alCambiar }: { datos: FuentesNicho; 
                     <span className="fu-video-meta">{(v.publicado ?? "").slice(0, 10)}</span></li>
                 ))}
               </ul>
-              <button className="btn btn-primary" onClick={guardarCanal} disabled={ocupado}>Guardar canal</button>
+              <button className="btn btn-primary" onClick={guardarCanal} disabled={ocupado || !rol}>Guardar canal</button>
             </div>
           )}
         </>
@@ -163,7 +167,7 @@ export function AdministrarFuentes({ datos, alCambiar }: { datos: FuentesNicho; 
         <>
           <textarea className="fu-entrada fu-links" rows={3} value={links} placeholder={tipoActual?.pide}
                     onChange={(e) => setLinks(e.target.value)} />
-          <button className="btn btn-primary" onClick={agregarLinks} disabled={ocupado || !links.trim()}>
+          <button className="btn btn-primary" onClick={agregarLinks} disabled={ocupado || !links.trim() || !rol}>
             {ocupado ? "Revisando links…" : "Agregar a candidatos"}
           </button>
           {resultados && (
