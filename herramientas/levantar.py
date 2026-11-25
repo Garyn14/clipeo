@@ -69,10 +69,21 @@ def resumen_publicacion() -> list[str]:
     return lineas or ["  publicación: sin cuentas conectadas"]
 
 
+def dependencias_al_dia(frontend: Path) -> bool:
+    """¿node_modules tiene lo que pide package-lock.json? (npm deja su propia copia en node_modules/.package-lock.json)"""
+    instalado, pedido = frontend / "node_modules" / ".package-lock.json", frontend / "package-lock.json"
+    return instalado.exists() and instalado.stat().st_mtime >= pedido.stat().st_mtime
+
+
 def main() -> None:
     npm = shutil.which("npm")
     if not npm:
         sys.exit("No encuentro npm (Node.js): el panel lo necesita.")
+    frontend = LEGACY / "frontend"
+    if not dependencias_al_dia(frontend):
+        # CLIP-84: una dependencia nueva del panel (p. ej. la tipografía) se instala sola al levantar
+        print("Instalando dependencias nuevas del panel (npm install)...")
+        subprocess.run([npm, "install", "--no-audit", "--no-fund"], cwd=str(frontend), check=False)
     procesos = [
         subprocess.Popen([sys.executable, "-m", "uvicorn", "app.main:app", "--port", "8000"],
                          cwd=str(LEGACY / "backend")),
