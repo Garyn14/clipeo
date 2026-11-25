@@ -6,9 +6,10 @@ sin reiniciar la sesión de Colab. Secrets por variables de entorno (las pasa ar
   HF_TOKEN    token de Hugging Face (diarización pyannote)
   AUTH_TOKEN  clave del servidor; debe ser igual a COLAB_AUTH_TOKEN del .env
 
-API (sin cambios respecto del notebook anterior):
+API:
   POST /transcribe  (multipart "audio", opcional "language") → 202 {"job_id"}
   GET  /status/<id> → {"status": "processing" | "done" | "error", "segments", "language"}
+  POST /live/check  {"username"} → {"is_live"} | {"blocked": true} | {"error"}   (CLIP-88: desde la IP de Colab)
 Imprime la línea "SERVIDOR_LISTO" cuando acepta pedidos.
 """
 
@@ -136,6 +137,19 @@ def transcribe():
     threading.Thread(target=_process_job, args=(job_id, tmp_path, language), daemon=True).start()
     print(f"[SERVER] Job {job_id} recibido (idioma: {language})", flush=True)
     return jsonify({"job_id": job_id}), 202
+
+
+@app.route("/live/check", methods=["POST"])
+def live_check():
+    """CLIP-88: ¿la cuenta de TikTok está en vivo? Consulta desde la IP de Colab (la de la PC la bloquea el WAF)."""
+    if not _autorizado():
+        return jsonify({"error": "unauthorized"}), 401
+    import live_check as lc   # junto a este archivo (lo descarga arrancar.py)
+
+    usuario = ((request.get_json(silent=True) or {}).get("username") or "").strip()
+    resultado = lc.consultar(usuario)
+    print(f"[SERVER] live/check @{usuario}: {resultado}", flush=True)
+    return jsonify(resultado)
 
 
 @app.route("/status/<job_id>", methods=["GET"])

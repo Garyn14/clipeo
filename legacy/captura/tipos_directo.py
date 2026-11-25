@@ -11,6 +11,7 @@ como "no en vivo", porque ese falso negativo ya costó una sesión completa (ver
 
 from __future__ import annotations
 
+import os
 import re
 
 REGISTRO: dict[str, "TipoDirecto"] = {}
@@ -73,7 +74,15 @@ class TikTok(TipoDirecto):
 
     def en_vivo(self, usuario: str) -> bool | None:
         from captura import tiktok_capture
+        from transcripcion.video_transcriber import _colab_config
 
+        # La URL del túnel de Colab cambia con cada reinicio del notebook: se relee del .env en cada consulta (como la
+        # transcripción) para que la verificación vaya por la IP de Colab y no caiga a la local, que bloquea el WAF.
+        url, token = _colab_config()
+        if url:
+            os.environ["COLAB_TRANSCRIBE_URL"] = url
+        if token:
+            os.environ["COLAB_AUTH_TOKEN"] = token
         try:
             return tiktok_capture.verificar_live_activo(self.url(usuario))
         except RuntimeError:

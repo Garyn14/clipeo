@@ -318,3 +318,28 @@ def test_si_yt_dlp_dice_que_no_esta_en_vivo_termina_sin_otra_consulta(raiz, monk
         "\n--- trozo_001.mp4 x ---\nERROR: [tiktok:live] fritzsport: The channel is not currently live\n", encoding="utf-8")
     monkeypatch.setattr(grabador.Grabador, "_grabar_trozo", lambda self, ruta: ("termino", 1))
     assert g.correr(verificar=False)["estado"] == "terminado"
+
+
+# ── /live/check en Colab (la consulta desde la PC la bloquea el WAF) ──
+
+def test_live_check_de_colab_distingue_bloqueo_de_no_en_vivo():
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "colab"))
+    import live_check as lc
+
+    perfil_bloqueado = {"x_@fritz.dump": "SlardarWAF"}          # la del perfil no decide
+    assert lc.decidir(0, "", {}, "fritz") == {"is_live": True}
+    assert lc.decidir(1, "ERROR: fritz: The channel is not currently live", perfil_bloqueado, "fritz") == {"is_live": False}
+    assert lc.decidir(1, "ERROR: algo", {"x_live@fritz.dump": "Please wait..."}, "fritz") == {"blocked": True}
+    assert "error" in lc.decidir(1, "ERROR: HTTP 403", {}, "fritz")
+    assert lc.consultar("no vale con espacios") == {"error": "usuario inválido"}
+
+
+def test_tiktok_relee_la_url_de_colab_en_cada_consulta(monkeypatch):
+    from captura import tiktok_capture
+    from transcripcion import video_transcriber
+    monkeypatch.setattr(video_transcriber, "_colab_config", lambda: ("https://tunel-nuevo.example", "clave"))
+    monkeypatch.setenv("COLAB_TRANSCRIBE_URL", "https://tunel-viejo.example")
+    vistos = []
+    monkeypatch.setattr(tiktok_capture, "verificar_live_activo", lambda url: vistos.append(os.environ["COLAB_TRANSCRIBE_URL"]) or True)
+    assert tipos_directo.obtener("tiktok").en_vivo("fritz") is True
+    assert vistos == ["https://tunel-nuevo.example"]
