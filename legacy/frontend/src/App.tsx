@@ -3,6 +3,7 @@ import "./App.css";
 import { EstadoOperacion, useErroresPendientes } from "./components/ui";
 import { Configuracion } from "./pages/Configuracion";
 import { DetalleSesion } from "./pages/DetalleSesion";
+import { Directos } from "./pages/Directos";
 import { Errores } from "./pages/Errores";
 import { Fuentes } from "./pages/Fuentes";
 import { Negocio } from "./pages/Negocio";
@@ -35,6 +36,9 @@ function App() {
             </NavLink>
             <NavLink to="/fuentes" className={enlace}>
               Fuentes
+            </NavLink>
+            <NavLink to="/directos" className={enlace}>
+              Directos
             </NavLink>
             <NavLink to="/sesiones" className={enlace}>
               Sesiones
@@ -72,6 +76,7 @@ function App() {
           <Route path="/" element={<NuevaCorrida />} />
           <Route path="/runs/:runId" element={<EstadoCorrida />} />
           <Route path="/fuentes" element={<Fuentes />} />
+          <Route path="/directos" element={<Directos />} />
           <Route path="/negocio" element={<Negocio />} />
           <Route path="/negocio/:nicho" element={<Negocio />} />
           <Route path="/sesiones" element={<Sesiones />} />

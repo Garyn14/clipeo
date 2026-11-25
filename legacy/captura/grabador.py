@@ -107,6 +107,17 @@ class Grabador:
             except Exception:  # noqa: BLE001
                 pass
 
+    def _ytdlp_dijo_no_en_vivo(self) -> bool:
+        try:
+            with open(self.carpeta / "yt-dlp.log", "rb") as f:
+                f.seek(0, 2)
+                f.seek(max(0, f.tell() - 4000))
+                cola = f.read().decode("utf-8", "replace")
+        except OSError:
+            return False
+        ultimo = cola.rsplit("\n--- ", 1)[-1]   # solo lo del último trozo
+        return "not currently live" in ultimo
+
     def _registrar(self, num: int, ruta: Path, inicio: str, parcial: bool) -> None:
         self.estado["trozos"].append({
             "id": f"trozo_{num:03d}", "archivo": ruta.name, "inicio": inicio, "fin": _ahora(),
@@ -147,8 +158,9 @@ class Grabador:
                     cortes = 0
                     continue
 
-                # La grabación terminó sola: ¿terminó el directo o fue un corte?
-                sigue = self.tipo.en_vivo(self.usuario)
+                # La grabación terminó sola: ¿terminó el directo o fue un corte? Si yt-dlp ya dijo que el canal no está
+                # en vivo, eso es concluyente (la consulta extra suele toparse con el bloqueo del WAF).
+                sigue = False if self._ytdlp_dijo_no_en_vivo() else self.tipo.en_vivo(self.usuario)
                 if sigue is True:
                     cortes += 1
                     if cortes > REINTENTOS_MAX:

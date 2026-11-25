@@ -308,3 +308,13 @@ def test_api_muestra_la_sesion_de_cada_trozo(vig, pipeline, monkeypatch):
     vigilante.procesar_trozos()
     cliente = next(x for x in TestClient(app).get("/directos").json()["clientes"] if x["nicho"] == "zapatillas_peru")
     assert cliente["capturas"][0]["trozos"][0]["sesion"] == f"{carpeta}_c001"
+
+
+def test_si_yt_dlp_dice_que_no_esta_en_vivo_termina_sin_otra_consulta(raiz, monkeypatch):
+    """Prueba real (CLIP-89): con el WAF bloqueando la consulta, un "not currently live" de yt-dlp ya es concluyente."""
+    _, stream = raiz
+    g, _ = _grabador(stream, monkeypatch, [2], en_vivo=[])
+    (g.carpeta / "yt-dlp.log").write_text(
+        "\n--- trozo_001.mp4 x ---\nERROR: [tiktok:live] fritzsport: The channel is not currently live\n", encoding="utf-8")
+    monkeypatch.setattr(grabador.Grabador, "_grabar_trozo", lambda self, ruta: ("termino", 1))
+    assert g.correr(verificar=False)["estado"] == "terminado"

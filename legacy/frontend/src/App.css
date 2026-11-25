@@ -1383,3 +1383,123 @@ a.btn {
 .pub-cliente-dato strong {
   color: var(--text);
 }
+
+/* ── CLIP-90: Directos ─────────────────────────── */
+
+.dv-vigilante {
+  margin: -0.6rem 0 1.2rem;
+}
+
+.dv-envivo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.4rem;
+}
+
+.dv-envivo-fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid var(--tally-border);
+  border-left: 3px solid var(--tally);
+  border-radius: var(--radius);
+  background: var(--tally-bg);
+}
+
+.dv-envivo-acciones {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: auto;
+}
+
+.dv-dato {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.dv-cliente {
+  display: grid;
+  gap: 1rem;
+}
+
+.dv-pausada td {
+  opacity: 0.55;
+}
+
+.dv-acciones {
+  display: flex;
+  gap: 0.35rem;
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+
+.dv-nueva {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.6rem 0.9rem;
+  max-width: none;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.dv-nueva label {
+  margin-bottom: 0;
+}
+
+.dv-nueva input[type="number"] {
+  width: 6rem;
+}
+
+.dv-nueva label.dv-check {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.45rem;
+  padding-bottom: 0.5rem;
+}
+
+.dv-capturas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.dv-captura {
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.dv-captura:last-child {
+  border-bottom: none;
+}
+
+.dv-captura-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.7rem;
+}
+
+.dv-trozos {
+  list-style: none;
+  margin: 0.45rem 0 0;
+  padding: 0 0 0 0.9rem;
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.84rem;
+}
+
+.dv-trozos li {
+  display: flex;
+  gap: 0.7rem;
+  align-items: baseline;
+}
