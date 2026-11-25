@@ -1,0 +1,23 @@
+# Cuentas de TikTok que mide investigacion/recolectar.py para el nicho franco_vidal (CLIP-78, S18).
+# tipo: oficial (del creador) | clipper (cuenta de clips de terceros) | medio | propia (nuestra)
+# Fuente: contexto/entidades/franco_vidal_investigacion_clips_2026-07-30.md (scraping del operador + web).
+
+cuentas:
+  # Propia
+  - {cuenta: nandoclips76, tipo: propia, universo: franco_vidal}
+
+  # Oficial
+  - {cuenta: francovidalm, tipo: oficial, universo: franco_vidal}
+
+  # Cuentas fan / clipper dedicadas
+  - {cuenta: elvidalismo, tipo: clipper, universo: franco_vidal}
+  - {cuenta: clips.vidalpresi8, tipo: clipper, universo: franco_vidal}
+  - {cuenta: fvidalitos.edits, tipo: clipper, universo: franco_vidal}
+  - {cuenta: dibuclips, tipo: clipper, universo: franco_vidal}
+  - {cuenta: francovidalismo27, tipo: clipper, universo: franco_vidal}
+  - {cuenta: francokickvidal, tipo: clipper, universo: franco_vidal}
+
+  # Cruce con la comunidad Kick / streaming
+  - {cuenta: fvidal.kick, tipo: clipper, universo: franco_vidal}
+  - {cuenta: kickasosperuoff, tipo: clipper, universo: mixto}
+  - {cuenta: show.en.ate, tipo: clipper, universo: franco_vidal}

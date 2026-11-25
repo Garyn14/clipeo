@@ -1,0 +1,22 @@
+# Fuentes del cliente Franco Vidal (CLIP-79, S18). Los canales los agrega el operador en el panel
+# (Fuentes → Administrar fuentes). Roles: propio (canal del personaje) · medios (TV/prensa: solo si el título o
+# la descripción mencionan las palabras clave).
+activo: true
+cliente: Franco Vidal
+sobre: franco_vidal
+ventana_inicial_dias: 7
+palabras_clave:
+- franco vidal
+- alcalde de ate
+- vidalismo
+canales:
+- nombre: Francovidalalcalde
+  plataforma: kick
+  url: https://kick.com/francovidalalcalde
+  rol: propio
+  activo: true
+- nombre: Francovidalclips
+  plataforma: youtube
+  url: https://www.youtube.com/channel/UCpjTfkKPFTZbvyID6GoZ4PA
+  rol: propio
+  activo: true

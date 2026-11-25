@@ -1,0 +1,244 @@
+nicho:
+  id: franco_vidal
+  descripcion: "Clips de Franco Vidal (alcalde de Ate, streamer en Kick) — cuenta @nandoclips76 (cliente 2, S18)"
+  entidades: [franco_vidal]
+  identificacion:
+    umbral_alto: 0.80
+    umbral_bajo: 0.40
+
+# CLIP-77 (S18, 2026-11-21): segundo cliente. Cuenta de clips del operador SOBRE Franco Vidal (no es su cuenta),
+# mismo modelo que @nandoclips93 con Tío Fritz. Base: los prompts de streamers_peru (ecosistema Kick) adaptados a un
+# personaje político-streamer, y la estructura madura de zapatillas_peru (juez, objetivo, dirección editorial).
+# Fuente principal esperada: TV/prensa (rol "medios") y, cuando haya grabados, su Kick.
+
+seo_base:
+  actualizado: "2026-11-21"
+  tiktok:
+    hashtags: ["#francovidal", "#vidalismo", "#ate", "#kickperu", "#fyp"]
+    notas: |
+      3-5 hashtags: 1 amplio (#fyp) + 2 del personaje (#francovidal, #vidalismo) + 1-2 del clip
+      (#ate, #kickperu, #lima). El caption debe repetir las palabras clave del título quemado
+      ("Franco Vidal", "alcalde de Ate"): TikTok pondera más el texto que los hashtags.
+  youtube_shorts:
+    hashtags: ["#Shorts", "#FrancoVidal", "#Ate"]
+    tags_backend: ["franco vidal", "alcalde de ate", "alcalde streamer", "kick peru"]
+    notas: |
+      Canal NandoClips Vidal (@nandoclips76), conectado el 2026-11-21 (CLIP-81).
+  facebook_reels:
+    hashtags: []
+    notas: ""
+
+deteccion_base:
+  confianza_minima: 0.75
+  prompt: |
+    Eres un detector de momentos virales de Franco Vidal, alcalde de Ate (Lima)
+    y streamer en Kick: el único político peruano que mezcla gestión municipal,
+    polémica y entretenimiento en vivo.
+
+    Analizas transcripciones de dos tipos de fuente:
+    - TV y prensa (noticieros, reportajes, entrevistas) que hablan de él o lo
+      entrevistan.
+    - Sus transmisiones en Kick y videos propios.
+
+    MOMENTOS QUE DEBES DETECTAR:
+
+    1. CONFRONTACIONES (confianza 0.85-1.0)
+       - Cruces con vecinos, periodistas, regidores o rivales políticos
+       - Responde en caliente a una acusación o a una pregunta incómoda
+       - Expone o encara a un trabajador, funcionario o infractor
+
+    2. DECLARACIONES QUE EXPLOTAN (confianza 0.80-0.95)
+       - Frases fuertes o polémicas que se entienden solas ("cero soles")
+       - Anuncios políticos (candidaturas, rupturas, renuncias) con carga
+       - Opiniones sobre otros streamers, políticos o la prensa
+
+    3. GESTIÓN CON CONFLICTO (confianza 0.75-0.90)
+       - Operativos, demoliciones, clausuras o recuperación de espacios
+         con tensión en escena
+       - Obras "antes/después" que generan debate
+       - Respuestas a denuncias por contratos, obras o gastos
+
+    4. EL ALCALDE STREAMER (confianza 0.75-0.85)
+       - Momentos donde su rol de alcalde choca con el de streamer
+       - Humor, ironía o reacción desmedida en vivo
+       - Cruces con figuras del ecosistema Kick o con autoridades
+
+    MOMENTOS QUE DEBES IGNORAR:
+    - Presentaciones del conductor, notas de relleno o publicidad
+    - Discursos protocolares sin conflicto ni frase fuerte
+    - Segmentos del noticiero que no tratan de Franco Vidal
+    - Saludos y despedidas de stream
+
+    FORMATO DE RESPUESTA — solo JSON válido:
+    {
+      "picos": [
+        {
+          "timestamp": "00:03:22",
+          "razon": "Franco Vidal encara a un vecino que reclama por la demolición",
+          "confianza": 0.9,
+          "tipo": "confrontacion",
+          "personaje_detectado": "franco_vidal"
+        }
+      ]
+    }
+
+contenido_base:
+  score_minimo_publicar: 7
+  hashtags_base:
+    - "#francovidal"
+    - "#vidalismo"
+    - "#ate"
+    - "#fyp"
+  prompt: |
+    Eres un experto en contenido viral sobre Franco Vidal, el alcalde
+    streamer de Ate, para la cuenta de clips @nandoclips76.
+
+    ESTILO DE TEXTO:
+    - Directo y con tensión, pero sin sobre-decorar: es un personaje
+      político y el exceso de emojis le resta (ver reglas del personaje)
+    - Verbos de acción: encara, expone, responde, denuncia, rompe el
+      silencio, se enfrenta, anuncia
+    - Emoji final solo si el momento es de humor o drama liviano
+
+    REGLA POLÍTICA — OBLIGATORIA:
+    - Cuenta lo que pasó, no opines ni tomes partido.
+    - Nada que funcione como propaganda (a favor) ni como ataque (en contra):
+      sin "el mejor alcalde", sin "corrupto" como afirmación propia. Si hay
+      una acusación, atribúyela ("lo acusan de…", "responde a la denuncia
+      de…").
+    - Nunca llamar a votar ni mencionar campañas electorales como consigna.
+
+    NOMBRES CANÓNICOS — OBLIGATORIO:
+    ✅ "Franco Vidal" o "el alcalde de Ate" (nunca "Vidal" solo en L1)
+    ✅ "Edde Cuéllar", "Manuel Vidal" (su padre), "Los Dibujitos"
+
+    CRITERIOS DE SCORE (1-10):
+    10 → Confrontación directa en escena con algo concreto en juego
+    8-9 → Declaración fuerte o anuncio político que se entiende solo
+    7-8 → Gestión con conflicto visible (operativo, demolición, reclamo)
+    5-6 → Momento interesante sin conflicto ni frase fuerte
+    1-4 → Nota informativa sin carga viral
+
+    BALANCE VISUAL ENTRE LÍNEAS — OBLIGATORIO:
+    Línea 1: entre 4 y 7 palabras
+    Línea 2: entre 4 y 7 palabras
+    Sin palabras de relleno
+    Narrativo, no descriptivo
+
+    TÍTULOS NARRATIVOS — OBLIGATORIO:
+    El título debe PROVOCAR curiosidad, no INFORMAR todo lo que pasa.
+    FÓRMULA: Personaje + acción + lo que está en juego (insinuado)
+    ✅ "Franco Vidal encara a vecino / que reclama por su casa"
+    ✅ "El alcalde de Ate responde / a la denuncia de los contratos"
+
+    REGLA DE SPEAKERS SIN IDENTIFICAR:
+    Si ves "[sin identificar]", NO inventes nombres. Usa la acción como sujeto
+    ("Vecino reclama al alcalde…" solo si el rol es claro por el contexto).
+
+    MOOD DEL CLIP — uno de: "tension", "comedia", "revelacion", "neutral".
+
+    ESTILO DE TEXTO quemado: "fijo" (default), "fijo_inicial", "dinamico",
+    "dinamico_con_titulo" o "sin_texto" (igual que el resto de los nichos).
+
+    CTA_TEXTO (opcional): vacío salvo que el clip lo necesite.
+    PALABRAS_CLAVE (opcional): 1-3 palabras exactas para resaltar.
+    LAYOUT (fuente horizontal): "blur" por defecto; "pillarbox" si hay
+    zócalos o gráficos del noticiero que no deben taparse.
+
+    PUBLICACIÓN — caption y hashtags listos por plataforma (solo TikTok por
+    ahora): caption con gancho propio (no repitas L1/L2 literal), con las
+    palabras "Franco Vidal" / "alcalde de Ate", y 3-5 hashtags al final.
+
+    FORMATO DE RESPUESTA — solo JSON válido:
+    {
+      "score": 8,
+      "publicar": true,
+      "texto_linea1": "Franco Vidal encara a vecino",
+      "texto_linea2": "que reclama por su casa",
+      "hashtags": ["#francovidal", "#ate"],
+      "razon_score": "confrontación directa con algo en juego",
+      "mood": "tension",
+      "estilo_texto": "fijo",
+      "cta_texto": "",
+      "palabras_clave": [],
+      "layout": "blur",
+      "publicacion": {
+        "tiktok": {
+          "descripcion": "caption con gancho + hashtags al final",
+          "hashtags": ["#francovidal", "#vidalismo", "#ate", "#fyp"]
+        },
+        "youtube_shorts": {
+          "titulo_alt": "Franco Vidal ... (<60 caracteres)",
+          "descripcion": "",
+          "hashtags": ["#Shorts", "#FrancoVidal"],
+          "tags_backend": ["franco vidal", "alcalde de ate"]
+        }
+      }
+    }
+
+# Juez: mismo criterio que el cliente 1 (CLIP-32): publica si fuerza >= 3, prioridad desde 7. Sin nota comercial:
+# este cliente no vende producto (objetivo solo viralidad, decisión del operador 2026-11-21).
+juez:
+  umbral_fuerza: 3
+
+objetivo:
+  viralidad: true
+
+# Duración (S18): los pilotos de @nandoclips76 duraban 90–150 s y el mejor fue el más corto (14 s, 5.630 vistas).
+# Clips cortos y que arranquen en el conflicto, como con el cliente 1.
+refinamiento_base:
+  contexto_antes_segundos: 40
+  contexto_despues_segundos: 40
+  duracion_minima_segundos: 20
+  duracion_maxima_segundos: 75
+  direccion_duracion_minima_segundos: 15
+  prompt: |
+    Eres un editor experto en clips virales de Franco Vidal (alcalde de Ate,
+    streamer en Kick) para TikTok.
+
+    Recibirás un fragmento de transcripción marcado como potencialmente viral.
+    Puede venir de un noticiero (con conductor y reportero) o de un stream.
+
+    CRITERIOS PARA EL RANGO:
+    - Arranca donde aparece lo que está en juego (la acusación, el reclamo, la
+      frase fuerte), no en la presentación del conductor
+    - El fin debe incluir la respuesta o reacción completa
+    - El clip debe entenderse solo, sin ver la nota completa
+    - Duración ideal entre 25 y 45 segundos; máximo 75 solo si la historia lo
+      pide. Un clip corto bien cerrado rinde más que uno largo con relleno.
+
+    CRITERIOS PARA DESCARTAR:
+    - El momento no se entiende sin el resto de la nota
+    - Es solo la voz del conductor sin Franco Vidal ni el conflicto en escena
+    - Es una mención superficial sin carga
+
+    FORMATO DE RESPUESTA — solo JSON válido:
+    {
+      "conservar": true,
+      "inicio": "00:03:10",
+      "fin": "00:03:45",
+      "duracion_segundos": 35,
+      "razon": "reclamo del vecino y respuesta del alcalde, completo",
+      "gancho": "primera frase impactante del clip"
+    }
+
+contenido_restricciones:
+  palabras_prohibidas:
+    - "proxeneta"
+    - "corrupto"
+    - "ladrón"
+    - "vota"
+    - "votar por"
+  reemplazos_sugeridos:
+    "corrupto": ["lo acusan de corrupción", "responde a la denuncia"]
+    "ladrón": ["lo acusan de", "denuncia en su contra"]
+
+publicacion:
+  tiktok_perfil: "@nandoclips76"   # cuenta de clips del cliente 2 (enlace automático y Negocio)
+  youtube_canal: "UCbTDUjkA8kMk-VNeIgmeBBA"   # NandoClips Vidal (@nandoclips76 en YouTube), configurado el 2026-11-21
+  plataformas:                     # CLIP-81: YouTube conectado el 2026-11-21 (igual que el cliente 1)
+    - youtube_shorts
+  horario: manual
+  descripcion_base: |
+    Lo más fuerte del alcalde streamer de Ate.
+    Síguenos para más clips de Franco Vidal.

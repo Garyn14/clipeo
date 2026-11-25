@@ -1,0 +1,126 @@
+# Referencias del nicho franco_vidal — memoria del "cerebro" (CLIP-78, S18). PROPUESTA: la aprueba el operador.
+# Clips reales de TikTok medidos con yt-dlp (2026-11-21). outlier = vistas / mediana de la cuenta.
+# Fuente de métricas: investigacion/franco_vidal/videos.jsonl · muestra: muestra.jsonl (top/fondo + cuenta propia),
+# transcritos en Colab; texto = descripción del clip en TikTok.
+
+actualizado: 2026-11-21
+metodo: >
+  564 videos de 10 cuentas (la oficial @francovidalm, 7 cuentas de fans/clips, la de cruce @kickasosperuoff y la propia
+  @nandoclips76; @francovidalismo27 no se pudo leer). Medianas: @francovidalm 312.800, @clips.vidalpresi8 177.300,
+  @show.en.ate 166.850, @fvidal.kick 76.700, @fvidalitos.edits 71.600, @elvidalismo 27.350, @dibuclips 11.250;
+  propia @nandoclips76 582. Muestra de 62 clips (20 de mayor y 8 de menor outlier del universo Franco, más la
+  propia) con transcripción. @kickasosperuoff resultó ser de fútbol (otro universo): no se usa.
+
+hallazgos:
+  - id: conflicto_en_escena
+    regla: >
+      Lo que más rinde es Franco (o su equipo) en un operativo con conflicto visible: recuperar la calle, retirar
+      rejas/tranqueras, sacar autos de la vía, con vecinos que reclaman o insultan en cámara. El conflicto se
+      escucha en los primeros segundos ("No puedo, no puedo… así nos tratan estos vecinos", "¡Ladrón…!").
+  - id: propaganda_no_rinde
+    regla: >
+      Lo que menos rinde es la propaganda: jingles y consignas de campaña ("marca el tren", "vota por más obras"),
+      agradecimientos de vecinos por una obra y reuniones protocolares (con el presidente Balcázar) quedan en 0,1x.
+      Coincide con la regla política del copy: contar lo que pasó, no hacer campaña.
+  - id: clips_cortos
+    regla: >
+      Las cuentas que rinden publican clips de 20–35 s (mediana); la propia publicaba 99 s y su mejor clip fue el
+      de 14 s. La duración no separa por sí sola el top del fondo (29 vs 28 s): manda la historia, pero corta.
+  - id: personaje_sin_hablar
+    regla: >
+      Varios éxitos son momentos visuales del personaje casi sin diálogo (en el ring, marchando, repartiendo,
+      bailando con su equipo), a menudo con música. El detector trabaja sobre la transcripción: estos momentos se
+      le escapan si nadie habla; conviene que el operador los marque a mano cuando los vea.
+
+formula_titulo: >
+  [Franco Vidal / el alcalde de Ate] + [acción concreta] + [con quién / qué está en juego], sin emoji final salvo
+  humor. Ej: "Franco Vidal recupera la calle / y los vecinos lo enfrentan".
+
+tipos_que_funcionan:
+  - tipo: operativo_con_conflicto
+    descripcion: >
+      Recuperación de espacio público (calles enrejadas, tranqueras, cocheras en la vía, invasiones) con
+      resistencia de vecinos o infractores en cámara. Lo que está en juego se ve y se escucha (el auto, la reja,
+      el reclamo). Sin conflicto, el mismo operativo es solo "obra" y rinde menos.
+    ejemplos:
+      - {titulo: "La calle NO es cochera! Seguimos recuperando espacios públicos", vistas: 13900000, outlier: 83.3, cuenta: show.en.ate}
+      - {titulo: "¡No más tranqueras en la vía pública! Recuperando espacios públicos", vistas: 4700000, outlier: 28.2, cuenta: show.en.ate}
+      - {titulo: "Liberación de calles enrejadas", vistas: 3300000, outlier: 19.8, cuenta: show.en.ate}
+      - {titulo: "Liberando espacios públicos · Salamanca", vistas: 3300000, outlier: 19.8, cuenta: show.en.ate}
+      - {titulo: "El alcalde cumplió su palabra y liberó espacio público", vistas: 165600, outlier: 52.4, cuenta: francokickvidal}
+      - {titulo: "La antigua gestión hacía abusos de autoridad a los mototaxistas en Ate", vistas: 111000, outlier: 35.1, cuenta: francokickvidal, nota: "el afectado reclama con una necesidad concreta: contar el reclamo sin tomar partido"}
+  - tipo: rivalidad_y_burla_politica
+    descripcion: >
+      Franco se burla o responde a un rival (Edde Cuéllar "el señor 5 %", la prensa crítica, el resultado
+      electoral) con una frase que se entiende sola. Funciona por la frase, no por el tema.
+    ejemplos:
+      - {titulo: "Franco manda saludos para el señor 5 %", vistas: 387900, outlier: 34.5, cuenta: dibuclips}
+      - {titulo: "La prensa está aquí, porque soy un demócrata", vistas: 242400, outlier: 21.6, cuenta: dibuclips}
+      - {titulo: "La prensa interrumpe la inauguración de Franco Vidal en Ate", vistas: 172200, outlier: 15.3, cuenta: dibuclips}
+      - {titulo: "¡El alcalde más votado del Perú! Franco Vidal se hace viral", vistas: 617700, outlier: 22.6, cuenta: elvidalismo}
+  - tipo: defensa_de_gestion
+    # S18 (2026-11-21, aprobado por el operador): en la primera tanda el juez marcó "ninguno" a 9 de 22 clips y el
+    # operador aprobó 8; casi todos eran Franco rindiendo cuentas de su gestión.
+    descripcion: >
+      Franco rinde cuentas o defiende su gestión: la deuda que heredó, compara sus obras con la gestión anterior,
+      responde a una denuncia con cifras o documentos (Contraloría), habla del resultado electoral. Rinde moderado
+      (1–2x) cuando es solo la cifra o el balance; rinde mucho más cuando hay un adversario concreto en escena (la
+      prensa que lo interrumpe, un rival que lo acusa): ese caso es rivalidad_y_burla_politica.
+    ejemplos:
+      - {titulo: "Alcalde Franco Vidal en radio la Karibeña: «Yo hice obras que decían…»", vistas: 5899, outlier: 1.9, cuenta: francokickvidal}
+      - {titulo: "¡Desmintiendo a la prensa! Franco mandará una cartita a la prensa", vistas: 13600, outlier: 1.2, cuenta: dibuclips}
+      - {titulo: "Franco Vidal recibió Ate con 80 millones de deuda (aprobado por el operador, S18)", cuenta: nandoclips76, propia: true}
+      - {titulo: "Franco Vidal compara sus obras con las de la antigua política (aprobado por el operador, S18)", cuenta: nandoclips76, propia: true}
+  - tipo: alcalde_personaje
+    descripcion: >
+      El lado personal y llamativo del alcalde streamer: boxea en el ring, marcha, reparte, celebra con su
+      equipo, se luce en un evento. Momento corto (10–30 s) y visual; suele no tener diálogo.
+    ejemplos:
+      - {titulo: "Alcalde Franco Vidal se luce en el ring, hace hasta la del chavo", vistas: 142700, outlier: 45.1, cuenta: francokickvidal}
+      - {titulo: "Se pasan de yetis con mi Alcalde Franco Vidal", vistas: 2600000, outlier: 33.9, cuenta: fvidal.kick}
+      - {titulo: "Mi Alcalde marchando", vistas: 1900000, outlier: 24.8, cuenta: fvidal.kick}
+      - {titulo: "El alcalde de los dibujitos Franco Vidal celebra el aniversario de Ate", vistas: 172200, outlier: 54.4, cuenta: francokickvidal}
+      - {titulo: "Franco Vidal repartiendo chocolate en Satipo", vistas: 5630, outlier: 9.7, cuenta: nandoclips76, propia: true}
+  - tipo: emocion_del_alcalde
+    descripcion: >
+      Franco se quiebra o se emociona (agradece a su padre, se despide, recuerda a alguien). Requiere que se vea la
+      emoción, no solo el discurso.
+    ejemplos:
+      - {titulo: "Emotivo momento, Franco al borde de las lágrimas", vistas: 295100, outlier: 26.2, cuenta: dibuclips}
+      - {titulo: "Franco fue el único alcalde que reconoció a Pascualillo", vistas: 218000, outlier: 19.4, cuenta: dibuclips}
+      - {titulo: "Alcalde Franco Vidal hace llorar a vecinas y vecinos en Ate", vistas: 443800, outlier: 16.2, cuenta: elvidalismo}
+  - tipo: riesgo_y_seguridad
+    senal_debil: true   # un solo ejemplo en 564 videos: confirmar con más datos
+    descripcion: >
+      Un peligro o incidente alrededor del alcalde (un láser apuntándole, seguridad que reacciona). Raro pero muy
+      fuerte cuando aparece.
+    ejemplos:
+      - {titulo: "Personal de seguridad se da cuenta de un láser hacia el alcalde Franco Vidal", vistas: 374000, outlier: 118.2, cuenta: francokickvidal}
+  - tipo: antes_y_despues
+    senal_debil: true   # un solo ejemplo en 564 videos: confirmar con más datos
+    descripcion: >
+      Una obra mostrada antes/después con impacto visual claro (parque, avenida). Funciona por el contraste, no por
+      el discurso de inauguración.
+    ejemplos:
+      - {titulo: "Vista impresionante del antes y después de la obra Parque Puruchuco", vistas: 294000, outlier: 93.0, cuenta: francokickvidal}
+
+lo_que_no_funciona:
+  descripcion: >
+    Propaganda y protocolo: jingles y consignas de campaña, agradecimientos a la gestión, reuniones con
+    autoridades sin conflicto, discursos sobre sus raíces o sus planes. Personaje presente pero nada en juego.
+  ejemplos:
+    - {titulo: "Ate marca el tren", outlier: 0.1, cuenta: fvidalitos.edits}
+    - {titulo: "Todos marcamos el tren", outlier: 0.1, cuenta: fvidalitos.edits}
+    - {titulo: "YA CASI LISTAS! Las pistas en Sol de las Viñas, gracias a nuestro Alcalde", outlier: 0.1, cuenta: show.en.ate}
+    - {titulo: "Mi Alcalde Franco Vidal y nuestro presidente José María Balcázar", outlier: 0.1, cuenta: fvidal.kick}
+    - {titulo: "(discurso sobre sus raíces y sus abuelos)", outlier: 0.1, cuenta: clips.vidalpresi8}
+    - {titulo: "¡Franco Vidal quiere demostrar su trabajo por el Perú!", outlier: 0.1, cuenta: dibuclips}
+    - {titulo: "El Vidalismo continúa", outlier: 0.1, cuenta: fvidalitos.edits}
+
+notas:
+  - "@show.en.ate publica los operativos de la municipalidad con mucho alcance (13,9 M el mejor): es el tipo de material
+    que más rinde. Si se usa como fuente es contenido de terceros (R-01)."
+  - "Kick real del personaje: kick.com/francovidalalcalde (con directos grabados); kick.com/francovidal existe pero
+    no tiene grabados."
+  - "Varios éxitos son edits con música (sin diálogo): el detector, que lee la transcripción, no los encuentra solo."
+  - "Contexto 2026: su padre ganó Ate (oct-2026) con Franco como primer regidor; Franco es alcalde hasta fin de año."

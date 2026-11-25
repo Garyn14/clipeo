@@ -8,8 +8,11 @@
 
 1. **Claude nunca inicia sesión.** No escribe contraseñas, códigos ni tokens en ningún formulario. Si una sesión
    venció, se lo pide al operador, que inicia sesión en el panel del navegador.
-2. **Claude sí puede usar las sesiones ya iniciadas** en el navegador integrado de la app de Claude. Requisito: en el
-   panel del navegador, ⋯ → **Conservar cookies → Compartidas** (con "Hasta salir" se borran al cerrar la app).
+2. **Claude sí puede usar las sesiones ya iniciadas.** Desde 2026-11-24 el **navegador de trabajo es el perfil de
+   Chrome "CLIPEO"** con la extensión Claude in Chrome (carpeta en `cuentas.local.yaml` → `navegador.chrome_perfil`;
+   Claude lo abre con `start chrome --profile-directory="<carpeta>"`). Ahí las sesiones persisten y las ventanas
+   emergentes de autorización (TikTok, Google) funcionan; en el navegador integrado se bloquean. El integrado queda
+   de respaldo (requiere ⋯ → **Conservar cookies → Compartidas**). En ese perfil solo van cuentas de Clipeo.
 3. **TikTok:** nunca publicar, editar, borrar ni cambiar la visibilidad de los videos privados propios del operador.
    Solo se actúa sobre borradores de Clipeo que correspondan a clips aprobados.
 4. Nunca cerrar sesión ni cambiar ajustes o credenciales de una cuenta.
@@ -24,6 +27,20 @@
 | Jira | `personal-clipeo.atlassian.net`, proyecto `CLIP` | Conector de Atlassian | Claude |
 | TikTok (publicación) | Cuenta del nicho, conectada por OAuth en el panel → Publicaciones | `data/publicacion.db` (local) | Motor de publicación (borradores) |
 | YouTube Shorts | Canal del nicho, conectado por OAuth en el panel | `data/publicacion.db` (local) | Motor de publicación (espejo) |
+
+### Cuentas por cliente
+
+Cada cliente tiene **un correo de Google** que es la llave de su TikTok y de su canal de YouTube Shorts (los correos
+están en `cuentas.local.yaml` → `clientes.<nicho>.google`). Todas las sesiones, en el perfil de Chrome "CLIPEO".
+
+| Cliente | Nicho | TikTok | YouTube Shorts |
+|---|---|---|---|
+| Tío Fritz | `zapatillas_peru` | @nandoclips93 (NandoClips 👟) | NandoClips👟 |
+| Franco Vidal | `franco_vidal` | @nandoclips76 (nandoClips 📹) | NandoClips Vidal (@nandoclips76) |
+
+**Al conectar o reconectar TikTok de un cliente, verificar la cuenta antes de aceptar** (nombre e identificador): el
+2026-11-21 la conexión de Franco quedó por error con la cuenta de Fritz porque la autorización se abrió con otra sesión.
+La app de TikTok de Clipeo (Clips Publicador) está en **sandbox**: cada cuenta nueva va primero a *Target users*.
 
 Los Secrets del notebook (`HF_TOKEN`, `COLAB_AUTH_TOKEN`/`AUTH_TOKEN`) los carga el operador en Colab: Claude no
 los ve ni los escribe.
