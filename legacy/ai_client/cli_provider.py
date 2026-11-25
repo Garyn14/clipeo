@@ -29,6 +29,7 @@ import shutil
 import subprocess
 import tempfile
 
+from . import perfiles
 from ._response import TextResponse
 from .errors import AIFatalError, AIRetryableError
 
@@ -113,6 +114,12 @@ class _CliMessages:
         env = dict(os.environ)
         env["DISABLE_AUTOUPDATER"] = "1"  # corridas largas chocan con el auto-update ("claude.exe in use")
         env.pop("ANTHROPIC_API_KEY", None)  # forzar la sesión de la suscripción, no la API
+        try:
+            carpeta = perfiles.config_dir_activo()  # CLIP-83: cuenta elegida en Configuración, releída en cada llamada
+        except FileNotFoundError as e:
+            raise AIFatalError(f"[AI_CLIENT] {e}") from e
+        if carpeta:
+            env["CLAUDE_CONFIG_DIR"] = str(carpeta)
 
         with tempfile.TemporaryDirectory(prefix="ai_cli_") as cwd_neutro:
             if system:

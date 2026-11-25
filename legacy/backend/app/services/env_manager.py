@@ -35,6 +35,8 @@ ENV_PATH = _resolver_env()
 ENV_FIELDS = [
     {
         "key": "COLAB_TRANSCRIBE_URL",
+        "seccion": "transcripcion",
+        "avanzado": False,
         "label": "URL de transcripción (Colab)",
         "secret": False,
         "help": "URL del túnel de Colab (con o sin /transcribe) — cambia cada vez que reiniciás el notebook. "
@@ -42,12 +44,16 @@ ENV_FIELDS = [
     },
     {
         "key": "COLAB_AUTH_TOKEN",
+        "seccion": "transcripcion",
+        "avanzado": False,
         "label": "Token de auth de Colab",
         "secret": True,
         "help": "Debe coincidir con AUTH_TOKEN del notebook.",
     },
     {
         "key": "AI_PROVIDER",
+        "seccion": "ia",
+        "avanzado": False,
         "label": "Proveedor de IA",
         "secret": False,
         "help": "claude_cli (default: Claude Code con la sesión de esta máquina, sin API key), "
@@ -55,18 +61,24 @@ ENV_FIELDS = [
     },
     {
         "key": "ANTHROPIC_API_KEY",
+        "seccion": "ia",
+        "avanzado": True,
         "label": "Anthropic API key",
         "secret": True,
         "help": "Solo si AI_PROVIDER=anthropic.",
     },
     {
         "key": "HF_TOKEN",
+        "seccion": "transcripcion",
+        "avanzado": True,
         "label": "Hugging Face token",
         "secret": True,
         "help": "Opcional — activa diarización de hablantes (pyannote) en WhisperX.",
     },
     {
         "key": "TIKTOK_CLIENT_KEY",
+        "seccion": "tiktok",
+        "avanzado": False,
         "label": "TikTok — Client key",
         "secret": False,
         "help": "De tu app en TikTok for Developers (producto Content Posting API, permiso video.upload). "
@@ -74,12 +86,16 @@ ENV_FIELDS = [
     },
     {
         "key": "TIKTOK_CLIENT_SECRET",
+        "seccion": "tiktok",
+        "avanzado": False,
         "label": "TikTok — Client secret",
         "secret": True,
         "help": "De la misma app de TikTok for Developers.",
     },
     {
         "key": "TIKTOK_REDIRECT_URI",
+        "seccion": "tiktok",
+        "avanzado": True,
         "label": "TikTok — Redirect URI",
         "secret": False,
         "help": "Exactamente la registrada en la app de TikTok (tiene que ser https). No hace falta que cargue: "
@@ -87,6 +103,8 @@ ENV_FIELDS = [
     },
     {
         "key": "YOUTUBE_CLIENT_ID",
+        "seccion": "youtube",
+        "avanzado": False,
         "label": "YouTube — Client ID",
         "secret": False,
         "help": "Del cliente OAuth (tipo Aplicación web) de tu proyecto en Google Cloud con YouTube Data API v3 "
@@ -94,12 +112,16 @@ ENV_FIELDS = [
     },
     {
         "key": "YOUTUBE_CLIENT_SECRET",
+        "seccion": "youtube",
+        "avanzado": False,
         "label": "YouTube — Client secret",
         "secret": True,
         "help": "Del mismo cliente OAuth de Google Cloud.",
     },
     {
         "key": "YOUTUBE_REDIRECT_URI",
+        "seccion": "youtube",
+        "avanzado": True,
         "label": "YouTube — Redirect URI",
         "secret": False,
         "help": "Opcional. Por defecto http://localhost:8000/publicaciones/cuentas/youtube/callback; tiene que "
@@ -107,6 +129,8 @@ ENV_FIELDS = [
     },
     {
         "key": "PUBLICACION_SIMULAR_FALLA",
+        "seccion": "pruebas",
+        "avanzado": True,
         "label": "Publicación — simular falla (solo cuentas de prueba)",
         "secret": False,
         "help": "Vacío = el envío simulado sale bien. Para probar el panel: red, token, pendientes, formato "
@@ -133,6 +157,8 @@ def list_env_status() -> list[dict]:
             "label": field["label"],
             "help": field["help"],
             "secret": field["secret"],
+            "seccion": field["seccion"],
+            "avanzado": field["avanzado"],
             "is_set": bool(raw),
             "value": "" if field["secret"] else raw,
             "masked_value": _mask(raw) if field["secret"] and raw else "",
@@ -150,3 +176,10 @@ def update_env(updates: dict[str, str]) -> None:
 
     for key, value in updates.items():
         set_key(str(ENV_PATH), key, value.strip(), quote_mode="never")
+
+
+def escribir_clave_interna(key: str, value: str) -> None:
+    """Escribe una clave que la app gestiona por su cuenta y no se edita como campo (p. ej. AI_CLI_PERFIL, CLIP-83)."""
+    if not ENV_PATH.exists():
+        ENV_PATH.touch()
+    set_key(str(ENV_PATH), key, value.strip(), quote_mode="never")
