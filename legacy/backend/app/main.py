@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.publicacion import motor
-from app.routers import clips, config, errores, publicaciones, runs, sessions, fuentes, negocio
+from app.routers import clips, config, errores, estado, publicaciones, runs, sessions, fuentes, negocio
 from app.services import review_actions
 
 
@@ -35,6 +35,7 @@ app.include_router(errores.router)
 app.include_router(publicaciones.router)
 app.include_router(fuentes.router)   # S14: fuentes estáticas por nicho
 app.include_router(negocio.router)   # S17: reporte de negocio por cliente
+app.include_router(estado.router)    # CLIP-84: estado de la operación (pie de la barra lateral)
 
 
 @app.get("/health")

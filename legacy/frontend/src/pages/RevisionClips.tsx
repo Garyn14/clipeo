@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api/client";
+import { PageHeader } from "../components/ui";
 import type { ClipView } from "../api/types";
 import { TIPO_MOMENTO_LABEL } from "../pasos";
 
@@ -48,7 +49,7 @@ export function RevisionClips() {
       <p className="migas">
         <Link to={`/sesiones/${sessionId}`}>← Detalle de la sesión</Link>
       </p>
-      <h1>Revisión de clips — {sessionId}</h1>
+      <PageHeader seccion="Producción · revisión" titulo="Revisión de clips" descripcion={<span className="mono">{sessionId}</span>} />
 
       <div className="barra-revision">
         <span className="pill pill-ok">{aprobados} aprobados</span>

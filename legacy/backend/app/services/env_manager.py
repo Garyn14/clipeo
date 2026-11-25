@@ -39,7 +39,7 @@ ENV_FIELDS = [
         "avanzado": False,
         "label": "URL de transcripción (Colab)",
         "secret": False,
-        "help": "URL del túnel de Colab (con o sin /transcribe) — cambia cada vez que reiniciás el notebook. "
+        "help": "URL del túnel de Colab (con o sin /transcribe) — cambia cada vez que reinicias el notebook. "
                 "Un cambio aplica también al siguiente reintento de una corrida en curso.",
     },
     {
@@ -99,7 +99,7 @@ ENV_FIELDS = [
         "label": "TikTok — Redirect URI",
         "secret": False,
         "help": "Exactamente la registrada en la app de TikTok (tiene que ser https). No hace falta que cargue: "
-                "al conectar, pegás en el panel la URL a la que te devolvió TikTok.",
+                "al conectar, pegas en el panel la URL a la que te devolvió TikTok.",
     },
     {
         "key": "YOUTUBE_CLIENT_ID",

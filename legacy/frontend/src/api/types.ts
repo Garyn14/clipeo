@@ -590,3 +590,10 @@ export interface FilaNegocioGlobal {
   senal?: SenalNegocio | null;        // CLIP-76: señal principal del mes
   aviso?: string | null;
 }
+
+// ── CLIP-84: estado de la operación (pie de la barra lateral) ──
+export interface EstadoOperacion {
+  colab: { vivo: boolean; motivo: string };
+  claude: { perfil: string; cuenta: string; sesion: boolean; plan: string };
+  errores: number;
+}

@@ -6,6 +6,7 @@ import type { ClienteFuentes, FilaNegocioGlobal, FuentesNicho, ReporteNegocio, R
   DiscardClipBody,
   EditClipBody,
   EnvField,
+  EstadoOperacion,
   CuentaClaude,
   PerfilClaude,
   ErrorFila,
@@ -90,6 +91,7 @@ export const api = {
   getEnvStatus: () => request<EnvField[]>("/config/env"),
   updateEnv: (values: Record<string, string>) =>
     request<EnvField[]>("/config/env", { method: "PUT", body: JSON.stringify({ values }) }),
+  getEstado: (refrescar = false) => request<EstadoOperacion>(`/estado${refrescar ? "?refrescar=true" : ""}`),
   getCuentaClaude: () => request<CuentaClaude>("/config/claude"),
   crearPerfilClaude: (nombre: string) =>
     request<PerfilClaude>("/config/claude/perfiles", { method: "POST", body: JSON.stringify({ nombre }) }),

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api/client";
+import { PageHeader } from "../components/ui";
 import type { FilaNegocioGlobal, GrupoNegocio, ReporteNegocio, ResumenConVariacion, SenalNegocio, VideoNegocio } from "../api/types";
 
 // S17 · CLIP-74: sección Negocio. Vista global (todos los clientes) y minidashboard por cliente y mes.
@@ -298,11 +299,12 @@ export function Negocio() {
   const navigate = useNavigate();
   return (
     <section className="ng">
-      <h1>Negocio</h1>
-      <p className="hint">
-        {nicho ? <a onClick={() => navigate("/negocio")} className="btn-link">← Todos los clientes</a>
+      <PageHeader
+        seccion="Resultados"
+        titulo="Negocio"
+        descripcion={nicho ? <button type="button" onClick={() => navigate("/negocio")} className="btn-link">← Todos los clientes</button>
           : "Cómo van las cuentas de cada cliente, mes a mes. Entra a un cliente y pulsa Actualizar para leer sus cuentas."}
-      </p>
+      />
       {nicho ? <Detalle nicho={nicho} /> : <Global />}
     </section>
   );

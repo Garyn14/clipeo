@@ -1,0 +1,74 @@
+/*
+  CLIP-84 · Tokens del sistema de diseño de Clipeo ("sala de control").
+
+  Neutros grafito cálidos, superficies planas separadas por líneas de 1 px, sin sombras, radios chicos.
+  Un solo acento de marca: el rojo de "grabando" (tally), reservado para lo que está en vivo, la marca y la
+  sección activa. La acción principal es un botón claro sobre fondo oscuro, no un color.
+  Los nombres de token antiguos (--bg, --accent…) se conservan para que las páginas existentes sigan funcionando.
+*/
+
+:root {
+  color-scheme: dark;
+
+  /* Superficies */
+  --bg: #0f0f0e;
+  --bg-sidebar: #0c0c0b;
+  --bg-elevated: #161614;
+  --bg-elevated-2: #1d1c1a;
+  --bg-input: #121211;
+  --bg-hover: #22211e;
+  --border: #2f2e2a;
+  --border-subtle: #242320;
+  --border-strong: #3d3b36;
+
+  /* Texto */
+  --text: #ecebe6;
+  --text-muted: #a9a79e;
+  --text-faint: #77756d;
+  --text-inverse: #121211;
+
+  /* Marca: tally de grabación */
+  --tally: #ff4b2b;
+  --tally-bg: rgba(255, 75, 43, 0.12);
+  --tally-border: rgba(255, 75, 43, 0.45);
+
+  /* Acción principal: claro sobre oscuro */
+  --primary: #ecebe6;
+  --primary-hover: #ffffff;
+
+  /* Enlaces e interacción (antes "accent" índigo) */
+  --accent: #d9d5c8;
+  --accent-strong: #f3f1ea;
+  --accent-bg: rgba(236, 235, 230, 0.07);
+  --accent-border: rgba(236, 235, 230, 0.25);
+  --focus: #e8c36a;
+
+  /* Estados: tonos apagados, se marcan con un punto de color */
+  --success: #62b98f;
+  --success-bg: rgba(98, 185, 143, 0.1);
+  --success-border: rgba(98, 185, 143, 0.35);
+  --warning: #dfa63f;
+  --warning-bg: rgba(223, 166, 63, 0.1);
+  --warning-border: rgba(223, 166, 63, 0.35);
+  --retry: #e2864a;
+  --retry-bg: rgba(226, 134, 74, 0.1);
+  --retry-border: rgba(226, 134, 74, 0.38);
+  --danger: #e5584f;
+  --danger-bg: rgba(229, 88, 79, 0.1);
+  --danger-border: rgba(229, 88, 79, 0.38);
+  --info: #8fa9c4;
+
+  /* Forma */
+  --radius: 6px;
+  --radius-sm: 4px;
+  --shadow-card: none;
+
+  /* Tipografía */
+  --font-sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+
+  --sidebar-w: 224px;
+
+  font-family: var(--font-sans);
+  font-feature-settings: "tnum" 1;
+}

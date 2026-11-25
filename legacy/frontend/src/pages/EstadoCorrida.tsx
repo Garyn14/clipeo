@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import { api } from "../api/client";
+import { PageHeader } from "../components/ui";
 
 const ESTADO_LABEL: Record<string, string> = {
   corriendo: "Corriendo...",
@@ -26,8 +27,11 @@ export function EstadoCorrida() {
 
   return (
     <section className="panel">
-      <h1>Corrida {run.run_id}</h1>
-      <span className={`pill pill-${run.estado}`}>{ESTADO_LABEL[run.estado] ?? run.estado}</span>
+      <PageHeader
+        seccion="Producción · corrida"
+        titulo={<span className="mono">{run.run_id}</span>}
+        acciones={<span className={`pill pill-${run.estado}`}>{ESTADO_LABEL[run.estado] ?? run.estado}</span>}
+      />
 
       {run.session_id ? (
         <p>

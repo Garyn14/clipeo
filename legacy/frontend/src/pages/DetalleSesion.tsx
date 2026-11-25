@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api/client";
+import { PageHeader } from "../components/ui";
 import type { NombrePaso, NombrePasoSesion } from "../api/types";
 import { CirculoPaso } from "../components/CirculoPaso";
 import { PasoModal } from "../components/PasoModal";
@@ -89,12 +90,13 @@ export function DetalleSesion() {
             />
           )}
           <div>
+            <p className="page-eyebrow">Producción · sesión</p>
             <h1>{s.video.titulo}</h1>
-            <p className="hint">{s.session_id}</p>
+            <p className="hint mono">{s.session_id}</p>
           </div>
         </header>
       ) : (
-        <h1>{s.session_id}</h1>
+        <PageHeader seccion="Producción · sesión" titulo={<span className="mono">{s.session_id}</span>} />
       )}
 
       <dl className="ficha ficha-sesion">
