@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Link, NavLink, useParams, useSearchParams } from "react-router-dom";
+import { Link, Navigate, NavLink, useParams, useSearchParams } from "react-router-dom";
 import { api } from "../api/client";
-import type { EstadoPublicacion, Plataforma, Publicacion, ResumenNicho } from "../api/types";
+import type { ClienteFuentes, EstadoPublicacion, Plataforma, Publicacion, ResumenNicho } from "../api/types";
+import { PageHeader, Vacio } from "../components/ui";
 import { formatearFecha } from "../pasos";
 
 /** Lo que cambia de una plataforma a otra en la pantalla. */
@@ -100,7 +101,7 @@ function hace(iso: string | null | undefined): string {
 
 function Explicacion({ plataforma, minutos }: { plataforma: Plataforma; minutos: number }) {
   const comun =
-    "Cada clip aprobado entra a la cola de su nicho en cada plataforma; las colas son independientes. " +
+    "Cada clip aprobado entra a la cola de su cliente en cada plataforma; las colas son independientes. " +
     `El backend revisa al arrancar y cada ${minutos} min: en cada horario envía un clip`;
   if (plataforma === "youtube") {
     return (
@@ -113,15 +114,54 @@ function Explicacion({ plataforma, minutos }: { plataforma: Plataforma; minutos:
   }
   return (
     <p className="hint">
-      {comun} a TikTok como <strong>borrador a tu bandeja</strong> y vos lo activás en la app. El seguimiento termina
+      {comun} a TikTok como <strong>borrador a tu bandeja</strong> y tú lo activas en la app. El seguimiento termina
       cuando TikTok confirma que el borrador llegó.
     </p>
   );
 }
 
+// ── CLIP-85: Publicaciones por cliente ──
+
+/** Un cliente con lo suyo en cada plataforma (resumen del motor + clientes con fuentes aunque no publiquen aún). */
+interface ClientePublicacion {
+  nicho: string;
+  cliente: string;
+  plataformas: Partial<Record<Plataforma, ResumenNicho>>;
+}
+
+const CLAVE_ULTIMO = "publicaciones.ultimoCliente";
+
+function leerUltimo(): string {
+  try {
+    return localStorage.getItem(CLAVE_ULTIMO) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+function guardarUltimo(nicho: string): void {
+  try {
+    localStorage.setItem(CLAVE_ULTIMO, nicho);
+  } catch {
+    /* sin almacenamiento: no se recuerda, no pasa nada */
+  }
+}
+
+function agruparClientes(nichos: ResumenNicho[], conFuentes: ClienteFuentes[]): ClientePublicacion[] {
+  const mapa = new Map<string, ClientePublicacion>();
+  for (const n of nichos) {
+    const c = mapa.get(n.nicho) ?? { nicho: n.nicho, cliente: n.cliente || n.nicho, plataformas: {} };
+    c.plataformas[n.plataforma] = n;
+    mapa.set(n.nicho, c);
+  }
+  for (const f of conFuentes) {
+    if (!mapa.has(f.nicho)) mapa.set(f.nicho, { nicho: f.nicho, cliente: f.cliente, plataformas: {} });
+  }
+  return [...mapa.values()].sort((a, b) => a.cliente.localeCompare(b.cliente, "es"));
+}
+
 export function Publicaciones() {
-  const params = useParams();
-  const plataforma: Plataforma = params.plataforma === "youtube" ? "youtube" : "tiktok";
+  const { nicho: nichoParam, plataforma: plataformaParam } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const conexion = searchParams.get("conexion");
 
@@ -130,20 +170,56 @@ export function Publicaciones() {
     queryFn: api.getResumenPublicaciones,
     refetchInterval: 10000,
   });
+  const fuentesQuery = useQuery({ queryKey: ["fuentes-nichos"], queryFn: api.getNichosFuentes });
 
-  const nichos = (resumenQuery.data?.nichos ?? []).filter((n) => n.plataforma === plataforma);
+  // Enlaces viejos (/publicaciones/tiktok, /publicaciones/youtube) → vista de todos los clientes
+  if (nichoParam && (PLATAFORMAS as string[]).includes(nichoParam)) {
+    return <Navigate to={`/publicaciones?vista=todos${conexion ? `&${searchParams}` : ""}`} replace />;
+  }
+  if (nichoParam && !plataformaParam) return <Navigate to={`/publicaciones/${nichoParam}/tiktok`} replace />;
+
+  const ultimo = leerUltimo();
+  const verTodos = searchParams.get("vista") === "todos";
+  if (!nichoParam && ultimo && !verTodos && !conexion) {
+    return <Navigate to={`/publicaciones/${ultimo}/tiktok`} replace />;
+  }
+
+  const clientes = agruparClientes(resumenQuery.data?.nichos ?? [], fuentesQuery.data ?? []);
+  const actual = nichoParam ? clientes.find((c) => c.nicho === nichoParam) : undefined;
+  const plataforma: Plataforma = plataformaParam === "youtube" ? "youtube" : "tiktok";
+  const minutos = Math.round((resumenQuery.data?.intervalo_s ?? 600) / 60);
+
+  if (nichoParam && nichoParam !== ultimo) guardarUltimo(nichoParam);
 
   return (
     <section className="panel">
-      <h1>Publicaciones</h1>
-      <nav className="pub-tabs">
-        {PLATAFORMAS.map((p) => (
-          <NavLink key={p} to={`/publicaciones/${p}`} className={({ isActive }) => (isActive ? "activo" : "")}>
-            {PLATAFORMA_UI[p].nombre}
-          </NavLink>
+      <PageHeader
+        seccion="Distribución · publicaciones"
+        titulo={actual ? actual.cliente : "Publicaciones"}
+        descripcion={
+          actual
+            ? "Cuentas, cola e historial de este cliente en cada plataforma."
+            : "Cómo va la cola de cada cliente. Entra a uno para ver su cuenta, su cola y su historial."
+        }
+      />
+
+      <nav className="tabs" aria-label="Clientes">
+        <Link to="/publicaciones?vista=todos" className={!nichoParam ? "activo" : ""} onClick={() => guardarUltimo("")}>
+          Todos
+        </Link>
+        {clientes.map((c) => (
+          <Link
+            key={c.nicho}
+            to={`/publicaciones/${c.nicho}/${plataforma}`}
+            className={c.nicho === nichoParam ? "activo" : ""}
+          >
+            {c.cliente}
+            <span className="tab-meta">
+              {(c.plataformas.tiktok?.conteos.en_cola ?? 0) + (c.plataformas.youtube?.conteos.en_cola ?? 0)}
+            </span>
+          </Link>
         ))}
       </nav>
-      <Explicacion plataforma={plataforma} minutos={Math.round((resumenQuery.data?.intervalo_s ?? 600) / 60)} />
 
       {conexion && (
         <p className={`pub-alerta ${conexion === "ok" ? "pub-alerta-ok" : "pub-alerta-error"}`}>
@@ -158,29 +234,86 @@ export function Publicaciones() {
 
       {resumenQuery.isLoading && <p className="hint">Cargando...</p>}
       {resumenQuery.isError && <p className="error">{(resumenQuery.error as Error).message}</p>}
-      {!resumenQuery.isLoading && nichos.length === 0 && (
-        <p className="hint">Todavía no hay cuentas ni clips aprobados. Aprobá un clip en la Revisión o conectá una cuenta.</p>
+
+      {!nichoParam && !resumenQuery.isLoading && <Todos clientes={clientes} />}
+
+      {nichoParam && !resumenQuery.isLoading && (
+        <>
+          <nav className="tabs tabs-sub" aria-label="Plataformas">
+            {PLATAFORMAS.map((p) => (
+              <NavLink
+                key={p}
+                to={`/publicaciones/${nichoParam}/${p}`}
+                className={({ isActive }) => (isActive ? "activo" : "")}
+              >
+                {PLATAFORMA_UI[p].nombre}
+                <span className="tab-meta">{actual?.plataformas[p]?.conteos.en_cola ?? 0} en cola</span>
+              </NavLink>
+            ))}
+          </nav>
+          <Explicacion plataforma={plataforma} minutos={minutos} />
+          {actual?.plataformas[plataforma] ? (
+            <NichoPublicacion key={`${plataforma}-${nichoParam}`} resumen={actual.plataformas[plataforma]!} />
+          ) : (
+            <div className="pub-bloque">
+              <Vacio titulo={`${actual?.cliente ?? nichoParam} no tiene cuenta de ${PLATAFORMA_UI[plataforma].nombre}`}>
+                Sus clips aprobados se encolan igual y salen cuando conectes la cuenta.
+              </Vacio>
+              <Conexion plataforma={plataforma} nicho={nichoParam} />
+            </div>
+          )}
+        </>
       )}
-
-      {nichos.length === 0 && !resumenQuery.isLoading && <NuevaCuenta plataforma={plataforma} />}
-
-      {nichos.map((n) => (
-        <NichoPublicacion key={`${n.plataforma}-${n.nicho}`} resumen={n} />
-      ))}
     </section>
   );
 }
 
-function NuevaCuenta({ plataforma }: { plataforma: Plataforma }) {
-  const [nicho, setNicho] = useState("zapatillas_peru");
+/** Vista de todos los clientes: una tarjeta por cliente con lo esencial de cada plataforma. */
+function Todos({ clientes }: { clientes: ClientePublicacion[] }) {
+  if (clientes.length === 0) {
+    return (
+      <Vacio titulo="Todavía no hay clientes con cuentas ni clips aprobados.">
+        Aprueba un clip en la Revisión o configura las fuentes de un cliente.
+      </Vacio>
+    );
+  }
   return (
-    <div className="pub-bloque">
-      <h2>Conectar una cuenta de {PLATAFORMA_UI[plataforma].nombre}</h2>
-      <label className="pub-campo">
-        Nicho
-        <input value={nicho} onChange={(e) => setNicho(e.target.value)} />
-      </label>
-      {nicho && <Conexion plataforma={plataforma} nicho={nicho} />}
+    <div className="pub-clientes">
+      {clientes.map((c) => (
+        <article key={c.nicho} className="pub-cliente">
+          <header className="pub-cliente-cabecera">
+            <h2>{c.cliente}</h2>
+            <Link to={`/publicaciones/${c.nicho}/tiktok`} className="btn-link">
+              Abrir →
+            </Link>
+          </header>
+          {PLATAFORMAS.map((p) => {
+            const r = c.plataformas[p];
+            return (
+              <Link key={p} to={`/publicaciones/${c.nicho}/${p}`} className="pub-cliente-plataforma">
+                <span className="pub-cliente-nombre">{PLATAFORMA_UI[p].nombre}</span>
+                {r?.cuenta ? (
+                  <span className={`pill pub-cuenta-${r.cuenta.estado}`}>{CUENTA_LABEL[r.cuenta.estado]}</span>
+                ) : (
+                  <span className="pill pill-muted">sin cuenta</span>
+                )}
+                <span className="pub-cliente-dato">
+                  <strong className="mono">{r?.conteos.en_cola ?? 0}</strong> en cola
+                  {r?.dias_cola !== null && r?.dias_cola !== undefined && <> · {r.dias_cola} d</>}
+                </span>
+                <span className="pub-cliente-dato">
+                  {r?.proximo_envio ? <>sale {cuando(r.proximo_envio.sale)}</> : <span className="hint">sin envío programado</span>}
+                </span>
+                {r && r.alertas.length > 0 && (
+                  <span className={`pill ${r.alertas.some((a) => a.nivel === "error") ? "pill-error" : "pill-warn"}`}>
+                    {r.alertas.length} aviso{r.alertas.length > 1 ? "s" : ""}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </article>
+      ))}
     </div>
   );
 }
@@ -216,9 +349,6 @@ function NichoPublicacion({ resumen }: { resumen: ResumenNicho }) {
 
   return (
     <div className="pub-nicho">
-      <h2>
-        {nicho} <span className="pill pill-muted">{ui.nombre}</span>
-      </h2>
 
       {resumen.alertas.map((a) => (
         <p key={a.texto} className={`pub-alerta pub-alerta-${a.nivel}`}>
@@ -313,13 +443,13 @@ function NichoPublicacion({ resumen }: { resumen: ResumenNicho }) {
       <div className="pub-bloque">
         <h3>Cola ({enCola.length})</h3>
         {enCola.length === 0 ? (
-          <p className="hint">Vacía. Los clips aprobados en la Revisión aparecen acá.</p>
+          <p className="hint">Vacía. Los clips aprobados en la Revisión aparecen aquí.</p>
         ) : (
           <>
             <ColaTabla pubs={enCola} onChanged={refrescar} />
             <p className="hint">
               Horas calculadas con las mismas reglas del sistema (revisa a las :00, :10, :20…). Se cumplen si el
-              backend está prendido a esa hora y {ui.nombre} no rechaza el envío.
+              backend está encendido a esa hora y {ui.nombre} no rechaza el envío.
             </p>
           </>
         )}
@@ -402,9 +532,9 @@ function Conexion({
           }}
         >
           <p className="hint">
-            Se abrió TikTok en otra pestaña (si no, <a href={urlAutorizacion} target="_blank" rel="noreferrer">abrila acá</a>).
-            Autorizá la app; TikTok te devuelve a la Redirect URI configurada (no importa si la página no carga).
-            Copiá la URL completa de la barra del navegador y pegala acá:
+            Se abrió TikTok en otra pestaña (si no, <a href={urlAutorizacion} target="_blank" rel="noreferrer">ábrela aquí</a>).
+            Autoriza la app; TikTok te devuelve a la Redirect URI configurada (no importa si la página no carga).
+            Copia la URL completa de la barra del navegador y pégala aquí:
           </p>
           <input
             value={urlPegada}

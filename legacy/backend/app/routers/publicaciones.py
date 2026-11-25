@@ -11,6 +11,7 @@ from pydantic import BaseModel
 from app.publicacion import cola, cuentas, db, horarios, motor, tiktok, youtube
 from app.publicacion.base import ErrorEnvio
 from app.publicacion.db import PLATAFORMAS
+from investigacion.negocio import nombre_cliente
 
 router = APIRouter(prefix="/publicaciones", tags=["publicaciones"])
 
@@ -128,6 +129,7 @@ def resumen():
             salida.append({
                 "plataforma": plataforma,
                 "nicho": nicho,
+                "cliente": nombre_cliente(nicho),   # CLIP-85: nombre visible del cliente
                 "cuenta": cuentas.publica(cuenta) if cuenta else None,
                 "proximo_envio": proximo,
                 "proximo_envio_motivo": est["motivo"],
@@ -279,7 +281,7 @@ def conectar_tiktok(body: ConectarTikTokBody):
             raise HTTPException(400, "La URL no corresponde a una autorización pedida desde este panel para este nicho")
         conn.execute("DELETE FROM oauth_estados WHERE state = ?", (state,))
         if horarios.ahora() - datetime.fromisoformat(fila["creado"]) > ESTADO_OAUTH_VIGENCIA:
-            raise HTTPException(400, "La autorización venció (más de 30 min) — volvé a empezar")
+            raise HTTPException(400, "La autorización venció (más de 30 min) — vuelve a empezar")
         try:
             tokens = tiktok.canjear_codigo(code)
         except ErrorEnvio as e:
@@ -312,8 +314,8 @@ def autorizar_youtube(nicho: str):
         conn.close()
 
 
-def _conectar_youtube(code: str | None, state: str | None, error: str | None) -> None:
-    """Valida la vuelta de Google y conecta la cuenta. ValueError con el motivo si algo falla."""
+def _conectar_youtube(code: str | None, state: str | None, error: str | None) -> str:
+    """Valida la vuelta de Google y conecta la cuenta; devuelve el nicho. ValueError con el motivo si algo falla."""
     if error:
         raise ValueError(f"Google no autorizó: {error}")
     if not code or not state or not state.startswith("yt_"):
@@ -325,7 +327,7 @@ def _conectar_youtube(code: str | None, state: str | None, error: str | None) ->
             raise ValueError("La autorización no corresponde a una pedida desde este panel")
         conn.execute("DELETE FROM oauth_estados WHERE state = ?", (state,))
         if horarios.ahora() - datetime.fromisoformat(fila["creado"]) > ESTADO_OAUTH_VIGENCIA:
-            raise ValueError("La autorización venció (más de 30 min) — volvé a empezar")
+            raise ValueError("La autorización venció (más de 30 min) — vuelve a empezar")
         try:
             tokens = youtube.canjear_codigo(code)
         except ErrorEnvio as e:
@@ -333,6 +335,7 @@ def _conectar_youtube(code: str | None, state: str | None, error: str | None) ->
         canal_id, nombre = youtube.canal(tokens["access_token"])
         cuentas.conectar(conn, fila["nicho"], "real", nombre=nombre, tokens={**tokens, "open_id": canal_id},
                          plataforma="youtube")
+        return fila["nicho"]
     finally:
         conn.close()
 
@@ -340,12 +343,13 @@ def _conectar_youtube(code: str | None, state: str | None, error: str | None) ->
 @router.get("/cuentas/youtube/callback")
 def callback_youtube(code: str | None = None, state: str | None = None, error: str | None = None):
     """Vuelta de Google: conecta la cuenta y regresa al panel con el resultado."""
+    # CLIP-85: vuelve a la página del cliente (o a la vista de todos si no se llegó a saber cuál era)
     try:
-        _conectar_youtube(code, state, error)
-        query = {"conexion": "ok"}
+        nicho = _conectar_youtube(code, state, error)
+        destino, query = f"/publicaciones/{nicho}/youtube", {"conexion": "ok"}
     except ValueError as e:
-        query = {"conexion": "error", "motivo": str(e)}
-    return RedirectResponse(f"{FRONTEND_URL}/publicaciones/youtube?{urlencode(query)}", status_code=303)
+        destino, query = "/publicaciones", {"conexion": "error", "motivo": str(e)}
+    return RedirectResponse(f"{FRONTEND_URL}{destino}?{urlencode(query)}", status_code=303)
 
 
 @router.post("/cuentas/{cuenta_id}/reanudar")

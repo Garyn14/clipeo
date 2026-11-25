@@ -461,7 +461,7 @@ def test_callback_conecta_la_cuenta(conn, cred, requests_mock):
     client = TestClient(app)
     r = client.get("/publicaciones/cuentas/youtube/callback", params={"code": "C", "state": "yt_ok"},
                    follow_redirects=False)
-    assert r.status_code == 303 and r.headers["location"].endswith("/publicaciones/youtube?conexion=ok")
+    assert r.status_code == 303 and r.headers["location"].endswith(f"/publicaciones/{NICHO}/youtube?conexion=ok")
     cuenta = cuentas.por_nicho(conn, NICHO, "youtube")
     assert cuenta["nombre"] == "Fritz Clips" and cuenta["open_id"] == "UC1" and cuenta["refresh_token"] == "RT"
 

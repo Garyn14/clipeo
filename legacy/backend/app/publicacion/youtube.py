@@ -379,9 +379,9 @@ def canjear_codigo(code: str) -> dict:
         "code": code, "grant_type": "authorization_code", "redirect_uri": cred["redirect_uri"],
     })
     if "youtube.upload" not in tokens.pop("scope"):
-        raise ValueError("La cuenta no otorgó el permiso para subir videos — volvé a conectar y aceptalo")
+        raise ValueError("La cuenta no otorgó el permiso para subir videos — vuelve a conectar y acéptalo")
     if not tokens.get("refresh_token"):
-        raise ValueError("Google no devolvió el permiso permanente (refresh token) — volvé a conectar")
+        raise ValueError("Google no devolvió el permiso permanente (refresh token) — vuelve a conectar")
     tokens["refresh_vence"] = None   # Google no informa cuándo vence
     return tokens
 
@@ -413,5 +413,5 @@ def canal(access_token: str) -> tuple[str, str]:
     if items is None:
         raise ValueError(f"No se pudo leer el canal de YouTube (HTTP {resp.status_code})")
     if not items:
-        raise ValueError("La cuenta de Google no tiene canal de YouTube — creá el canal y volvé a conectar")
+        raise ValueError("La cuenta de Google no tiene canal de YouTube — crea el canal y vuelve a conectar")
     return items[0]["id"], (items[0].get("snippet") or {}).get("title") or "Canal de YouTube"

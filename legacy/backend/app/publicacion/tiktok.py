@@ -344,7 +344,7 @@ def canjear_codigo(code: str) -> dict:
         "code": code, "grant_type": "authorization_code", "redirect_uri": cred["redirect_uri"],
     })
     if "video.upload" not in tokens.pop("scope").split(","):
-        raise ValueError("La cuenta no otorgó el permiso video.upload — volvé a conectar y aceptalo")
+        raise ValueError("La cuenta no otorgó el permiso video.upload — vuelve a conectar y acéptalo")
     return tokens
 
 

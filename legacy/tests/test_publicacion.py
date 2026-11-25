@@ -561,3 +561,21 @@ def test_token_por_vencer_se_renueva_antes_de_enviar(conn, reloj, video, request
     assert cola.obtener(conn, pub["id"])["estado"] == "en_bandeja"
     init = [r for r in requests_mock.request_history if r.url.endswith("/inbox/video/init/")][0]
     assert init.headers["Authorization"] == "Bearer NUEVO"
+
+
+def test_resumen_trae_el_nombre_del_cliente(conn):
+    """CLIP-85: Publicaciones se separa por cliente; el resumen trae su nombre visible."""
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.routers import publicaciones as router_pub
+
+    cuentas.conectar(conn, "zapatillas_peru", "simulado")
+    nombres = {"zapatillas_peru": "Tío Fritz"}
+    original = router_pub.nombre_cliente
+    router_pub.nombre_cliente = lambda nicho: nombres.get(nicho, nicho)
+    try:
+        r = TestClient(app).get("/publicaciones/resumen").json()
+    finally:
+        router_pub.nombre_cliente = original
+    fila = next(n for n in r["nichos"] if n["nicho"] == "zapatillas_peru")
+    assert fila["cliente"] == "Tío Fritz"

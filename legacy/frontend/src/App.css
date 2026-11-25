@@ -1312,3 +1312,74 @@ a.btn {
 .ng-senal-positiva { color: var(--success); }
 .ng-senal-info { color: var(--text-muted); }
 .ng-lectura-celda { max-width: 420px; }
+
+/* ── CLIP-85: Publicaciones por cliente ───────────── */
+
+.tabs-sub {
+  margin-top: -0.5rem;
+}
+
+.tabs-sub a {
+  font-size: 0.82rem;
+  padding-top: 0.35rem;
+}
+
+.pub-clientes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1rem;
+}
+
+.pub-cliente {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+}
+
+.pub-cliente-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.pub-cliente-cabecera h2 {
+  margin: 0;
+}
+
+.pub-cliente-plataforma {
+  display: grid;
+  grid-template-columns: 8.5rem auto 1fr;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  padding: 0.7rem 1rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.84rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.pub-cliente-plataforma:last-child {
+  border-bottom: none;
+}
+
+.pub-cliente-plataforma:hover {
+  background: var(--bg-elevated-2);
+}
+
+.pub-cliente-nombre {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.pub-cliente-dato {
+  grid-column: 2 / -1;
+}
+
+.pub-cliente-dato strong {
+  color: var(--text);
+}

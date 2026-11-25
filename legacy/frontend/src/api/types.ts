@@ -337,6 +337,8 @@ export interface ProximoEnvio {
 export interface ResumenNicho {
   plataforma: Plataforma;
   nicho: string;
+  /** CLIP-85: nombre visible del cliente */
+  cliente: string;
   cuenta: CuentaPublicacion | null;
   proximo_envio: ProximoEnvio | null;
   /** Por qué no hay estimación (sin cuenta, reconectar) */

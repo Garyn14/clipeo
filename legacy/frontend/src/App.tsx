@@ -1,4 +1,4 @@
-import { Navigate, NavLink, Route, Routes } from "react-router-dom";
+import { NavLink, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { EstadoOperacion, useErroresPendientes } from "./components/ui";
 import { Configuracion } from "./pages/Configuracion";
@@ -78,8 +78,9 @@ function App() {
           <Route path="/sesiones/:sessionId" element={<DetalleSesion />} />
           <Route path="/sesiones/:sessionId/revision" element={<RevisionClips />} />
           <Route path="/errores" element={<Errores />} />
-          <Route path="/publicaciones" element={<Navigate to="/publicaciones/tiktok" replace />} />
-          <Route path="/publicaciones/:plataforma" element={<Publicaciones />} />
+          <Route path="/publicaciones" element={<Publicaciones />} />
+          <Route path="/publicaciones/:nicho" element={<Publicaciones />} />
+          <Route path="/publicaciones/:nicho/:plataforma" element={<Publicaciones />} />
           <Route path="/configuracion" element={<Configuracion />} />
         </Routes>
       </main>
