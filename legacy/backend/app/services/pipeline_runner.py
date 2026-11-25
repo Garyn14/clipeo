@@ -212,6 +212,16 @@ def launch_run(modo: str, url_o_path: str, canal_id: str | None) -> dict:
     return {"run_id": _lanzar(cmd, session_id, "nueva"), "session_id": session_id}
 
 
+def launch_trozo(video: Path, session_id: str, canal_id: str) -> str:
+    """CLIP-89: procesa un trozo grabado de un directo (video local) en su propia sesión. Devuelve el run_id.
+
+    Sesión explícita por trozo: sin ella, todos los trozos de una captura compartirían la sesión de su carpeta."""
+    (STREAM_DATA / session_id).mkdir(parents=True, exist_ok=True)
+    cmd = [sys.executable, "-u", str(PROJECT_ROOT / "pipeline.py"), "--video", str(video),
+           "--session-id", session_id, "--colab", "--config", canal_id]
+    return _lanzar(cmd, session_id, "directo")
+
+
 def relaunch(session_id: str, reintentar: str | None = None, chunks: list[str] | None = None) -> str:
     """Retoma una sesión: reanudar pendientes, o --reintentar un paso (y los siguientes)."""
     estado = _estado_sesion(session_id)

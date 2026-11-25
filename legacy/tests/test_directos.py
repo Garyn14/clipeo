@@ -238,3 +238,73 @@ def test_api_cuentas_y_detener(vig, monkeypatch):
     assert c.post("/directos/capturas/otra_cosa/detener").status_code == 404
 
     assert c.delete("/directos/zapatillas_peru/cuentas/tiktok/fritzsport").status_code == 200
+
+
+# ── CLIP-89: cada trozo entra solo al pipeline ──
+
+def _captura_con_trozos(stream, trozos, usuario="fritzsport"):
+    carpeta = directos.nombre_captura("zapatillas_peru", usuario)
+    directos.escribir_json(stream / carpeta / directos.ARCHIVO_ESTADO, {
+        "nicho": "zapatillas_peru", "plataforma": "tiktok", "usuario": usuario, "estado": "terminado",
+        "pid": 1, "inicio": "2026-11-25T01:00:00", "trozos": trozos})
+    return carpeta
+
+
+def _trozo(n, bytes_=5_000_000, estado="listo"):
+    return {"id": f"trozo_{n:03d}", "archivo": f"trozo_{n:03d}.mp4", "bytes": bytes_, "estado": estado, "sesion": None}
+
+
+@pytest.fixture
+def pipeline(monkeypatch):
+    from app.services import pipeline_runner
+    lanzadas, activas = [], {}
+    monkeypatch.setattr(pipeline_runner, "launch_trozo",
+                        lambda video, sesion, canal: lanzadas.append((Path(video).name, sesion, canal)) or f"run{len(lanzadas)}")
+    monkeypatch.setattr(pipeline_runner, "sesiones_activas", lambda: activas)
+    return lanzadas, activas
+
+
+def test_trozos_listos_van_al_pipeline_una_sola_vez(vig, pipeline):
+    vigilante, _ = vig
+    lanzadas, _ = pipeline
+    directos.agregar("zapatillas_peru", "tiktok", "fritzsport")
+    carpeta = _captura_con_trozos(vigilante.STREAM_DATA, [_trozo(1), _trozo(2, estado="parcial"), _trozo(3, bytes_=100)])
+    vigilante.procesar_trozos()
+    assert lanzadas == [("trozo_001.mp4", f"{carpeta}_c001", "zapatillas_peru"),
+                        ("trozo_002.mp4", f"{carpeta}_c002", "zapatillas_peru")]
+    marcas = vigilante.procesados(carpeta)
+    assert marcas["trozo_001"]["sesion"] == f"{carpeta}_c001" and "omitido" in marcas["trozo_003"]
+    vigilante.procesar_trozos()                     # segunda vuelta: nada nuevo
+    assert len(lanzadas) == 2
+
+
+def test_respeta_el_maximo_de_procesos_y_la_opcion_de_no_procesar(vig, pipeline, monkeypatch):
+    vigilante, _ = vig
+    lanzadas, activas = pipeline
+    monkeypatch.setattr(vigilante, "MAX_PROCESOS", 1)
+    directos.agregar("zapatillas_peru", "tiktok", "fritzsport")
+    _captura_con_trozos(vigilante.STREAM_DATA, [_trozo(1), _trozo(2)])
+    vigilante.procesar_trozos()
+    assert len(lanzadas) == 1                       # el segundo espera
+    activas.clear()
+    vigilante.procesar_trozos()
+    assert len(lanzadas) == 2
+
+    directos.agregar("zapatillas_peru", "tiktok", "solograbar", procesar=False)
+    _captura_con_trozos(vigilante.STREAM_DATA, [_trozo(1)], usuario="solograbar")
+    vigilante.procesar_trozos()
+    assert len(lanzadas) == 2
+
+
+def test_api_muestra_la_sesion_de_cada_trozo(vig, pipeline, monkeypatch):
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.routers import directos as router
+    vigilante, _ = vig
+    monkeypatch.setattr(router, "STREAM_DATA", vigilante.STREAM_DATA)
+    monkeypatch.setattr(vigilante, "_vivo", lambda pid, inicio: False)
+    directos.agregar("zapatillas_peru", "tiktok", "fritzsport")
+    carpeta = _captura_con_trozos(vigilante.STREAM_DATA, [_trozo(1)])
+    vigilante.procesar_trozos()
+    cliente = next(x for x in TestClient(app).get("/directos").json()["clientes"] if x["nicho"] == "zapatillas_peru")
+    assert cliente["capturas"][0]["trozos"][0]["sesion"] == f"{carpeta}_c001"

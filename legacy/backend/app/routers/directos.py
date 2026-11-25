@@ -27,6 +27,10 @@ def _cliente(nicho: str, chequeos: dict) -> dict:
         cuentas.append({**c, "chequeo": chequeos.get(clave), "grabando": vigilante.activa(nicho, c)})
     capturas = directos.capturas(STREAM_DATA, nicho)[:CAPTURAS_POR_CLIENTE]
     for cap in capturas:
+        marcas = vigilante.procesados(cap["carpeta"])   # CLIP-89: sesión del pipeline de cada trozo
+        for t in cap.get("trozos") or []:
+            t["sesion"] = (marcas.get(t["id"]) or {}).get("sesion")
+            t["omitido"] = (marcas.get(t["id"]) or {}).get("omitido")
         if cap.get("estado") == "grabando" and not vigilante._vivo(cap.get("pid"), cap.get("inicio")):
             cap["estado"], cap["motivo"] = "interrumpido", "el grabador se cerró sin terminar (¿se reinició la PC?)"
     return {"nicho": nicho, "cliente": nombre_cliente(nicho), "cuentas": cuentas, "capturas": capturas}

@@ -108,9 +108,56 @@ def tick() -> str:
         _candado.release()
 
 
+ARCHIVO_PROCESADOS = "procesados.json"   # lo escribe solo el vigilante (el grabador reescribe captura_estado.json)
+MAX_PROCESOS = int(os.environ.get("DIRECTOS_MAX_PROCESOS", "2"))
+BYTES_MINIMOS = 512 * 1024                # un trozo más chico no alcanza para un clip
+
+
+def _procesar_activado(nicho: str, plataforma: str, usuario: str) -> bool:
+    cuenta = next((c for c in directos.leer(nicho)["cuentas"]
+                   if c.get("plataforma") == plataforma and c.get("usuario") == usuario), None)
+    return True if cuenta is None else bool(cuenta.get("procesar", True))
+
+
+def procesados(carpeta: str) -> dict:
+    return directos.leer_json(STREAM_DATA / carpeta / ARCHIVO_PROCESADOS) or {}
+
+
+def sesion_trozo(carpeta: str, trozo_id: str) -> str:
+    """trozo_003 de directo_x_y_fecha → directo_x_y_fecha_c003 (una sesión por trozo)."""
+    return f"{carpeta}_c{trozo_id.rsplit('_', 1)[-1]}"
+
+
 def procesar_trozos() -> list[str]:
-    """CLIP-89: se completa en su propio commit."""
-    return []
+    """CLIP-89: lanza el pipeline de cada trozo listo que todavía no se procesó (a lo sumo MAX_PROCESOS a la vez).
+
+    Las marcas van en procesados.json de la captura: un trozo se procesa una sola vez aunque el backend se reinicie."""
+    from app.services import pipeline_runner
+
+    en_curso = sum(1 for s in pipeline_runner.sesiones_activas() if s.startswith(directos.PREFIJO))
+    partes = []
+    for cap in sorted(directos.capturas(STREAM_DATA), key=lambda e: e.get("inicio") or ""):
+        nicho, carpeta = cap.get("nicho"), cap["carpeta"]
+        if not nicho or not _procesar_activado(nicho, cap.get("plataforma"), cap.get("usuario")):
+            continue
+        marcas = procesados(carpeta)
+        for trozo in cap.get("trozos") or []:
+            if trozo["id"] in marcas or trozo.get("estado") not in ("listo", "parcial"):
+                continue
+            if (trozo.get("bytes") or 0) < BYTES_MINIMOS:
+                marcas[trozo["id"]] = {"omitido": "trozo demasiado corto", "ts": datetime.now().isoformat(timespec="seconds")}
+                directos.escribir_json(STREAM_DATA / carpeta / ARCHIVO_PROCESADOS, marcas)
+                continue
+            if en_curso >= MAX_PROCESOS:
+                partes.append("trozos en espera: ya hay suficientes procesándose")
+                return partes
+            sesion = sesion_trozo(carpeta, trozo["id"])
+            run_id = pipeline_runner.launch_trozo(STREAM_DATA / carpeta / trozo["archivo"], sesion, nicho)
+            marcas[trozo["id"]] = {"sesion": sesion, "run_id": run_id, "ts": datetime.now().isoformat(timespec="seconds")}
+            directos.escribir_json(STREAM_DATA / carpeta / ARCHIVO_PROCESADOS, marcas)
+            en_curso += 1
+            partes.append(f"{trozo['id']} de @{cap.get('usuario')} al pipeline ({sesion})")
+    return partes
 
 
 def estado() -> dict:

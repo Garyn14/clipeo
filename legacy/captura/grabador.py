@@ -74,12 +74,17 @@ class Grabador:
         cmd = self.tipo.comando_grabacion(self.usuario, str(ruta))
         flags = {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP} if sys.platform == "win32" \
             else {"start_new_session": True}
-        proc = self._lanzar(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True,
-                            encoding="utf-8", errors="replace", **flags)
+        # La salida de yt-dlp/ffmpeg va a un archivo, nunca a un pipe sin leer: el progreso de ffmpeg llena el buffer
+        # del pipe y corta la grabación a los pocos segundos. De paso queda el diagnóstico de cada trozo.
+        with open(self.carpeta / "yt-dlp.log", "a", encoding="utf-8") as log:
+            log.write(f"\n--- {ruta.name} {_ahora()} ---\n")
+            log.flush()
+            proc = self._lanzar(cmd, stdout=log, stderr=subprocess.STDOUT, **flags)
         inicio = self._reloj()
         while True:
             rc = proc.poll()
             if rc is not None:
+                print(f"[GRABADOR] yt-dlp terminó solo (rc={rc}); detalle en yt-dlp.log", flush=True)
                 return "termino", rc
             if self._pidieron_detener():
                 self._detener_proceso(proc)
