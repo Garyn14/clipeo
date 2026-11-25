@@ -8,6 +8,7 @@ el comando/stdin y devuelve la salida JSON que daría `claude -p --output-format
 
 import json
 import subprocess
+from pathlib import Path
 
 import pytest
 
@@ -48,6 +49,8 @@ def fake_run(monkeypatch):
         monkeypatch.setattr(cli_module.shutil, "which", lambda _: "claude")
         monkeypatch.delenv("AI_CLI_PATH", raising=False)
         monkeypatch.delenv("AI_CLI_MODEL", raising=False)
+        # CLIP-83: sin perfil activo (no leer el .env real del operador)
+        monkeypatch.setattr(cli_module.perfiles, "ruta_env", lambda: Path("no-existe.env"))
         return fake
     return _instalar
 

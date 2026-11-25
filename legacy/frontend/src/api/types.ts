@@ -403,9 +403,31 @@ export interface EnvField {
   label: string;
   help: string;
   secret: boolean;
+  /** CLIP-83: sección de la página y si va plegado en "Avanzado". */
+  seccion: string;
+  avanzado: boolean;
   is_set: boolean;
   value: string;
   masked_value: string;
+}
+
+// ── CLIP-83: cuenta de Claude por perfiles ──
+export interface PerfilClaude {
+  /** "" = sesión por defecto de la máquina. */
+  nombre: string;
+  sesion: boolean;
+  cuenta?: string;
+  plan?: string;
+  metodo?: string;
+  error?: string;
+  comando_login: string;
+}
+
+export interface CuentaClaude {
+  activo: string;
+  activo_existe: boolean;
+  carpeta: string;
+  perfiles: PerfilClaude[];
 }
 
 // ── S14: fuentes estáticas por nicho ──
