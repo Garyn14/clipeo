@@ -32,7 +32,7 @@ BASE = "/content"
 # whisperx 3.8.6 trae pyannote 4 (modelo community-1) y exige torch 2.8; whisperx 3.7.x exige pyannote < 4.
 # Al actualizar: cambiar el bloque completo y probar en Colab (ver legacy/colab/README.md).
 PAQUETES = ["whisperx==3.8.6", "torch==2.8.0", "torchaudio==2.8.0", "torchvision==0.23.0",
-            "numpy==2.2.6", "flask"]
+            "numpy==2.2.6", "flask", "yt-dlp"]   # yt-dlp: /live/check (CLIP-88)
 
 # (clave, texto, segundos típicos): el porcentaje avanza por etapas según estos tiempos
 ETAPAS = [
@@ -176,6 +176,8 @@ def main(rama: str = "main"):
     os.chmod(f"{BASE}/cloudflared", 0o755)
     urllib.request.urlretrieve(f"https://raw.githubusercontent.com/{REPO}/{rama}/legacy/colab/servidor.py",
                                f"{BASE}/servidor.py")
+    urllib.request.urlretrieve(f"https://raw.githubusercontent.com/{REPO}/{rama}/legacy/colab/live_check.py",
+                               f"{BASE}/live_check.py")   # CLIP-88: /live/check
 
     # 4. Servidor en un proceso nuevo (sin reiniciar la sesión)
     log_srv = f"{BASE}/servidor.log"

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { api } from "../api/client";
+import { PageHeader } from "../components/ui";
 import { AdministrarFuentes } from "../components/AdministrarFuentes";
 import type { ClienteFuentes, FuentesNicho, ResumenEjecucion, VideoFuente } from "../api/types";
 
@@ -171,8 +172,11 @@ export function Fuentes() {
 
   return (
     <section className="fu">
-      <h1>Fuentes</h1>
-      <p className="hint">Videos nuevos de los canales fijos de cada cliente, listos para convertir en clips.</p>
+      <PageHeader
+        seccion="Producción"
+        titulo="Fuentes"
+        descripcion="Videos nuevos de los canales de cada cliente, listos para convertir en clips."
+      />
 
       {/* Cliente */}
       <div className="fu-clientes">

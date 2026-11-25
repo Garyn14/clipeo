@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api/client";
+import { PageHeader } from "../components/ui";
 import type { RunLaunchBody } from "../api/types";
 
 export function NuevaCorrida() {
@@ -24,10 +25,11 @@ export function NuevaCorrida() {
 
   return (
     <section className="panel">
-      <h1>Nueva corrida</h1>
-      <p className="hint">
-        Transcripción siempre vía Colab — no hay opción de correr WhisperX local desde acá.
-      </p>
+      <PageHeader
+        seccion="Producción"
+        titulo="Nueva corrida"
+        descripcion="Procesa un video suelto (enlace o archivo local). La transcripción va siempre por Colab."
+      />
 
       <form
         onSubmit={(e) => {

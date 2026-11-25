@@ -1,10 +1,19 @@
 # Estado del proyecto
 
 > Memoria compartida entre sesiones. **Actualizar al cerrar cada ticket.**
-> Última actualización: 2026-11-21 (S17 cerrado; tickets sueltos CLIP-70, 71 y 72 cerrados; Jira al día)
+> Última actualización: 2026-11-25 (S19 en revisión: PR del sprint esperando la demo del operador)
 
 ## Ahora
 
+- **S19 en revisión** (rama `sprint/S19`, `docs/sprints/S19.md`; trabajado de noche con el OK del operador del
+  2026-11-25): **CLIP-84** rediseño del panel (identidad "sala de control", barra lateral con estado de Colab y de la
+  cuenta de Claude), **CLIP-85** Publicaciones por cliente, épica **L1 · Directos (CLIP-86)** v1 con **CLIP-88/89/90**
+  (vigilar cuentas de TikTok por cliente, grabar en trozos, cada trozo al pipeline, sección Directos; probado con un
+  live real) y **CLIP-87** spike de despliegue de la publicación (recomienda VM Oracle Always Free). **Siguiente:**
+  demo del operador y verificar `/live/check` desde Colab después de integrar. Jira: CLIP-84…90 en En revisión.
+- **S18 cerrado** (PR #52) y **CLIP-83** (perfiles de cuenta de Claude, PR #53) integrados el 2026-11-24. El
+  pipeline usa el perfil **gtadescribo** (`AI_CLI_PERFIL` en `.env`): la sesión por defecto de la PC tenía guardada la
+  credencial de otra cuenta, sin cupo semanal.
 - **Foco:** clips de calidad (ver `docs/ROADMAP.md` v0.5: Fase 1 hasta S13). Lo demás es secundario.
 - **Piloto de referencia:** `v1_full`, en `legacy/` desde CLIP-23 (ver `docs/DIAGNOSTICO_V1_FULL.md`).
 - **S17 · Negocio cerrado** (OK del operador 2026-11-21, PR #49; `docs/sprints/S17.md`): pestaña **Negocio** con vista

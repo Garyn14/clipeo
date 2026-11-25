@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { api } from "../api/client";
+import { PageHeader } from "../components/ui";
 import type { EnvField, PerfilClaude } from "../api/types";
 
 // CLIP-83: la página se ordena por secciones; lo que casi no se toca va plegado en "Avanzado".
@@ -70,11 +71,11 @@ export function Configuracion() {
 
   return (
     <section className="panel">
-      <h1>Configuración</h1>
-      <p className="hint">
-        Se guarda directo en <code>.env</code> — aplica desde la próxima corrida que lances
-        (no hace falta reiniciar el backend).
-      </p>
+      <PageHeader
+        seccion="Ajustes"
+        titulo="Configuración"
+        descripcion={<>Se guarda directo en <code>.env</code> y aplica desde la próxima corrida que lances, sin reiniciar el backend.</>}
+      />
 
       <form onSubmit={handleSubmit} className="form-config">
         {SECCIONES.map((seccion) => {

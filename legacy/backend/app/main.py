@@ -3,8 +3,9 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.directos import vigilante
 from app.publicacion import motor
-from app.routers import clips, config, errores, publicaciones, runs, sessions, fuentes, negocio
+from app.routers import clips, config, directos, errores, estado, publicaciones, runs, sessions, fuentes, negocio
 from app.services import review_actions
 
 
@@ -14,7 +15,10 @@ async def lifespan(app: FastAPI):
     review_actions.completar_textos_publicacion()
     # Motor de publicación: revisa al arrancar y cada 10 min (PUBLICACION_MOTOR=0 lo apaga)
     motor.iniciar()
+    # CLIP-88: vigilante de directos (DIRECTOS_MOTOR=0 lo apaga)
+    vigilante.iniciar()
     yield
+    vigilante.detener()
     motor.detener()
 
 
@@ -35,6 +39,8 @@ app.include_router(errores.router)
 app.include_router(publicaciones.router)
 app.include_router(fuentes.router)   # S14: fuentes estáticas por nicho
 app.include_router(negocio.router)   # S17: reporte de negocio por cliente
+app.include_router(estado.router)    # CLIP-84: estado de la operación (pie de la barra lateral)
+app.include_router(directos.router)  # CLIP-88: directos en vivo (épica L1)
 
 
 @app.get("/health")

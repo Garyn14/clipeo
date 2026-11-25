@@ -6,6 +6,9 @@ import type { ClienteFuentes, FilaNegocioGlobal, FuentesNicho, ReporteNegocio, R
   DiscardClipBody,
   EditClipBody,
   EnvField,
+  CuentaDirecto,
+  ResumenDirectos,
+  EstadoOperacion,
   CuentaClaude,
   PerfilClaude,
   ErrorFila,
@@ -90,6 +93,19 @@ export const api = {
   getEnvStatus: () => request<EnvField[]>("/config/env"),
   updateEnv: (values: Record<string, string>) =>
     request<EnvField[]>("/config/env", { method: "PUT", body: JSON.stringify({ values }) }),
+  // CLIP-90: directos
+  getDirectos: () => request<ResumenDirectos>("/directos"),
+  agregarCuentaDirecto: (nicho: string, body: { plataforma: string; usuario: string; trozo_min: number; procesar: boolean }) =>
+    request<CuentaDirecto>(`/directos/${nicho}/cuentas`, { method: "POST", body: JSON.stringify(body) }),
+  actualizarCuentaDirecto: (nicho: string, plataforma: string, usuario: string, cambios: { activo?: boolean; procesar?: boolean; trozo_min?: number }) =>
+    request<CuentaDirecto>(`/directos/${nicho}/cuentas/${plataforma}/${usuario}`, { method: "PATCH", body: JSON.stringify(cambios) }),
+  quitarCuentaDirecto: (nicho: string, plataforma: string, usuario: string) =>
+    request<{ ok: boolean }>(`/directos/${nicho}/cuentas/${plataforma}/${usuario}`, { method: "DELETE" }),
+  revisarDirectos: () => request<{ ok: boolean }>("/directos/revisar", { method: "POST" }),
+  grabarDirecto: (nicho: string, plataforma: string, usuario: string) =>
+    request<{ pid: number }>(`/directos/${nicho}/cuentas/${plataforma}/${usuario}/grabar`, { method: "POST" }),
+  detenerCaptura: (carpeta: string) => request<{ ok: boolean }>(`/directos/capturas/${carpeta}/detener`, { method: "POST" }),
+  getEstado: (refrescar = false) => request<EstadoOperacion>(`/estado${refrescar ? "?refrescar=true" : ""}`),
   getCuentaClaude: () => request<CuentaClaude>("/config/claude"),
   crearPerfilClaude: (nombre: string) =>
     request<PerfilClaude>("/config/claude/perfiles", { method: "POST", body: JSON.stringify({ nombre }) }),

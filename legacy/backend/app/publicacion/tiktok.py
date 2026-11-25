@@ -61,8 +61,8 @@ _dormir = time.sleep
 
 # error.code de init / status → (tipo, mensaje para el panel)
 _CODIGOS = {
-    "access_token_invalid": (RECONECTAR, "El token de TikTok es inválido o venció — reconectá la cuenta"),
-    "scope_not_authorized": (RECONECTAR, "La cuenta no autorizó el permiso video.upload — reconectá la cuenta"),
+    "access_token_invalid": (RECONECTAR, "El token de TikTok es inválido o venció — reconecta la cuenta"),
+    "scope_not_authorized": (RECONECTAR, "La cuenta no autorizó el permiso video.upload — reconecta la cuenta"),
     "spam_risk_too_many_pending_share": (
         PAUSAR, "TikTok: demasiados borradores pendientes en 24 h (máx. 5). Activá o descartá los de la bandeja"),
     "spam_risk_user_banned_from_posting": (ERROR, "TikTok: la cuenta tiene prohibido publicar"),
@@ -344,7 +344,7 @@ def canjear_codigo(code: str) -> dict:
         "code": code, "grant_type": "authorization_code", "redirect_uri": cred["redirect_uri"],
     })
     if "video.upload" not in tokens.pop("scope").split(","):
-        raise ValueError("La cuenta no otorgó el permiso video.upload — volvé a conectar y aceptalo")
+        raise ValueError("La cuenta no otorgó el permiso video.upload — vuelve a conectar y acéptalo")
     return tokens
 
 

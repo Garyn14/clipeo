@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api/client";
+import { PageHeader } from "../components/ui";
 import type { ErrorFila, ReintentoLoteResultado } from "../api/types";
 import { PASO_LABEL, formatearFecha } from "../pasos";
 
@@ -56,12 +57,11 @@ export function Errores() {
 
   return (
     <section className="panel">
-      <h1>Instancias con error</h1>
-      <p className="hint">
-        Pasos que quedaron en error en cualquier sesión. Los reintentables (límite de uso de Claude,
-        Colab caído, red) ya agotaron sus reintentos automáticos; los no reintentables necesitan
-        corregir la causa antes.
-      </p>
+      <PageHeader
+        seccion="Producción"
+        titulo="Errores"
+        descripcion="Pasos que quedaron en error en cualquier sesión. Los reintentables (límite de uso de Claude, Colab caído, red) ya agotaron sus reintentos automáticos; los demás necesitan corregir la causa antes."
+      />
 
       <div className="filtros">
         <label>

@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api/client";
+import { PageHeader } from "../components/ui";
 import type { EstadoSesion, SessionSummary } from "../api/types";
 import { ESTADO_SESION_LABEL, PASO_LABEL, formatearDuracion, formatearFecha } from "../pasos";
 
@@ -47,7 +48,11 @@ export function Sesiones() {
 
   return (
     <section className="panel">
-      <h1>Sesiones</h1>
+      <PageHeader
+        seccion="Producción"
+        titulo="Sesiones"
+        descripcion="Cada video procesado, con su estado y el paso en que va. Entra a una para ver el detalle o revisar sus clips."
+      />
 
       <div className="filtros">
         <label>

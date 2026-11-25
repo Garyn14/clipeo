@@ -337,6 +337,8 @@ export interface ProximoEnvio {
 export interface ResumenNicho {
   plataforma: Plataforma;
   nicho: string;
+  /** CLIP-85: nombre visible del cliente */
+  cliente: string;
   cuenta: CuentaPublicacion | null;
   proximo_envio: ProximoEnvio | null;
   /** Por qué no hay estimación (sin cuenta, reconectar) */
@@ -589,4 +591,69 @@ export interface FilaNegocioGlobal {
   resumen?: ResumenConVariacion;
   senal?: SenalNegocio | null;        // CLIP-76: señal principal del mes
   aviso?: string | null;
+}
+
+// ── CLIP-84: estado de la operación (pie de la barra lateral) ──
+export interface EstadoOperacion {
+  colab: { vivo: boolean; motivo: string };
+  claude: { perfil: string; cuenta: string; sesion: boolean; plan: string };
+  errores: number;
+}
+
+// ── CLIP-90: directos en vivo (épica L1) ──
+export interface ChequeoDirecto {
+  ts: string;
+  /** null = no concluyente (bloqueo o error): nunca se toma como "no en vivo" */
+  en_vivo: boolean | null;
+  detalle: string;
+}
+
+export interface TrozoDirecto {
+  id: string;
+  archivo: string;
+  inicio: string;
+  fin: string;
+  bytes: number;
+  estado: "listo" | "parcial";
+  sesion: string | null;
+  omitido?: string | null;
+}
+
+export type EstadoCaptura = "grabando" | "terminado" | "detenido" | "sin_directo" | "error" | "interrumpido";
+
+export interface CapturaDirecto {
+  carpeta: string;
+  nicho: string;
+  plataforma: string;
+  usuario: string;
+  url: string;
+  estado: EstadoCaptura;
+  inicio: string;
+  fin: string | null;
+  motivo: string;
+  trozo_min: number;
+  trozos: TrozoDirecto[];
+}
+
+export interface CuentaDirecto {
+  plataforma: string;
+  usuario: string;
+  activo: boolean;
+  trozo_min: number;
+  procesar: boolean;
+  chequeo: ChequeoDirecto | null;
+  grabando: CapturaDirecto | null;
+}
+
+export interface ClienteDirectos {
+  nicho: string;
+  cliente: string;
+  cuentas: CuentaDirecto[];
+  capturas: CapturaDirecto[];
+}
+
+export interface ResumenDirectos {
+  plataformas: { clave: string; nombre: string; disponible: boolean }[];
+  vigilante: { activo: boolean; intervalo_s: number; ultima_vuelta: { inicio: string | null; fin: string | null; resumen: string } };
+  clientes: ClienteDirectos[];
 }
